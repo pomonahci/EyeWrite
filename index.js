@@ -13,7 +13,6 @@ const localPort   = 3000;                          //local host port
 var PORT = 33333;       // UDP Port
 var HOST = '127.0.0.1'; //
 app.use(express.static('scripts'));           //allow Node.js access scripts directory
-app.use(express.static(__dirname + '/node_modules/firepad/dist/'));
 app.use(express.static(__dirname));
 var dgram = require('dgram');
 var server = dgram.createSocket('udp4');
@@ -54,7 +53,7 @@ io.of('/data').on('connection', socket => {//broadcast for socket connection
   });
 
   socket.on('gazeLog', function(data) {
-    console.log(data);
+    //console.log(data);
     var dataString = JSON.stringify(data);
     dataString = dataString + "\n";
     gazeLog.write(dataString);
@@ -86,14 +85,9 @@ app.get('/', function (req, res) {
 app.post('/log', function(req, res) {
  console.log(req.body);
  if(req.body.hasOwnProperty('line')) {
-   // gazeLog.write(JSON.stringify(req.body));
-   // gazeLog.write("\n");
-   // console.log("logged gaze");
- } else {
-   var requestUrl = "http://project2.cs.pomona.edu:80/?" + encodeGetParams(req.body);
-   request(requestUrl, function(error, response, body) {
-     console.log("LOGGED");
-   });
+   gazeLog.write(JSON.stringify(req.body));
+   gazeLog.write("\n");
+   console.log("logged gaze");
  }
 });
 
