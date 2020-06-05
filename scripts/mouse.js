@@ -1,5 +1,7 @@
 var firepad = firepad || {};
 
+
+
 var FirepadMouse = (function() {
 
     
