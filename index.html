@@ -5,13 +5,13 @@
 <head>
   <meta charset="utf-8" />
   <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/5.5.4/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase.js"></script>
   <!-- CodeMirror -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/codemirror.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/codemirror.css" />
 
   <!-- Firepad (full not min)-->
-  <link rel="stylesheet" href="https://firepad.io/releases/v1.5.9/firepad.css" />
+  <link rel="stylesheet" href="https://firepad.io/releases/v1.5.10/firepad.css" />
   <script src="https://firepad.io/releases/v1.5.10/firepad.js" type="text/javascript"></script>
 
   <!-- Include example userlist script / CSS.
@@ -95,12 +95,20 @@
     function init() {
       //// Initialize Firebase.
       //// TODO: replace with your Firebase project configuration.
+      // Your web app's Firebase configuration
       var config = {
-        apiKey: '<API_KEY>',
-        authDomain: "firepad-tests.firebaseapp.com",
-        databaseURL: "https://firepad-tests.firebaseio.com"
+        apiKey: "AIzaSyA2OzRoGJAloJ9NdYewDl4egs_FSlpOkd8",
+        authDomain: "eyewrite-ab60c.firebaseapp.com",
+        databaseURL: "https://eyewrite-ab60c.firebaseio.com",
+        projectId: "eyewrite-ab60c",
+        storageBucket: "eyewrite-ab60c.appspot.com",
+        // messagingSenderId: "544252935680",
+        appId: "1:544252935680:web:a0e398f2ad80910da962e5",
+        measurementId: "G-BFQHBGPXPS"
       };
+      // Initialize Firebase
       firebase.initializeApp(config);
+      firebase.analytics();
 
       //// Get Firebase Database reference.
       window.firepadRef = getExampleRef();
@@ -118,6 +126,10 @@
       //// Create FirepadUserList (with our desired userId).
       var firepadUserList = FirepadUserList.fromDiv(firepadRef.child('users'),
         document.getElementById('userlist'), userId);
+
+      //// Track mouse position, remove when user disconnects
+      window.mousePosRef = window.firepadRef.child('users').child(window.userId).child('mousePosition');
+      window.mousePosRef.onDisconnect().remove();
 
       // var setCursorAtEnd = function () {
       //   codeMirror.setCursor({
@@ -154,6 +166,12 @@
       }
       return ref;
     }
+
+    // window.onbeforeunload = async function() {
+    //   await window.firepadRef.child('users').child(window.userId).remove();
+    //   console.log('done');
+    // }
+
   </script>
   
 </body>

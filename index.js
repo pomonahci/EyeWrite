@@ -19,8 +19,6 @@ var server = dgram.createSocket('udp4');
 
 var gazeLog = fs.createWriteStream("./userGazeLog.txt");
 
-
-
 const users = io.of("/users").on("connection", (socket) => {
   socket.on("userID", (msg) => {
     console.log(msg);

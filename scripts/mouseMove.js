@@ -38,6 +38,8 @@ var logMouseMovement = function (mouseEvent) {
   mouseMove.y = mouseEvent.clientY;
   mouseMove.epoch = currentTime + 47000;
 
+  window.mousePosRef.set(mouseMove.x + ',' + mouseMove.y);
+
   mouse.emit("mouse move", JSON.stringify(mouseMove));
 };
 
