@@ -36,9 +36,13 @@ var logMouseMovement = function (mouseEvent) {
   mouseMove.user = window.userId;
   mouseMove.x = mouseEvent.clientX;
   mouseMove.y = mouseEvent.clientY;
-  mouseMove.epoch = currentTime + 47000;
+  mouseMove.epoch = currentTime;
 
-  window.mousePosRef.set(mouseMove.x + ',' + mouseMove.y);
+  window.mousePosRef.set({
+    x : mouseMove.x,
+    y : mouseMove.y,
+    t : mouseMove.epoch
+  });
 
   mouse.emit("mouse move", JSON.stringify(mouseMove));
 };
