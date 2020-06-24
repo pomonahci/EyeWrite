@@ -2354,7 +2354,7 @@
       thisCanvas.style.top = 0;
       thisCanvas.style.left = 0;
       thisCanvas.style.pointerEvents = "none";
-      thisCanvas.style.zIndex = "3";
+      thisCanvas.style.zIndex = "4";
       thisCanvas.width = window.innerWidth;
       thisCanvas.height = window.innerHeight;
 
