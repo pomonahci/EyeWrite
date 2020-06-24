@@ -36,13 +36,13 @@
 
     document.addEventListener('mousemove', function mousemove(event) {
       rtcm.trigger('mouseActivity', event);
-      let x = event.clientX;
-      let y = event.clientY;
+      // let x = event.clientX;
+      // let y = event.clientY;
 
-      let ctx = canvas.getContext("2d");
-      ctx.fillStyle = myColor;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillRect(x - 5, y - 5, 10, 10);
+      // let ctx = canvas.getContext("2d");
+      // ctx.fillStyle = myColor;
+      // ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // ctx.fillRect(x - 5, y - 5, 10, 10);
     });
   });
 
@@ -2396,6 +2396,10 @@
     };
 
     OtherClient.prototype.removeMouse = function () {
+      var body = document.getElementsByTagName("body")[0];
+      var canvas = body.getElementById(this.id + "canvas");
+      body.removeChild(canvas);
+      
       if (this.mouseMark) { this.mouseMark.clear(); }
     };
 
