@@ -2348,6 +2348,23 @@
     function OtherClient(id, editorAdapter) {
       this.id = id;
       this.editorAdapter = editorAdapter;
+      var thisCanvas = document.createElement('canvas');
+      thisCanvas.id = id + "canvas";
+      
+      thisCanvas.style.top = 0;
+      thisCanvas.style.left = 0;
+      thisCanvas.style.pointerEvents = "none";
+      thisCanvas.style.zIndex = "3";
+      thisCanvas.width = window.innerWidth;
+      thisCanvas.height = window.innerHeight;
+
+
+
+      var body = document.getElementsByTagName("body")[0];
+      body.appendChild(thisCanvas);
+      
+      
+
     }
 
     OtherClient.prototype.setColor = function (color) {
@@ -5089,14 +5106,11 @@
       // show mouse
       var mouseX = mouse.x;
       var mouseY = mouse.y;
-      var mouseEl = document.createElement('div');
-      var canvas = document.getElementById('canvas');
-      mouseEl.className = 'other-client';
-      mouseEl.style.borderWidth = '2px';
-      mouseEl.style.borderStyle = 'solid';
-      mouseEl.style.borderColor = color;
+      
+      var thisCanvas = document.getElementById(clientId + "canvas");
+
       // send to canvas?
-      var ctx = canvas.getContext("2d");
+      var ctx = thisCanvas.getContext("2d");
       ctx.fillStyle = color;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillRect(mouseX - 5, mouseY - 5, 10, 10);
