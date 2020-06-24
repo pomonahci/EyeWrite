@@ -2350,7 +2350,7 @@
       this.editorAdapter = editorAdapter;
       var thisCanvas = document.createElement('canvas');
       thisCanvas.id = id + "canvas";
-      
+
       thisCanvas.style.top = 0;
       thisCanvas.style.left = 0;
       thisCanvas.style.pointerEvents = "none";
@@ -2362,8 +2362,8 @@
 
       var body = document.getElementsByTagName("body")[0];
       body.appendChild(thisCanvas);
-      
-      
+
+
 
     }
 
@@ -2397,9 +2397,12 @@
 
     OtherClient.prototype.removeMouse = function () {
       var body = document.getElementsByTagName("body")[0];
-      var canvas = body.getElementById(this.id + "canvas");
-      body.removeChild(canvas);
-      
+
+      var canvas = document.getElementById(this.id + "canvas");
+      if (canvas) {
+        body.removeChild(canvas);
+      }
+
       if (this.mouseMark) { this.mouseMark.clear(); }
     };
 
@@ -5110,15 +5113,16 @@
       // show mouse
       var mouseX = mouse.x;
       var mouseY = mouse.y;
-      
+
       var thisCanvas = document.getElementById(clientId + "canvas");
 
-      // send to canvas?
-      var ctx = thisCanvas.getContext("2d");
-      ctx.fillStyle = color;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillRect(mouseX - 5, mouseY - 5, 10, 10);
-
+      if (thisCanvas) {
+        // send to canvas?
+        var ctx = thisCanvas.getContext("2d");
+        ctx.fillStyle = color;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillRect(mouseX - 5, mouseY - 5, 10, 10);
+      }
     }
 
     RichTextCodeMirrorAdapter.prototype.trigger = function (event) {
