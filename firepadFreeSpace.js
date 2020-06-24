@@ -2396,13 +2396,6 @@
     };
 
     OtherClient.prototype.removeMouse = function () {
-      var body = document.getElementsByTagName("body")[0];
-
-      var canvas = document.getElementById(this.id + "canvas");
-      if (canvas) {
-        body.removeChild(canvas);
-      }
-
       if (this.mouseMark) { this.mouseMark.clear(); }
     };
 
