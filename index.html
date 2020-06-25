@@ -158,15 +158,17 @@
         snapshot.forEach(function (childSnapshot) {
 
           let mouse = childSnapshot.child('mouse').val();
-          let mouseX = mouse['x'];
-          let mouseY = mouse['y'];
-
           let color = childSnapshot.child('color').val();
+          if (mouse && color) {
+            let mouseX = mouse['x'];
+            let mouseY = mouse['y'];
 
-          
-          ctx.fillStyle = color;
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.fillRect(mouseX - 5, mouseY - 5, 10, 10);
+            
+
+            ctx.fillStyle = color;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillRect(mouseX - 5, mouseY - 5, 10, 10);
+          }
 
 
         });
