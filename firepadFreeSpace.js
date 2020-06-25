@@ -34,16 +34,26 @@
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
+    window.addEventListener("resize", function () {
+      backdrop.width = window.innerWidth;
+      backdrop.height = window.innerHeight;
+
+
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
     document.addEventListener('mousemove', function mousemove(event) {
       rtcm.trigger('mouseActivity', event);
-      // let x = event.clientX;
-      // let y = event.clientY;
+      let x = event.clientX;
+      let y = event.clientY;
 
       // let ctx = canvas.getContext("2d");
       // ctx.fillStyle = myColor;
       // ctx.clearRect(0, 0, canvas.width, canvas.height);
       // ctx.fillRect(x - 5, y - 5, 10, 10);
     });
+    
   });
 
   firepad.utils.makeEventEmitter = function (clazz, opt_allowedEVents) {
@@ -2348,23 +2358,6 @@
     function OtherClient(id, editorAdapter) {
       this.id = id;
       this.editorAdapter = editorAdapter;
-      var thisCanvas = document.createElement('canvas');
-      thisCanvas.id = id + "canvas";
-
-      thisCanvas.style.top = 0;
-      thisCanvas.style.left = 0;
-      thisCanvas.style.pointerEvents = "none";
-      thisCanvas.style.zIndex = "4";
-      thisCanvas.width = window.innerWidth;
-      thisCanvas.height = window.innerHeight;
-
-
-
-      var body = document.getElementsByTagName("body")[0];
-      body.appendChild(thisCanvas);
-
-
-
     }
 
     OtherClient.prototype.setColor = function (color) {
@@ -2384,11 +2377,11 @@
     OtherClient.prototype.updateMouse = function (mouse) {
       this.removeMouse();
       this.mouse = mouse;
-      this.mouseMark = this.editorAdapter.setOtherMouse(
-        mouse,
-        this.color,
-        this.id
-      );
+      // this.mouseMark = this.editorAdapter.setOtherMouse(
+      //   mouse,
+      //   this.color,
+      //   this.id
+      // );
     };
 
     OtherClient.prototype.removeCursor = function () {
@@ -5106,16 +5099,18 @@
       // show mouse
       var mouseX = mouse.x;
       var mouseY = mouse.y;
+      var mouseEl = document.createElement('div');
+      var canvas = document.getElementById('canvas');
+      mouseEl.className = 'other-client';
+      mouseEl.style.borderWidth = '2px';
+      mouseEl.style.borderStyle = 'solid';
+      mouseEl.style.borderColor = color;
+      // send to canvas?
+      var ctx = canvas.getContext("2d");
+      ctx.fillStyle = color;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillRect(mouseX - 5, mouseY - 5, 10, 10);
 
-      var thisCanvas = document.getElementById(clientId + "canvas");
-
-      if (thisCanvas) {
-        // send to canvas?
-        var ctx = thisCanvas.getContext("2d");
-        ctx.fillStyle = color;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillRect(mouseX - 5, mouseY - 5, 10, 10);
-      }
     }
 
     RichTextCodeMirrorAdapter.prototype.trigger = function (event) {

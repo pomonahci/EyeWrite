@@ -127,7 +127,7 @@
       firebase.analytics();
 
       //// Get Firebase Database reference.
-      window.firepadRef = getExampleRef();
+      var firepadRef = getExampleRef();
 
       //// Create CodeMirror (with lineWrapping on).
       var codeMirror = CodeMirror(document.getElementById('firepad'), { lineWrapping: true });
@@ -149,6 +149,28 @@
           firepad.setText('Welcome to EyeWrite');
         }
       });
+
+
+
+      firepadRef.child('users').on('value', function (snapshot) {
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext("2d");
+        snapshot.forEach(function (childSnapshot) {
+
+          let mouse = childSnapshot.child('mouse').val();
+          let mouseX = mouse['x'];
+          let mouseY = mouse['y'];
+
+          let color = childSnapshot.child('color').val();
+
+          
+          ctx.fillStyle = color;
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.fillRect(mouseX - 5, mouseY - 5, 10, 10);
+
+
+        });
+      });
     }
 
     // Helper to get hash from end of URL or generate a random one.
@@ -166,9 +188,14 @@
       }
       return ref;
     }
+
   </script>
 </body>
 
+
+<script>
+
+</script>
 
 
 <script>
@@ -183,11 +210,11 @@
     if (gazeOn) {
       button.innerHTML = "Hide Gaze (ESC)";
       button.style.backgroundColor = "#AF3131";
-      canvas.style.zIndex = "0";
+      canvas.style.visibility = "visible";
     } else {
       button.innerHTML = "Show Gaze (ESC)";
       button.style.backgroundColor = "#3BA057";
-      canvas.style.zIndex = "-5";
+      canvas.style.visibility = "hidden";
     }
   }
 </script>
@@ -200,4 +227,5 @@
     }
   });
 </script>
+
 </html>
