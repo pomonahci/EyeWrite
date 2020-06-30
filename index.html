@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- See http://www.firepad.io/docs/ for detailed embedding docs. -->
+
 <html>
 
 <head>
@@ -10,20 +10,20 @@
   <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-database.js"></script>
 
   <!-- CodeMirror -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/codemirror.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/codemirror.css" />
+  <script src="./node_modules/codemirror/lib/codemirror.js"></script>
+  <link rel="stylesheet" href="./node_modules/codemirror/lib/codemirror.css" />
+  <script src="./node_modules/codemirror/mode/javascript/javascript.js"></script>
 
   <!-- Firepad -->
   <link rel="stylesheet" href="https://firepad.io/releases/v1.5.10/firepad.css" />
-  <script src="./firepadFreeSpace.js"></script>
+  <script src="https://firepad.io/releases/v1.5.10/firepad.js"></script>
 
-  <!-- Include example userlist script / CSS.
-       Can be downloaded from: https://github.com/firebase/firepad/tree/master/examples/ -->
+  <!-- Firepad Userlist -->
   <script src="./scripts/firepad-userlist.js"></script>
   <link rel="stylesheet" href="./css/firepad-userlist.css" />
 
-  <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
+  <!-- CodeMirror Addon -->
+  <script src="./node_modules/codemirror/addon/selection/mark-selection.js"></script>
 
 
   <style>
@@ -77,97 +77,57 @@
       bottom: 0;
       height: 50px;
       width: 175px;
-      z-index: 10;
+      z-index: 5;
     }
 
-    #backdrop {
-      position: absolute;
-      top: 0px;
-      left: 0px;
-      pointer-events: none;
-      z-index: -3;
-      background-color: #20438f;
-    }
-
-    #canvas {
-      position: absolute;
-      top: 0px;
-      left: 0px;
-      pointer-events: none;
+    #highlight {
+      color: white;
     }
   </style>
 </head>
 
-<body onload="init()">
+<body>
   <div id="userlist"></div>
   <div id="firepad"></div>
   <div id="toggleView">
     <button onclick="changeGaze()" id="toggleButton">Show Gaze</button>
   </div>
-  <canvas id="canvas"></canvas>
-  <canvas id="backdrop"></canvas>
 
   <script>
-    function init() {
-      //// Initialize Firebase.
-      //// TODO: replace with your Firebase project configuration.
-      // Your web app's Firebase configuration
-      var firebaseConfig = {
-        apiKey: "AIzaSyBqy0PMzUcdYTh-MaKCXCR1GZGQrhlUs2s",
-        authDomain: "neweyewrite.firebaseapp.com",
-        databaseURL: "https://neweyewrite.firebaseio.com",
-        projectId: "neweyewrite",
-        storageBucket: "neweyewrite.appspot.com",
-        messagingSenderId: "555020691162",
-        appId: "1:555020691162:web:62d17e309001bca73a27e3",
-        measurementId: "G-5NDK60WNMF"
-      };
-      // Initialize Firebase
-      firebase.initializeApp(firebaseConfig);
-      firebase.analytics();
+    //// Initialize Firebase.
+    //// TODO: replace with your Firebase project configuration.
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyBqy0PMzUcdYTh-MaKCXCR1GZGQrhlUs2s",
+      authDomain: "neweyewrite.firebaseapp.com",
+      databaseURL: "https://neweyewrite.firebaseio.com",
+      projectId: "neweyewrite",
+      storageBucket: "neweyewrite.appspot.com",
+      messagingSenderId: "555020691162",
+      appId: "1:555020691162:web:62d17e309001bca73a27e3",
+      measurementId: "G-5NDK60WNMF"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
 
-      //// Get Firebase Database reference.
-      var firepadRef = getExampleRef();
+    //// Get Firebase Database reference.
+    var firepadRef = getExampleRef();
 
-      //// Create CodeMirror (with lineWrapping on).
-      var codeMirror = CodeMirror(document.getElementById('firepad'), { lineWrapping: true });
+    //// Create CodeMirror (with lineWrapping on).
+    var codeMirror = CodeMirror(document.getElementById('firepad'), { lineWrapping: true, inputStyle: 'contenteditable', historyEventDelay: 2500, autofocus: true, workTime: 5, workDelay: 5, pollInterval: 5, viewportMargin: 0, styleSelectedText: true });
 
-      // Create a random ID to use as our user ID (we must give this to firepad and FirepadUserList).
-      window.userId = Math.floor(Math.random() * 9999999999).toString();
+    // Create a random ID to use as our user ID (we must give this to firepad and FirepadUserList).
+    var userId = Math.floor(Math.random() * 9999999999).toString();
 
-      //// Create Firepad (with rich text features and our desired userId).
-      window.firepad = Firepad.fromCodeMirror(firepadRef, codeMirror,
-        { richTextToolbar: true, richTextShortcuts: true, userId: userId });
+    //// Create Firepad (with rich text features and our desired userId).
+    var firepad = Firepad.fromCodeMirror(firepadRef, codeMirror,
+      { richTextToolbar: true, richTextShortcuts: true, userId: userId });
 
-      //// Create FirepadUserList (with our desired userId).
-      var firepadUserList = FirepadUserList.fromDiv(firepadRef.child('users'),
-        document.getElementById('userlist'), userId);
+    //// Create FirepadUserList (with our desired userId).
+    var firepadUserList = FirepadUserList.fromDiv(firepadRef.child('users'),
+      document.getElementById('userlist'), userId);
 
-      //// Initialize contents.
-      window.firepad.on('ready', function () {
-        if (firepad.isHistoryEmpty()) {
-          firepad.setText('Welcome to EyeWrite');
-        }
-      });
-
-      var canvas = document.getElementById('canvas');
-      var ctx = canvas.getContext("2d");
-
-      firepadRef.child('users').on('value', function (snapshot) {
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        snapshot.forEach(function (childSnapshot) {
-
-          let mouse = childSnapshot.child('mouse').val();
-          let color = childSnapshot.child('color').val();
-          if (mouse && color) {
-            ctx.fillStyle = color;
-            ctx.fillRect(mouse['x'] - 5, mouse['y'] - 5, 10, 10);
-          }
-
-        });
-      });
-    }
 
     // Helper to get hash from end of URL or generate a random one.
     function getExampleRef() {
@@ -179,49 +139,11 @@
         ref = ref.push(); // generate unique location.
         window.location = window.location + '#' + ref.key; // add it as a hash to the URL.
       }
-      if (typeof console !== 'undefined') {
-        console.log('Firebase data: ', ref.toString());
-      }
       return ref;
     }
 
   </script>
+  <script src="./scripts/mouseVis.js"></script>
 </body>
-
-
-<script>
-
-</script>
-
-
-<script>
-  window.gazeOn = false;
-  gazeSharing = false;
-  var button = document.getElementById('toggleButton');
-  changeGaze();
-  function changeGaze() {
-    window.gazeOn = !window.gazeOn;
-    gazeSharing = gazeOn;
-    let canvas = document.getElementById("canvas");
-    if (gazeOn) {
-      button.innerHTML = "Hide Gaze (ESC)";
-      button.style.backgroundColor = "#AF3131";
-      canvas.style.visibility = "visible";
-    } else {
-      button.innerHTML = "Show Gaze (ESC)";
-      button.style.backgroundColor = "#3BA057";
-      canvas.style.visibility = "hidden";
-    }
-  }
-</script>
-
-<script>
-  $(document).keyup(function (e) {
-    // user can toggle between gaze on and off with esc key
-    if (e.keyCode == 27) {
-      changeGaze();
-    }
-  });
-</script>
 
 </html>
