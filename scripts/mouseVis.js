@@ -5,7 +5,7 @@ var userHighlights = {};
 
 var mousePosRef = firepadRef.child('mice');
 
-var gazeOn = false;
+window.gazeOn = false;
 var toggleButton = document.getElementById('toggleButton');
 
 //// Initialize contents.
@@ -17,36 +17,37 @@ firepad.on('ready', function () {
   //Once firepad is ready, we grab the CodeMirror editor instance from within firepad
   FirepadCM = firepad.editorAdapter_.cm;
 
+
+  var textEl = document.getElementById('firepad');
+
   //Mouse Event Listeners
-  document.addEventListener('mousemove', function (event) {
+  textEl.addEventListener('mousemove', function (event) {
     var mouse = FirepadCM.coordsChar({ left: event.clientX, top: event.clientY }, "window");
-    mousePosRef.child(userId).update({ 'line': mouse['line'], 'ch': mouse['ch'] });
+    mousePosRef.child(userId).update({ line: mouse['line'], ch: mouse['ch'] });
   });
 
-  document.addEventListener('mouseleave', function () {
-    try {
-      userHighlights[userId].clear();
-      firepadRef.child('mice').child(userId).update({ 'line': null, 'ch': null });
-    } catch (err) {
-      console.log('mouse glitch');
-    }
+  textEl.addEventListener('mouseleave', function () {
+    userHighlights[userId].clear();
+    firepadRef.child('mice').child(userId).update({ line: null, ch: null });
   });
 
   changeGaze();
 });
 
 function visualize(snapshot) {
+
   snapshot.forEach(function (childSnapshot) {
 
     let line = childSnapshot.child('line').val();
     let ch = childSnapshot.child('ch').val();
 
-    if (line && ch) { //childSnapshot.key is the userId
+    if (line !== null && ch !== null) {
+
+      let visWord = FirepadCM.findWordAt({ line: line, ch: ch });
+
       if (userHighlights[childSnapshot.key]) {
         userHighlights[childSnapshot.key].clear();
       }
-
-      let visWord = FirepadCM.findWordAt({ line: line, ch: ch });
 
       let highlight = FirepadCM.markText(
         { line: visWord['anchor']['line'], ch: visWord['anchor']['ch'] },
@@ -76,13 +77,15 @@ function changeGaze() {
     toggleButton.innerHTML = "Show Gaze (ESC)";
     toggleButton.style.backgroundColor = "#3BA057";
     firepadRef.child('mice').off('value', visualize);
-    for(user in userHighlights){
+    for (user in userHighlights) {
       userHighlights[user].clear();
     }
   }
 }
 
 window.onbeforeunload = async function () {
+  userHighlights[userId].clear();
+  await firepadRef.child('mice').child(userId).remove();
   await firepadRef.child('users').child(userId).remove();
   console.log('done');
 }
@@ -91,7 +94,6 @@ window.onbeforeunload = async function () {
 firepadRef.child('users').on('child_added', function (snapshot) {
   console.log(snapshot.key);
   userColors[snapshot.key] = snapshot.child('color').val();
-  userHighlights[snapshot.key] = null;
 });
 
 firepadRef.child('users').on('child_removed', function (snapshot) {
