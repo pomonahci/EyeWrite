@@ -22,9 +22,8 @@
   <script src="./scripts/firepad-userlist.js"></script>
   <link rel="stylesheet" href="./css/firepad-userlist.css" />
 
-  <!-- CodeMirror Addon -->
-  <script src="./node_modules/codemirror/addon/selection/mark-selection.js"></script>
-
+  <!-- CodeMirror Addon (for controlling color of text when selected) -->
+  <script src="./node_modules/codemirror/addon/selection/mark-selection.js"></script> 
 
   <style>
     html {
@@ -112,20 +111,28 @@
     firebase.analytics();
 
     //// Get Firebase Database reference.
-    var firepadRef = getExampleRef();
+    var firebaseRef = getExampleRef();
 
     //// Create CodeMirror (with lineWrapping on).
-    var codeMirror = CodeMirror(document.getElementById('firepad'), { lineWrapping: true, inputStyle: 'contenteditable', historyEventDelay: 2500, autofocus: true, workTime: 5, workDelay: 5, pollInterval: 5, viewportMargin: 0, styleSelectedText: true });
+    var codeMirror = CodeMirror(document.getElementById('firepad'), { lineWrapping: true, 
+      inputStyle: 'contenteditable', 
+      historyEventDelay: 2500, 
+      autofocus: true, 
+      workTime: 5, 
+      workDelay: 5, 
+      pollInterval: 5, 
+      viewportMargin: 0, 
+      styleSelectedText: true });
 
     // Create a random ID to use as our user ID (we must give this to firepad and FirepadUserList).
     var userId = Math.floor(Math.random() * 9999999999).toString();
 
     //// Create Firepad (with rich text features and our desired userId).
-    var firepad = Firepad.fromCodeMirror(firepadRef, codeMirror,
+    var firepad = Firepad.fromCodeMirror(firebaseRef, codeMirror,
       { richTextToolbar: true, richTextShortcuts: true, userId: userId });
 
     //// Create FirepadUserList (with our desired userId).
-    var firepadUserList = FirepadUserList.fromDiv(firepadRef.child('users'),
+    var firepadUserList = FirepadUserList.fromDiv(firebaseRef.child('users'),
       document.getElementById('userlist'), userId);
 
 
@@ -143,6 +150,7 @@
     }
 
   </script>
+  <!-- Mouse Visualization Script -->
   <script src="./scripts/mouseVis.js"></script>
 </body>
 
