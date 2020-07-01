@@ -26,7 +26,7 @@ firepad.on('ready', function () {
 
   textEl.addEventListener('mouseleave', function () {
     userHighlights[userId].clear(); //clear this users highlight
-    firebaseRef.child('mice').child(userId).update({ line: null, ch: null }); //delete the users highlight from firebase
+    firebaseRef.child('mice').child(userId).remove(); //delete the users highlight from firebase
   });
 
   changeGaze(); //callback function for the toggle switch -- we call it once here to add the visualization listener to firebase
@@ -50,13 +50,12 @@ function visualize(snapshot) {
     if (line !== null && ch !== null) {
       //finds the word in the codemirror instance nearest to the position given
       let visWord = FirepadCM.findWordAt({ line: line, ch: ch });
-      let blahblah = userColors[childSnapshot.key];
 
       //creates a highlight (TextMarker object) for that word and uses the user's color
       let highlight = FirepadCM.markText(
         { line: visWord['anchor']['line'], ch: visWord['anchor']['ch'] },
         { line: visWord['head']['line'], ch: visWord['head']['ch'] },
-        { css: "background: " + blahblah });
+        { css: "background: " + userColors[childSnapshot.key] });
       
       //associates this highlight with the user it came from in our local dictionary to keep track
       userHighlights[childSnapshot.key] = highlight;
