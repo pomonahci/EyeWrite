@@ -50,18 +50,21 @@ function visualize(snapshot) {
     if (line !== null && ch !== null) {
       //finds the word in the codemirror instance nearest to the position given
       let visWord = FirepadCM.findWordAt({ line: line, ch: ch });
+      let blahblah = userColors[childSnapshot.key];
 
       //creates a highlight (TextMarker object) for that word and uses the user's color
       let highlight = FirepadCM.markText(
         { line: visWord['anchor']['line'], ch: visWord['anchor']['ch'] },
         { line: visWord['head']['line'], ch: visWord['head']['ch'] },
-        { className: "highlight", css: "background: " + userColors[childSnapshot.key] });
+        { css: "background: " + blahblah });
       
       //associates this highlight with the user it came from in our local dictionary to keep track
       userHighlights[childSnapshot.key] = highlight;
     }
   });
 }
+
+
 
 //adds the (esc) key as a shortcut for the visualization toggle button
 document.addEventListener('keyup', function (e) {
@@ -97,7 +100,6 @@ window.onbeforeunload = async function () {
 
 //adds all user colors to our local dictionary
 firebaseRef.child('users').on('child_added', function (snapshot) {
-  console.log(snapshot.key);
   userColors[snapshot.key] = snapshot.child('color').val();
 });
 
