@@ -1,0 +1,3 @@
+[submodule "bootstrap-multiselect"]
+	path = bootstrap-multiselect
+	url = https://github.com/davidstutz/bootstrap-multiselect
