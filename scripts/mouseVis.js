@@ -296,9 +296,9 @@ function createUpArrow(userId, userColorDiv, line, sentences) {
       FirepadCM.on('viewportChange', function mark() {
         FirepadCM.off('viewportChange', mark);
         createHighlight(userId, userColorDiv, line, sentences);
-        FirepadCM.refresh();
       });
       FirepadCM.scrollIntoView({ line: line, ch: sentences['left'] });
+      FirepadCM.refresh();
     }
     userColorDiv.appendChild(arrow);
   } else if (userColorDiv.firstChild.firstChild.className == 'line') {
@@ -309,13 +309,11 @@ function createUpArrow(userId, userColorDiv, line, sentences) {
       FirepadCM.on('viewportChange', function mark() {
         FirepadCM.off('viewportChange', mark);
         createHighlight(userId, userColorDiv, line, sentences);
-        FirepadCM.refresh();
       });
       FirepadCM.scrollIntoView({ line: line, ch: sentences['left'] });
+      FirepadCM.refresh();
     }
   }
-
-
 }
 
 function createDownArrow(userId, userColorDiv, line, sentences) {
@@ -334,9 +332,9 @@ function createDownArrow(userId, userColorDiv, line, sentences) {
       FirepadCM.on('viewportChange', function mark() {
         FirepadCM.off('viewportChange', mark);
         createHighlight(userId, userColorDiv, line, sentences);
-        FirepadCM.refresh();
       });
       FirepadCM.scrollIntoView({ line: line, ch: sentences['left'] });
+      FirepadCM.refresh();
     }
     userColorDiv.appendChild(arrow);
 
@@ -348,9 +346,9 @@ function createDownArrow(userId, userColorDiv, line, sentences) {
       FirepadCM.on('viewportChange', function mark() {
         FirepadCM.off('viewportChange', mark);
         createHighlight(userId, userColorDiv, line, sentences);
-        FirepadCM.refresh();
       });
       FirepadCM.scrollIntoView({ line: line, ch: sentences['left'] });
+      FirepadCM.refresh();
     }
   }
 }
