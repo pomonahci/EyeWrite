@@ -4,6 +4,9 @@ var usersChecked = {}; //dictionary that keeps track of which users are checked 
 var userColors = {}; //dictionary that holds user colors (to avoid unecessary reading from firebase)
 var userHighlights = {}; //dictionary that associates each user with their mouse highlight (TextMarker object)
 
+var cmScrollTop;
+var smScrollBottom;
+
 var mousePosRef = firebaseRef.child('mice'); //reference to the area of the database containing user mouse positions
 
 firepad.on('ready', function () {
@@ -11,13 +14,13 @@ firepad.on('ready', function () {
     firepad.setText('Welcome to EyeWrite'); //sets initial text
   }
 
-  //bootstrap-multiselect is a github repo I included
+  //bootstrap-multiselect
   $('#user-checkboxes').multiselect({ //initializes checkbox dropdown for user visualization
     includeSelectAllOption: true,
     disableIfEmpty: true,
-    buttonContainer: '<div class="dropdown-button" />', //for UI button positioning purposes
+    buttonContainer: $('#user-checkboxes-container'), //for UI button positioning purposes
     buttonText: function () {
-      return 'Select users to visualize';
+      return 'Visualize Users';
     },
     onChange: function (option, checked, select) { //updates local dictionaries if a checked value changes
       usersChecked[option.val()] = checked;
@@ -43,21 +46,33 @@ firepad.on('ready', function () {
     }
   });
 
+  //to correctly assign button width dynamically
+  document.getElementById('user-checkboxes-container').getElementsByTagName('button')[0].style.width = (userlistBox.offsetWidth - 20) + 'px';
+
   FirepadCM = firepad.editorAdapter_.cm; //we grab the codemirror instance from firepad now that firepad is ready
+
+  cmScrollTop = FirepadCM.coordsChar({ left: 0, top: 0 }, 'local');
+  cmScrollBottom = FirepadCM.coordsChar({ left: 0, top: FirepadCM.getScrollInfo()['clientHeight'] }, 'local');
+
+  FirepadCM.on('scroll', function () {
+    let top = FirepadCM.getScrollInfo()['top'];
+    let height = FirepadCM.getScrollInfo()['clientHeight'];
+
+    cmScrollTop = FirepadCM.coordsChar({ left: 0, top: top }, 'local');
+    cmScrollBottom = FirepadCM.coordsChar({ left: 0, top: top + height }, 'local');
+  });
 
   //Firebase listener for when users are added
   firebaseRef.child('users').on('child_added', function (snapshot) {
-    
     if (snapshot.key != userId) { //we don't add ourselves to the local dictionary because we don't visualize ourselves
       usersChecked[snapshot.key] = false; //initialize usersChecked entry as false
       userColors[snapshot.key] = snapshot.child('color').val(); //record this users color in the local dict
 
-      
       if (snapshot.child('name').val() != null) { //if the name attribute in firebase has already loaded (it takes a second)
         $('#user-checkboxes').append('<option value=' + snapshot.key + '>' + snapshot.child('name').val() + '</option>'); //add this user to the checkbox list
         $('#user-checkboxes').multiselect('rebuild'); //rebuild checkbox list
 
-      } else { 
+      } else {
         $('#user-checkboxes').append('<option value=' + snapshot.key + '>' + snapshot.key + '</option>'); //place holder to display userId when the name is not ready
         $('#user-checkboxes').multiselect('rebuild');
 
@@ -83,6 +98,10 @@ firepad.on('ready', function () {
         $('option[value=' + snapshot.key + ']', $('#user-checkboxes'))[0]['label'] = snapshot.child('name').val(); //update username in checkbox list
         $('#user-checkboxes').multiselect('rebuild');
       }
+
+      if (userColors[snapshot.key] && userColors[snapshot.key] != snapshot.child('color').val()) {
+        userColors[snapshot.key] = snapshot.child('color').val();
+      }
     }
   });
 
@@ -107,25 +126,31 @@ firepad.on('ready', function () {
   });
 
   //Firebase listener for mouse values, this callback is responsible for visualizing all users
-  firebaseRef.child('mice').on('value', visualize);
+  firebaseRef.child('mice').on('child_changed', visualize);
 
   //DOM element as target to track mouse movements
   var textEl = document.getElementById('firepad'); //reference to the firepad html element
 
   //Mouse Event Listeners
   textEl.addEventListener('mousemove', function (event) {
-    var mouse = FirepadCM.coordsChar({ left: event.clientX, top: event.clientY }, "window"); //transforms mouse coordinates to codemirror document position
+    var mouse = FirepadCM.coordsChar({ left: event.clientX, top: event.clientY }, 'window'); //transforms mouse coordinates to codemirror document position
     mousePosRef.child(userId).update({ line: mouse['line'], ch: mouse['ch'] }); //sends to firebase
   });
 
   textEl.addEventListener('mouseleave', function () {
     firebaseRef.child('mice').child(userId).update({ line: null, ch: null }); //send nulls to firebase to signal the user is off target but has not closed the window
   });
+
+  pickr.on('save', (color) => {
+    if (color) {
+      firepad.firebaseAdapter_.setColor(color.toHEXA().toString());
+    }
+  });
 });
 
 //callback function for visualization
-function visualize(snapshot) {
-  snapshot.forEach(function (childSnapshot) { //iterates through mice
+function visualize(childSnapshot) {
+  // snapshot.forEach(function (childSnapshot) { //iterates through mice
 
     if (usersChecked[childSnapshot.key]) {
       //grabs position info
@@ -147,21 +172,56 @@ function visualize(snapshot) {
 
         //default for if something goes wrong and sentences is null
         if (!sentences) {
-          sentences['left'] = 0;
-          sentences['right'] = 0;
+          sentences['left'] = visToken['start'];
+          sentences['right'] = vistToken['end'];
         }
+        
+        var userColorDiv = document.getElementsByClassName('firepad-user-' + childSnapshot.key)[0].getElementsByClassName('firepad-userlist-color-indicator')[0];
 
-        //creates a highlight (TextMarker object) for the multi-sentence highlight range and uses the user's color
-        let highlight = FirepadCM.markText(
-          { line: line, ch: sentences['left'] },
-          { line: line, ch: sentences['right'] },
-          { css: "background: " + userColors[childSnapshot.key] });
+        if (line < cmScrollTop['line'] || (line == cmScrollTop['line'] && sentences['right'] < cmScrollTop['ch'])) {
+          
+          if (!userColorDiv.hasChildNodes()) {
+            var arrowTip = document.createElement('div');
+            arrowTip.className = 'triangle-up';
+            userColorDiv.appendChild(arrowTip);
 
-        //associates this highlight with the user it came from in our local dictionary to keep track
-        userHighlights[childSnapshot.key] = highlight;
+            var arrowStem = document.createElement('div');
+            arrowStem.className = 'line';
+            userColorDiv.appendChild(arrowStem);
+          }
+
+        } else if (line > cmScrollBottom['line'] || (line == cmScrollBottom['line'] && sentences['left'] > cmScrollBottom['ch'])) {
+          
+          if (!userColorDiv.hasChildNodes()) {
+            var arrowStem = document.createElement('div');
+            arrowStem.className = 'line';
+            userColorDiv.appendChild(arrowStem);
+
+            var arrowTip = document.createElement('div');
+            arrowTip.className = 'triangle-down';
+            userColorDiv.appendChild(arrowTip);
+          }
+
+        } else {
+          
+          if (userColorDiv.hasChildNodes()) {
+            while (userColorDiv.firstChild) {
+              userColorDiv.removeChild(userColorDiv.firstChild);
+            }
+          }
+
+          //creates a highlight (TextMarker object) for the multi-sentence highlight range and uses the user's color
+          let highlight = FirepadCM.markText(
+            { line: line, ch: sentences['left'] },
+            { line: line, ch: sentences['right'] },
+            { css: 'background: ' + userColors[childSnapshot.key] });
+
+          //associates this highlight with the user it came from in our local dictionary to keep track
+          userHighlights[childSnapshot.key] = highlight;
+        }
       }
     }
-  });
+  // });
 }
 
 //takes a word (token) and a line and highlights the sentence that word
@@ -177,43 +237,48 @@ function wordToLine(token, line) {
   //the index found using the function isToken which checks if each element is the given token
   let index = lineTokens.findIndex(isToken);
 
-  //left and right bumpers for finding periods and determining the highlight range
-  let leftBump = index;
-  let rightBump = index;
+  if (index != -1) {
 
-  //counters for the number of periods allowed on the left of the word and on the right of the word
-  let leftPeriodCount = 2;
-  let rightPeriodCount = 2;
+    //left and right bumpers for finding periods and determining the highlight range
+    let leftBump = index;
+    let rightBump = index;
 
-  //loop until period conditions are satisfied
-  while (true) {
-    //ticks left
-    if (lineTokens[leftBump]['start'] > 0 && leftPeriodCount > 0) {
-      leftBump--;
+    //counters for the number of periods allowed on the left of the word and on the right of the word
+    let leftPeriodCount = 2;
+    let rightPeriodCount = 2;
+
+    //loop until period conditions are satisfied
+    while (true) {
+      //ticks left
+      if (lineTokens[leftBump]['start'] > 0 && leftPeriodCount > 0) {
+        leftBump--;
+      }
+      //ticks right
+      if (lineTokens[rightBump]['end'] < lineTokens[lineTokens.length - 1]['end'] && rightPeriodCount > 0) {
+        rightBump++;
+      }
+      //counts down periods on the left
+      if (lineTokens[leftBump]['string'].includes('.')) {
+        leftPeriodCount--;
+      }
+      //counts down periods on the right
+      if (lineTokens[rightBump]['string'].includes('.')) {
+        rightPeriodCount--;
+      }
+      //if the period conditions are satisfied or we're up against the begining of the line or the end of the line then break
+      if ((leftPeriodCount <= 0 || lineTokens[leftBump]['start'] == 0) && (rightPeriodCount <= 0 || lineTokens[rightBump]['end'] == lineTokens[lineTokens.length - 1]['end'])) {
+        break;
+      }
     }
-    //ticks right
-    if (lineTokens[rightBump]['end'] < lineTokens[lineTokens.length - 1]['end'] && rightPeriodCount > 0) {
-      rightBump++;
+    //Just because the highlighting of the starting period on the left is annoying, but if
+    //we're at the begining of the line, the first character shouldn't be left out of the highlight
+    if (lineTokens[leftBump]['start'] == 0) {
+      return { left: lineTokens[leftBump]['start'], right: lineTokens[rightBump]['end'] };
+    } else {
+      return { left: lineTokens[leftBump]['start'] + 1, right: lineTokens[rightBump]['end'] };
     }
-    //counts down periods on the left
-    if (lineTokens[leftBump]['string'].includes('.')) {
-      leftPeriodCount--;
-    }
-    //counts down periods on the right
-    if (lineTokens[rightBump]['string'].includes('.')) {
-      rightPeriodCount--;
-    }
-    //if the period conditions are satisfied or we're up against the begining of the line or the end of the line then break
-    if((leftPeriodCount <= 0 || lineTokens[leftBump]['start'] == 0) && (rightPeriodCount <= 0 || lineTokens[rightBump]['end'] == lineTokens[lineTokens.length - 1]['end'])){
-      break;
-    }
-  }
-  //Just because the highlighting of the starting period on the left is annoying, but if
-  //we're at the begining of the line, the first character shouldn't be left out of the highlight
-  if (lineTokens[leftBump]['start'] == 0) {
-    return { left: lineTokens[leftBump]['start'], right: lineTokens[rightBump]['end'] };
   } else {
-    return { left: lineTokens[leftBump]['start'] + 1, right: lineTokens[rightBump]['end'] };
+    return { left: null, right: null };
   }
 }
 
@@ -222,3 +287,4 @@ window.onbeforeunload = async function () {
   await firebaseRef.child('mice').child(userId).remove();
   await firebaseRef.child('users').child(userId).remove();
 }
+

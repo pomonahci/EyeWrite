@@ -3,33 +3,42 @@
 <html>
 
 <head>
-  <meta charset="utf-8" />
+  <meta charset='utf-8' />
   <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-database.js"></script>
+  <script src='https://www.gstatic.com/firebasejs/7.6.2/firebase.js'></script>
+  <script src='https://www.gstatic.com/firebasejs/7.6.2/firebase-auth.js'></script>
+  <script src='https://www.gstatic.com/firebasejs/7.6.2/firebase-database.js'></script>
 
   <!-- CodeMirror -->
-  <script src="./node_modules/codemirror/lib/codemirror.js"></script>
-  <link rel="stylesheet" href="./node_modules/codemirror/lib/codemirror.css" />
-  <script src="./node_modules/codemirror/mode/javascript/javascript.js"></script>
+  <script src='./node_modules/codemirror/lib/codemirror.js'></script>
+  <link rel='stylesheet' href='./node_modules/codemirror/lib/codemirror.css' />
+  <script src='./node_modules/codemirror/mode/javascript/javascript.js'></script>
 
   <!-- Firepad -->
-  <link rel="stylesheet" href="https://firepad.io/releases/v1.5.10/firepad.css" />
-  <script src="https://firepad.io/releases/v1.5.10/firepad.js"></script>
+  <link rel='stylesheet' href='https://firepad.io/releases/v1.5.10/firepad.css' />
+  <script src='https://firepad.io/releases/v1.5.10/firepad.js'></script>
 
   <!-- Firepad Userlist -->
-  <script src="./scripts/firepad-userlist.js"></script>
-  <link rel="stylesheet" href="./css/firepad-userlist.css" />
+  <script src='./scripts/firepad-userlist.js'></script>
+  <link rel='stylesheet' href='./css/firepad-userlist.css' />
 
   <!-- Include Twitter Bootstrap and jQuery: -->
-  <link rel="stylesheet" href="./node_modules/bootstrap-multiselect/docs/css/bootstrap-3.3.2.min.css" type="text/css" />
-  <script type="text/javascript" src="./node_modules/bootstrap-multiselect/docs/js/jquery-2.1.3.min.js"></script>
-  <script type="text/javascript" src="./node_modules/bootstrap-multiselect/docs/js/bootstrap-3.3.2.min.js"></script>
+  <link rel='stylesheet' href='./node_modules/bootstrap-multiselect/docs/css/bootstrap-3.3.2.min.css' type='text/css' />
+  <script type='text/javascript' src='./node_modules/bootstrap-multiselect/docs/js/jquery-2.1.3.min.js'></script>
+  <script type='text/javascript' src='./node_modules/bootstrap-multiselect/docs/js/bootstrap-3.3.2.min.js'></script>
 
   <!-- Include the plugin's CSS and JS: -->
-  <script type="text/javascript" src="./node_modules/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"></script>
-  <link rel="stylesheet" href="./node_modules/bootstrap-multiselect/dist/css/bootstrap-multiselect.css" type="text/css" />
+  <script type='text/javascript' src='./node_modules/bootstrap-multiselect/dist/js/bootstrap-multiselect.js'></script>
+  <link rel='stylesheet' href='./node_modules/bootstrap-multiselect/dist/css/bootstrap-multiselect.css'
+    type='text/css' />
+
+  <!-- 'nano' theme -->
+  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css' />
+
+  <!-- Modern or es5 bundle -->
+  <script src='https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js'></script>
+
+
 
   <style>
     html {
@@ -61,38 +70,77 @@
       height: auto;
     }
 
-    .dropdown-button {
-      position: relative;
-      margin-top: 0px;
-      float: right;
-      right: 27px;
-      top: 27px;
+    .user-checkboxes-container-position {
+      position: absolute;
+      float: left;
+      margin-left: 10px;
     }
 
-    .highlight {
-      color: white;
+    .colorpicker-button {
+      color: rgb(51, 51, 51);
+      background-color: #FFFFFF;
+      padding: 6px 20px;
+      border-radius: 4px;
+      border: 1px solid #CCCCCC;
+    }
+
+    .colorpicker-button:hover {
+      border: 1px solid #ADADAD;
+      background-color: #E6E6E6;
+    }
+
+    .colorpicker-button-position {
+      position: absolute;
+      float: left;
+      margin-left: 10px;
+    }
+
+    .triangle-up {
+      width: 0;
+      height: 0;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-bottom: 15px solid #FFFFFF;
+
+    }
+
+    .triangle-down {
+      width: 0;
+      height: 0;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-top: 15px solid #FFFFFF;
+    }
+
+    .line {
+      width: 10px;
+      height: 15px;
+      background: #FFFFFF;
+      margin-left: 10px;
     }
   </style>
 </head>
 
 <body>
-  <div id="userlist"></div>
-  <div id="firepad"></div>
-  <select id="user-checkboxes" multiple="multiple"></select>
+  <div id='userlist'></div>
+  <div id='firepad'></div>
+  <select id='user-checkboxes' multiple='multiple'></select>
+  <div id='user-checkboxes-container' class='user-checkboxes-container-position'></div>
+  <div id='colorpicker' class='colorpicker-button-position'></div>
 
   <script>
     //// Initialize Firebase.
     //// TODO: replace with your Firebase project configuration.
     // Your web app's Firebase configuration
     var firebaseConfig = {
-      apiKey: "AIzaSyBqy0PMzUcdYTh-MaKCXCR1GZGQrhlUs2s",
-      authDomain: "neweyewrite.firebaseapp.com",
-      databaseURL: "https://neweyewrite.firebaseio.com",
-      projectId: "neweyewrite",
-      storageBucket: "neweyewrite.appspot.com",
-      messagingSenderId: "555020691162",
-      appId: "1:555020691162:web:62d17e309001bca73a27e3",
-      measurementId: "G-5NDK60WNMF"
+      apiKey: 'AIzaSyBqy0PMzUcdYTh-MaKCXCR1GZGQrhlUs2s',
+      authDomain: 'neweyewrite.firebaseapp.com',
+      databaseURL: 'https://neweyewrite.firebaseio.com',
+      projectId: 'neweyewrite',
+      storageBucket: 'neweyewrite.appspot.com',
+      messagingSenderId: '555020691162',
+      appId: '1:555020691162:web:62d17e309001bca73a27e3',
+      measurementId: 'G-5NDK60WNMF'
     };
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
@@ -110,7 +158,7 @@
       workTime: 5,
       workDelay: 5,
       pollInterval: 5,
-      viewportMargin: 0
+      viewportMargin: 1
     });
 
     // Create a random ID to use as our user ID (we must give this to firepad and FirepadUserList).
@@ -123,9 +171,6 @@
     //// Create FirepadUserList (with our desired userId).
     var firepadUserList = FirepadUserList.fromDiv(firebaseRef.child('users'),
       document.getElementById('userlist'), userId);
-
-    var logo = document.getElementsByClassName('powered-by-firepad')[0];
-    logo.parentNode.removeChild(logo);
 
 
     // Helper to get hash from end of URL or generate a random one.
@@ -142,9 +187,61 @@
     }
   </script>
 
+  <script>
+    //firepadUserList.firebaseOff_(firebaseRef.child('users'), 'child_changed', firepadUserList['firebaseCallbacks_'][4]['callback']);
+
+    var logo = document.getElementsByClassName('powered-by-firepad')[0];
+    logo.parentNode.removeChild(logo);
+
+    var nameHint = document.getElementsByClassName('firepad-userlist-name-hint')[0];
+    nameHint.style.top = 20 + 'px';
+
+    var userlistBox = document.getElementsByClassName('firepad-userlist')[0];
+    userlistBox.style.height = 200 + 'px';
+    userlistBox.style.borderRadius = 4 + 'px';
+
+    var userlist = document.getElementsByClassName('firepad-userlist-users')[0];
+    userlist.style.height = (userlistBox.offsetHeight + userlistBox.offsetTop - userlist.offsetTop) + 'px';;
+    userlist.style.overflowY = 'scroll';
+
+    var el = document.createElement('button');
+    el.className = 'colorpicker-button';
+    el.innerText = 'Change Color';
+    el.style.width = (userlistBox.offsetWidth - 20) + 'px';
+
+    var colorPicker = document.getElementById('colorpicker');
+    colorPicker.style.top = (userlistBox.offsetHeight + userlistBox.offsetTop + 15) + 'px';
+    colorPicker.appendChild(el);
+
+    const pickr = new Pickr(Object.assign({
+      el,
+      theme: 'nano',
+      useAsButton: true,
+      default: '#000000',
+      swatches: null,
+      defaultRepresentation: 'HEXA',
+      components: {
+        preview: true,
+        opacity: false,
+        hue: true,
+        interaction: {
+          hex: false,
+          rgba: false,
+          hsva: false,
+          input: false,
+          clear: true,
+          save: true
+        }
+      }
+    })
+    );
+
+    document.getElementById('user-checkboxes-container').style.top = (colorPicker.offsetHeight + colorPicker.offsetTop + 10) + 'px';
+  </script>
+
 </body>
 
 <!-- Mouse Visualization Script -->
-<script src="./scripts/mouseVis.js"></script>
+<script src='./scripts/mouseVis.js'></script>
 
 </html>
