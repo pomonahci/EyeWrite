@@ -39,7 +39,6 @@
   <script src='https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js'></script>
 
 
-
   <style>
     html {
       height: 100%;
@@ -75,9 +74,15 @@
       float: left;
       margin-left: 10px;
     }
+    
+    .colorpicker-button-position {
+      position: absolute;
+      float: left;
+      margin-left: 10px;
+    }
 
     .colorpicker-button {
-      color: rgb(51, 51, 51);
+      color: #333333;
       background-color: #FFFFFF;
       padding: 6px 20px;
       border-radius: 4px;
@@ -89,19 +94,12 @@
       background-color: #E6E6E6;
     }
 
-    .colorpicker-button-position {
-      position: absolute;
-      float: left;
-      margin-left: 10px;
-    }
-
     .triangle-up {
       width: 0;
       height: 0;
       border-left: 15px solid transparent;
       border-right: 15px solid transparent;
       border-bottom: 15px solid #FFFFFF;
-
     }
 
     .triangle-down {
@@ -124,14 +122,11 @@
 <body>
   <div id='userlist'></div>
   <div id='firepad'></div>
-  <select id='user-checkboxes' multiple='multiple'></select>
   <div id='user-checkboxes-container' class='user-checkboxes-container-position'></div>
+  <select id='user-checkboxes' multiple='multiple'></select>
   <div id='colorpicker' class='colorpicker-button-position'></div>
 
   <script>
-    //// Initialize Firebase.
-    //// TODO: replace with your Firebase project configuration.
-    // Your web app's Firebase configuration
     var firebaseConfig = {
       apiKey: 'AIzaSyBqy0PMzUcdYTh-MaKCXCR1GZGQrhlUs2s',
       authDomain: 'neweyewrite.firebaseapp.com',
@@ -142,6 +137,7 @@
       appId: '1:555020691162:web:62d17e309001bca73a27e3',
       measurementId: 'G-5NDK60WNMF'
     };
+
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     firebase.analytics();
@@ -151,14 +147,8 @@
 
     //// Create CodeMirror (with lineWrapping on).
     var codeMirror = CodeMirror(document.getElementById('firepad'), {
-      lineWrapping: true,
-      inputStyle: 'contenteditable',
-      historyEventDelay: 2500,
-      autofocus: true,
-      workTime: 5,
-      workDelay: 5,
-      pollInterval: 5,
-      viewportMargin: 1
+      lineWrapping: true, inputStyle: 'contenteditable', historyEventDelay: 2500,
+      autofocus: true, workTime: 5, workDelay: 5, pollInterval: 5, viewportMargin: 1
     });
 
     // Create a random ID to use as our user ID (we must give this to firepad and FirepadUserList).
@@ -171,7 +161,6 @@
     //// Create FirepadUserList (with our desired userId).
     var firepadUserList = FirepadUserList.fromDiv(firebaseRef.child('users'),
       document.getElementById('userlist'), userId);
-
 
     // Helper to get hash from end of URL or generate a random one.
     function getExampleRef() {
@@ -186,61 +175,9 @@
       return ref;
     }
   </script>
-
-  <script>
-    //firepadUserList.firebaseOff_(firebaseRef.child('users'), 'child_changed', firepadUserList['firebaseCallbacks_'][4]['callback']);
-
-    var logo = document.getElementsByClassName('powered-by-firepad')[0];
-    logo.parentNode.removeChild(logo);
-
-    var nameHint = document.getElementsByClassName('firepad-userlist-name-hint')[0];
-    nameHint.style.top = 20 + 'px';
-
-    var userlistBox = document.getElementsByClassName('firepad-userlist')[0];
-    userlistBox.style.height = 200 + 'px';
-    userlistBox.style.borderRadius = 4 + 'px';
-
-    var userlist = document.getElementsByClassName('firepad-userlist-users')[0];
-    userlist.style.height = (userlistBox.offsetHeight + userlistBox.offsetTop - userlist.offsetTop) + 'px';;
-    userlist.style.overflowY = 'scroll';
-
-    var el = document.createElement('button');
-    el.className = 'colorpicker-button';
-    el.innerText = 'Change Color';
-    el.style.width = (userlistBox.offsetWidth - 20) + 'px';
-
-    var colorPicker = document.getElementById('colorpicker');
-    colorPicker.style.top = (userlistBox.offsetHeight + userlistBox.offsetTop + 15) + 'px';
-    colorPicker.appendChild(el);
-
-    const pickr = new Pickr(Object.assign({
-      el,
-      theme: 'nano',
-      useAsButton: true,
-      default: '#000000',
-      swatches: null,
-      defaultRepresentation: 'HEXA',
-      components: {
-        preview: true,
-        opacity: false,
-        hue: true,
-        interaction: {
-          hex: false,
-          rgba: false,
-          hsva: false,
-          input: false,
-          clear: true,
-          save: true
-        }
-      }
-    })
-    );
-
-    document.getElementById('user-checkboxes-container').style.top = (colorPicker.offsetHeight + colorPicker.offsetTop + 10) + 'px';
-  </script>
-
 </body>
 
+<script src='./scripts/UIAdjustments.js'></script>
 <!-- Mouse Visualization Script -->
 <script src='./scripts/mouseVis.js'></script>
 

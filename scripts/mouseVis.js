@@ -94,13 +94,19 @@ firepad.on('ready', function () {
   //users which is unnecessary but right now there is no nice way to listen for these individual events
   firebaseRef.child('users').on('child_changed', function (snapshot) {
     if (snapshot.key != userId) {
+      let userDiv = document.getElementsByClassName('firepad-user-' + snapshot.key)[0];
+
       if (snapshot.child('name').val()) {
         $('option[value=' + snapshot.key + ']', $('#user-checkboxes'))[0]['label'] = snapshot.child('name').val(); //update username in checkbox list
         $('#user-checkboxes').multiselect('rebuild');
+        let userNameDiv = userDiv.getElementsByClassName('firepad-userlist-name')[0];
+        userNameDiv.innerText = snapshot.child('name').val();
       }
 
       if (userColors[snapshot.key] && userColors[snapshot.key] != snapshot.child('color').val()) {
         userColors[snapshot.key] = snapshot.child('color').val();
+        let userColorDiv = userDiv.getElementsByClassName('firepad-userlist-color-indicator')[0];
+        userColorDiv.style.backgroundColor = snapshot.child('color').val();
       }
     }
   });
@@ -128,6 +134,12 @@ firepad.on('ready', function () {
   //Firebase listener for mouse values, this callback is responsible for visualizing all users
   firebaseRef.child('mice').on('child_changed', visualize);
 
+  //when this user closes their window, removes them from the database and removes their mouse
+  window.onbeforeunload = async function () {
+    await firebaseRef.child('mice').child(userId).remove();
+    await firebaseRef.child('users').child(userId).remove();
+  }
+
   //DOM element as target to track mouse movements
   var textEl = document.getElementById('firepad'); //reference to the firepad html element
 
@@ -152,76 +164,54 @@ firepad.on('ready', function () {
 function visualize(childSnapshot) {
   // snapshot.forEach(function (childSnapshot) { //iterates through mice
 
-    if (usersChecked[childSnapshot.key]) {
-      //grabs position info
-      let line = childSnapshot.child('line').val();
-      let ch = childSnapshot.child('ch').val();
+  if (usersChecked[childSnapshot.key]) {
+    //grabs position info
+    let line = childSnapshot.child('line').val();
+    let ch = childSnapshot.child('ch').val();
 
-      //if there already exists a highlight for this user we clear it to make a new one
-      if (userHighlights[childSnapshot.key]) { //childSnapshot.key is the userId
-        userHighlights[childSnapshot.key].clear();
-      }
-
-      //incase we get passed nulls
-      if (line != null && ch != null) {
-        //finds the word (token) in the codemirror editor nearest to the position given
-        let visToken = FirepadCM.getTokenAt({ line: line, ch: ch });
-
-        //transforms the word into multi-sentence range
-        let sentences = wordToLine(visToken, line);
-
-        //default for if something goes wrong and sentences is null
-        if (!sentences) {
-          sentences['left'] = visToken['start'];
-          sentences['right'] = vistToken['end'];
-        }
-        
-        var userColorDiv = document.getElementsByClassName('firepad-user-' + childSnapshot.key)[0].getElementsByClassName('firepad-userlist-color-indicator')[0];
-
-        if (line < cmScrollTop['line'] || (line == cmScrollTop['line'] && sentences['right'] < cmScrollTop['ch'])) {
-          
-          if (!userColorDiv.hasChildNodes()) {
-            var arrowTip = document.createElement('div');
-            arrowTip.className = 'triangle-up';
-            userColorDiv.appendChild(arrowTip);
-
-            var arrowStem = document.createElement('div');
-            arrowStem.className = 'line';
-            userColorDiv.appendChild(arrowStem);
-          }
-
-        } else if (line > cmScrollBottom['line'] || (line == cmScrollBottom['line'] && sentences['left'] > cmScrollBottom['ch'])) {
-          
-          if (!userColorDiv.hasChildNodes()) {
-            var arrowStem = document.createElement('div');
-            arrowStem.className = 'line';
-            userColorDiv.appendChild(arrowStem);
-
-            var arrowTip = document.createElement('div');
-            arrowTip.className = 'triangle-down';
-            userColorDiv.appendChild(arrowTip);
-          }
-
-        } else {
-          
-          if (userColorDiv.hasChildNodes()) {
-            while (userColorDiv.firstChild) {
-              userColorDiv.removeChild(userColorDiv.firstChild);
-            }
-          }
-
-          //creates a highlight (TextMarker object) for the multi-sentence highlight range and uses the user's color
-          let highlight = FirepadCM.markText(
-            { line: line, ch: sentences['left'] },
-            { line: line, ch: sentences['right'] },
-            { css: 'background: ' + userColors[childSnapshot.key] });
-
-          //associates this highlight with the user it came from in our local dictionary to keep track
-          userHighlights[childSnapshot.key] = highlight;
-        }
-      }
+    //if there already exists a highlight for this user we clear it to make a new one
+    if (userHighlights[childSnapshot.key]) { //childSnapshot.key is the userId
+      userHighlights[childSnapshot.key].clear();
     }
+
+    //incase we get passed nulls
+    if (line != null && ch != null) {
+      //finds the word (token) in the codemirror editor nearest to the position given
+      let visToken = FirepadCM.getTokenAt({ line: line, ch: ch });
+
+      //transforms the word into multi-sentence range
+      let sentences = wordToLine(visToken, line);
+
+      //default for if something goes wrong and sentences is null
+      if (!sentences) {
+        sentences['left'] = visToken['start'];
+        sentences['right'] = vistToken['end'];
+      }
+
+      var userColorDiv = document.getElementsByClassName('firepad-user-' + childSnapshot.key)[0].getElementsByClassName('firepad-userlist-color-indicator')[0];
+
+      if (isAboveView(line, cmScrollTop, sentences)) {
+        createUpArrow(childSnapshot.key, userColorDiv, line, sentences);
+
+      } else if (isBelowView(line, cmScrollBottom, sentences)) {
+        createDownArrow(childSnapshot.key, userColorDiv, line, sentences);
+
+      } else {
+        createHighlight(childSnapshot.key, userColorDiv, line, sentences);
+
+      }
+    }else{
+      var userColorDiv = document.getElementsByClassName('firepad-user-' + childSnapshot.key)[0].getElementsByClassName('firepad-userlist-color-indicator')[0];
+      clearArrow(userColorDiv);
+    }
+  }
   // });
+}
+
+function hexToRgb(hex) {
+  let opacity = .35;
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? "rgb(" + parseInt(result[1], 16) + "," + parseInt(result[2], 16) + "," + parseInt(result[3], 16) + "," + opacity + ")" : null;
 }
 
 //takes a word (token) and a line and highlights the sentence that word
@@ -282,9 +272,106 @@ function wordToLine(token, line) {
   }
 }
 
-//when this user closes their window, removes them from the database and removes their mouse
-window.onbeforeunload = async function () {
-  await firebaseRef.child('mice').child(userId).remove();
-  await firebaseRef.child('users').child(userId).remove();
+function isAboveView(line, viewTop, sentences) {
+  return line < viewTop['line'] || (line == viewTop['line'] && sentences['right'] < viewTop['ch']);
 }
 
+function isBelowView(line, viewBottom, sentences) {
+  return line > viewBottom['line'] || (line == viewBottom['line'] && sentences['left'] > viewBottom['ch']);
+}
+
+function createUpArrow(userId, userColorDiv, line, sentences) {
+  if (!userColorDiv.hasChildNodes()) {
+    var arrow = document.createElement('div');
+
+    var arrowTip = document.createElement('div');
+    arrowTip.className = 'triangle-up';
+    arrow.appendChild(arrowTip);
+
+    var arrowStem = document.createElement('div');
+    arrowStem.className = 'line';
+    arrow.appendChild(arrowStem);
+
+    arrow.onclick = function () {
+      FirepadCM.on('viewportChange', function mark() {
+        FirepadCM.off('viewportChange', mark);
+        createHighlight(userId, userColorDiv, line, sentences);
+        FirepadCM.refresh();
+      });
+      FirepadCM.scrollIntoView({ line: line, ch: sentences['left'] });
+    }
+    userColorDiv.appendChild(arrow);
+  } else if (userColorDiv.firstChild.firstChild.className == 'line') {
+    clearArrow(userColorDiv);
+    createUpArrow(userId, userColorDiv, line, sentences);
+  } else {
+    userColorDiv.firstChild.onclick = function () {
+      FirepadCM.on('viewportChange', function mark() {
+        FirepadCM.off('viewportChange', mark);
+        createHighlight(userId, userColorDiv, line, sentences);
+        FirepadCM.refresh();
+      });
+      FirepadCM.scrollIntoView({ line: line, ch: sentences['left'] });
+    }
+  }
+
+
+}
+
+function createDownArrow(userId, userColorDiv, line, sentences) {
+  if (!userColorDiv.hasChildNodes()) {
+    var arrow = document.createElement('div');
+
+    var arrowStem = document.createElement('div');
+    arrowStem.className = 'line';
+    arrow.appendChild(arrowStem);
+
+    var arrowTip = document.createElement('div');
+    arrowTip.className = 'triangle-down';
+    arrow.appendChild(arrowTip);
+
+    arrow.onclick = function () {
+      FirepadCM.on('viewportChange', function mark() {
+        FirepadCM.off('viewportChange', mark);
+        createHighlight(userId, userColorDiv, line, sentences);
+        FirepadCM.refresh();
+      });
+      FirepadCM.scrollIntoView({ line: line, ch: sentences['left'] });
+    }
+    userColorDiv.appendChild(arrow);
+
+  } else if (userColorDiv.firstChild.firstChild.className == 'triangle-up') {
+    clearArrow(userColorDiv);
+    createDownArrow(userId, userColorDiv, line, sentences);
+  } else {
+    userColorDiv.firstChild.onclick = function () {
+      FirepadCM.on('viewportChange', function mark() {
+        FirepadCM.off('viewportChange', mark);
+        createHighlight(userId, userColorDiv, line, sentences);
+        FirepadCM.refresh();
+      });
+      FirepadCM.scrollIntoView({ line: line, ch: sentences['left'] });
+    }
+  }
+}
+
+function clearArrow(userColorDiv) {
+  if (userColorDiv.hasChildNodes()) {
+    while (userColorDiv.firstChild) {
+      userColorDiv.removeChild(userColorDiv.firstChild);
+    }
+  }
+}
+
+function createHighlight(userId, userColorDiv, line, sentences) {
+  clearArrow(userColorDiv);
+
+  //creates a highlight (TextMarker object) for the multi-sentence highlight range and uses the user's color
+  let highlight = FirepadCM.markText(
+    { line: line, ch: sentences['left'] },
+    { line: line, ch: sentences['right'] },
+    { css: 'background: ' + hexToRgb(userColors[userId]) });
+
+  //associates this highlight with the user it came from in our local dictionary to keep track
+  userHighlights[userId] = highlight;
+}
