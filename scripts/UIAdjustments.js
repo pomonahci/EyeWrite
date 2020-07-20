@@ -1,5 +1,4 @@
 var UIAdjustments = function () {
-
   firepadUserList.firebaseOff_(firebaseRef.child('users'), 'child_changed', firepadUserList['firebaseCallbacks_'][4]['callback']);
 
   var logo = document.getElementsByClassName('powered-by-firepad')[0];
@@ -43,8 +42,7 @@ var UIAdjustments = function () {
         save: true
       }
     }
-  })
-  );
+  }));
 
   document.getElementById('user-checkboxes-container').style.top = (colorPicker.offsetHeight + colorPicker.offsetTop + 10) + 'px';
 
@@ -52,5 +50,4 @@ var UIAdjustments = function () {
     userlistBox: userlistBox,
     pickr: pickr
   }
-
 }();

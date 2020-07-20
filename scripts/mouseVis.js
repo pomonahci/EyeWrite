@@ -1,6 +1,5 @@
 var mouseVis = function () {
-
-  //reference for our firepad"s instance of codemirror
+  //reference for our firepad's instance of codemirror
   var FirepadCM;
   //dictionary for user colors
   var userColors = {};
@@ -15,6 +14,12 @@ var mouseVis = function () {
 
   //reference to firebase user mouse positions
   var mousePosRef = firebaseRef.child("mice");
+
+  //when this user closes their window, removes them from the database and removes their mouse
+  window.addEventListener("beforeunload", function () {
+    mousePosRef.child(userId).remove();
+    firebaseRef.child("users").child(userId).remove();
+  });
 
   firepad.on("ready", function () {
     if (firepad.isHistoryEmpty()) {
@@ -63,8 +68,8 @@ var mouseVis = function () {
     //we grab the codemirror instance from firepad now that firepad is ready
     FirepadCM = firepad.editorAdapter_.cm;
 
-    cmScrollTop = FirepadCM.coordsChar({ left: 0, top: 0 }, "local");
-    cmScrollBottom = FirepadCM.coordsChar({ left: 0, top: FirepadCM.getScrollInfo().clientHeight }, "local");
+    cmScrollTop = FirepadCM.coordsChar({ left: 0, top: FirepadCM.getScrollInfo().top }, "local");
+    cmScrollBottom = FirepadCM.coordsChar({ left: 0, top: FirepadCM.getScrollInfo().top + FirepadCM.getScrollInfo().clientHeight }, "local");
 
     FirepadCM.on("scroll", function () {
       cmScrollTop = FirepadCM.coordsChar({ left: 0, top: FirepadCM.getScrollInfo().top }, "local");
@@ -148,13 +153,7 @@ var mouseVis = function () {
     });
 
     //Firebase listener for mouse values, this callback is responsible for visualizing all users
-    firebaseRef.child("mice").on("child_changed", visualize);
-
-    //when this user closes their window, removes them from the database and removes their mouse
-    window.onbeforeunload = async function () {
-      await firebaseRef.child("mice").child(userId).remove();
-      await firebaseRef.child("users").child(userId).remove();
-    }
+    mousePosRef.on("child_changed", visualize);
 
     //taret element to track mouse movements
     var textEl = document.getElementById("firepad");
@@ -168,7 +167,7 @@ var mouseVis = function () {
 
     textEl.addEventListener("mouseleave", function () {
       //send nulls to firebase to signal the user is off target but has not closed the window
-      firebaseRef.child("mice").child(userId).update({ line: null, ch: null });
+      mousePosRef.child(userId).update({ line: null, ch: null });
     });
 
     UIAdjustments.pickr.on("save", (color) => {
@@ -307,8 +306,8 @@ var mouseVis = function () {
       arrow.appendChild(arrowStem);
 
       arrow.onclick = function () {
-        FirepadCM.on("viewportChange", function mark() {
-          FirepadCM.off("viewportChange", mark);
+        FirepadCM.on("refresh", function mark() {
+          FirepadCM.off("refresh", mark);
           createHighlight(userId, userColorDiv, line, sentences);
         });
         FirepadCM.scrollIntoView({ line: line, ch: sentences["left"] });
@@ -320,8 +319,8 @@ var mouseVis = function () {
       createUpArrow(userId, userColorDiv, line, sentences);
     } else {
       userColorDiv.firstChild.onclick = function () {
-        FirepadCM.on("viewportChange", function mark() {
-          FirepadCM.off("viewportChange", mark);
+        FirepadCM.on("refresh", function mark() {
+          FirepadCM.off("refresh", mark);
           createHighlight(userId, userColorDiv, line, sentences);
         });
         FirepadCM.scrollIntoView({ line: line, ch: sentences["left"] });
@@ -343,11 +342,11 @@ var mouseVis = function () {
       arrow.appendChild(arrowTip);
 
       arrow.onclick = function () {
-        FirepadCM.on("viewportChange", function mark() {
-          FirepadCM.off("viewportChange", mark);
+        FirepadCM.on("refresh", function mark() {
+          FirepadCM.off("refresh", mark);
           createHighlight(userId, userColorDiv, line, sentences);
         });
-        FirepadCM.scrollIntoView({ line: line, ch: sentences["left"] });
+        FirepadCM.scrollIntoView({ line: line, ch: sentences["right"] });
         FirepadCM.refresh();
       }
       userColorDiv.appendChild(arrow);
@@ -357,11 +356,11 @@ var mouseVis = function () {
       createDownArrow(userId, userColorDiv, line, sentences);
     } else {
       userColorDiv.firstChild.onclick = function () {
-        FirepadCM.on("viewportChange", function mark() {
-          FirepadCM.off("viewportChange", mark);
+        FirepadCM.on("refresh", function mark() {
+          FirepadCM.off("refresh", mark);
           createHighlight(userId, userColorDiv, line, sentences);
         });
-        FirepadCM.scrollIntoView({ line: line, ch: sentences["left"] });
+        FirepadCM.scrollIntoView({ line: line, ch: sentences["right"] });
         FirepadCM.refresh();
       }
     }
@@ -387,5 +386,5 @@ var mouseVis = function () {
     //associates this highlight with the user it came from in our local dictionary to keep track
     userHighlights[userId] = highlight;
   }
-
 }();
+
