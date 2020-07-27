@@ -33,6 +33,6 @@
     "request": "^2.88.2",
     "socket.io": "^2.3.0",
     "socket.io-stream": "^0.9.1",
-    "webgazer": "pomonahci/WebGazer#master"
+    "webgazer": "brownhci/WebGazer#master"
   }
 }

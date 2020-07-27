@@ -155,19 +155,69 @@ var mouseVis = function () {
     //Firebase listener for mouse values, this callback is responsible for visualizing all users
     mousePosRef.on("child_changed", visualize);
 
-    //taret element to track mouse movements
-    var textEl = document.getElementById("firepad");
+    webgazer.setGazeListener(function (data, elapsedTime) {
+      if (data == null) {
+        return;
+      }
 
-    //Mouse Event Listeners
-    textEl.addEventListener("mousemove", function (event) {
-      //transforms mouse coordinates to codemirror document position
-      var mouse = FirepadCM.coordsChar({ left: event.clientX, top: event.clientY }, "window");
+      var mouse = FirepadCM.coordsChar({ left: data.x, top: data.y }, "window");
       mousePosRef.child(userId).update({ line: mouse.line, ch: mouse.ch });
+
+    }).begin();
+
+    webgazer.showVideo(false);
+    webgazer.showFaceOverlay(false);
+    webgazer.showFaceFeedbackBox(false);
+    webgazer.showPredictionPoints(false);
+
+
+    var mouseRadioInput = document.getElementById("mouseRadio");
+
+    mouseRadioInput.addEventListener("change", function () {
+      if (mouseRadioInput.checked) {
+        webgazer.pause();
+
+        //taret element to track mouse movements
+        var textEl = document.getElementById("firepad");
+
+        //Mouse Event Listeners
+        textEl.addEventListener("mousemove", function (event) {
+          //transforms mouse coordinates to codemirror document position
+          var mouse = FirepadCM.coordsChar({ left: event.clientX, top: event.clientY }, "window");
+          mousePosRef.child(userId).update({ line: mouse.line, ch: mouse.ch });
+        });
+
+        textEl.addEventListener("mouseleave", function () {
+          //send nulls to firebase to signal the user is off target but has not closed the window
+          mousePosRef.child(userId).update({ line: null, ch: null });
+        });
+      }
     });
 
-    textEl.addEventListener("mouseleave", function () {
-      //send nulls to firebase to signal the user is off target but has not closed the window
-      mousePosRef.child(userId).update({ line: null, ch: null });
+    var gazeRadioInput = document.getElementById("gazeRadio");
+
+    gazeRadioInput.addEventListener("change", function () {
+      if (gazeRadioInput.checked) {
+        
+        webgazer.setGazeListener(function (data, elapsedTime) {
+          if (data == null) {
+            return;
+          }
+          var mouse = FirepadCM.coordsChar({ left: data.x, top: data.y }, "window");
+          mousePosRef.child(userId).update({ line: mouse.line, ch: mouse.ch });
+        }).resume();
+
+        var textEl = document.getElementById("firepad");
+
+        textEl.removeEventListener("mousemove", function (event) {
+          var mouse = FirepadCM.coordsChar({ left: event.clientX, top: event.clientY }, "window");
+          mousePosRef.child(userId).update({ line: mouse.line, ch: mouse.ch });
+        });
+
+        textEl.removeEventListener("mouseleave", function () {
+          mousePosRef.child(userId).update({ line: null, ch: null });
+        });
+      }
     });
 
     UIAdjustments.pickr.on("save", (color) => {
