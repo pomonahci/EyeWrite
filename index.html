@@ -3,204 +3,35 @@
 <html>
 
 <head>
-  <meta charset='utf-8' />
-  <!-- Firebase -->
-  <script src='https://www.gstatic.com/firebasejs/7.6.2/firebase.js'></script>
-  <script src='https://www.gstatic.com/firebasejs/7.6.2/firebase-auth.js'></script>
-  <script src='https://www.gstatic.com/firebasejs/7.6.2/firebase-database.js'></script>
-
-  <!-- CodeMirror -->
-  <script src='./node_modules/codemirror/lib/codemirror.js'></script>
-  <link rel='stylesheet' href='./node_modules/codemirror/lib/codemirror.css' />
-  <script src='./node_modules/codemirror/mode/javascript/javascript.js'></script>
-
-  <!-- Firepad -->
-  <link rel='stylesheet' href='https://firepad.io/releases/v1.5.10/firepad.css' />
-  <script src='https://firepad.io/releases/v1.5.10/firepad.js'></script>
-
-  <!-- Firepad Userlist -->
-  <script src='./scripts/firepad-userlist.js'></script>
-  <link rel='stylesheet' href='./css/firepad-userlist.css' />
-
-  <!-- WebGazer -->
-  <script type='text/javascript' src='./node_modules/webgazer/www/webgazer.js'></script>
-
-  <!-- Include Twitter Bootstrap and jQuery: -->
-  <link rel='stylesheet' href='./node_modules/bootstrap-multiselect/docs/css/bootstrap-3.3.2.min.css' type='text/css' />
-  <script type='text/javascript' src='./node_modules/bootstrap-multiselect/docs/js/jquery-2.1.3.min.js'></script>
-  <script type='text/javascript' src='./node_modules/bootstrap-multiselect/docs/js/bootstrap-3.3.2.min.js'></script>
-
-  <!-- Include the plugin's CSS and JS: -->
-  <script type='text/javascript' src='./node_modules/bootstrap-multiselect/dist/js/bootstrap-multiselect.js'></script>
-  <link rel='stylesheet' href='./node_modules/bootstrap-multiselect/dist/css/bootstrap-multiselect.css'
-    type='text/css' />
-
-  <!-- 'nano' theme -->
-  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css' />
-
-  <!-- Modern or es5 bundle -->
-  <script src='https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js'></script>
-
-
-  <style>
-    html {
-      height: 100%;
-    }
-
-    body {
-      margin: 0;
-      height: 100%;
-    }
-
-    /* Height / width / positioning can be customized for your use case.
-       For demo purposes, we make the user list 175px and firepad fill the rest of the page. */
-    #userlist {
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      height: auto;
-      width: 175px;
-    }
-
-    .userlist-box {
-      height: 200px;
-      border-radius: 4px;
-    }
-
-    #firepad {
-      position: absolute;
-      left: 175px;
-      top: 0;
-      bottom: 0;
-      right: 0;
-      height: auto;
-    }
-
-    .user-checkboxes-container-position {
-      position: absolute;
-      float: left;
-      margin-left: 10px;
-    }
-
-    .colorpicker-button-position {
-      position: absolute;
-      float: left;
-      margin-left: 10px;
-    }
-
-    .colorpicker-button {
-      color: #333333;
-      background-color: #FFFFFF;
-      padding: 6px 20px;
-      border-radius: 4px;
-      border: 1px solid #CCCCCC;
-    }
-
-    .colorpicker-button:hover {
-      border: 1px solid #ADADAD;
-      background-color: #E6E6E6;
-    }
-
-    .arrow-up {
-      width: 0;
-      height: 0;
-      border-left: 15px solid transparent;
-      border-right: 15px solid transparent;
-      border-bottom: 15px solid #FFFFFF;
-    }
-
-    .arrow-down {
-      width: 0;
-      height: 0;
-      border-left: 15px solid transparent;
-      border-right: 15px solid transparent;
-      border-top: 15px solid #FFFFFF;
-    }
-
-    .arrow-stem {
-      width: 10px;
-      height: 15px;
-      background: #FFFFFF;
-      margin-left: 10px;
-    }
-
-    .radio-buttons{
-      position: relative;
-      top: 400px;
-      left: 20px;
-    }
-  </style>
+  <title>Welcome to EyeWrite!</title>
 </head>
 
 <body>
-  <div id='userlist'></div>
-  <div id='firepad'></div>
-  <div id='user-checkboxes-container' class='user-checkboxes-container-position'></div>
-  <select id='user-checkboxes' multiple='multiple'></select>
-  <div id='colorpicker' class='colorpicker-button-position'></div>
-  
-  <div class="radio-buttons">
-    <input type="radio" id="mouseRadio" name="visualizationChoice" value="mouse">
-    <label for="mouse">Mouse</label>
+  <p>Welcome to EyeWrite!</p>
+  <A HREF="./eyewrite.html">Create New Pad</A>
+  <br>
+  <br>
 
-    <input type="radio" id="gazeRadio" name="visualizationChoice" value="gaze" checked>
-    <label for="gaze">Gaze</label>
-  </div>
+
+  <input type="text" id="textInput" placeholder="existing link">
+  <br>
+  <A id="existing">Join Existing Pad</A>
+
+
+  <button onclick="send()">Enter</button>
 
   <script>
-    var firebaseConfig = {
-      apiKey: 'AIzaSyBqy0PMzUcdYTh-MaKCXCR1GZGQrhlUs2s',
-      authDomain: 'neweyewrite.firebaseapp.com',
-      databaseURL: 'https://neweyewrite.firebaseio.com',
-      projectId: 'neweyewrite',
-      storageBucket: 'neweyewrite.appspot.com',
-      messagingSenderId: '555020691162',
-      appId: '1:555020691162:web:62d17e309001bca73a27e3',
-      measurementId: 'G-5NDK60WNMF'
-    };
+    function send() {
+      var text = document.getElementById("textInput");
 
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    firebase.analytics();
+      var existing = document.getElementById("existing");
+      existing.href = text.value;
 
-    //// Get Firebase Database reference.
-    var firebaseRef = getExampleRef();
-
-    //// Create CodeMirror (with lineWrapping on).
-    var codeMirror = CodeMirror(document.getElementById('firepad'), {
-      lineWrapping: true, inputStyle: 'contenteditable', historyEventDelay: 2500,
-      autofocus: true, workTime: 5, workDelay: 5, pollInterval: 5, viewportMargin: 2
-    });
-
-    // Create a random ID to use as our user ID (we must give this to firepad and FirepadUserList).
-    var userId = Math.floor(Math.random() * 9999999999).toString();
-
-    //// Create Firepad (with rich text features and our desired userId).
-    var firepad = Firepad.fromCodeMirror(firebaseRef, codeMirror,
-      { richTextToolbar: true, richTextShortcuts: true, userId: userId });
-
-    //// Create FirepadUserList (with our desired userId).
-    var firepadUserList = FirepadUserList.fromDiv(firebaseRef.child('users'),
-      document.getElementById('userlist'), userId);
-
-    // Helper to get hash from end of URL or generate a random one.
-    function getExampleRef() {
-      var ref = firebase.database().ref();
-      var hash = window.location.hash.replace(/#/g, '');
-      if (hash) {
-        ref = ref.child(hash);
-      } else {
-        ref = ref.push(); // generate unique location.
-        window.location = window.location + '#' + ref.key; // add it as a hash to the URL.
-      }
-      return ref;
     }
   </script>
+
 </body>
 
-<script src='./scripts/UIAdjustments.js'></script>
-<!-- Mouse Visualization Script -->
-<script src='./scripts/mouseVis.js'></script>
+
 
 </html>

@@ -290,6 +290,8 @@ var mouseVis = function () {
     //the index found using the function isToken which checks if each element is the given token
     let index = lineTokens.findIndex(isToken);
 
+    var slider = document.getElementById("sentenceSlider");
+
     if (index != -1) {
 
       //left and right bumpers for finding periods and determining the highlight range
@@ -297,8 +299,8 @@ var mouseVis = function () {
       let rightBump = index;
 
       //counters for the number of periods allowed on the left of the word and on the right of the word
-      let leftPeriodCount = 2;
-      let rightPeriodCount = 2;
+      let leftPeriodCount = slider.value;
+      let rightPeriodCount = slider.value;
 
       //loop until period conditions are satisfied
       while (true) {

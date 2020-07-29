@@ -20,8 +20,11 @@ var server = dgram.createSocket('udp4');
 var gazeLog = fs.createWriteStream("./userGazeLog.txt");
 
 app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname, './index.html'));
+  console.log(__dirname);
+  res.sendFile(path.join(__dirname, "./index.html"));
 });
+
+
 
 // gazeLog.write(JSON.stringify(req.body));
 // gazeLog.write("\n");
