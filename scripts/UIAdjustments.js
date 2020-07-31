@@ -38,7 +38,7 @@ var UIAdjustments = function () {
         rgba: false,
         hsva: false,
         input: false,
-        clear: true,
+        clear: false,
         save: true
       }
     }

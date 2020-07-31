@@ -12,12 +12,14 @@ var mouseVis = function () {
   var cmScrollTop;
   var cmScrollBottom;
 
-  //reference to firebase user mouse positions
+  //reference to firebase user mouse and gaze positions
   var mousePosRef = firebaseRef.child("mice");
+  var gazePosRef = firebaseRef.child("gaze");
 
   //when this user closes their window, removes them from the database and removes their mouse
   window.addEventListener("beforeunload", function () {
     mousePosRef.child(userId).remove();
+    gazePosRef.child(userId).remove();
     firebaseRef.child("users").child(userId).remove();
   });
 
@@ -79,34 +81,36 @@ var mouseVis = function () {
     //Firebase listener for when users are added
     firebaseRef.child("users").on("child_added", function (snapshot) {
       //don't add this client to local dictionary because we don't visualize ourselves
-      if (snapshot.key != userId) {
+      // if (snapshot.key != userId) {
 
-        usersChecked[snapshot.key] = false;
-        userColors[snapshot.key] = snapshot.child("color").val();
+      usersChecked[snapshot.key] = true;
+      userColors[snapshot.key] = snapshot.child("color").val();
 
-        //if the name attribute in firebase hasn't already loaded (it takes a sec)
-        if (snapshot.child("name").val() != null) {
-          $("#user-checkboxes").append("<option value=" + snapshot.key + ">" + snapshot.child("name").val() + "</option>");
-          $("#user-checkboxes").multiselect("rebuild");
+      //if the name attribute in firebase hasn't already loaded (it takes a sec)
+      if (snapshot.child("name").val() != null) {
+        $("#user-checkboxes").append("<option value=" + snapshot.key + ">" + snapshot.child("name").val() + "</option>");
+        $("#user-checkboxes").multiselect("rebuild");
+        $("#user-checkboxes").multiselect("select", snapshot.key);
 
-        } else {
-          //place holder to display userId when the name is not ready
-          $("#user-checkboxes").append("<option value=" + snapshot.key + ">" + snapshot.key + "</option>");
-          $("#user-checkboxes").multiselect("rebuild");
+      } else {
+        //place holder to display userId when the name is not ready
+        $("#user-checkboxes").append("<option value=" + snapshot.key + ">" + snapshot.key + "</option>");
+        $("#user-checkboxes").multiselect("rebuild");
+        $("#user-checkboxes").multiselect("select", snapshot.key);
 
-          //listen for when the name attribute is ready
-          firebaseRef.child("users").child(snapshot.key).on("value", function (snapshot) {
-            if (snapshot.child("name").val()) {
-              //update the place holder entry
-              $("option[value=" + snapshot.key + "]", $("#user-checkboxes"))[0].label = snapshot.child("name").val();
-              $("#user-checkboxes").multiselect("rebuild");
+        //listen for when the name attribute is ready
+        firebaseRef.child("users").child(snapshot.key).on("value", function (snapshot) {
+          if (snapshot.child("name").val()) {
+            //update the place holder entry
+            $("option[value=" + snapshot.key + "]", $("#user-checkboxes"))[0].label = snapshot.child("name").val();
+            $("#user-checkboxes").multiselect("rebuild");
 
-              //remove the listener
-              firebaseRef.child("users").child(snapshot.key).off("value");
-            }
-          });
-        }
+            //remove the listener
+            firebaseRef.child("users").child(snapshot.key).off("value");
+          }
+        });
       }
+      // }
     });
 
     //Firebase listener for when usernames are changed
@@ -129,7 +133,19 @@ var mouseVis = function () {
           var userColorDiv = userDiv.getElementsByClassName("firepad-userlist-color-indicator")[0];
           userColorDiv.style.backgroundColor = snapshot.child("color").val();
         }
+      } else {
+
+        if (userColors[snapshot.key] && userColors[snapshot.key] != snapshot.child("color").val()) {
+          userColors[snapshot.key] = snapshot.child("color").val();
+        }
+        if (snapshot.child("name").val()) {
+          //update username in checkbox list
+          $("option[value=" + snapshot.key + "]", $("#user-checkboxes"))[0].label = snapshot.child("name").val();
+          $("#user-checkboxes").multiselect("rebuild");
+        }
+
       }
+
     });
 
     //Firebase listener for when users are removed
@@ -153,15 +169,15 @@ var mouseVis = function () {
     });
 
     //Firebase listener for mouse values, this callback is responsible for visualizing all users
-    mousePosRef.on("child_changed", visualize);
+    gazePosRef.on("child_changed", visualize);
 
     webgazer.setGazeListener(function (data, elapsedTime) {
       if (data == null) {
         return;
       }
 
-      var mouse = FirepadCM.coordsChar({ left: data.x, top: data.y }, "window");
-      mousePosRef.child(userId).update({ line: mouse.line, ch: mouse.ch });
+      var gaze = FirepadCM.coordsChar({ left: data.x, top: data.y }, "window");
+      gazePosRef.child(userId).update({ line: gaze.line, ch: gaze.ch });
 
     }).begin();
 
@@ -171,61 +187,79 @@ var mouseVis = function () {
     webgazer.showPredictionPoints(false);
 
 
+    //taret element to track mouse movements
+    var textEl = document.getElementById("firepad");
+
+    //Mouse Event Listeners
+    textEl.addEventListener("mousemove", mouseMove);
+
+    textEl.addEventListener("mouseleave", mouseLeave);
+
+    var transmitRadioInput = document.getElementById("transmit");
+    var noTransmitRadioInput = document.getElementById("noTransmit");
+
     var mouseRadioInput = document.getElementById("mouseRadio");
+    var gazeRadioInput = document.getElementById("gazeRadio");
+
 
     mouseRadioInput.addEventListener("change", function () {
       if (mouseRadioInput.checked) {
-        webgazer.pause();
+        gazePosRef.off("child_changed", visualize);
 
-        //taret element to track mouse movements
-        var textEl = document.getElementById("firepad");
-
-        //Mouse Event Listeners
-        textEl.addEventListener("mousemove", function (event) {
-          //transforms mouse coordinates to codemirror document position
-          var mouse = FirepadCM.coordsChar({ left: event.clientX, top: event.clientY }, "window");
-          mousePosRef.child(userId).update({ line: mouse.line, ch: mouse.ch });
-        });
-
-        textEl.addEventListener("mouseleave", function () {
-          //send nulls to firebase to signal the user is off target but has not closed the window
-          mousePosRef.child(userId).update({ line: null, ch: null });
-        });
+        mousePosRef.on("child_changed", visualize);
       }
     });
-
-    var gazeRadioInput = document.getElementById("gazeRadio");
 
     gazeRadioInput.addEventListener("change", function () {
       if (gazeRadioInput.checked) {
-        
-        webgazer.setGazeListener(function (data, elapsedTime) {
-          if (data == null) {
-            return;
-          }
-          var mouse = FirepadCM.coordsChar({ left: data.x, top: data.y }, "window");
-          mousePosRef.child(userId).update({ line: mouse.line, ch: mouse.ch });
-        }).resume();
+        mousePosRef.off("child_changed", visualize);
 
-        var textEl = document.getElementById("firepad");
-
-        textEl.removeEventListener("mousemove", function (event) {
-          var mouse = FirepadCM.coordsChar({ left: event.clientX, top: event.clientY }, "window");
-          mousePosRef.child(userId).update({ line: mouse.line, ch: mouse.ch });
-        });
-
-        textEl.removeEventListener("mouseleave", function () {
-          mousePosRef.child(userId).update({ line: null, ch: null });
-        });
+        gazePosRef.on("child_changed", visualize);
       }
     });
+
+
+
+    transmitRadioInput.addEventListener("change", function () {
+      if (transmitRadioInput.checked) {
+        textEl.addEventListener("mousemove", mouseMove);
+        textEl.addEventListener("mouseleave", mouseLeave);
+        webgazer.resume();
+
+      }
+    });
+
+    noTransmitRadioInput.addEventListener("change", function () {
+      if (noTransmitRadioInput.checked) {
+        textEl.removeEventListener("mousemove", mouseMove);
+        textEl.removeEventListener("mouseleave", mouseLeave);
+        webgazer.pause();
+        mousePosRef.child(userId).update(null);
+        gazePosRef.child(userId).update(null);
+      }
+    });
+
+
 
     UIAdjustments.pickr.on("save", (color) => {
       if (color) {
         firepad.firebaseAdapter_.setColor(color.toHEXA().toString());
       }
+
+      UIAdjustments.pickr.hide();
     });
   });
+
+  function mouseMove(event) {
+    //transforms mouse coordinates to codemirror document position
+    var mouse = FirepadCM.coordsChar({ left: event.clientX, top: event.clientY }, "window");
+    mousePosRef.child(userId).update({ line: mouse.line, ch: mouse.ch });
+  }
+
+  function mouseLeave() {
+    //send nulls to firebase to signal the user is off target but has not closed the window
+    mousePosRef.child(userId).update({ line: null, ch: null });
+  }
 
   //callback function for visualization
   function visualize(childSnapshot) {
