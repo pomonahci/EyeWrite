@@ -80,26 +80,15 @@
     .user-checkboxes-container-position {
       position: absolute;
       float: left;
-      margin-left: 10px;
-    }
-
-    .colorpicker-button-position {
-      position: absolute;
-      float: left;
-      margin-left: 10px;
+      left: 10px;
     }
 
     .colorpicker-button {
-      color: #333333;
-      background-color: #FFFFFF;
-      padding: 6px 20px;
-      border-radius: 4px;
-      border: 1px solid #CCCCCC;
-    }
-
-    .colorpicker-button:hover {
-      border: 1px solid #ADADAD;
-      background-color: #E6E6E6;
+      background-color: transparent;
+      width: 30px;
+      height: 30px;
+      border: none;
+      outline: none;
     }
 
     .arrow-up {
@@ -127,24 +116,19 @@
 
     .mouse-gaze-buttons {
       position: relative;
-      top: 400px;
       left: 20px;
     }
 
     .transmit-toggle-buttons {
       position: relative;
-      top: 300px;
       left: 20px;
-      width: 100px;
     }
 
     .slider-container {
       position: relative;
-      top: 400px;
-      left: 30px;
+      left: 20px;
       width: 130px;
     }
-
   </style>
 </head>
 
@@ -153,26 +137,29 @@
   <div id='firepad'></div>
   <div id='user-checkboxes-container' class='user-checkboxes-container-position'></div>
   <select id='user-checkboxes' multiple='multiple'></select>
-  <div id='colorpicker' class='colorpicker-button-position'></div>
 
-  <div class="mouse-gaze-buttons">
-    <input type="radio" id="mouseRadio" name="visualizationChoice" value="mouse">
-    <label for="mouse">Mouse</label>
-
-    <input type="radio" id="gazeRadio" name="visualizationChoice" value="gaze" checked>
-    <label for="gaze">Gaze</label>
-  </div>
+  <div id='colorpicker'></div>
 
   <div class="transmit-toggle-buttons">
+    <p>Data:</p>
     <input type="radio" id="transmit" name="transmitChoice" value="yes" checked>
-    <label for="yes">Send Data</label>
+    <label for="yes">Send</label>
 
     <input type="radio" id="noTransmit" name="transmitChoice" value="no">
-    <label for="no">Block Data</label>
+    <label for="no">Block</label>
+  </div>
+
+  <div class="mouse-gaze-buttons">
+    <p>Visualize:</p>
+    <input type="radio" id="gazeRadio" name="visualizationChoice" value="gaze" checked>
+    <label for="gaze">Gaze</label>
+
+    <input type="radio" id="mouseRadio" name="visualizationChoice" value="mouse">
+    <label for="mouse">Mouse</label>
   </div>
 
   <div class="slider-container">
-    <p>Number of sentences to highlight: <span id="numSentences"></span></p>
+    <p>Highlight Size: <span id="numSentences"></span></p>
     <input type="range" min="2" max="6" value="2" class="slider" id="sentenceSlider">
   </div>
 

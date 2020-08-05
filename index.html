@@ -4,28 +4,31 @@
 
 <head>
   <title>Welcome to EyeWrite!</title>
+
+  <style>
+    .serif {
+      font-family: Georgia, serif;
+      font-size: 40px;
+      font-weight: 200;
+      text-align: center;
+    }
+  </style>
 </head>
 
 <body>
-  <p>Welcome to EyeWrite!</p>
+  <p class="serif">Welcome to EyeWrite!</p>
 
-  <br>
-  <br>
-  <A href="./node_modules/webgazer/www/calibration.html">Calibrate!</A>
-  <br>
-  <br>
+  <input type="button" style="margin-left: 530px;"  onclick="location.href='./node_modules/webgazer/www/calibration.html';" value="Calibrate">
 
 
-  <A HREF="./eyewrite.html">Create New Pad</A>
+  <input type="button" onclick="location.href='./eyewrite.html';" value="Create New Pad">
   <br>
   <br>
 
 
-  <input type="text" id="textInput" placeholder="existing link">
+  <A id="existing" style="margin-left: 570px;">Join Existing Pad</A>
   <br>
-  <A id="existing">Join Existing Pad</A>
-
-
+  <input type="text" style="margin-left: 530px;" id="textInput" placeholder="existing link">
   <button onclick="send()">Enter</button>
 
   <script>

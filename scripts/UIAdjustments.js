@@ -13,14 +13,29 @@ var UIAdjustments = function () {
   userlist.style.height = (userlistBox.offsetHeight + userlistBox.offsetTop - userlist.offsetTop) + 'px';;
   userlist.style.overflowY = 'scroll';
 
+
+  var thisUserColorIndicator = document.getElementsByClassName("firepad-user-" + userId)[0];
+
   var el = document.createElement('button');
   el.className = 'colorpicker-button';
-  el.innerText = 'Change Color';
-  el.style.width = (userlistBox.offsetWidth - 20) + 'px';
 
+  var colorWheelPic = document.createElement('img');
+  colorWheelPic.src = 'colorwheel.png';
+  colorWheelPic.style.position = "relative";
+  colorWheelPic.style.left = "-5px";
+  
+  colorWheelPic.style.height = "30px";
+  colorWheelPic.style.width = "30px";
+  
+  
+  el.appendChild(colorWheelPic);
+  
   var colorPicker = document.getElementById('colorpicker');
-  colorPicker.style.top = (userlistBox.offsetHeight + userlistBox.offsetTop + 15) + 'px';
+  colorPicker.style.position = "absolute";
+  colorPicker.style.top = 0 + "px";
+  
   colorPicker.appendChild(el);
+  thisUserColorIndicator.appendChild(colorPicker);
 
   const pickr = new Pickr(Object.assign({
     el,
@@ -44,7 +59,17 @@ var UIAdjustments = function () {
     }
   }));
 
-  document.getElementById('user-checkboxes-container').style.top = (colorPicker.offsetHeight + colorPicker.offsetTop + 10) + 'px';
+  var userCheckboxesContainer = document.getElementById('user-checkboxes-container');
+  userCheckboxesContainer.style.top = (userlistBox.offsetTop + userlistBox.offsetHeight + 10) + "px";
+
+  var transmitToggleButtons = document.getElementsByClassName('transmit-toggle-buttons')[0];
+  transmitToggleButtons.style.top = (userCheckboxesContainer.offsetTop + userCheckboxesContainer.offsetHeight + 60) + "px";
+
+  var mouseGazeButtons = document.getElementsByClassName('mouse-gaze-buttons')[0];
+  mouseGazeButtons.style.top = (userCheckboxesContainer.offsetTop + userCheckboxesContainer.offsetHeight + 80)+ "px";
+
+  var sliderContainer = document.getElementsByClassName('slider-container')[0];
+  sliderContainer.style.top = (userCheckboxesContainer.offsetTop + userCheckboxesContainer.offsetHeight + 100)+ "px";
 
   return {
     userlistBox: userlistBox,

@@ -80,23 +80,29 @@ var mouseVis = function () {
 
     //Firebase listener for when users are added
     firebaseRef.child("users").on("child_added", function (snapshot) {
-      //don't add this client to local dictionary because we don't visualize ourselves
-      // if (snapshot.key != userId) {
 
-      usersChecked[snapshot.key] = true;
       userColors[snapshot.key] = snapshot.child("color").val();
 
       //if the name attribute in firebase hasn't already loaded (it takes a sec)
       if (snapshot.child("name").val() != null) {
         $("#user-checkboxes").append("<option value=" + snapshot.key + ">" + snapshot.child("name").val() + "</option>");
         $("#user-checkboxes").multiselect("rebuild");
-        $("#user-checkboxes").multiselect("select", snapshot.key);
-
+        if (snapshot.key != userId) {
+          $("#user-checkboxes").multiselect("select", snapshot.key);
+          usersChecked[snapshot.key] = true;
+        } else {
+          usersChecked[snapshot.key] = false;
+        }
       } else {
         //place holder to display userId when the name is not ready
         $("#user-checkboxes").append("<option value=" + snapshot.key + ">" + snapshot.key + "</option>");
         $("#user-checkboxes").multiselect("rebuild");
-        $("#user-checkboxes").multiselect("select", snapshot.key);
+        if (snapshot.key != userId) {
+          $("#user-checkboxes").multiselect("select", snapshot.key);
+          usersChecked[snapshot.key] = true;
+        } else {
+          usersChecked[snapshot.key] = false;
+        }
 
         //listen for when the name attribute is ready
         firebaseRef.child("users").child(snapshot.key).on("value", function (snapshot) {
@@ -110,7 +116,6 @@ var mouseVis = function () {
           }
         });
       }
-      // }
     });
 
     //Firebase listener for when usernames are changed
@@ -132,6 +137,8 @@ var mouseVis = function () {
           //update color in firepad userlist
           var userColorDiv = userDiv.getElementsByClassName("firepad-userlist-color-indicator")[0];
           userColorDiv.style.backgroundColor = snapshot.child("color").val();
+
+
         }
       } else {
 
@@ -143,9 +150,7 @@ var mouseVis = function () {
           $("option[value=" + snapshot.key + "]", $("#user-checkboxes"))[0].label = snapshot.child("name").val();
           $("#user-checkboxes").multiselect("rebuild");
         }
-
       }
-
     });
 
     //Firebase listener for when users are removed
@@ -171,21 +176,37 @@ var mouseVis = function () {
     //Firebase listener for mouse values, this callback is responsible for visualizing all users
     gazePosRef.on("child_changed", visualize);
 
+    // if(window.sessionStorage.calibrationData){
+    //   console.log(JSON.parse(window.sessionStorage.calibrationData));
+    //   webgazer.getRegression()[0].setData(JSON.parse(window.sessionStorage.calibrationData));
+    //   console.log(webgazer.getRegression()[0].getData());
+    // }
+
+    /*
+      NOTICE!
+      If you want to use an external eyetracker, you can plug in your
+      stream of (x,y) coordinates here. Use the two lines within
+      setGazeListener to transform (x,y) coordinates to Code Mirror
+      position, then send to Firebase. Make sure your (x,y)
+      coordinates are relative to the browser window top left corner.
+    */
+
+    window.saveDataAcrossSessions = true;
+
     webgazer.setGazeListener(function (data, elapsedTime) {
       if (data == null) {
         return;
       }
 
-      var gaze = FirepadCM.coordsChar({ left: data.x, top: data.y }, "window");
-      gazePosRef.child(userId).update({ line: gaze.line, ch: gaze.ch });
+      var gazePosition = FirepadCM.coordsChar({ left: data.x, top: data.y }, "window");
+      gazePosRef.child(userId).update({ line: gazePosition.line, ch: gazePosition.ch });
 
     }).begin();
 
     webgazer.showVideo(false);
     webgazer.showFaceOverlay(false);
     webgazer.showFaceFeedbackBox(false);
-    webgazer.showPredictionPoints(false);
-
+    webgazer.showPredictionPoints(true);
 
     //taret element to track mouse movements
     var textEl = document.getElementById("firepad");
@@ -218,14 +239,11 @@ var mouseVis = function () {
       }
     });
 
-
-
     transmitRadioInput.addEventListener("change", function () {
       if (transmitRadioInput.checked) {
         textEl.addEventListener("mousemove", mouseMove);
         textEl.addEventListener("mouseleave", mouseLeave);
         webgazer.resume();
-
       }
     });
 
@@ -234,8 +252,9 @@ var mouseVis = function () {
         textEl.removeEventListener("mousemove", mouseMove);
         textEl.removeEventListener("mouseleave", mouseLeave);
         webgazer.pause();
-        mousePosRef.child(userId).update(null);
-        gazePosRef.child(userId).update(null);
+        
+          mousePosRef.child(userId).update({ line: "block", ch: "block" });
+          gazePosRef.child(userId).update({ line: "block", ch: "block" });
       }
     });
 
@@ -263,16 +282,31 @@ var mouseVis = function () {
 
   //callback function for visualization
   function visualize(childSnapshot) {
-    let userId = childSnapshot.key;
 
-    if (usersChecked[userId]) {
+    console.log(childSnapshot.child("line").val());
+
+
+    if (childSnapshot.child("line").val() == "block") {
+      userHighlights[childSnapshot.key].clear();
+      usersChecked[childSnapshot.key] = false;
+      $("#user-checkboxes").multiselect("deselect", childSnapshot.key);
+      $("#user-checkboxes").multiselect("disable", childSnapshot.key);
+      console.log("disable");
+
+    } else {
+      $("#user-checkboxes").multiselect("enable", childSnapshot.key);
+      console.log("enable");
+    }
+
+
+    if (usersChecked[childSnapshot.key]) {
       //grabs position info
       let line = childSnapshot.child("line").val();
       let ch = childSnapshot.child("ch").val();
 
       //if there already exists a highlight for this user we clear it to make a new one
-      if (userHighlights[userId]) {
-        userHighlights[userId].clear();
+      if (userHighlights[childSnapshot.key]) {
+        userHighlights[childSnapshot.key].clear();
       }
 
       //incase we get passed nulls
@@ -289,17 +323,18 @@ var mouseVis = function () {
           sentences.right = vistToken.end;
         }
 
-        var userColorDiv = document.getElementsByClassName("firepad-user-" + userId)[0].getElementsByClassName("firepad-userlist-color-indicator")[0];
+        var userColorDiv = document.getElementsByClassName("firepad-user-" + childSnapshot.key)[0].getElementsByClassName("firepad-userlist-color-indicator")[0];
 
         if (isAboveView(line, cmScrollTop, sentences)) {
-          createUpArrow(userId, userColorDiv, line, sentences);
+          createUpArrow(childSnapshot.key, userColorDiv, line, sentences);
         } else if (isBelowView(line, cmScrollBottom, sentences)) {
-          createDownArrow(userId, userColorDiv, line, sentences);
+          createDownArrow(childSnapshot.key, userColorDiv, line, sentences);
         } else {
-          createHighlight(userId, userColorDiv, line, sentences);
+          createHighlight(childSnapshot.key, userColorDiv, line, sentences);
         }
       } else {
-        var userColorDiv = document.getElementsByClassName("firepad-user-" + userId)[0].getElementsByClassName("firepad-userlist-color-indicator")[0];
+        userHighlights[childSnapshot.key].clear();
+        var userColorDiv = document.getElementsByClassName("firepad-user-" + childSnapshot.key)[0].getElementsByClassName("firepad-userlist-color-indicator")[0];
         clearArrow(userColorDiv);
       }
     }
