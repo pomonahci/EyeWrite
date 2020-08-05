@@ -174,13 +174,7 @@ var mouseVis = function () {
     });
 
     //Firebase listener for mouse values, this callback is responsible for visualizing all users
-    gazePosRef.on("child_changed", visualize);
-
-    // if(window.sessionStorage.calibrationData){
-    //   console.log(JSON.parse(window.sessionStorage.calibrationData));
-    //   webgazer.getRegression()[0].setData(JSON.parse(window.sessionStorage.calibrationData));
-    //   console.log(webgazer.getRegression()[0].getData());
-    // }
+    gazePosRef.on("value", visualize);
 
     /*
       NOTICE!
@@ -198,8 +192,12 @@ var mouseVis = function () {
         return;
       }
 
-      var gazePosition = FirepadCM.coordsChar({ left: data.x, top: data.y }, "window");
-      gazePosRef.child(userId).update({ line: gazePosition.line, ch: gazePosition.ch });
+      if (window.blocked) {
+        gazePosRef.child(userId).update({ line: -1, ch: -1 });
+      } else {
+        var gazePosition = FirepadCM.coordsChar({ left: data.x, top: data.y }, "window");
+        gazePosRef.child(userId).update({ line: gazePosition.line, ch: gazePosition.ch });
+      }
 
     }).begin();
 
@@ -216,49 +214,38 @@ var mouseVis = function () {
 
     textEl.addEventListener("mouseleave", mouseLeave);
 
+    var mouseRadioInput = document.getElementById("mouseRadio");
+    var gazeRadioInput = document.getElementById("gazeRadio");
     var transmitRadioInput = document.getElementById("transmit");
     var noTransmitRadioInput = document.getElementById("noTransmit");
 
-    var mouseRadioInput = document.getElementById("mouseRadio");
-    var gazeRadioInput = document.getElementById("gazeRadio");
-
-
     mouseRadioInput.addEventListener("change", function () {
       if (mouseRadioInput.checked) {
-        gazePosRef.off("child_changed", visualize);
+        gazePosRef.off("value", visualize);
 
-        mousePosRef.on("child_changed", visualize);
+        mousePosRef.on("value", visualize);
       }
     });
 
     gazeRadioInput.addEventListener("change", function () {
       if (gazeRadioInput.checked) {
-        mousePosRef.off("child_changed", visualize);
+        mousePosRef.off("value", visualize);
 
-        gazePosRef.on("child_changed", visualize);
+        gazePosRef.on("value", visualize);
       }
     });
 
     transmitRadioInput.addEventListener("change", function () {
       if (transmitRadioInput.checked) {
-        textEl.addEventListener("mousemove", mouseMove);
-        textEl.addEventListener("mouseleave", mouseLeave);
-        webgazer.resume();
+        window.blocked = false;
       }
     });
 
     noTransmitRadioInput.addEventListener("change", function () {
       if (noTransmitRadioInput.checked) {
-        textEl.removeEventListener("mousemove", mouseMove);
-        textEl.removeEventListener("mouseleave", mouseLeave);
-        webgazer.pause();
-        
-          mousePosRef.child(userId).update({ line: "block", ch: "block" });
-          gazePosRef.child(userId).update({ line: "block", ch: "block" });
+        window.blocked = true;
       }
     });
-
-
 
     UIAdjustments.pickr.on("save", (color) => {
       if (color) {
@@ -271,8 +258,12 @@ var mouseVis = function () {
 
   function mouseMove(event) {
     //transforms mouse coordinates to codemirror document position
-    var mouse = FirepadCM.coordsChar({ left: event.clientX, top: event.clientY }, "window");
-    mousePosRef.child(userId).update({ line: mouse.line, ch: mouse.ch });
+    if (window.blocked) {
+      mousePosRef.child(userId).update({ line: -1, ch: -1 });
+    } else {
+      var mouse = FirepadCM.coordsChar({ left: event.clientX, top: event.clientY }, "window");
+      mousePosRef.child(userId).update({ line: mouse.line, ch: mouse.ch });
+    }
   }
 
   function mouseLeave() {
@@ -281,63 +272,61 @@ var mouseVis = function () {
   }
 
   //callback function for visualization
-  function visualize(childSnapshot) {
+  function visualize(snapshot) {
+    snapshot.forEach(function (childSnapshot) {
 
-    console.log(childSnapshot.child("line").val());
-
-
-    if (childSnapshot.child("line").val() == "block") {
-      userHighlights[childSnapshot.key].clear();
-      usersChecked[childSnapshot.key] = false;
-      $("#user-checkboxes").multiselect("deselect", childSnapshot.key);
-      $("#user-checkboxes").multiselect("disable", childSnapshot.key);
-      console.log("disable");
-
-    } else {
-      $("#user-checkboxes").multiselect("enable", childSnapshot.key);
-      console.log("enable");
-    }
-
-
-    if (usersChecked[childSnapshot.key]) {
-      //grabs position info
-      let line = childSnapshot.child("line").val();
-      let ch = childSnapshot.child("ch").val();
-
-      //if there already exists a highlight for this user we clear it to make a new one
-      if (userHighlights[childSnapshot.key]) {
-        userHighlights[childSnapshot.key].clear();
+      if(childSnapshot.child("line").val() == -1){
+        console.log(childSnapshot.child("line").val());
       }
 
-      //incase we get passed nulls
-      if (line != null && ch != null) {
-        //finds the word (token) in the codemirror editor nearest to the position given
-        let visToken = FirepadCM.getTokenAt({ line: line, ch: ch });
+      if (usersChecked[childSnapshot.key]) {
+        //grabs position info
+        let line = childSnapshot.child("line").val();
+        let ch = childSnapshot.child("ch").val();
 
-        //transforms the word into multi-sentence range
-        let sentences = wordToLine(visToken, line);
-
-        //default for if something goes wrong and sentences is null
-        if (!sentences) {
-          sentences.left = visToken.start;
-          sentences.right = vistToken.end;
+        //if there already exists a highlight for this user we clear it to make a new one
+        if (userHighlights[childSnapshot.key]) {
+          userHighlights[childSnapshot.key].clear();
         }
 
-        var userColorDiv = document.getElementsByClassName("firepad-user-" + childSnapshot.key)[0].getElementsByClassName("firepad-userlist-color-indicator")[0];
+        //incase we get passed nulls
+        if (line != null && ch != null) {
 
-        if (isAboveView(line, cmScrollTop, sentences)) {
-          createUpArrow(childSnapshot.key, userColorDiv, line, sentences);
-        } else if (isBelowView(line, cmScrollBottom, sentences)) {
-          createDownArrow(childSnapshot.key, userColorDiv, line, sentences);
+          if (line == -1 || ch == -1) {
+            userHighlights[childSnapshot.key].clear();
+            
+          } else {
+
+            //finds the word (token) in the codemirror editor nearest to the position given
+            let visToken = FirepadCM.getTokenAt({ line: line, ch: ch });
+
+            //transforms the word into multi-sentence range
+            let sentences = wordToLine(visToken, line);
+
+            //default for if something goes wrong and sentences is null
+            if (!sentences) {
+              sentences.left = visToken.start;
+              sentences.right = vistToken.end;
+            }
+
+            var userColorDiv = document.getElementsByClassName("firepad-user-" + childSnapshot.key)[0].getElementsByClassName("firepad-userlist-color-indicator")[0];
+
+            if (isAboveView(line, cmScrollTop, sentences)) {
+              createUpArrow(childSnapshot.key, userColorDiv, line, sentences);
+            } else if (isBelowView(line, cmScrollBottom, sentences)) {
+              createDownArrow(childSnapshot.key, userColorDiv, line, sentences);
+            } else {
+              createHighlight(childSnapshot.key, userColorDiv, line, sentences);
+            }
+          }
+
         } else {
-          createHighlight(childSnapshot.key, userColorDiv, line, sentences);
+          userHighlights[childSnapshot.key].clear();
+          var userColorDiv = document.getElementsByClassName("firepad-user-" + childSnapshot.key)[0].getElementsByClassName("firepad-userlist-color-indicator")[0];
+          clearArrow(userColorDiv);
         }
-      } else {
-        userHighlights[childSnapshot.key].clear();
-        var userColorDiv = document.getElementsByClassName("firepad-user-" + childSnapshot.key)[0].getElementsByClassName("firepad-userlist-color-indicator")[0];
-        clearArrow(userColorDiv);
       }
-    }
+    });
   }
 
   function hexToRgb(hex) {
