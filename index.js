@@ -17,17 +17,10 @@ app.use(express.static(__dirname));
 var dgram = require('dgram');
 var server = dgram.createSocket('udp4');
 
-var gazeLog = fs.createWriteStream("./userGazeLog.txt");
-
 app.get('/', function (req, res) {
   console.log(__dirname);
   res.sendFile(path.join(__dirname, "./index.html"));
 });
-
-
-
-// gazeLog.write(JSON.stringify(req.body));
-// gazeLog.write("\n");
 
 //run server
 http.listen(localPort, function () {

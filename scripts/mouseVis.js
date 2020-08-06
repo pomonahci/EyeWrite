@@ -23,55 +23,52 @@ var mouseVis = function () {
     firebaseRef.child("users").child(userId).remove();
   });
 
+  //initializes bootstrap-multiselect checkboxes
+  $("#user-checkboxes").multiselect({
+    includeSelectAllOption: true,
+    disableIfEmpty: true,
+    //for UI button positioning purposes
+    buttonContainer: $("#user-checkboxes-container"),
+    buttonText: function () {
+      return "Visualize Users";
+    },
+    //updates local dictionaries if a checked value changes
+    onChange: function (option, checked, select) {
+      usersChecked[option.val()] = checked;
+      if (userHighlights[option.val()]) {
+        userHighlights[option.val()].clear();
+      }
+    },
+    //separate callback for select all
+    onSelectAll: function () {
+      for (key in usersChecked) {
+        usersChecked[key] = true;
+        if (userHighlights[key]) {
+          userHighlights[key].clear();
+        }
+      }
+    },
+    //separate callback for deselect all
+    onDeselectAll: function () {
+      for (key in usersChecked) {
+        usersChecked[key] = false;
+        if (userHighlights[key]) {
+          userHighlights[key].clear();
+        }
+      }
+    }
+  });
+
   firepad.on("ready", function () {
     if (firepad.isHistoryEmpty()) {
       firepad.setText("Welcome to EyeWrite");
     }
 
-    //initializes bootstrap-multiselect checkboxes
-    $("#user-checkboxes").multiselect({
-      includeSelectAllOption: true,
-      disableIfEmpty: true,
-      //for UI button positioning purposes
-      buttonContainer: $("#user-checkboxes-container"),
-      buttonText: function () {
-        return "Visualize Users";
-      },
-      //updates local dictionaries if a checked value changes
-      onChange: function (option, checked, select) {
-        usersChecked[option.val()] = checked;
-        if (userHighlights[option.val()]) {
-          userHighlights[option.val()].clear();
-        }
-      },
-      //separate callback for select all
-      onSelectAll: function () {
-        for (key in usersChecked) {
-          usersChecked[key] = true;
-          if (userHighlights[key]) {
-            userHighlights[key].clear();
-          }
-        }
-      },
-      //separate callback for deselect all
-      onDeselectAll: function () {
-        for (key in usersChecked) {
-          usersChecked[key] = false;
-          if (userHighlights[key]) {
-            userHighlights[key].clear();
-          }
-        }
-      }
-    });
-
-    //to correctly assign button width dynamically
-    document.getElementById("user-checkboxes-container").getElementsByTagName("button")[0].style.width = (UIAdjustments.userlistBox.offsetWidth - 20) + "px";
-
     //we grab the codemirror instance from firepad now that firepad is ready
     FirepadCM = firepad.editorAdapter_.cm;
 
-    cmScrollTop = FirepadCM.coordsChar({ left: 0, top: FirepadCM.getScrollInfo().top }, "local");
-    cmScrollBottom = FirepadCM.coordsChar({ left: 0, top: FirepadCM.getScrollInfo().top + FirepadCM.getScrollInfo().clientHeight }, "local");
+    cmScrollTop = FirepadCM.coordsChar({ left: 0, top: 0 }, "local");
+    cmScrollBottom = FirepadCM.coordsChar({ left: 0, top: 500 }, "local"); //just an estimate for initial value
 
     FirepadCM.on("scroll", function () {
       cmScrollTop = FirepadCM.coordsChar({ left: 0, top: FirepadCM.getScrollInfo().top }, "local");
@@ -83,39 +80,27 @@ var mouseVis = function () {
 
       userColors[snapshot.key] = snapshot.child("color").val();
 
-      //if the name attribute in firebase hasn't already loaded (it takes a sec)
-      if (snapshot.child("name").val() != null) {
-        $("#user-checkboxes").append("<option value=" + snapshot.key + ">" + snapshot.child("name").val() + "</option>");
-        $("#user-checkboxes").multiselect("rebuild");
-        if (snapshot.key != userId) {
-          $("#user-checkboxes").multiselect("select", snapshot.key);
-          usersChecked[snapshot.key] = true;
-        } else {
-          usersChecked[snapshot.key] = false;
-        }
+      //place holder to display userId when the name is not ready
+      $("#user-checkboxes").append("<option value=" + snapshot.key + ">" + snapshot.key + "</option>");
+      $("#user-checkboxes").multiselect("rebuild");
+      if (snapshot.key != userId) {
+        $("#user-checkboxes").multiselect("select", snapshot.key);
+        usersChecked[snapshot.key] = true;
       } else {
-        //place holder to display userId when the name is not ready
-        $("#user-checkboxes").append("<option value=" + snapshot.key + ">" + snapshot.key + "</option>");
-        $("#user-checkboxes").multiselect("rebuild");
-        if (snapshot.key != userId) {
-          $("#user-checkboxes").multiselect("select", snapshot.key);
-          usersChecked[snapshot.key] = true;
-        } else {
-          usersChecked[snapshot.key] = false;
-        }
-
-        //listen for when the name attribute is ready
-        firebaseRef.child("users").child(snapshot.key).on("value", function (snapshot) {
-          if (snapshot.child("name").val()) {
-            //update the place holder entry
-            $("option[value=" + snapshot.key + "]", $("#user-checkboxes"))[0].label = snapshot.child("name").val();
-            $("#user-checkboxes").multiselect("rebuild");
-
-            //remove the listener
-            firebaseRef.child("users").child(snapshot.key).off("value");
-          }
-        });
+        usersChecked[snapshot.key] = false;
       }
+
+      //listen for when the name attribute is ready
+      firebaseRef.child("users").child(snapshot.key).on("value", function (snapshot) {
+        if (snapshot.child("name").val()) {
+          //update the place holder entry
+          $("option[value=" + snapshot.key + "]", $("#user-checkboxes"))[0].label = snapshot.child("name").val();
+          $("#user-checkboxes").multiselect("rebuild");
+
+          //remove the listener
+          firebaseRef.child("users").child(snapshot.key).off("value");
+        }
+      });
     });
 
     //Firebase listener for when usernames are changed
@@ -137,8 +122,6 @@ var mouseVis = function () {
           //update color in firepad userlist
           var userColorDiv = userDiv.getElementsByClassName("firepad-userlist-color-indicator")[0];
           userColorDiv.style.backgroundColor = snapshot.child("color").val();
-
-
         }
       } else {
 
@@ -185,8 +168,11 @@ var mouseVis = function () {
       coordinates are relative to the browser window top left corner.
     */
 
+    //WebGazer inizializing specifications
     window.saveDataAcrossSessions = true;
+    window.applyKalmanFilter = true;
 
+    //Listens for WebGazer gaze predictions, sends to firebase
     webgazer.setGazeListener(function (data, elapsedTime) {
       if (data == null) {
         return;
@@ -198,74 +184,69 @@ var mouseVis = function () {
         var gazePosition = FirepadCM.coordsChar({ left: data.x, top: data.y }, "window");
         gazePosRef.child(userId).update({ line: gazePosition.line, ch: gazePosition.ch });
       }
-
     }).begin();
 
+    //WebGazer specifications
     webgazer.showVideo(false);
     webgazer.showFaceOverlay(false);
     webgazer.showFaceFeedbackBox(false);
     webgazer.showPredictionPoints(true);
 
-    //taret element to track mouse movements
-    var textEl = document.getElementById("firepad");
+    //Mouse Listeners
+    var target = document.getElementById("firepad");
+    target.addEventListener("mousemove", mouseMove);
+    target.addEventListener("mouseleave", mouseLeave);
 
-    //Mouse Event Listeners
-    textEl.addEventListener("mousemove", mouseMove);
+    //Fetches the buttons responsible for toggling mouse vs. gaze and send vs. block
+    var mouseButton = document.getElementById("mouseButton");
+    var gazeButton = document.getElementById("gazeButton");
+    var sendButton = document.getElementById("sendButton");
+    var blockButton = document.getElementById("blockButton");
 
-    textEl.addEventListener("mouseleave", mouseLeave);
-
-    var mouseRadioInput = document.getElementById("mouseRadio");
-    var gazeRadioInput = document.getElementById("gazeRadio");
-    var transmitRadioInput = document.getElementById("transmit");
-    var noTransmitRadioInput = document.getElementById("noTransmit");
-
-    mouseRadioInput.addEventListener("change", function () {
-      if (mouseRadioInput.checked) {
+    //Controls toggling for mouse vs. gaze
+    mouseButton.addEventListener("change", function () {
+      if (mouseButton.checked) {
         gazePosRef.off("value", visualize);
 
         mousePosRef.on("value", visualize);
       }
     });
-
-    gazeRadioInput.addEventListener("change", function () {
-      if (gazeRadioInput.checked) {
+    gazeButton.addEventListener("change", function () {
+      if (gazeButton.checked) {
         mousePosRef.off("value", visualize);
 
         gazePosRef.on("value", visualize);
       }
     });
 
-    transmitRadioInput.addEventListener("change", function () {
-      if (transmitRadioInput.checked) {
+    //Controls toggling for send vs. block
+    sendButton.addEventListener("change", function () {
+      if (sendButton.checked) {
         window.blocked = false;
       }
     });
-
-    noTransmitRadioInput.addEventListener("change", function () {
-      if (noTransmitRadioInput.checked) {
+    blockButton.addEventListener("change", function () {
+      if (blockButton.checked) {
         window.blocked = true;
       }
     });
 
-    UIAdjustments.pickr.on("save", (color) => {
-      if (color) {
-        firepad.firebaseAdapter_.setColor(color.toHEXA().toString());
-      }
-
-      UIAdjustments.pickr.hide();
-    });
+    //to correctly assign button width dynamically
+    document.getElementById("user-checkboxes-container").getElementsByTagName("button")[0].style.width = (UIAdjustments.userlistBox.offsetWidth - 20) + "px";
   });
 
+  //Callback for mouse movement
   function mouseMove(event) {
     //transforms mouse coordinates to codemirror document position
     if (window.blocked) {
-      mousePosRef.child(userId).update({ line: -1, ch: -1 });
+      mousePosRef.child(userId).update({ line: -1, ch: -1 }); //to signal in the database that this user's data is being blocked
     } else {
-      var mouse = FirepadCM.coordsChar({ left: event.clientX, top: event.clientY }, "window");
+      var mouse = FirepadCM.coordsChar({ left: event.clientX, top: event.clientY }, "window"); //else send as a CodeMirror line and ch
       mousePosRef.child(userId).update({ line: mouse.line, ch: mouse.ch });
     }
   }
 
+  //Callback for when the mouse leaves the target
   function mouseLeave() {
     //send nulls to firebase to signal the user is off target but has not closed the window
     mousePosRef.child(userId).update({ line: null, ch: null });
@@ -274,10 +255,6 @@ var mouseVis = function () {
   //callback function for visualization
   function visualize(snapshot) {
     snapshot.forEach(function (childSnapshot) {
-
-      if(childSnapshot.child("line").val() == -1){
-        console.log(childSnapshot.child("line").val());
-      }
 
       if (usersChecked[childSnapshot.key]) {
         //grabs position info
@@ -293,8 +270,10 @@ var mouseVis = function () {
         if (line != null && ch != null) {
 
           if (line == -1 || ch == -1) {
-            userHighlights[childSnapshot.key].clear();
-            
+            if (userHighlights[childSnapshot.key]) {
+              userHighlights[childSnapshot.key].clear();
+            }
+
           } else {
 
             //finds the word (token) in the codemirror editor nearest to the position given
@@ -329,6 +308,7 @@ var mouseVis = function () {
     });
   }
 
+  //Transforms a string hex color to a string rgb color with a fixed opacity
   function hexToRgb(hex) {
     let opacity = 0.35;
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -395,93 +375,14 @@ var mouseVis = function () {
     }
   }
 
+  //Checks if a highlight is above the client view port
   function isAboveView(line, viewTop, sentences) {
     return line < viewTop["line"] || (line == viewTop["line"] && sentences["right"] < viewTop["ch"]);
   }
 
+  //Checks if a highlight is bellow the client view port
   function isBelowView(line, viewBottom, sentences) {
     return line > viewBottom["line"] || (line == viewBottom["line"] && sentences["left"] > viewBottom["ch"]);
-  }
-
-  function createUpArrow(userId, userColorDiv, line, sentences) {
-    if (!userColorDiv.hasChildNodes()) {
-      var arrow = document.createElement("div");
-
-      var arrowTip = document.createElement("div");
-      arrowTip.className = "arrow-up";
-      arrow.appendChild(arrowTip);
-
-      var arrowStem = document.createElement("div");
-      arrowStem.className = "arrow-stem";
-      arrow.appendChild(arrowStem);
-
-      arrow.onclick = function () {
-        FirepadCM.on("refresh", function mark() {
-          FirepadCM.off("refresh", mark);
-          createHighlight(userId, userColorDiv, line, sentences);
-        });
-        FirepadCM.scrollIntoView({ line: line, ch: sentences["left"] });
-        FirepadCM.refresh();
-      }
-      userColorDiv.appendChild(arrow);
-    } else if (userColorDiv.firstChild.firstChild.className == "arrow-stem") {
-      clearArrow(userColorDiv);
-      createUpArrow(userId, userColorDiv, line, sentences);
-    } else {
-      userColorDiv.firstChild.onclick = function () {
-        FirepadCM.on("refresh", function mark() {
-          FirepadCM.off("refresh", mark);
-          createHighlight(userId, userColorDiv, line, sentences);
-        });
-        FirepadCM.scrollIntoView({ line: line, ch: sentences["left"] });
-        FirepadCM.refresh();
-      }
-    }
-  }
-
-  function createDownArrow(userId, userColorDiv, line, sentences) {
-    if (!userColorDiv.hasChildNodes()) {
-      var arrow = document.createElement("div");
-
-      var arrowStem = document.createElement("div");
-      arrowStem.className = "arrow-stem";
-      arrow.appendChild(arrowStem);
-
-      var arrowTip = document.createElement("div");
-      arrowTip.className = "arrow-down";
-      arrow.appendChild(arrowTip);
-
-      arrow.onclick = function () {
-        FirepadCM.on("refresh", function mark() {
-          FirepadCM.off("refresh", mark);
-          createHighlight(userId, userColorDiv, line, sentences);
-        });
-        FirepadCM.scrollIntoView({ line: line, ch: sentences["right"] });
-        FirepadCM.refresh();
-      }
-      userColorDiv.appendChild(arrow);
-
-    } else if (userColorDiv.firstChild.firstChild.className == "arrow-up") {
-      clearArrow(userColorDiv);
-      createDownArrow(userId, userColorDiv, line, sentences);
-    } else {
-      userColorDiv.firstChild.onclick = function () {
-        FirepadCM.on("refresh", function mark() {
-          FirepadCM.off("refresh", mark);
-          createHighlight(userId, userColorDiv, line, sentences);
-        });
-        FirepadCM.scrollIntoView({ line: line, ch: sentences["right"] });
-        FirepadCM.refresh();
-      }
-    }
-  }
-
-  function clearArrow(userColorDiv) {
-    if (userColorDiv.hasChildNodes()) {
-      while (userColorDiv.firstChild) {
-        userColorDiv.removeChild(userColorDiv.firstChild);
-      }
-    }
   }
 
   function createHighlight(userId, userColorDiv, line, sentences) {
@@ -495,6 +396,94 @@ var mouseVis = function () {
 
     //associates this highlight with the user it came from in our local dictionary to keep track
     userHighlights[userId] = highlight;
+  }
+
+  //Creates up arrow indicating a user's highlight is above the view port
+  function createUpArrow(userId, userColorDiv, line, sentences) {
+    if (!userColorDiv.hasChildNodes()) {
+      var arrow = document.createElement("div");
+
+      //constructing arrow shape
+      var arrowTip = document.createElement("div");
+      arrowTip.className = "arrow-up";
+      arrow.appendChild(arrowTip);
+
+      var arrowStem = document.createElement("div");
+      arrowStem.className = "arrow-stem";
+      arrow.appendChild(arrowStem);
+
+      //Click for "jump-to" functionality
+      arrow.onclick = function () {
+        FirepadCM.on("refresh", function mark() {
+          FirepadCM.off("refresh", mark);
+          createHighlight(userId, userColorDiv, line, sentences);
+        });
+        FirepadCM.scrollIntoView({ line: line, ch: sentences["left"] });
+        FirepadCM.refresh();
+      }
+      userColorDiv.appendChild(arrow);
+    } else if (userColorDiv.firstChild.firstChild.className == "arrow-stem") { //if there's already a down arrow
+      clearArrow(userColorDiv);
+      createUpArrow(userId, userColorDiv, line, sentences);
+    } else {
+      userColorDiv.firstChild.onclick = function () { //if there's already an up arrow, update the position to jump to
+        FirepadCM.on("refresh", function mark() {
+          FirepadCM.off("refresh", mark);
+          createHighlight(userId, userColorDiv, line, sentences);
+        });
+        FirepadCM.scrollIntoView({ line: line, ch: sentences["left"] });
+        FirepadCM.refresh();
+      }
+    }
+  }
+
+  //Creates down arrow indicating a user's highlight is bellow the view port
+  function createDownArrow(userId, userColorDiv, line, sentences) {
+    if (!userColorDiv.hasChildNodes()) {
+      var arrow = document.createElement("div");
+
+      //constructing arrow shape
+      var arrowStem = document.createElement("div");
+      arrowStem.className = "arrow-stem";
+      arrow.appendChild(arrowStem);
+
+      var arrowTip = document.createElement("div");
+      arrowTip.className = "arrow-down";
+      arrow.appendChild(arrowTip);
+
+      //Click for "jump-to" functionality
+      arrow.onclick = function () {
+        FirepadCM.on("refresh", function mark() {
+          FirepadCM.off("refresh", mark);
+          createHighlight(userId, userColorDiv, line, sentences);
+        });
+        FirepadCM.scrollIntoView({ line: line, ch: sentences["right"] });
+        FirepadCM.refresh();
+      }
+      userColorDiv.appendChild(arrow);
+
+    } else if (userColorDiv.firstChild.firstChild.className == "arrow-up") { //if there's already an up arrow
+      clearArrow(userColorDiv);
+      createDownArrow(userId, userColorDiv, line, sentences);
+    } else {
+      userColorDiv.firstChild.onclick = function () { //if there's already a down arrow
+        FirepadCM.on("refresh", function mark() {
+          FirepadCM.off("refresh", mark);
+          createHighlight(userId, userColorDiv, line, sentences);
+        });
+        FirepadCM.scrollIntoView({ line: line, ch: sentences["right"] });
+        FirepadCM.refresh();
+      }
+    }
+  }
+
+  //Clears the color indicator of any arrow
+  function clearArrow(userColorDiv) {
+    if (userColorDiv.hasChildNodes()) {
+      while (userColorDiv.firstChild) {
+        userColorDiv.removeChild(userColorDiv.firstChild);
+      }
+    }
   }
 }();
 

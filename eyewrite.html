@@ -91,6 +91,11 @@
       outline: none;
     }
 
+    #colorpicker {
+      position: absolute;
+      top: 0px;
+    }
+
     .arrow-up {
       width: 0;
       height: 0;
@@ -114,20 +119,28 @@
       margin-left: 10px;
     }
 
-    .mouse-gaze-buttons {
+    #mouse-gaze-buttons {
       position: relative;
       left: 20px;
     }
 
-    .transmit-toggle-buttons {
+    #send-block-buttons {
       position: relative;
       left: 20px;
     }
 
-    .slider-container {
+    #slider-container {
       position: relative;
       left: 20px;
       width: 130px;
+    }
+
+    #color-wheel-pic {
+      position: relative;
+      left: 6px;
+      top: 7px;
+      height: 20px;
+      width: 20px;
     }
   </style>
 </head>
@@ -140,27 +153,27 @@
 
   <div id='colorpicker'></div>
 
-  <div class="transmit-toggle-buttons">
+  <div id="send-block-buttons">
     <p>Data:</p>
-    <input type="radio" id="transmit" name="transmitChoice" value="yes" checked>
-    <label for="yes">Send</label>
+    <input type="radio" id="sendButton" name="transmitChoice" value="send" checked>
+    <label for="send">Send</label>
 
-    <input type="radio" id="noTransmit" name="transmitChoice" value="no">
-    <label for="no">Block</label>
+    <input type="radio" id="blockButton" name="transmitChoice" value="block">
+    <label for="block">Block</label>
   </div>
 
-  <div class="mouse-gaze-buttons">
+  <div id="mouse-gaze-buttons">
     <p>Visualize:</p>
-    <input type="radio" id="gazeRadio" name="visualizationChoice" value="gaze" checked>
+    <input type="radio" id="gazeButton" name="visualizationChoice" value="gaze" checked>
     <label for="gaze">Gaze</label>
 
-    <input type="radio" id="mouseRadio" name="visualizationChoice" value="mouse">
+    <input type="radio" id="mouseButton" name="visualizationChoice" value="mouse">
     <label for="mouse">Mouse</label>
   </div>
 
-  <div class="slider-container">
+  <div id="slider-container">
     <p>Highlight Size: <span id="numSentences"></span></p>
-    <input type="range" min="2" max="6" value="2" class="slider" id="sentenceSlider">
+    <input type="range" min="2" max="6" value="2" id="sentenceSlider">
   </div>
 
   <script>
@@ -214,15 +227,6 @@
   </script>
 </body>
 
-<script>
-  var slider = document.getElementById("sentenceSlider");
-  var output = document.getElementById("numSentences");
-  output.innerHTML = slider.value;
-
-  slider.oninput = function () {
-    output.innerHTML = this.value;
-  }
-</script>
 
 <script src='./scripts/UIAdjustments.js'></script>
 <!-- Mouse Visualization Script -->
