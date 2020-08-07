@@ -1,5 +1,6 @@
 var UIAdjustments = function () {
 
+  
   firepadUserList.firebaseOff_(firebaseRef.child('users'), 'child_changed', firepadUserList['firebaseCallbacks_'][4]['callback']);
 
   var logo = document.getElementsByClassName('powered-by-firepad')[0];
@@ -53,12 +54,12 @@ var UIAdjustments = function () {
 
   //Assigns color picker color to user color div
   firepad.on("ready", function () {
-    UIAdjustments.pickr.on("save", (color) => {
+    pickr.on("save", (color) => {
       if (color) {
         firepad.firebaseAdapter_.setColor(color.toHEXA().toString());
       }
       //hides pickr after pressing save
-      UIAdjustments.pickr.hide();
+      pickr.hide();
     });
   });
 
@@ -87,13 +88,15 @@ var UIAdjustments = function () {
   transmitToggleButtons.style.top = (userCheckboxesContainer.offsetTop + userCheckboxesContainer.offsetHeight + 60) + "px";
 
   var mouseGazeButtons = document.getElementById('mouse-gaze-buttons');
-  mouseGazeButtons.style.top = (userCheckboxesContainer.offsetTop + userCheckboxesContainer.offsetHeight + 80) + "px";
+  mouseGazeButtons.style.top = (userCheckboxesContainer.offsetTop + userCheckboxesContainer.offsetHeight + 65) + "px";
 
   var sliderContainer = document.getElementById('slider-container');
-  sliderContainer.style.top = (userCheckboxesContainer.offsetTop + userCheckboxesContainer.offsetHeight + 100) + "px";
+  sliderContainer.style.top = (userCheckboxesContainer.offsetTop + userCheckboxesContainer.offsetHeight + 80) + "px";
+
+  var calibrationButton = document.getElementById('calibrationButton');
+  calibrationButton.style.top = (userCheckboxesContainer.offsetTop + userCheckboxesContainer.offsetHeight + 105) + "px";
 
   return {
-    userlistBox: userlistBox,
-    pickr: pickr
+    userlistBoxOffsetWidth: userlistBox.offsetWidth
   }
 }();

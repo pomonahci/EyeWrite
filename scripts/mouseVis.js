@@ -29,8 +29,9 @@ var mouseVis = function () {
     disableIfEmpty: true,
     //for UI button positioning purposes
     buttonContainer: $("#user-checkboxes-container"),
+    buttonClass: "user-checkboxes",
     buttonText: function () {
-      return "Visualize Users";
+      return "Visualize";
     },
     //updates local dictionaries if a checked value changes
     onChange: function (option, checked, select) {
@@ -168,8 +169,9 @@ var mouseVis = function () {
       coordinates are relative to the browser window top left corner.
     */
 
-    //WebGazer inizializing specifications
+    //needed in order to load calibration data
     window.saveDataAcrossSessions = true;
+    //applying smoothing filter
     window.applyKalmanFilter = true;
 
     //Listens for WebGazer gaze predictions, sends to firebase
@@ -232,7 +234,7 @@ var mouseVis = function () {
     });
 
     //to correctly assign button width dynamically
-    document.getElementById("user-checkboxes-container").getElementsByTagName("button")[0].style.width = (UIAdjustments.userlistBox.offsetWidth - 20) + "px";
+    //document.getElementById("user-checkboxes-container").getElementsByTagName("button")[0].style.width = (UIAdjustments.userlistBoxOffsetWidth - 20) + "px";
   });
 
   //Callback for mouse movement

@@ -80,7 +80,28 @@
     .user-checkboxes-container-position {
       position: absolute;
       float: left;
-      left: 10px;
+      left: 15px;
+    }
+
+    .user-checkboxes {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      display: inline-block;
+      color: #9C9C9C;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      background-color: #FCFCFC;
+      border-color: #C9C9C9;
+      border-bottom-width: 4px;
+      padding: 4px 6px 2px 6px;
+      width: 95px;
+    }
+
+    .user-checkboxes:hover {
+      background-color: #FFBF86;
+      color: #FFFFFF;
+      border-color: #E6A165;
     }
 
     .colorpicker-button {
@@ -119,20 +140,10 @@
       margin-left: 10px;
     }
 
-    #mouse-gaze-buttons {
-      position: relative;
-      left: 20px;
-    }
-
-    #send-block-buttons {
-      position: relative;
-      left: 20px;
-    }
-
     #slider-container {
       position: relative;
-      left: 20px;
-      width: 130px;
+      left: 15px;
+      width: 150px;
     }
 
     #color-wheel-pic {
@@ -141,6 +152,65 @@
       top: 7px;
       height: 20px;
       width: 20px;
+    }
+
+    #calibrationButton {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      display: inline-block;
+      color: #9C9C9C;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      background-color: #FCFCFC;
+      border-color: #C9C9C9;
+      border-bottom-width: 4px;
+      padding: 4px 6px 2px 6px;
+      position: relative;
+      left: 15px;
+    }
+
+    #calibrationButton:hover {
+      background-color: #FFBF86;
+      color: #FFFFFF;
+      border-color: #E6A165;
+    }
+
+    .radio-buttons {
+      position: relative;
+      left: 11px;
+      width: 155px;
+    }
+
+    .radio-buttons input[type="radio"] {
+      position: relative;
+      opacity: 0;
+      width: 0;
+    }
+
+    .radio-buttons label {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      display: inline-block;
+      color: #9C9C9C;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      background-color: #FCFCFC;
+      border-color: #C9C9C9;
+      border-bottom-width: 4px;
+      padding: 4px 6px 2px 6px;
+    }
+
+    .radio-buttons label:hover {
+      background-color: #FFBF86;
+      color: #FFFFFF;
+      border-color: #E6A165;
+    }
+
+    .radio-buttons input[type="radio"]:checked+label {
+      background-color: #E6E6E6;
+      border-color: #ADADAD;
     }
   </style>
 </head>
@@ -153,28 +223,33 @@
 
   <div id='colorpicker'></div>
 
-  <div id="send-block-buttons">
+  <div id="send-block-buttons" class="radio-buttons">
     <p>Data:</p>
-    <input type="radio" id="sendButton" name="transmitChoice" value="send" checked>
-    <label for="send">Send</label>
+    <input type="radio" id="sendButton" name="transmitChoice" checked>
+    <label for="sendButton" id="sendButtonLabel">Send</label>
 
-    <input type="radio" id="blockButton" name="transmitChoice" value="block">
-    <label for="block">Block</label>
+    <input type="radio" id="blockButton" name="transmitChoice">
+    <label for="blockButton">Block</label>
   </div>
 
-  <div id="mouse-gaze-buttons">
+  <div id="mouse-gaze-buttons" class="radio-buttons">
     <p>Visualize:</p>
-    <input type="radio" id="gazeButton" name="visualizationChoice" value="gaze" checked>
-    <label for="gaze">Gaze</label>
+    <input type="radio" id="gazeButton" name="visualizationChoice" checked>
+    <label for="gazeButton">Gaze</label>
 
-    <input type="radio" id="mouseButton" name="visualizationChoice" value="mouse">
-    <label for="mouse">Mouse</label>
+    <input type="radio" id="mouseButton" name="visualizationChoice">
+    <label for="mouseButton">Mouse</label>
   </div>
 
   <div id="slider-container">
     <p>Highlight Size: <span id="numSentences"></span></p>
     <input type="range" min="2" max="6" value="2" id="sentenceSlider">
   </div>
+
+  <A href="node_modules/webgazer/www/calibration.html">
+    <input type="button" id="calibrationButton" value="Calibrate">
+  </A>
+
 
   <script>
     var firebaseConfig = {
