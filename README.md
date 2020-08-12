@@ -36,8 +36,8 @@ If you want to build the repository from source follow these instructions:
     # Run index.js with NodeJS
     node index.js
 
-    *Visit (http://localhost:3000) on your browser
-    *Follow the instructions on the welcome page to create or join a collaborative document
+* Visit (http://localhost:3000) on your browser
+* Follow the instructions on the welcome page to create or join a collaborative document
 
 
 
