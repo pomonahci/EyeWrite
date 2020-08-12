@@ -4,13 +4,13 @@ EyeWrite is an online collaborative text editor which utilizes eye tracking to s
 
 ## Features
 
-    *Rich-text editing with version history
-    *Real-time collaboration with user gaze and mouse location sharing
-    *Arbitrary number of users
-    *Uses common webcam for eye tracking
-    *Eye tracking is self-calibrating
-    *Optional manual calibration page
-    *Option to block the sharing of gaze and mouse data
+* Rich-text editing with version history
+* Real-time collaboration with user gaze and mouse location sharing
+* Arbitrary number of users
+* Uses common webcam for eye tracking
+* Eye tracking is self-calibrating
+* Optional manual calibration page
+* Option to block the sharing of gaze and mouse data
 
 ## Build the repository
 
