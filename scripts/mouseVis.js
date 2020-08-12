@@ -31,7 +31,7 @@ var mouseVis = function () {
     buttonContainer: $("#user-checkboxes-container"),
     buttonClass: "user-checkboxes",
     buttonText: function () {
-      return "Visualize";
+      return "Collaborators";
     },
     //updates local dictionaries if a checked value changes
     onChange: function (option, checked, select) {
@@ -192,7 +192,7 @@ var mouseVis = function () {
     webgazer.showVideo(false);
     webgazer.showFaceOverlay(false);
     webgazer.showFaceFeedbackBox(false);
-    webgazer.showPredictionPoints(true);
+    webgazer.showPredictionPoints(false);
 
     //Mouse Listeners
     var target = document.getElementById("firepad");

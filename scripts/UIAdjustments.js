@@ -1,6 +1,4 @@
 var UIAdjustments = function () {
-
-  
   firepadUserList.firebaseOff_(firebaseRef.child('users'), 'child_changed', firepadUserList['firebaseCallbacks_'][4]['callback']);
 
   var logo = document.getElementsByClassName('powered-by-firepad')[0];
@@ -12,22 +10,21 @@ var UIAdjustments = function () {
   userlistBox.className += ' userlist-box';
 
   var userlist = document.getElementsByClassName('firepad-userlist-users')[0];
-  userlist.style.height = (userlistBox.offsetHeight + userlistBox.offsetTop - userlist.offsetTop) + 'px';;
+  userlist.style.height = (userlistBox.offsetHeight + userlistBox.offsetTop - userlist.offsetTop) + 'px';
   userlist.style.overflowY = 'scroll';
-
-  var thisUserColorIndicator = document.getElementsByClassName("firepad-user-" + userId)[0];
 
   var colorWheelPic = document.createElement('img');
   colorWheelPic.id = "color-wheel-pic";
-  colorWheelPic.src = 'colorwheel.png';
+  colorWheelPic.src = './graphics/colorwheel.png';
   
   var el = document.createElement('button');
   el.className = 'colorpicker-button';
   el.appendChild(colorWheelPic);
 
-  var colorPicker = document.getElementById('colorpicker');
-
+  var colorPicker = document.createElement('div');
   colorPicker.appendChild(el);
+
+  var thisUserColorIndicator = document.getElementsByClassName("firepad-user-" + userId)[0];
   thisUserColorIndicator.appendChild(colorPicker);
 
   const pickr = new Pickr(Object.assign({
@@ -81,20 +78,8 @@ var UIAdjustments = function () {
     output.innerHTML = this.value;
   }
 
-  var userCheckboxesContainer = document.getElementById('user-checkboxes-container');
-  userCheckboxesContainer.style.top = (userlistBox.offsetTop + userlistBox.offsetHeight + 10) + "px";
-
-  var transmitToggleButtons = document.getElementById('send-block-buttons');
-  transmitToggleButtons.style.top = (userCheckboxesContainer.offsetTop + userCheckboxesContainer.offsetHeight + 60) + "px";
-
-  var mouseGazeButtons = document.getElementById('mouse-gaze-buttons');
-  mouseGazeButtons.style.top = (userCheckboxesContainer.offsetTop + userCheckboxesContainer.offsetHeight + 65) + "px";
-
-  var sliderContainer = document.getElementById('slider-container');
-  sliderContainer.style.top = (userCheckboxesContainer.offsetTop + userCheckboxesContainer.offsetHeight + 80) + "px";
-
-  var calibrationButton = document.getElementById('calibrationButton');
-  calibrationButton.style.top = (userCheckboxesContainer.offsetTop + userCheckboxesContainer.offsetHeight + 105) + "px";
+  var controlContainer = document.getElementById('controlContainer');
+  controlContainer.style.top = (userlistBox.offsetTop + userlistBox.offsetHeight + 10) + "px";
 
   return {
     userlistBoxOffsetWidth: userlistBox.offsetWidth

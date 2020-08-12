@@ -1,0 +1,251 @@
+:root {
+  --outer-border: #BBB;
+  --sub-box-padding: #FCFCFC;
+  --title-text: #444;
+  --button-border: #999999;
+  --button-hover: #FFBF86;
+  --button-hover-border: #E6A165;
+  --button-text: #FFFFFF;
+  --arrow-color: #FFFFFF;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  height: 100%;
+}
+
+/* Height / width / positioning can be customized for your use case.
+   For demo purposes, we make the user list 175px and firepad fill the rest of the page. */
+#userlist {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  height: auto;
+  width: 175px;
+}
+
+.userlist-box {
+  height: 200px;
+  border-radius: 4px;
+}
+
+#firepad {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 175px;
+  height: auto;
+}
+
+.arrow-up {
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid var(--arrow-color);
+}
+
+.arrow-down {
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-top: 15px solid var(--arrow-color);
+}
+
+.arrow-stem {
+  width: 10px;
+  height: 15px;
+  background: var(--arrow-color);
+  margin-left: 10px;
+}
+
+.colorpicker-button {
+  position: absolute;
+  top: 0px;
+  background-color: transparent;
+  width: 30px;
+  height: 30px;
+  border: none;
+  outline: none;
+}
+
+#color-wheel-pic {
+  position: relative;
+  left: 6px;
+  top: 7px;
+  height: 20px;
+  width: 20px;
+}
+
+#controlContainer {
+  background-color: #EBEBEB;
+  width: 175px;
+  height: 350px;
+  position: relative;
+  border-radius: 4px;
+}
+
+#user-checkboxes-container {
+  position: relative;
+  margin-left: 15px;
+}
+
+.user-checkboxes {
+  background-color: var(--sub-box-padding);
+  border: 1px solid var(--outer-border);
+  border-bottom-width: 4px;
+  border-radius: 6px;
+  color: var(--title-text);
+  display: inline-block;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 10px;
+  padding: 4px 6px 2px 6px;
+  width: 145px;
+}
+
+.user-checkboxes:hover {
+  background-color: var(--button-hover);
+  border-color: var(--button-hover-border);
+  color: var(--button-text);
+}
+
+.radio-buttons {
+  position: relative;
+  width: 145px;
+  margin-top: 10px;
+  margin-left: 15px;
+  background-color: var(--sub-box-padding);
+  border: 1px solid var(--outer-border);
+  border-radius: 4px;
+}
+
+.radio-buttons p {
+  color: var(--title-text);
+  margin-top: 5px;
+  margin-left: 10px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.radio-buttons input[type="radio"] {
+  position: relative;
+  opacity: 0;
+  width: 0;
+}
+
+.radio-buttons label {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  display: inline-block;
+  color: var(--button-text);
+  border: 1px solid var(--button-border);
+  border-radius: 6px;
+  background-color: #C9C9C9;
+  border-bottom-width: 4px;
+  padding: 4px 6px 2px 6px;
+  margin-left: 5px;
+}
+
+.radio-buttons label:hover {
+  background-color: var(--button-hover);
+  border-color: var(--button-hover-border);
+}
+
+.radio-buttons input[type="radio"]:checked+label {
+  background-color: var(--button-border);
+  border-color: var(--title-text);
+}
+
+#slider-container {
+  position: relative;
+  left: 15px;
+  width: 145px;
+  height: 70px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: var(--sub-box-padding);
+  border: 1px solid var(--outer-border);
+  border-radius: 4px;
+}
+
+.slider-text {
+  position: relative;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  margin-left: 10px;
+  margin-top: 5px;
+}
+
+#sentenceSlider {
+  position: relative;
+  float: bottom;
+  width: 125px;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  input[type='range'] {
+    display: inline;
+    overflow: hidden;
+    border: 1px solid var(--title-text);
+    -webkit-appearance: none;
+    background-color: var(--sub-box-padding);
+    outline: none;
+    border-radius: 13px;
+  }
+
+  input[type='range']::-webkit-slider-runnable-track {
+    height: 13px;
+    -webkit-appearance: none;
+    color: var(--button-hover-border);
+  }
+
+  input[type='range']::-webkit-slider-thumb {
+    border-radius: 13px;
+    width: 13px;
+    -webkit-appearance: none;
+    height: 13px;
+    cursor: ew-resize;
+    background: var(--button-hover-border);
+    box-shadow: -80px 0 0 75px #C9C9C9;
+  }
+}
+
+#calibrationLink {
+  text-decoration: none;
+  margin-left: 15px;
+}
+
+#calibrationButton {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--title-text);
+  border: 1px solid var(--outer-border);
+  border-radius: 6px;
+  background-color: var(--sub-box-padding);
+  border-bottom-width: 4px;
+  padding: 4px 6px 2px 6px;
+  position: relative;
+  top: 2px;
+  width: 145px;
+}
+
+#calibrationButton:hover {
+  background-color: var(--button-hover);
+  color: var(--button-text);
+  border-color: var(--button-hover-border);
+}

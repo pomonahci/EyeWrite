@@ -41,215 +41,46 @@
   <!-- Modern or es5 bundle -->
   <script src='https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js'></script>
 
-
-  <style>
-    html {
-      height: 100%;
-    }
-
-    body {
-      margin: 0;
-      height: 100%;
-    }
-
-    /* Height / width / positioning can be customized for your use case.
-       For demo purposes, we make the user list 175px and firepad fill the rest of the page. */
-    #userlist {
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      height: auto;
-      width: 175px;
-    }
-
-    .userlist-box {
-      height: 200px;
-      border-radius: 4px;
-    }
-
-    #firepad {
-      position: absolute;
-      left: 175px;
-      top: 0;
-      bottom: 0;
-      right: 0;
-      height: auto;
-    }
-
-    .user-checkboxes-container-position {
-      position: absolute;
-      float: left;
-      left: 15px;
-    }
-
-    .user-checkboxes {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-size: 16px;
-      font-weight: 400;
-      display: inline-block;
-      color: #9C9C9C;
-      border: 1px solid transparent;
-      border-radius: 6px;
-      background-color: #FCFCFC;
-      border-color: #C9C9C9;
-      border-bottom-width: 4px;
-      padding: 4px 6px 2px 6px;
-      width: 95px;
-    }
-
-    .user-checkboxes:hover {
-      background-color: #FFBF86;
-      color: #FFFFFF;
-      border-color: #E6A165;
-    }
-
-    .colorpicker-button {
-      background-color: transparent;
-      width: 30px;
-      height: 30px;
-      border: none;
-      outline: none;
-    }
-
-    #colorpicker {
-      position: absolute;
-      top: 0px;
-    }
-
-    .arrow-up {
-      width: 0;
-      height: 0;
-      border-left: 15px solid transparent;
-      border-right: 15px solid transparent;
-      border-bottom: 15px solid #FFFFFF;
-    }
-
-    .arrow-down {
-      width: 0;
-      height: 0;
-      border-left: 15px solid transparent;
-      border-right: 15px solid transparent;
-      border-top: 15px solid #FFFFFF;
-    }
-
-    .arrow-stem {
-      width: 10px;
-      height: 15px;
-      background: #FFFFFF;
-      margin-left: 10px;
-    }
-
-    #slider-container {
-      position: relative;
-      left: 15px;
-      width: 150px;
-    }
-
-    #color-wheel-pic {
-      position: relative;
-      left: 6px;
-      top: 7px;
-      height: 20px;
-      width: 20px;
-    }
-
-    #calibrationButton {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-size: 16px;
-      font-weight: 400;
-      display: inline-block;
-      color: #9C9C9C;
-      border: 1px solid transparent;
-      border-radius: 6px;
-      background-color: #FCFCFC;
-      border-color: #C9C9C9;
-      border-bottom-width: 4px;
-      padding: 4px 6px 2px 6px;
-      position: relative;
-      left: 15px;
-    }
-
-    #calibrationButton:hover {
-      background-color: #FFBF86;
-      color: #FFFFFF;
-      border-color: #E6A165;
-    }
-
-    .radio-buttons {
-      position: relative;
-      left: 11px;
-      width: 155px;
-    }
-
-    .radio-buttons input[type="radio"] {
-      position: relative;
-      opacity: 0;
-      width: 0;
-    }
-
-    .radio-buttons label {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-size: 16px;
-      font-weight: 400;
-      display: inline-block;
-      color: #9C9C9C;
-      border: 1px solid transparent;
-      border-radius: 6px;
-      background-color: #FCFCFC;
-      border-color: #C9C9C9;
-      border-bottom-width: 4px;
-      padding: 4px 6px 2px 6px;
-    }
-
-    .radio-buttons label:hover {
-      background-color: #FFBF86;
-      color: #FFFFFF;
-      border-color: #E6A165;
-    }
-
-    .radio-buttons input[type="radio"]:checked+label {
-      background-color: #E6E6E6;
-      border-color: #ADADAD;
-    }
-  </style>
+  <link rel='stylesheet' href='./css/eyewrite.css' />
 </head>
 
 <body>
   <div id='userlist'></div>
   <div id='firepad'></div>
-  <div id='user-checkboxes-container' class='user-checkboxes-container-position'></div>
-  <select id='user-checkboxes' multiple='multiple'></select>
 
   <div id='colorpicker'></div>
 
-  <div id="send-block-buttons" class="radio-buttons">
-    <p>Data:</p>
-    <input type="radio" id="sendButton" name="transmitChoice" checked>
-    <label for="sendButton" id="sendButtonLabel">Send</label>
+  <div id="controlContainer">
+    <div id='user-checkboxes-container'></div>
+    <select id='user-checkboxes' multiple='multiple'></select>
 
-    <input type="radio" id="blockButton" name="transmitChoice">
-    <label for="blockButton">Block</label>
+    <div class="radio-buttons">
+      <p>Data:</p>
+      <input type="radio" id="sendButton" name="dataChoice" checked>
+      <label for="sendButton" id="sendButtonLabel">Send</label>
+
+      <input type="radio" id="blockButton" name="dataChoice">
+      <label for="blockButton">Block</label>
+    </div>
+
+    <div class="radio-buttons">
+      <p>Visualize:</p>
+      <input type="radio" id="gazeButton" name="visualizeChoice" checked>
+      <label for="gazeButton">Gaze</label>
+
+      <input type="radio" id="mouseButton" name="visualizeChoice">
+      <label for="mouseButton">Mouse</label>
+    </div>
+
+    <div id="slider-container">
+      <p class="slider-text">Highlight Size: <span id="numSentences"></span></p>
+      <input type="range" min="2" max="6" value="2" id="sentenceSlider">
+    </div>
+
+    <A href="node_modules/webgazer/www/calibration.html" id="calibrationLink">
+      <input type="button" id="calibrationButton" value="Calibrate">
+    </A>
   </div>
-
-  <div id="mouse-gaze-buttons" class="radio-buttons">
-    <p>Visualize:</p>
-    <input type="radio" id="gazeButton" name="visualizationChoice" checked>
-    <label for="gazeButton">Gaze</label>
-
-    <input type="radio" id="mouseButton" name="visualizationChoice">
-    <label for="mouseButton">Mouse</label>
-  </div>
-
-  <div id="slider-container">
-    <p>Highlight Size: <span id="numSentences"></span></p>
-    <input type="range" min="2" max="6" value="2" id="sentenceSlider">
-  </div>
-
-  <A href="node_modules/webgazer/www/calibration.html">
-    <input type="button" id="calibrationButton" value="Calibrate">
-  </A>
-
 
   <script>
     var firebaseConfig = {
