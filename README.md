@@ -21,8 +21,7 @@ If you want to build the repository from source follow these instructions:
     cd EyeWrite
     npm install
     # build dependencies for WebGazer
-    cd node_modules
-    cd webgazer
+    cd node_modules/webgazer
     npm install
     # build dependencies for calibration page
     cd www
@@ -30,9 +29,6 @@ If you want to build the repository from source follow these instructions:
 
 ## Run EyeWrite locally
 
-    # Ensure you are in the EyeWrite directory
-    cd
-    cd EyeWrite
     # Run index.js with NodeJS
     node index.js
 
