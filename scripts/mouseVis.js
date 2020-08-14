@@ -18,6 +18,9 @@ var mouseVis = function () {
 
   //when this user closes their window, removes them from the database and removes their mouse
   window.addEventListener("beforeunload", function () {
+    mousePosRef.child(userId).set(null);
+    gazePosRef.child(userId).set(null);
+    firebaseRef.child("users").child(userId).set(null);
     mousePosRef.child(userId).remove();
     gazePosRef.child(userId).remove();
     firebaseRef.child("users").child(userId).remove();
