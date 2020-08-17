@@ -4,23 +4,28 @@ var UIAdjustments = function () {
   var logo = document.getElementsByClassName('powered-by-firepad')[0];
   logo.parentNode.removeChild(logo);
 
-  document.getElementsByClassName('firepad-userlist-name-hint')[0].style.top = 20 + 'px';
+  document.getElementsByClassName('firepad-userlist-name-hint')[0].style.top = '20px';
 
   var userlistBox = document.getElementsByClassName('firepad-userlist')[0];
   userlistBox.className += ' userlist-box';
 
   var userlist = document.getElementsByClassName('firepad-userlist-users')[0];
-  userlist.style.height = (userlistBox.offsetHeight + userlistBox.offsetTop - userlist.offsetTop) + 'px';;
+  userlist.style.height = (userlistBox.offsetHeight + userlistBox.offsetTop - userlist.offsetTop) + 'px';
   userlist.style.overflowY = 'scroll';
 
+  var colorWheelPic = document.createElement('img');
+  colorWheelPic.id = "color-wheel-pic";
+  colorWheelPic.src = './graphics/colorwheel.png';
+  
   var el = document.createElement('button');
   el.className = 'colorpicker-button';
-  el.innerText = 'Change Color';
-  el.style.width = (userlistBox.offsetWidth - 20) + 'px';
+  el.appendChild(colorWheelPic);
 
-  var colorPicker = document.getElementById('colorpicker');
-  colorPicker.style.top = (userlistBox.offsetHeight + userlistBox.offsetTop + 15) + 'px';
+  var colorPicker = document.createElement('div');
   colorPicker.appendChild(el);
+
+  var thisUserColorIndicator = document.getElementsByClassName("firepad-user-" + userId)[0];
+  thisUserColorIndicator.appendChild(colorPicker);
 
   const pickr = new Pickr(Object.assign({
     el,
@@ -38,16 +43,45 @@ var UIAdjustments = function () {
         rgba: false,
         hsva: false,
         input: false,
-        clear: true,
+        clear: false,
         save: true
       }
     }
   }));
 
-  document.getElementById('user-checkboxes-container').style.top = (colorPicker.offsetHeight + colorPicker.offsetTop + 10) + 'px';
+  //Assigns color picker color to user color div
+  firepad.on("ready", function () {
+    pickr.on("save", (color) => {
+      if (color) {
+        firepad.firebaseAdapter_.setColor(color.toHEXA().toString());
+      }
+      //hides pickr after pressing save
+      pickr.hide();
+    });
+  });
+
+  firebaseRef.child("users").child(userId).on("value", function (snapshot) {
+    if (snapshot.child("color").val()) {
+      //update the place holder entry
+      pickr.setColor(snapshot.child("color").val());
+
+      //remove the listener
+      firebaseRef.child("users").child(userId).off("value");
+    }
+  });
+
+  var slider = document.getElementById("sentenceSlider");
+  var output = document.getElementById("numSentences");
+  output.innerHTML = slider.value;
+
+  slider.oninput = function () {
+    output.innerHTML = this.value;
+  }
+
+  var controlContainer = document.getElementById('controlContainer');
+  controlContainer.style.top = (userlistBox.offsetTop + userlistBox.offsetHeight + 10) + "px";
 
   return {
-    userlistBox: userlistBox,
-    pickr: pickr
+    userlistBoxOffsetWidth: userlistBox.offsetWidth
   }
 }();
