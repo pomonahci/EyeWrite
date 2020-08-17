@@ -11,6 +11,7 @@ EyeWrite is an online collaborative text editor which utilizes eye tracking to s
 * Eye tracking is self-calibrating
 * Optional manual calibration page
 * Option to block the sharing of gaze and mouse data
+* Option to alter visualization.js to use an external eye tracker (instructions in code comments)
 
 ## Build the repository
 
@@ -22,9 +23,6 @@ If you want to build the repository from source follow these instructions:
     npm install
     # build dependencies for WebGazer
     cd node_modules/webgazer
-    npm install
-    # build dependencies for calibration page
-    cd www
     npm install
 
 ## Run EyeWrite locally

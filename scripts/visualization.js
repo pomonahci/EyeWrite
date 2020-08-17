@@ -21,6 +21,7 @@ var mouseVis = function () {
     mousePosRef.child(userId).set(null);
     gazePosRef.child(userId).set(null);
     firebaseRef.child("users").child(userId).set(null);
+
     mousePosRef.child(userId).remove();
     gazePosRef.child(userId).remove();
     firebaseRef.child("users").child(userId).remove();
@@ -216,6 +217,7 @@ var mouseVis = function () {
         mousePosRef.on("value", visualize);
       }
     });
+
     gazeButton.addEventListener("change", function () {
       if (gazeButton.checked) {
         mousePosRef.off("value", visualize);
@@ -235,9 +237,6 @@ var mouseVis = function () {
         window.blocked = true;
       }
     });
-
-    //to correctly assign button width dynamically
-    //document.getElementById("user-checkboxes-container").getElementsByTagName("button")[0].style.width = (UIAdjustments.userlistBoxOffsetWidth - 20) + "px";
   });
 
   //Callback for mouse movement
@@ -296,9 +295,13 @@ var mouseVis = function () {
             var userColorDiv = document.getElementsByClassName("firepad-user-" + childSnapshot.key)[0].getElementsByClassName("firepad-userlist-color-indicator")[0];
 
             if (isAboveView(line, cmScrollTop, sentences)) {
-              createUpArrow(childSnapshot.key, userColorDiv, line, sentences);
+              if (childSnapshot.key != userId) {
+                createUpArrow(childSnapshot.key, userColorDiv, line, sentences);
+              }
             } else if (isBelowView(line, cmScrollBottom, sentences)) {
-              createDownArrow(childSnapshot.key, userColorDiv, line, sentences);
+              if (childSnapshot.key != userId) {
+                createDownArrow(childSnapshot.key, userColorDiv, line, sentences);
+              }
             } else {
               createHighlight(childSnapshot.key, userColorDiv, line, sentences);
             }
