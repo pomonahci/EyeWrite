@@ -5,43 +5,80 @@
 <head>
   <title>Welcome to EyeWrite!</title>
 
-  <style>
-    .serif {
-      font-family: Georgia, serif;
-      font-size: 40px;
-      font-weight: 200;
-      text-align: center;
-    }
-  </style>
+  <link rel='stylesheet' href='./node_modules/bootstrap/dist/css/bootstrap.css' />
 </head>
 
 <body>
-  <p class="serif">Welcome to EyeWrite!</p>
 
-  <p>
+  <div class="container pad">
 
-  </p>
-
-  <input type="button" style="margin-left: 530px;"  onclick="location.href='./WebGazer/www/calibration.html';" value="Calibrate">
+    <h1 class="text-center" style="margin-top: 30px; margin-bottom: 20px;">Welcome to EyeWrite!</h1>
 
 
-  <input type="button" onclick="location.href='./eyewrite.html';" value="Create New Document">
-  <br>
-  <br>
 
+    <div class="container pad">
+      <p class="text-justify">
+        EyeWrite is an online collaborative text editor which utilizes eye tracking to share each user's gaze with their
+        collaborators and visualize them in real time on the working document. EyeWrite uses <a
+          href='https://webgazer.cs.brown.edu/'>WebGazer.js</a> for eye tracking
+        capabilities as well as CodeMirror and Firepad for rich-text editing and real time collaboration. EyeWrite
+        functions completely on the browser and uses the everyday webcam for eye tracking, providing an easily
+        accessible
+        environment for close collaboration. EyeWrite also is capable of visualizing each collaborator's mouse movement
+        instead of their gaze. The webcam can only be accessed for gaze sharing with the user's consent, and once
+        EyeWrite
+        is in use the sharing of gaze and mouse data with collaborators can be toggled on and off at the user's
+        discretion.
+      </p>
+    </div>
 
-  <A id="existing" style="margin-left: 570px;">Join Existing Document</A>
-  <br>
-  <input type="text" style="margin-left: 530px;" id="textInput" placeholder="existing link">
-  <button onclick="send()">Enter</button>
+    <hr class='featurette-divider'>
+
+    <h3>Calibrate WebGazer.js</h3>
+    <p class="text-justify">
+      For best eye tracking accuracy, we recomend you visit our calibration page before using EyeWrite. When finished
+      calibrating, press the back button to revisit this page and create or join a collaborative EyeWrite document.
+    </p>
+    <input class="btn btn-primary" type="button" onclick="location.href='./WebGazer/www/calibration.html';"
+      value="Visit Calibration Page">
+
+    <hr class='featurette-divider'>
+
+    <h3>Create a document</h3>
+    <p class="text-justify">
+      Create a new EyeWrite collaborative document. To share your document with a collaborator, simply send them the URL
+      of your document and they will be able to join bellow.
+    </p>
+    <input class="btn btn-primary" type="button" onclick="location.href='./eyewrite.html';" value="Create New Document">
+
+    <hr class='featurette-divider'>
+    <h3>Join an existing document</h3>
+    <p class="text-justify">
+      To join an exisiting EyeWrite document, paste the URL of an existing EyeWrite document in the text bar bellow.
+    </p>
+
+    <input type="text" id="textInput" placeholder="Document Link">
+    <button class="btn btn-primary" id="joinBtn" onclick="send()" disabled>Join Pad</button>
+
+    <br>
+    <br>
+    <br>
+    <br>
+
+  </div>
 
   <script>
+    document.getElementById("textInput").oninput = function () {
+      if (document.getElementById("textInput").value !== "") {
+        document.getElementById("joinBtn").disabled = false;
+      } else {
+        document.getElementById("joinBtn").disabled = true;
+      }
+    }
+
     function send() {
       var text = document.getElementById("textInput");
-
-      var existing = document.getElementById("existing");
-      existing.href = text.value;
-
+      location.href = text.value;
     }
   </script>
 
