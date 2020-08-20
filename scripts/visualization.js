@@ -73,7 +73,7 @@ var mouseVis = function () {
     FirepadCM = firepad.editorAdapter_.cm;
 
     cmScrollTop = FirepadCM.coordsChar({ left: 0, top: 0 }, "local");
-    cmScrollBottom = FirepadCM.coordsChar({ left: 0, top: 500 }, "local"); //just an estimate for initial value
+    cmScrollBottom = FirepadCM.coordsChar({ left: 0, top: 600 }, "local"); //just an estimate for initial value
 
     FirepadCM.on("scroll", function () {
       cmScrollTop = FirepadCM.coordsChar({ left: 0, top: FirepadCM.getScrollInfo().top }, "local");
