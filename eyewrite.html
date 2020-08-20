@@ -5,14 +5,12 @@
 <head>
   <meta charset='utf-8' />
   <!-- Firebase -->
-  <script src='https://www.gstatic.com/firebasejs/7.6.2/firebase.js'></script>
-  <script src='https://www.gstatic.com/firebasejs/7.6.2/firebase-auth.js'></script>
+  <script src='https://www.gstatic.com/firebasejs/7.6.2/firebase-app.js'></script>
   <script src='https://www.gstatic.com/firebasejs/7.6.2/firebase-database.js'></script>
 
   <!-- CodeMirror -->
   <script src='./node_modules/codemirror/lib/codemirror.js'></script>
   <link rel='stylesheet' href='./node_modules/codemirror/lib/codemirror.css' />
-  <script src='./node_modules/codemirror/mode/javascript/javascript.js'></script>
 
   <!-- Firepad -->
   <link rel='stylesheet' href='https://firepad.io/releases/v1.5.10/firepad.css' />
@@ -96,7 +94,6 @@
 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    firebase.analytics();
 
     //// Get Firebase Database reference.
     var firebaseRef = getRef();
@@ -133,9 +130,11 @@
   </script>
 </body>
 
+<!-- UI Adjustments Script -->
 
 <script src='./scripts/UIAdjustments.js'></script>
-<!-- Mouse Visualization Script -->
+
+<!-- Visualization Script -->
 <script src='./scripts/visualization.js'></script>
 
 </html>
