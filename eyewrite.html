@@ -23,6 +23,9 @@
   <!-- WebGazer -->
   <script type='text/javascript' src='./WebGazer/www/webgazer.js'></script>
 
+  <!-- Peer.JS -->
+  <script src="./node_modules/peerjs/dist/peerjs.js"></script>
+
   <!-- Include Twitter Bootstrap and jQuery: -->
   <link rel='stylesheet' href='./node_modules/bootstrap-multiselect/docs/css/bootstrap-3.3.2.min.css' type='text/css' />
   <script type='text/javascript' src='./node_modules/bootstrap-multiselect/docs/js/jquery-2.1.3.min.js'></script>
@@ -63,11 +66,20 @@
 
     <div class="radio-buttons">
       <p>Visualize:</p>
-      <input type="radio" id="gazeButton" name="visualizeChoice" checked>
+      <input type="radio" id="gazeButton" name="visualizeChoice">
       <label for="gazeButton">Gaze</label>
 
-      <input type="radio" id="mouseButton" name="visualizeChoice">
+      <input type="radio" id="mouseButton" name="visualizeChoice" checked>
       <label for="mouseButton">Mouse</label>
+    </div>
+
+    <div class="radio-buttons">
+      <p>Voice Chat:</p>
+      <input type="radio" id="joinButton" name="chatChoice">
+      <label for="joinButton">Join</label>
+
+      <input type="radio" id="leaveButton" name="chatChoice" checked>
+      <label for="leaveButton">Leave</label>
     </div>
 
     <div id="slider-container">
@@ -79,18 +91,30 @@
       <input type="button" id="calibrationButton" value="Calibrate">
     </A>
   </div>
+  <div id="audio-streams"></div>
 
   <script>
+    // var firebaseConfig = {
+    //   apiKey: "AIzaSyAmD2D9XCpVDQcJF08chqCbkCpL-_Jfu_Y",
+    //   authDomain: "eyewrite-62d75.firebaseapp.com",
+    //   databaseURL: "https://eyewrite-62d75.firebaseio.com",
+    //   projectId: "eyewrite-62d75",
+    //   storageBucket: "eyewrite-62d75.appspot.com",
+    //   messagingSenderId: "998123311342",
+    //   appId: "1:998123311342:web:abed435afee503a2eb63ff",
+    //   measurementId: "G-8EGTMW2Q4G"
+    // };
     var firebaseConfig = {
-      apiKey: "AIzaSyAmD2D9XCpVDQcJF08chqCbkCpL-_Jfu_Y",
-      authDomain: "eyewrite-62d75.firebaseapp.com",
-      databaseURL: "https://eyewrite-62d75.firebaseio.com",
-      projectId: "eyewrite-62d75",
-      storageBucket: "eyewrite-62d75.appspot.com",
-      messagingSenderId: "998123311342",
-      appId: "1:998123311342:web:abed435afee503a2eb63ff",
+      apiKey: "AIzaSyBuN6J2LmZCPqvJZxi9AWFEM8CJRq5CLko",
+      authDomain: "eyewrite-a2c67.firebaseapp.com",
+      databaseURL: "https://eyewrite-a2c67-default-rtdb.firebaseio.com",
+      projectId: "eyewrite-a2c67",
+      storageBucket: "eyewrite-a2c67.appspot.com",
+      messagingSenderId: "599864983534",
+      appId: "1:599864983534:web:1f7f0632ea14ec045558ff",
       measurementId: "G-8EGTMW2Q4G"
     };
+
 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
