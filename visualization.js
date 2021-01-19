@@ -641,7 +641,6 @@ var mouseVis = function () {
       hasStream = true;
       createMyPeer();
       console.log(`${userId} joined the chat`);
-      alert("Joining the voice chat.");
       // createMuteButton();
     }).catch(function (err) {
       console.error(`${userId} failed to turn on audio stream`, err);
@@ -811,7 +810,6 @@ var mouseVis = function () {
    */
   function onLeave() {
     console.log(`${userId} left the chat`);
-    alert("Leaving the voice chat.");
     (async function () {return await myPeer.destroy();})();
     myPeer = null;
     readyToJoin = false;
