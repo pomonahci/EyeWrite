@@ -1,3 +1,5 @@
+const e = require("express");
+
 var FirepadUserList = (function() {
   function FirepadUserList(ref, place, userId, displayName) {
     if (!(this instanceof FirepadUserList)) {
@@ -113,6 +115,19 @@ var FirepadUserList = (function() {
       if (!isValidColor(color)) {
         color = "#ffb"
       }
+
+      // var voiceActive = userSnapshot.child("voice_status").val();
+      // if (voiceActive) {
+      //   // add the active status dot
+      //   var activeDot = document.createElement('img');
+      //   activeDot.id = "voice-chat-active-dot";
+      //   activeDot.src = './graphics/greendot.png';
+      //   var userInfo = document.getElementById()
+      // } else {
+      //   // remove the active status dot
+      //   var activeDot = document.getElementById("voice-chat-active-dot");
+      //   activeDot.remove();
+      // }
 
       var colorDiv = elt('div', null, { 'class': 'firepad-userlist-color-indicator' });
       colorDiv.style.backgroundColor = color;

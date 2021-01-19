@@ -638,9 +638,11 @@ var mouseVis = function () {
       myStream = stream;
       console.log(`${userId} turned on audio stream: ${myStream.id}`);
       voiceRef.child(userId).update({is_ready: true, stream_id: myStream.id});
+      firebaseRef.child("users").child(userId).update({voice_status: true});
       hasStream = true;
       createMyPeer();
       console.log(`${userId} joined the chat`);
+      alert("Joining the voice chat.");
       // createMuteButton();
     }).catch(function (err) {
       console.error(`${userId} failed to turn on audio stream`, err);
@@ -810,6 +812,7 @@ var mouseVis = function () {
    */
   function onLeave() {
     console.log(`${userId} left the chat`);
+    alert("Leaving the voice chat.");
     (async function () {return await myPeer.destroy();})();
     myPeer = null;
     readyToJoin = false;
@@ -819,6 +822,7 @@ var mouseVis = function () {
     }
     // document.getElementById("mute").remove();
     voiceRef.child(userId).set(null);
+    firebaseRef.child("users").child(userId).update({voice_status: false});
   }
 
   // /**
