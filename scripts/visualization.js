@@ -19,7 +19,7 @@ var mouseVis = function () {
 
   //when this user closes their window, removes them from the database and removes their mouse
   window.addEventListener("beforeunload", function () {
-    if (!document.getElementById('joinButton').disabled) onLeave();
+    if (!document.getElementById('voiceOnButton').disabled) onLeave();
     mousePosRef.child(userId).set(null);
     gazePosRef.child(userId).set(null);
     voiceRef.child(userId).set(null);
@@ -212,8 +212,8 @@ var mouseVis = function () {
     var gazeButton = document.getElementById("gazeButton");
     var sendButton = document.getElementById("sendButton");
     var blockButton = document.getElementById("blockButton");
-    var joinButton = document.getElementById("joinButton");
-    var leaveButton = document.getElementById("leaveButton");
+    var voiceOnButton = document.getElementById("voiceOnButton");
+    var voiceOffButton = document.getElementById("voiceOffButton");
 
     //Controls toggling for mouse vs. gaze
     mouseButton.addEventListener("change", function () {
@@ -246,15 +246,15 @@ var mouseVis = function () {
     });
 
     //Controls toggling for join vs. leave voice chat
-    joinButton.addEventListener("change", function () {
-      if (joinButton.checked) {
+    voiceOnButton.addEventListener("change", function () {
+      if (voiceOnButton.checked) {
         console.log('join chat');
         onJoin();
       }
     });
 
-    leaveButton.addEventListener("change", function () {
-      if (leaveButton.checked) {
+    voiceOffButton.addEventListener("change", function () {
+      if (voiceOffButton.checked) {
         onLeave();
       }
     });
