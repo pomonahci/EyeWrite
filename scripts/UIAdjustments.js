@@ -13,13 +13,13 @@ var UIAdjustments = function () {
   userlist.style.height = (userlistBox.offsetHeight + userlistBox.offsetTop - userlist.offsetTop) + 'px';
   userlist.style.overflowY = 'scroll';
 
-  var colorWheelPic = document.createElement('img');
-  colorWheelPic.id = "color-wheel-pic";
-  colorWheelPic.src = './graphics/colorwheel.png';
+  var colorEditPencilIcon = document.createElement('img');
+  colorEditPencilIcon.id = "color-edit-pencil-icon";
+  colorEditPencilIcon.src = './graphics/pencil.png';
   
   var el = document.createElement('button');
   el.className = 'colorpicker-button';
-  el.appendChild(colorWheelPic);
+  el.appendChild(colorEditPencilIcon);
 
   var colorPicker = document.createElement('div');
   colorPicker.appendChild(el);
