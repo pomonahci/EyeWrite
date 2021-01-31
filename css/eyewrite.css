@@ -84,9 +84,6 @@ body {
   width: 20px;
 }
 
-/* #voice-chat-active-dot {
-
-} */
 
 #controlContainer {
   background-color: #EBEBEB;
@@ -141,13 +138,17 @@ body {
   font-size: 16px;
 }
 
+.border {
+  border: 1px solid black;
+}
+
 .radio-buttons input[type="radio"] {
   position: relative;
   opacity: 0;
   width: 0;
 }
 
-.radio-buttons label {
+.radio-buttons label[type="radio"] {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 16px;
   font-weight: 400;
@@ -170,6 +171,17 @@ body {
   background-color: var(--button-border);
   border-color: var(--title-text);
 }
+
+.radio-buttons .inline-toggle-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.radio-buttons .inline-toggle-container p {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+}
+
 
 #slider-container {
   position: relative;
@@ -252,4 +264,55 @@ body {
   background-color: var(--button-hover);
   color: var(--button-text);
   border-color: var(--button-hover-border);
+}
+
+.radio-buttons .onoffswitch {
+  margin-right:5px;
+  margin-bottom:10px;
+  position: relative; width: 64px;
+  -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.radio-buttons .onoffswitch-checkbox {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.radio-buttons .onoffswitch-label {
+  display: block; overflow: hidden; cursor: pointer;
+  border: 2px solid #FFFFFF; border-radius: 0px;
+}
+.radio-buttons .onoffswitch-inner {
+  display: block; width: 200%; margin-left: -100%;
+  transition: margin 0.3s ease-in 0s;
+}
+.radio-buttons .onoffswitch-inner:before, .onoffswitch-inner:after {
+  display: block; float: left; width: 50%; height: 22px; padding: 0; line-height: 22px;
+  font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+  box-sizing: border-box;
+}
+.radio-buttons .onoffswitch-inner:before {
+  content: "ON";
+  padding-left: 10px;
+  background-color: #EEEEEE; color: #444;
+}
+.radio-buttons .onoffswitch-inner:after {
+  content: "OFF";
+  padding-right: 10px;
+  background-color: #EEEEEE; color: #999999;
+  text-align: right;
+}
+.radio-buttons .onoffswitch-switch {
+  display: block; width: 16px; margin: 3px;
+  background: #A1A1A1;
+  position: absolute; top: 0; bottom: 0;
+  right: 38px;
+  border: 2px solid #FFFFFF; border-radius: 0px;
+  transition: all 0.3s ease-in 0s; 
+}
+.radio-buttons .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+  margin-left: 0;
+}
+.radio-buttons .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+  right: 0px; 
+  background-color: #FFBF86; 
 }
