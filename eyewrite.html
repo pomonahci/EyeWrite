@@ -63,7 +63,7 @@
         <!-- <input type="radio" id="sendButton" name="dataChoice" checked>
         <label for="sendButton" id="sendButtonLabel" type="radio">Send</label> -->
         <div class="onoffswitch">
-          <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="gazeswitch" tabindex="0" checked>
+          <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="gazeswitch" tabindex="0">
           <label class="onoffswitch-label" for="gazeswitch">
               <span class="onoffswitch-inner"></span>
               <span class="onoffswitch-switch"></span>
@@ -78,7 +78,7 @@
         <label for="blockButton" type="radio">Block</label> -->
         <div>
           <div class="onoffswitch">
-            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="mouseswitch" tabindex="0" checked>
+            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="mouseswitch" tabindex="0">
             <label class="onoffswitch-label" for="mouseswitch">
                 <span class="onoffswitch-inner"></span>
                 <span class="onoffswitch-switch"></span>
@@ -100,7 +100,7 @@
 
     <div>
       <div class="radio-buttons">
-        <div class="border"><p>Voice Chat</p></div>
+        <div><p>Voice Chat</p></div>
         
         <!-- <input type="radio" id="voiceOnButton" name="voiceChoice">
         <label for="voiceOnButton" type="radio">On</label>
@@ -112,13 +112,18 @@
           <p>voice chat</p>
           <button>on</button>
         </div> -->
-        <div class="onoffswitch">
-          <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" tabindex="0" checked>
-          <label class="onoffswitch-label" for="myonoffswitch">
-              <span class="onoffswitch-inner"></span>
-              <span class="onoffswitch-switch"></span>
-          </label>
+        <div class="inline-toggle-container">
+          <div class="onoffswitch">
+            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" tabindex="0">
+            <label class="onoffswitch-label" for="myonoffswitch">
+                <span class="onoffswitch-inner"></span>
+                <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+
+          <button id="mute" disabled=True>Mute</button>
         </div>
+       
 
 
       </div>

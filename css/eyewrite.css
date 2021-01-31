@@ -182,6 +182,12 @@ body {
   font-size: 14px;
 }
 
+.radio-buttons .inline-toggle-container #mute {
+  width: 60px;
+  height: 26px;
+  margin-right: 5px;
+  text-align: center;
+}
 
 #slider-container {
   position: relative;
@@ -268,6 +274,7 @@ body {
 
 .radio-buttons .onoffswitch {
   margin-right:5px;
+  margin-left:5px;
   margin-bottom:10px;
   position: relative; width: 64px;
   -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
@@ -283,7 +290,7 @@ body {
 }
 .radio-buttons .onoffswitch-inner {
   display: block; width: 200%; margin-left: -100%;
-  transition: margin 0.3s ease-in 0s;
+  transition: margin 0.2s ease-in 0s;
 }
 .radio-buttons .onoffswitch-inner:before, .onoffswitch-inner:after {
   display: block; float: left; width: 50%; height: 22px; padding: 0; line-height: 22px;
@@ -307,7 +314,7 @@ body {
   position: absolute; top: 0; bottom: 0;
   right: 38px;
   border: 2px solid #FFFFFF; border-radius: 0px;
-  transition: all 0.3s ease-in 0s; 
+  transition: all 0.2s ease-in 0s; 
 }
 .radio-buttons .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
   margin-left: 0;
