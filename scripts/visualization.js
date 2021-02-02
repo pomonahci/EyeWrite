@@ -651,6 +651,7 @@ var mouseVis = function () {
       console.log(`${userId} joined the chat`);
       alert("Joining the voice chat.");
       document.getElementById("voiceChatSwitch").disabled=false;
+      document.getElementById("mute").disabled=false;
       // createMuteButton();
     }).catch(function (err) {
       console.error(`${userId} failed to turn on audio stream`, err);
@@ -834,6 +835,7 @@ var mouseVis = function () {
     voiceRef.child(userId).set(null);
     alert("Leaving the voice chat.");
     document.getElementById("voiceChatSwitch").disabled=false;
+    document.getElementById("mute").disabled=true;
     
   }
 
