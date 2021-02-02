@@ -642,6 +642,7 @@ var mouseVis = function () {
       createMyPeer();
       console.log(`${userId} joined the chat`);
       alert("Joining the voice chat.");
+      document.getElementById("voiceChatSwitch").disabled=false;
       // createMuteButton();
     }).catch(function (err) {
       console.error(`${userId} failed to turn on audio stream`, err);
@@ -811,7 +812,6 @@ var mouseVis = function () {
    */
   function onLeave() {
     console.log(`${userId} left the chat`);
-    alert("Leaving the voice chat.");
     (async function () {return await myPeer.destroy();})();
     myPeer = null;
     readyToJoin = false;
@@ -821,7 +821,23 @@ var mouseVis = function () {
     }
     // document.getElementById("mute").remove();
     voiceRef.child(userId).set(null);
+    alert("Leaving the voice chat.");
+    document.getElementById("voiceChatSwitch").disabled=false;
+    
   }
+
+  function toggleVoiceChat() {
+    var checkbox = document.getElementById("voiceChatSwitch");
+    if (checkbox.checked == true) {
+      checkbox.disabled=true;
+      onJoin();
+    } else {
+      checkbox.disabled=true;
+      onLeave();
+    }
+  }
+
+  document.getElementById("voiceChatSwitch").onclick = toggleVoiceChat;
 
   // /**
   //  * Listens for when the user exits the tab or window.
