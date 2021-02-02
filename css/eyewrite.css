@@ -88,7 +88,7 @@ body {
 #controlContainer {
   background-color: #EBEBEB;
   width: 175px;
-  height: 438px;
+  height: 404px;
   position: relative;
   border-radius: 4px;
 }
@@ -273,6 +273,7 @@ body {
   position: relative;
   top: 2px;
   width: 145px;
+  margin-top:8px;
 }
 
 #calibrationButton:hover {
