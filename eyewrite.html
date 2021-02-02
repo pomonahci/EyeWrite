@@ -52,11 +52,12 @@
   <div id='colorpicker'></div>
 
   <div id="controlContainer">
+    
     <div id='user-checkboxes-container'></div>
     <select id='user-checkboxes' multiple='multiple'></select>
 
     <div class="radio-buttons">
-      <p>Send Data:</p>
+      <p>Send My Data:</p>
 
       <div class="inline-toggle-container">
         <p class="inline">Gaze</p>
@@ -88,7 +89,7 @@
       </div>
       
     </div>
-
+<!-- 
     <div class="radio-buttons">
       <p>Visualize:</p>
       <input type="radio" id="gazeButton" name="visualizeChoice">
@@ -96,6 +97,11 @@
 
       <input type="radio" id="mouseButton" name="visualizeChoice" checked>
       <label for="mouseButton" type="radio">Mouse</label>
+    </div> -->
+
+    <div id="slider-container">
+      <p class="slider-text">Highlight Size: <span id="numSentences"></span></p>
+      <input type="range" min="2" max="6" value="2" id="sentenceSlider">
     </div>
 
     <div>
@@ -123,22 +129,12 @@
 
           <button id="mute" disabled=True>Mute</button>
         </div>
-       
-
-
       </div>
-    </div>
-    
-
-    <div id="slider-container">
-      <p class="slider-text">Highlight Size: <span id="numSentences"></span></p>
-      <input type="range" min="2" max="6" value="2" id="sentenceSlider">
     </div>
 
     <A href="./WebGazer/www/calibration.html" id="calibrationLink">
-      <input type="button" id="calibrationButton" value="Calibrate">
+      <input type="button" id="calibrationButton" value="Calibrate Gaze">
     </A>
-
 
   </div>
   <div id="audio-streams"></div>
