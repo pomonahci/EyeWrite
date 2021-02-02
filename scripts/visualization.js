@@ -19,7 +19,7 @@ var mouseVis = function () {
 
   //when this user closes their window, removes them from the database and removes their mouse
   window.addEventListener("beforeunload", function () {
-    if (!document.getElementById('voiceOnButton').disabled) onLeave();
+    if (!document.getElementById('voiceChatSwitch').checked) onLeave();
     mousePosRef.child(userId).set(null);
     gazePosRef.child(userId).set(null);
     voiceRef.child(userId).set(null);
@@ -39,7 +39,7 @@ var mouseVis = function () {
     buttonContainer: $("#user-checkboxes-container"),
     buttonClass: "user-checkboxes",
     buttonText: function () {
-      return "Collaborators";
+      return "Visualize Collaborators";
     },
     //updates local dictionaries if a checked value changes
     onChange: function (option, checked, select) {
@@ -210,54 +210,62 @@ var mouseVis = function () {
     //Fetches the buttons responsible for toggling mouse vs. gaze and send vs. block
     var mouseButton = document.getElementById("mouseButton");
     var gazeButton = document.getElementById("gazeButton");
-    var sendButton = document.getElementById("sendButton");
-    var blockButton = document.getElementById("blockButton");
-    var voiceOnButton = document.getElementById("voiceOnButton");
-    var voiceOffButton = document.getElementById("voiceOffButton");
+    var mouseDataSwitch = document.getElementById("mouseSwitch");
+    var gazeDataSwitch = document.getElementById("gazeSwitch");
+    var voiceChatSwitch = document.getElementById("voiceChatSwitch");
 
     //Controls toggling for mouse vs. gaze
-    mouseButton.addEventListener("change", function () {
-      if (mouseButton.checked) {
-        gazePosRef.off("value", visualize);
+      // mouseButton.addEventListener("change", function () {
+      //   if (mouseButton.checked) {
+      //     gazePosRef.off("value", visualize);
+      //     mousePosRef.on("value", visualize);
+      //   }
+      // });
 
-        mousePosRef.on("value", visualize);
-      }
-    });
+      // gazeButton.addEventListener("change", function () {
+      //   if (gazeButton.checked) {
+      //     mousePosRef.off("value", visualize);
 
-    gazeButton.addEventListener("change", function () {
-      if (gazeButton.checked) {
-        mousePosRef.off("value", visualize);
+      //     gazePosRef.on("value", visualize);
+      //   }
+      // });
 
-        gazePosRef.on("value", visualize);
-      }
-    });
+      mouseDataSwitch.addEventListener("change", function () {
+        if (mouseDataSwitch.checked) {
+          gazeDataSwitch.checked = false;
+        }
+      });
 
-    //Controls toggling for send vs. block
-    sendButton.addEventListener("change", function () {
-      if (sendButton.checked) {
-        window.blocked = false;
-      }
-    });
+      gazeDataSwitch.addEventListener("change", function () {
+        if (gazeDataSwitch.checked) {
+          mouseDataSwitch.checked = false;
+        }
+      });
 
-    blockButton.addEventListener("change", function () {
-      if (blockButton.checked) {
-        window.blocked = true;
-      }
-    });
+      // //Controls toggling for send vs. block
+      // sendButton.addEventListener("change", function () {
+      //   if (sendButton.checked) {
+      //     window.blocked = false;
+      //   }
+      // });
 
-    //Controls toggling for join vs. leave voice chat
-    voiceOnButton.addEventListener("change", function () {
-      if (voiceOnButton.checked) {
-        console.log('join chat');
+      // blockButton.addEventListener("change", function () {
+      //   if (blockButton.checked) {
+      //     window.blocked = true;
+      //   }
+      // });
+
+    voiceChatSwitch.addEventListener("change", function () {
+      if (voiceChatSwitch.checked == true) {
+        voiceChatSwitch.disabled=true;
         onJoin();
-      }
-    });
-
-    voiceOffButton.addEventListener("change", function () {
-      if (voiceOffButton.checked) {
+      } else {
+        voiceChatSwitch.disabled=true;
         onLeave();
       }
-    });
+    })
+
+    
   });
 
   //Callback for mouse movement
@@ -646,6 +654,9 @@ var mouseVis = function () {
       // createMuteButton();
     }).catch(function (err) {
       console.error(`${userId} failed to turn on audio stream`, err);
+      voiceChatSwitch = document.getElementById("voiceChatSwitch");
+      voiceChatSwitch.checked = false;
+      voiceChatSwitch.disabled = false;
     });
   }
 
@@ -826,18 +837,6 @@ var mouseVis = function () {
     
   }
 
-  function toggleVoiceChat() {
-    var checkbox = document.getElementById("voiceChatSwitch");
-    if (checkbox.checked == true) {
-      checkbox.disabled=true;
-      onJoin();
-    } else {
-      checkbox.disabled=true;
-      onLeave();
-    }
-  }
-
-  document.getElementById("voiceChatSwitch").onclick = toggleVoiceChat;
 
   // /**
   //  * Listens for when the user exits the tab or window.
