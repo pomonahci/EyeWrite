@@ -16,6 +16,8 @@ var mouseVis = function () {
   var mousePosRef = firebaseRef.child("mice");
   var gazePosRef = firebaseRef.child("gaze");
   var voiceRef = firebaseRef.child("voice");      // reference to voice tree in firebase realtime database
+  var sendingGazeData = false;
+  var sendingMouseData = false;
 
   //when this user closes their window, removes them from the database and removes their mouse
   window.addEventListener("beforeunload", function () {
@@ -42,7 +44,7 @@ var mouseVis = function () {
     buttonContainer: $("#user-checkboxes-container"),
     buttonClass: "user-checkboxes",
     buttonText: function () {
-      return "Visualize Collaborators";
+      return "Collaborators";
     },
     //updates local dictionaries if a checked value changes
     onChange: function (option, checked, select) {
@@ -68,6 +70,29 @@ var mouseVis = function () {
           userHighlights[key].clear();
         }
       }
+    }
+  });
+
+  $("#visualize-checkboxes").multiselect({
+    includeSelectAllOption: true,
+    disableIfEmpty: true,
+    //for UI button positioning purposes
+    buttonContainer: $("#visualize-control-container"),
+    buttonClass: "visualize-checkboxes",
+    buttonText: function () {
+      return "Visualize Data";
+    },
+    //updates local dictionaries if a checked value changes
+    onChange: function (option, checked, select) {
+      console.log('onChange');
+    },
+    //separate callback for select all
+    onSelectAll: function () {
+      console.log('onSelectAll');
+    },
+    //separate callback for deselect all
+    onDeselectAll: function () {
+      console.log('onDeselectAll');
     }
   });
 
@@ -237,12 +262,30 @@ var mouseVis = function () {
       mouseDataSwitch.addEventListener("change", function () {
         if (mouseDataSwitch.checked) {
           gazeDataSwitch.checked = false;
+          console.log('sending mouse data, blocking gaze data.')
+          sendingMouseData = true;
+          sendingGazeData = false;
+          if (window.blocked) window.blocked = true;
+        } else {
+          if (!gazeDataSwitch.checked) {
+            window.blocked = true;
+            console.log('blocking both mouse and gaze data.')
+          }
         }
       });
 
       gazeDataSwitch.addEventListener("change", function () {
         if (gazeDataSwitch.checked) {
           mouseDataSwitch.checked = false;
+          console.log('sending gaze data, blocking mouse data.')
+          sendingGazeData = true;
+          sendingMouseData = false;
+          if (window.blocked) window.blocked = true;
+        } else {
+          if (!gazeDataSwitch.checked) {
+            window.blocked = true;
+            console.log('blocking both gaze and mouse data.')
+          }
         }
       });
 

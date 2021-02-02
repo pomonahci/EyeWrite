@@ -119,6 +119,32 @@ body {
   color: var(--button-text);
 }
 
+#visualize-control-container {
+  position: relative;
+  margin-left: 15px;
+}
+
+.visualize-checkboxes {
+  background-color: var(--sub-box-padding);
+  border: 1px solid var(--outer-border);
+  border-bottom-width: 4px;
+  border-radius: 6px;
+  color: var(--title-text);
+  display: inline-block;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 10px;
+  padding: 4px 6px 2px 6px;
+  width: 145px;
+}
+
+.visualize-checkboxes:hover {
+  background-color: var(--button-hover);
+  border-color: var(--button-hover-border);
+  color: var(--button-text);
+}
+
 .radio-buttons {
   position: relative;
   width: 145px;
