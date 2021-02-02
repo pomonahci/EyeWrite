@@ -187,6 +187,7 @@ body {
   height: 26px;
   margin-right: 5px;
   text-align: center;
+  color: black;
 }
 
 .radio-buttons .inline-toggle-container #mute:disabled {
@@ -194,7 +195,7 @@ body {
   height: 26px;
   margin-right: 5px;
   text-align: center;
-  text-decoration-color: #A1A1A1;
+  color: #A1A1A1;
 }
 
 #slider-container {
