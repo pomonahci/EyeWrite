@@ -18,8 +18,8 @@ var mouseVis = function () {
   var voiceRef = firebaseRef.child("voice");      // reference to voice tree in firebase realtime database
   
   // state variables (0 for none, 1 for mouse, 2 for gaze)
-  var sendDataState = 0;
-  var visualizationState = 0;   
+  window.sendDataState = 0;
+  window.visualizationState = 0;   
 
   //when this user closes their window, removes them from the database and removes their mouse
   window.addEventListener("beforeunload", function () {
@@ -219,7 +219,7 @@ var mouseVis = function () {
         return;
       }
 
-      if (sendDataState != 2) {
+      if (window.sendDataState != 2) {
         gazePosRef.child(userId).update({ line: -1, ch: -1 });
       } else {
         var gazePosition = FirepadCM.coordsChar({ left: data.x, top: data.y }, "window");
@@ -263,25 +263,25 @@ var mouseVis = function () {
       mouseSendSwitch.addEventListener("change", function () {
         if (mouseSendSwitch.checked) {
           gazeSendSwitch.checked = false;
-          sendDataState = 1;
+          window.sendDataState = 1;
         } else {
           if (!gazeSendSwitch.checked) {
-            sendDataState = 0;
+            window.sendDataState = 0;
           }
         }
-        console.log(`send data state: ${getDataState(sendDataState)}`);
+        console.log(`send data state: ${getDataState(window.sendDataState)}`);
       });
 
       gazeSendSwitch.addEventListener("change", function () {
         if (gazeSendSwitch.checked) {
           mouseSendSwitch.checked = false;
-          sendDataState = 2;
+          window.sendDataState = 2;
         } else {
           if (!gazeSendSwitch.checked) {
-            sendDataState = 0;
+            window.sendDataState = 0;
           }
         }
-        console.log(`send data state: ${getDataState(sendDataState)}`);
+        console.log(`send data state: ${getDataState(window.sendDataState)}`);
       });
 
       mouseVisSwitch.addEventListener("change", function () {
@@ -290,15 +290,15 @@ var mouseVis = function () {
             gazeVisSwitch.checked = false;
             gazePosRef.off("value", visualize);
           }
-          if (visualizationState != 1) visualizationState = 1;
+          if (window.visualizationState != 1) window.visualizationState = 1;
           mousePosRef.on("value", visualize);
         } else {
           if (!gazeVisSwitch.checked) {
-            visualizationState = 0;
+            window.visualizationState = 0;
             mousePosRef.off("value", visualize);
           }
         }
-        console.log(`visualization state: ${getDataState(visualizationState)}`);
+        console.log(`visualization state: ${getDataState(window.visualizationState)}`);
       });
 
       gazeVisSwitch.addEventListener("change", function () {
@@ -307,15 +307,15 @@ var mouseVis = function () {
             mouseVisSwitch.checked = false;
             mousePosRef.off("value", visualize);
           }
-          if (visualizationState != 2) visualizationState = 2;
+          if (window.visualizationState != 2) window.visualizationState = 2;
           gazePosRef.on("value", visualize);
         } else {
           if (!mouseVisSwitch.checked) {
-            visualizationState = 0;
+            window.visualizationState = 0;
             mousePosRef.off("value", visualize);
           }
         }
-        console.log(`visualization state: ${getDataState(visualizationState)}`);
+        console.log(`visualization state: ${getDataState(window.visualizationState)}`);
       });
 
       // //Controls toggling for send vs. block
@@ -348,7 +348,7 @@ var mouseVis = function () {
   //Callback for mouse movement
   function mouseMove(event) {
     //transforms mouse coordinates to codemirror document position
-    if (sendDataState != 1) {
+    if (window.sendDataState != 1) {
       mousePosRef.child(userId).update({ line: -1, ch: -1 }); //to signal in the database that this user's data is being blocked
     } else {
       var mouse = FirepadCM.coordsChar({ left: event.clientX, top: event.clientY }, "window"); //else send as a CodeMirror line and ch
