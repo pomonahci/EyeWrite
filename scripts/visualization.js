@@ -312,7 +312,7 @@ var mouseVis = function () {
         } else {
           if (!mouseVisSwitch.checked) {
             window.visualizationState = 0;
-            mousePosRef.off("value", visualize);
+            gazePosRef.off("value", visualize);
           }
         }
         console.log(`visualization state: ${getDataState(window.visualizationState)}`);
