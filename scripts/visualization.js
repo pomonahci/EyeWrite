@@ -376,7 +376,7 @@ var mouseVis = function () {
             //finds the word (token) in the codemirror editor nearest to the position given
             // NOT WORKING CORRECTLY, RETURNS TOKEN OF THE ENTIRE PARAGRAPH.
             let visToken = FirepadCM.getTokenAt({ line: line, ch: ch });
-            // getTokenAt returns the entire paragraph (line corresponds to the paragraph).
+            // getTokenAt returns the entire paragraph (line corresponds to paragraph, ch corresponds to exact character in paragraph)
 
             //transforms the word into multi-sentence range
             let sentences = wordToLine(visToken, line);
@@ -431,7 +431,7 @@ var mouseVis = function () {
     //the index found using the function isToken which checks if each element is the given token
     let index = lineTokens.findIndex(isToken);
 
-    var slider = document.getElementById("sentenceSlider");
+    // var slider = document.getElementById("sentenceSlider");
 
     if (index != -1) {
 
@@ -440,8 +440,10 @@ var mouseVis = function () {
       let rightBump = index;
 
       //counters for the number of periods allowed on the left of the word and on the right of the word
-      let leftPeriodCount = slider.value;
-      let rightPeriodCount = slider.value;
+      // let leftPeriodCount = slider.value;
+      // let rightPeriodCount = slider.value;
+      let leftPeriodCount = 2;
+      let rightPeriodCount = 2;
 
       //loop until period conditions are satisfied
       while (true) {
