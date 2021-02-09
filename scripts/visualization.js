@@ -252,20 +252,6 @@ var mouseVis = function () {
     var voiceMuteButton = document.getElementById("mute");
 
     //Controls toggling for mouse vs. gaze
-      // mouseButton.addEventListener("change", function () {
-      //   if (mouseButton.checked) {
-      //     gazePosRef.off("value", visualize);
-      //     mousePosRef.on("value", visualize);
-      //   }
-      // });
-
-      // gazeButton.addEventListener("change", function () {
-      //   if (gazeButton.checked) {
-      //     mousePosRef.off("value", visualize);
-
-      //     gazePosRef.on("value", visualize);
-      //   }
-      // });
 
       function getDataState(val) {
         if (val == 0) return 'none';
@@ -300,9 +286,11 @@ var mouseVis = function () {
 
       mouseVisSwitch.addEventListener("change", function () {
         if (mouseVisSwitch.checked) {
-          gazeVisSwitch.checked = false;
-          visualizationState = 1;
-          gazePosRef.off("value", visualize);
+          if (gazeVisSwitch.checked) {
+            gazeVisSwitch.checked = false;
+            gazePosRef.off("value", visualize);
+          }
+          if (visualizationState != 1) visualizationState = 1;
           mousePosRef.on("value", visualize);
         } else {
           if (!gazeVisSwitch.checked) {
@@ -315,10 +303,12 @@ var mouseVis = function () {
 
       gazeVisSwitch.addEventListener("change", function () {
         if (gazeVisSwitch.checked) {
-          mouseVisSwitch.checked = false;
-          visualizationState = 2;
+          if (mouseVisSwitch.checked) {
+            mouseVisSwitch.checked = false;
+            mousePosRef.off("value", visualize);
+          }
+          if (visualizationState != 2) visualizationState = 2;
           gazePosRef.on("value", visualize);
-          mousePosRef.off("value", visualize);
         } else {
           if (!mouseVisSwitch.checked) {
             visualizationState = 0;
