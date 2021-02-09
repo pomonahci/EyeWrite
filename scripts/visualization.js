@@ -302,9 +302,13 @@ var mouseVis = function () {
         if (mouseVisSwitch.checked) {
           gazeVisSwitch.checked = false;
           visualizationState = 1;
+          gazePosRef.off("value", visualize);
+          mousePosRef.on("value", visualize);
         } else {
           if (!gazeVisSwitch.checked) {
             visualizationState = 0;
+            gazePosRef.off("value", visualize);
+            mousePosRef.off("value", visualize);
           }
         }
         console.log(`visualization state: ${getDataState(visualizationState)}`);
@@ -314,9 +318,13 @@ var mouseVis = function () {
         if (gazeVisSwitch.checked) {
           mouseVisSwitch.checked = false;
           visualizationState = 2;
+          gazePosRef.on("value", visualize);
+          mousePosRef.off("value", visualize);
         } else {
           if (!mouseVisSwitch.checked) {
             visualizationState = 0;
+            gazePosRef.off("value", visualize);
+            mousePosRef.off("value", visualize);
           }
         }
         console.log(`visualization state: ${getDataState(visualizationState)}`);
