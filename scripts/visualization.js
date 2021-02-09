@@ -277,7 +277,7 @@ var mouseVis = function () {
           mouseSendSwitch.checked = false;
           window.sendDataState = 2;
         } else {
-          if (!gazeSendSwitch.checked) {
+          if (!mouseSendSwitch.checked) {
             window.sendDataState = 0;
           }
         }
