@@ -318,19 +318,6 @@ var mouseVis = function () {
         console.log(`visualization state: ${getDataState(window.visualizationState)}`);
       });
 
-      // //Controls toggling for send vs. block
-      // sendButton.addEventListener("change", function () {
-      //   if (sendButton.checked) {
-      //     window.blocked = false;
-      //   }
-      // });
-
-      // blockButton.addEventListener("change", function () {
-      //   if (blockButton.checked) {
-      //     window.blocked = true;
-      //   }
-      // });
-
     voiceChatSwitch.addEventListener("change", function () {
       if (voiceChatSwitch.checked == true) {
         voiceChatSwitch.disabled=true;
@@ -387,12 +374,14 @@ var mouseVis = function () {
           } else {
 
             //finds the word (token) in the codemirror editor nearest to the position given
+            // NOT WORKING CORRECTLY, RETURNS TOKEN OF THE ENTIRE PARAGRAPH.
             let visToken = FirepadCM.getTokenAt({ line: line, ch: ch });
+            // getTokenAt returns the entire paragraph (line corresponds to the paragraph).
 
             //transforms the word into multi-sentence range
             let sentences = wordToLine(visToken, line);
 
-            //default for if something goes wrong and sentences is null
+            // default for if something goes wrong and sentences is null
             if (!sentences) {
               sentences.left = visToken.start;
               sentences.right = vistToken.end;
