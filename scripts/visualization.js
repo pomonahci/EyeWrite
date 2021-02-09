@@ -197,7 +197,7 @@ var mouseVis = function () {
     });
 
     //Firebase listener for mouse values, this callback is responsible for visualizing all users
-    gazePosRef.on("value", visualize);
+    // gazePosRef.on("value", visualize);
 
     /*
       NOTICE!
@@ -302,13 +302,12 @@ var mouseVis = function () {
         if (mouseVisSwitch.checked) {
           gazeVisSwitch.checked = false;
           visualizationState = 1;
-          gazePosRef.on("value", function (snapshot) {});
+          gazePosRef.off("value", visualize);
           mousePosRef.on("value", visualize);
         } else {
           if (!gazeVisSwitch.checked) {
             visualizationState = 0;
-            gazePosRef.on("value", function (snapshot) {});
-            mousePosRef.on("value", function (snapshot) {});
+            mousePosRef.off("value", visualize);
           }
         }
         console.log(`visualization state: ${getDataState(visualizationState)}`);
@@ -319,12 +318,11 @@ var mouseVis = function () {
           mouseVisSwitch.checked = false;
           visualizationState = 2;
           gazePosRef.on("value", visualize);
-          mousePosRef.on("value", function (snapshot) {});
+          mousePosRef.off("value", visualize);
         } else {
           if (!mouseVisSwitch.checked) {
             visualizationState = 0;
-            gazePosRef.on("value", function (snapshot) {});
-            mousePosRef.on("value", function (snapshot) {});
+            mousePosRef.off("value", visualize);
           }
         }
         console.log(`visualization state: ${getDataState(visualizationState)}`);
