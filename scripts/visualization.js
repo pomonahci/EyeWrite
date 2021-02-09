@@ -348,7 +348,7 @@ var mouseVis = function () {
   //Callback for mouse movement
   function mouseMove(event) {
     //transforms mouse coordinates to codemirror document position
-    if (window.blocked) {
+    if (sendDataState != 1) {
       mousePosRef.child(userId).update({ line: -1, ch: -1 }); //to signal in the database that this user's data is being blocked
     } else {
       var mouse = FirepadCM.coordsChar({ left: event.clientX, top: event.clientY }, "window"); //else send as a CodeMirror line and ch
