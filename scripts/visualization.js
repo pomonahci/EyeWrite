@@ -46,7 +46,7 @@ var mouseVis = function () {
     buttonContainer: $("#user-checkboxes-container"),
     buttonClass: "user-checkboxes",
     buttonText: function () {
-      return "Collaborators";
+      return "All Users";
     },
     //updates local dictionaries if a checked value changes
     onChange: function (option, checked, select) {
