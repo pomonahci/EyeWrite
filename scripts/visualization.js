@@ -16,8 +16,10 @@ var mouseVis = function () {
   var mousePosRef = firebaseRef.child("mice");
   var gazePosRef = firebaseRef.child("gaze");
   var voiceRef = firebaseRef.child("voice");      // reference to voice tree in firebase realtime database
-  var sendingGazeData = false;
-  var sendingMouseData = false;
+  
+  // state variables (0 for none, 1 for mouse, 2 for gaze)
+  var sendDataState = 0;
+  var visualizationState = 0;   
 
   //when this user closes their window, removes them from the database and removes their mouse
   window.addEventListener("beforeunload", function () {
@@ -96,6 +98,7 @@ var mouseVis = function () {
     }
   });
 
+  // FIREBASE TOGGLES HERE
   firepad.on("ready", function () {
     if (firepad.isHistoryEmpty()) {
       firepad.setText("Welcome to EyeWrite");
@@ -216,7 +219,7 @@ var mouseVis = function () {
         return;
       }
 
-      if (window.blocked) {
+      if (sendDataState != 2) {
         gazePosRef.child(userId).update({ line: -1, ch: -1 });
       } else {
         var gazePosition = FirepadCM.coordsChar({ left: data.x, top: data.y }, "window");
@@ -238,8 +241,13 @@ var mouseVis = function () {
     //Fetches the buttons responsible for toggling mouse vs. gaze and send vs. block
     var mouseButton = document.getElementById("mouseButton");
     var gazeButton = document.getElementById("gazeButton");
-    var mouseDataSwitch = document.getElementById("mouseSwitch");
-    var gazeDataSwitch = document.getElementById("gazeSwitch");
+
+    var mouseSendSwitch = document.getElementById("mouseSendSwitch");
+    var gazeSendSwitch = document.getElementById("gazeSendSwitch");
+
+    var mouseVisSwitch = document.getElementById("mouseVisSwitch");
+    var gazeVisSwitch = document.getElementById("gazeVisSwitch");
+
     var voiceChatSwitch = document.getElementById("voiceChatSwitch");
     var voiceMuteButton = document.getElementById("mute");
 
@@ -259,34 +267,59 @@ var mouseVis = function () {
       //   }
       // });
 
-      mouseDataSwitch.addEventListener("change", function () {
-        if (mouseDataSwitch.checked) {
-          gazeDataSwitch.checked = false;
-          console.log('sending mouse data, blocking gaze data.')
-          sendingMouseData = true;
-          sendingGazeData = false;
-          if (window.blocked) window.blocked = true;
+      function getDataState(val) {
+        if (val == 0) return 'none';
+        else if (val == 1) return 'mouse';
+        else if (val == 2) return 'gaze';
+        else return 'invalid';
+      }
+
+      mouseSendSwitch.addEventListener("change", function () {
+        if (mouseSendSwitch.checked) {
+          gazeSendSwitch.checked = false;
+          sendDataState = 1;
         } else {
-          if (!gazeDataSwitch.checked) {
-            window.blocked = true;
-            console.log('blocking both mouse and gaze data.')
+          if (!gazeSendSwitch.checked) {
+            sendDataState = 0;
           }
         }
+        console.log(`send data state: ${getDataState(sendDataState)}`);
       });
 
-      gazeDataSwitch.addEventListener("change", function () {
-        if (gazeDataSwitch.checked) {
-          mouseDataSwitch.checked = false;
-          console.log('sending gaze data, blocking mouse data.')
-          sendingGazeData = true;
-          sendingMouseData = false;
-          if (window.blocked) window.blocked = true;
+      gazeSendSwitch.addEventListener("change", function () {
+        if (gazeSendSwitch.checked) {
+          mouseSendSwitch.checked = false;
+          sendDataState = 2;
         } else {
-          if (!gazeDataSwitch.checked) {
-            window.blocked = true;
-            console.log('blocking both gaze and mouse data.')
+          if (!gazeSendSwitch.checked) {
+            sendDataState = 0;
           }
         }
+        console.log(`send data state: ${getDataState(sendDataState)}`);
+      });
+
+      mouseVisSwitch.addEventListener("change", function () {
+        if (mouseVisSwitch.checked) {
+          gazeVisSwitch.checked = false;
+          visualizationState = 1;
+        } else {
+          if (!gazeVisSwitch.checked) {
+            visualizationState = 0;
+          }
+        }
+        console.log(`visualization state: ${getDataState(visualizationState)}`);
+      });
+
+      gazeVisSwitch.addEventListener("change", function () {
+        if (gazeVisSwitch.checked) {
+          mouseVisSwitch.checked = false;
+          visualizationState = 2;
+        } else {
+          if (!mouseVisSwitch.checked) {
+            visualizationState = 0;
+          }
+        }
+        console.log(`visualization state: ${getDataState(visualizationState)}`);
       });
 
       // //Controls toggling for send vs. block
@@ -881,10 +914,9 @@ var mouseVis = function () {
     }
     voiceRef.child(userId).set(null);
     alert("Leaving the voice chat.");
-    // document.getElementById("voiceChatSwitch").disabled=false;
     document.getElementById("mute").disabled=true;
     document.getElementById("mute").innerText="Mute";
-    
+    document.getElementById("voiceChatSwitch").disabled=false;
   }
 
 
