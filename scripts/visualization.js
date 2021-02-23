@@ -392,6 +392,8 @@ var mouseVis = function () {
 
             //transforms the word into multi-sentence range
             let sentences = wordToLine(visToken, line);
+            console.log(line, ch);
+            console.log(visToken);
             console.log(sentences);
 
             // default for if something goes wrong and sentences is null
