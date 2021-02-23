@@ -219,7 +219,7 @@ var mouseVis = function () {
         return;
       }
 
-      if (window.sendDataState == 2 || window.sendDataState == 3) {
+      if (window.sendDataState == 0 || window.sendDataState == 1) {
         gazePosRef.child(userId).update({ line: -1, ch: -1 });
       } else {
         var gazePosition = FirepadCM.coordsChar({ left: data.x, top: data.y }, "window");
@@ -347,7 +347,7 @@ var mouseVis = function () {
   //Callback for mouse movement
   function mouseMove(event) {
     //transforms mouse coordinates to codemirror document position
-    if (window.sendDataState == 1 || window.sendDataState == 3) {
+    if (window.sendDataState == 0 || window.sendDataState == 2) {
       mousePosRef.child(userId).update({ line: -1, ch: -1 }); //to signal in the database that this user's data is being blocked
     } else {
       var mouse = FirepadCM.coordsChar({ left: event.clientX, top: event.clientY }, "window"); //else send as a CodeMirror line and ch
