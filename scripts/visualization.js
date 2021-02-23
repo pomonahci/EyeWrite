@@ -464,7 +464,7 @@ var mouseVis = function () {
     if (index != -1) {
       let numPad = Math.floor(slider.value / 2);
       if (slider.value % 2 == 0) {
-        if (ch <= Math.floor(token.end - token.start / 2)) {
+        if (ch <= Math.floor((token.end - token.start) / 2)) {
           return { left: line - numPad, right: line + numPad };
         } else {
           return { left: line - numPad + 1, right: line + numPad + 1 };
