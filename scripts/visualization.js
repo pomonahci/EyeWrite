@@ -451,10 +451,10 @@ var mouseVis = function () {
   function wordToLines(token, line, ch) {
 
     //function for finding the token index in the array of tokens
-    // const isToken = (element) => element.start == token.start && element.end == token.end;
+    const isToken = (element) => element.start == token.start && element.end == token.end;
 
     //array of all tokens from the given line
-    // let lineTokens = FirepadCM.getLineTokens(line);
+    let lineTokens = FirepadCM.getLineTokens(line);
 
     //the index found using the function isToken which checks if each element is the given token
     let index = lineTokens.findIndex(isToken);
