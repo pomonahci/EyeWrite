@@ -689,10 +689,10 @@ var mouseVis = function () {
     if (userId != snapshot.key) {                                   // when the updated child is not the local client
       snapshot.forEach(function (child) {
         remoteClients[snapshot.key][child.key] = child.val();
-        if (muteStatus[snapshot.child("stream_id")] && muteStatus[snapshot.child("stream_id")] != snapshot.child("is_muted")) {
-          toggleAudioElement(snapshot.child("stream_id"));
-        }
+        muteStatus[snapshot.child("stream_id")] = snapshot.child("is_muted");
+        toggleAudioElement(snapshot.child("stream_id"));
       });
+
     } else {                                                        // when the updated child is the local client
       if (snapshot.child("is_ready")) {
         readyToJoin = true;
@@ -830,7 +830,7 @@ var mouseVis = function () {
     if (audioElems[streamId]) {
       let stream = audioElems[streamId].srcObject;
       stream.getAudioTracks().forEach(function (track) {
-        track.enabled = !track.enabled;
+        track.enabled = !muteStatus[streamId];
       });
     }
   }
