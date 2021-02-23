@@ -260,6 +260,12 @@ var mouseVis = function () {
       else return 'invalid';
     }
 
+    function clearHighlights() {
+      for (const [_, singleUserHighlight] of Object.entries(userHighlights)) {
+        singleUserHightlight.clear();
+      }
+    }
+
     mouseSendSwitch.addEventListener("change", function () {
       if (mouseSendSwitch.checked) {
         // gazeSendSwitch.checked = false;
@@ -273,6 +279,7 @@ var mouseVis = function () {
           window.sendDataState = 2;
         } else {
           window.sendDataState = 0;
+          clearHighlights();
         }
       }
       // console.log(`send data state: ${getDataState(window.sendDataState)}`);
@@ -291,6 +298,7 @@ var mouseVis = function () {
           window.sendDataState = 1;
         } else {
           window.sendDataState = 0;
+          clearHighlights();
         }
       }
       // console.log(`send data state: ${getDataState(window.sendDataState)}`);
@@ -308,6 +316,7 @@ var mouseVis = function () {
         if (!gazeVisSwitch.checked) {
           window.visualizationState = 0;
           mousePosRef.off("value", visualize);
+          clearHighlights();
         }
       }
       console.log(`visualization state: ${getDataState(window.visualizationState)}`);
@@ -325,6 +334,7 @@ var mouseVis = function () {
         if (!mouseVisSwitch.checked) {
           window.visualizationState = 0;
           gazePosRef.off("value", visualize);
+          clearHighlights();
         }
       }
       console.log(`visualization state: ${getDataState(window.visualizationState)}`);
@@ -510,9 +520,10 @@ var mouseVis = function () {
 
     //creates a highlight (TextMarker object) for the multi-sentence highlight range and uses the user"s color
     let highlight = FirepadCM.markText(
-      // { line: line, ch: sentences["left"] },
-      { line: line - 1, ch: 0 },
+      { line: line, ch: sentences["left"] },
       { line: line, ch: sentences["right"] },
+      // region[0],
+      // region[1],
       { css: "background: " + hexToRgb(userColors[userId]) });
 
     //associates this highlight with the user it came from in our local dictionary to keep track
