@@ -462,9 +462,9 @@ var mouseVis = function () {
     var slider = document.getElementById("sentenceSlider");
 
     if (index != -1) {
-      let numPad = Int(slider.value / 2);
+      let numPad = Math.floor(slider.value / 2);
       if (slider.value % 2 == 0) {
-        if (ch <= Int(token.end - token.start / 2)) {
+        if (ch <= Math.floor(token.end - token.start / 2)) {
           return { left: line - numPad, right: line + numPad - 1 };
         } else {
           return { left: line - numPad + 1, right: line + numPad };
