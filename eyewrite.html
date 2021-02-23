@@ -52,7 +52,7 @@
   <div id='colorpicker'></div>
 
   <div id="controlContainer">
-    
+
     <div id='user-checkboxes-container'></div>
     <select id='user-checkboxes' multiple='multiple'></select>
 
@@ -66,12 +66,12 @@
         <div class="onoffswitch">
           <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="gazeVisSwitch" tabindex="0">
           <label class="onoffswitch-label" for="gazeVisSwitch">
-              <span class="onoffswitch-inner"></span>
-              <span class="onoffswitch-switch"></span>
+            <span class="onoffswitch-inner"></span>
+            <span class="onoffswitch-switch"></span>
           </label>
         </div>
       </div>
-      
+
 
       <div class="inline-toggle-container">
         <p>Mouse</p>
@@ -81,13 +81,13 @@
           <div class="onoffswitch">
             <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="mouseVisSwitch" tabindex="0">
             <label class="onoffswitch-label" for="mouseVisSwitch">
-                <span class="onoffswitch-inner"></span>
-                <span class="onoffswitch-switch"></span>
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
             </label>
           </div>
         </div>
       </div>
-      
+
     </div>
 
     <!-- <div id="slider-container">
@@ -105,12 +105,12 @@
         <div class="onoffswitch">
           <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="gazeSendSwitch" tabindex="0">
           <label class="onoffswitch-label" for="gazeSendSwitch">
-              <span class="onoffswitch-inner"></span>
-              <span class="onoffswitch-switch"></span>
+            <span class="onoffswitch-inner"></span>
+            <span class="onoffswitch-switch"></span>
           </label>
         </div>
       </div>
-      
+
 
       <div class="inline-toggle-container">
         <p>Mouse</p>
@@ -120,15 +120,15 @@
           <div class="onoffswitch">
             <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="mouseSendSwitch" tabindex="0">
             <label class="onoffswitch-label" for="mouseSendSwitch">
-                <span class="onoffswitch-inner"></span>
-                <span class="onoffswitch-switch"></span>
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
             </label>
           </div>
         </div>
       </div>
-      
+
     </div>
-<!-- 
+    <!-- 
     <div class="radio-buttons">
       <p>Visualize:</p>
       <input type="radio" id="gazeButton" name="visualizeChoice">
@@ -141,8 +141,10 @@
 
     <div>
       <div class="radio-buttons">
-        <div><p>Voice Chat</p></div>
-        
+        <div>
+          <p>Voice Chat</p>
+        </div>
+
         <!-- <input type="radio" id="voiceOnButton" name="voiceChoice">
         <label for="voiceOnButton" type="radio">On</label>
   
@@ -157,8 +159,8 @@
           <div class="onoffswitch">
             <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="voiceChatSwitch" tabindex="0">
             <label class="onoffswitch-label" for="voiceChatSwitch">
-                <span class="onoffswitch-inner"></span>
-                <span class="onoffswitch-switch"></span>
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
             </label>
           </div>
 
@@ -175,26 +177,26 @@
   <div id="audio-streams"></div>
 
   <script>
-    // var firebaseConfig = {
-    //   apiKey: "AIzaSyAmD2D9XCpVDQcJF08chqCbkCpL-_Jfu_Y",
-    //   authDomain: "eyewrite-62d75.firebaseapp.com",
-    //   databaseURL: "https://eyewrite-62d75.firebaseio.com",
-    //   projectId: "eyewrite-62d75",
-    //   storageBucket: "eyewrite-62d75.appspot.com",
-    //   messagingSenderId: "998123311342",
-    //   appId: "1:998123311342:web:abed435afee503a2eb63ff",
-    //   measurementId: "G-8EGTMW2Q4G"
-    // };
     var firebaseConfig = {
-      apiKey: "AIzaSyBuN6J2LmZCPqvJZxi9AWFEM8CJRq5CLko",
-      authDomain: "eyewrite-a2c67.firebaseapp.com",
-      databaseURL: "https://eyewrite-a2c67-default-rtdb.firebaseio.com",
-      projectId: "eyewrite-a2c67",
-      storageBucket: "eyewrite-a2c67.appspot.com",
-      messagingSenderId: "599864983534",
-      appId: "1:599864983534:web:1f7f0632ea14ec045558ff",
+      apiKey: "AIzaSyAmD2D9XCpVDQcJF08chqCbkCpL-_Jfu_Y",
+      authDomain: "eyewrite-62d75.firebaseapp.com",
+      databaseURL: "https://eyewrite-62d75.firebaseio.com",
+      projectId: "eyewrite-62d75",
+      storageBucket: "eyewrite-62d75.appspot.com",
+      messagingSenderId: "998123311342",
+      appId: "1:998123311342:web:abed435afee503a2eb63ff",
       measurementId: "G-8EGTMW2Q4G"
     };
+    // var firebaseConfig = {
+    //   apiKey: "AIzaSyBuN6J2LmZCPqvJZxi9AWFEM8CJRq5CLko",
+    //   authDomain: "eyewrite-a2c67.firebaseapp.com",
+    //   databaseURL: "https://eyewrite-a2c67-default-rtdb.firebaseio.com",
+    //   projectId: "eyewrite-a2c67",
+    //   storageBucket: "eyewrite-a2c67.appspot.com",
+    //   messagingSenderId: "599864983534",
+    //   appId: "1:599864983534:web:1f7f0632ea14ec045558ff",
+    //   measurementId: "G-8EGTMW2Q4G"
+    // };
 
 
     // Initialize Firebase
