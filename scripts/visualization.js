@@ -262,7 +262,7 @@ var mouseVis = function () {
 
     function clearHighlights() {
       for (const [_, singleUserHighlight] of Object.entries(userHighlights)) {
-        singleUserHightlight.clear();
+        singleUserHighlight.clear();
       }
     }
 
@@ -522,8 +522,6 @@ var mouseVis = function () {
     let highlight = FirepadCM.markText(
       { line: line, ch: sentences["left"] },
       { line: line, ch: sentences["right"] },
-      // region[0],
-      // region[1],
       { css: "background: " + hexToRgb(userColors[userId]) });
 
     //associates this highlight with the user it came from in our local dictionary to keep track
