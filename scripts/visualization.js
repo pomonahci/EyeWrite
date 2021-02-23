@@ -343,6 +343,7 @@ var mouseVis = function () {
     voiceChatSwitch.addEventListener("change", function () {
       if (voiceChatSwitch.checked == true) {
         voiceChatSwitch.disabled = true;
+        voiceRef.child(userId).update({ is_muted: false, is_ready: true, peer_id: -1, stream_id: -1 })
         onJoin();
       } else {
         voiceChatSwitch.disabled = true;
@@ -695,7 +696,7 @@ var mouseVis = function () {
 
     if (myPeer && myPeer.id && readyToJoin) {
       for (uId in remoteClients) {
-        if (uId < userId && remoteClients[uId]["is_ready"] && remoteClients[uId]["peer_id"]) callRemotePeer(uId);
+        if (uId < userId && remoteClients[uId]["is_ready"] && remoteClients[uId]["peer_id"] && remoteClients[uId]["peer_id"] != -1) callRemotePeer(uId);
       }
     }
   });
@@ -833,12 +834,14 @@ var mouseVis = function () {
    */
   function removeAudioElement(streamId) {
     let audio = audioElems[streamId];
-    audio.srcObject.getTracks().forEach(function (track) {
-      track.stop();
-    });
-    audio.remove();
-    delete audioElems[streamId];
-    console.log(`removed ${streamId} from audio`);
+    if (audio != -1) {
+      audio.srcObject.getTracks().forEach(function (track) {
+        track.stop();
+      });
+      audio.remove();
+      delete audioElems[streamId];
+      console.log(`removed ${streamId} from audio`);
+    }
   }
 
   /**
