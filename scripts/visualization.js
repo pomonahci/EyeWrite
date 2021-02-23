@@ -279,7 +279,7 @@ var mouseVis = function () {
           window.sendDataState = 2;
         } else {
           window.sendDataState = 0;
-          clearHighlights();
+          // clearHighlights();
         }
       }
       // console.log(`send data state: ${getDataState(window.sendDataState)}`);
@@ -298,7 +298,7 @@ var mouseVis = function () {
           window.sendDataState = 1;
         } else {
           window.sendDataState = 0;
-          clearHighlights();
+          // clearHighlights();
         }
       }
       // console.log(`send data state: ${getDataState(window.sendDataState)}`);
