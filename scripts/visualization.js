@@ -219,7 +219,7 @@ var mouseVis = function () {
         return;
       }
 
-      if (window.sendDataState != 2) {
+      if (window.sendDataState == 2 || window.sendDataState == 3) {
         gazePosRef.child(userId).update({ line: -1, ch: -1 });
       } else {
         var gazePosition = FirepadCM.coordsChar({ left: data.x, top: data.y }, "window");
@@ -262,10 +262,16 @@ var mouseVis = function () {
 
     mouseSendSwitch.addEventListener("change", function () {
       if (mouseSendSwitch.checked) {
-        gazeSendSwitch.checked = false;
-        window.sendDataState = 1;
+        // gazeSendSwitch.checked = false;
+        if (gazeSendSwitch.checked) {
+          window.sendDataState = 3;
+        } else {
+          window.sendDataState = 1;
+        }
       } else {
-        if (!gazeSendSwitch.checked) {
+        if (gazeSendSwitch.checked) {
+          window.sendDataState = 2;
+        } else {
           window.sendDataState = 0;
         }
       }
@@ -274,10 +280,16 @@ var mouseVis = function () {
 
     gazeSendSwitch.addEventListener("change", function () {
       if (gazeSendSwitch.checked) {
-        mouseSendSwitch.checked = false;
-        window.sendDataState = 2;
+        // mouseSendSwitch.checked = false;
+        if (mouseSendSwitch.checked) {
+          window.sendDataState = 3;
+        } else {
+          window.sendDataState = 2;
+        }
       } else {
-        if (!mouseSendSwitch.checked) {
+        if (mouseSendSwitch.checked) {
+          window.sendDataState = 1;
+        } else {
           window.sendDataState = 0;
         }
       }
@@ -335,7 +347,7 @@ var mouseVis = function () {
   //Callback for mouse movement
   function mouseMove(event) {
     //transforms mouse coordinates to codemirror document position
-    if (window.sendDataState != 1) {
+    if (window.sendDataState == 1 || window.sendDataState == 3) {
       mousePosRef.child(userId).update({ line: -1, ch: -1 }); //to signal in the database that this user's data is being blocked
     } else {
       var mouse = FirepadCM.coordsChar({ left: event.clientX, top: event.clientY }, "window"); //else send as a CodeMirror line and ch
