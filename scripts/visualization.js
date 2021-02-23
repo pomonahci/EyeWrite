@@ -275,7 +275,7 @@ var mouseVis = function () {
           window.sendDataState = 0;
         }
       }
-      console.log(`send data state: ${getDataState(window.sendDataState)}`);
+      // console.log(`send data state: ${getDataState(window.sendDataState)}`);
     });
 
     gazeSendSwitch.addEventListener("change", function () {
@@ -293,7 +293,7 @@ var mouseVis = function () {
           window.sendDataState = 0;
         }
       }
-      console.log(`send data state: ${getDataState(window.sendDataState)}`);
+      // console.log(`send data state: ${getDataState(window.sendDataState)}`);
     });
 
     mouseVisSwitch.addEventListener("change", function () {
@@ -392,6 +392,7 @@ var mouseVis = function () {
 
             //transforms the word into multi-sentence range
             let sentences = wordToLine(visToken, line);
+            console.log(sentences);
 
             // default for if something goes wrong and sentences is null
             if (!sentences) {
