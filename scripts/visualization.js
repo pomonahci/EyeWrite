@@ -653,13 +653,15 @@ var mouseVis = function () {
   var myStream;               // the local client's media stream
   var readyToJoin = false;    // whether the local client is ready to join
   var remoteClients = {};     // collection of remote clients, indexed by user id
-  var audioElems = {};        // collection of live audio elements
+  var audioElems = {};        // collection of (active) audio elements
+  var muteStatus = {};        // collection of mute status for each audio element
   var config = {
     'iceServers': [
       { 'urls': 'stun:stun.services.mozilla.com' },
       { 'urls': 'stun:stun.l.google.com:19302' }
     ]
   };
+  var muteBtn = document.getElementById("mute");
 
   /**
    * Listener for new additions to voiceRef.
@@ -687,6 +689,7 @@ var mouseVis = function () {
     if (userId != snapshot.key) {                                   // when the updated child is not the local client
       snapshot.forEach(function (child) {
         remoteClients[snapshot.key][child.key] = child.val();
+        muteStatus[snapshot.child("stream_id")] = snapshot.child("is_muted");
       });
     } else {                                                        // when the updated child is the local client
       if (snapshot.child("is_ready")) {
@@ -706,6 +709,7 @@ var mouseVis = function () {
    */
   voiceRef.on("child_removed", function (snapshot) {
     if (remoteClients[snapshot.key]) {
+      delete muteStatus[snapshot.child("stream_id")];
       delete remoteClients[snapshot.key];
     }
     let streamId = snapshot.child("stream_id").val()
@@ -739,21 +743,20 @@ var mouseVis = function () {
    * Toggles the mute button.
    */
   function toggleMuteButton() {
-    let muteBtn = document.getElementById("mute");
     if (muteBtn.innerText == "Mute") {
       // alert('muting')
       voiceRef.child(userId).update({ is_muted: true });
       muteBtn.innerText = "Unmute";
-      for (uId in remoteClients) {
-        if (remoteClients[uId]["conn"]) remoteClients[uId]["conn"].send(`${userId} mute ${myStream.id}`);
-      }
+      // for (uId in remoteClients) {
+      //   if (remoteClients[uId]["conn"]) remoteClients[uId]["conn"].send(`${userId} mute ${myStream.id}`);
+      // }
     } else if (muteBtn.innerText == "Unmute") {
       // alert('unmuting')
       voiceRef.child(userId).update({ is_muted: false });
       muteBtn.innerText = "Mute";
-      for (uId in remoteClients) {
-        if (remoteClients[uId]["conn"]) remoteClients[uId]["conn"].send(`${userId} unmute ${myStream.id}`);
-      }
+      // for (uId in remoteClients) {
+      //   if (remoteClients[uId]["conn"]) remoteClients[uId]["conn"].send(`${userId} unmute ${myStream.id}`);
+      // }
     } else {
       console.log("Error");
     }
@@ -809,6 +812,7 @@ var mouseVis = function () {
       audio.id = stream.id;
       audio.srcObject = stream;
       audioElems[audio.id] = audio;
+      if (muteStatus[stream.id]) toggleAudioElement(stream.id);
       document.querySelector("#audio-streams").append(audio);
       console.log(`added ${stream.id} to #audio-streams`);
     }
@@ -821,10 +825,13 @@ var mouseVis = function () {
    */
   function toggleAudioElement(streamId) {
     console.log(streamId);
-    let stream = audioElems[streamId].srcObject;
-    stream.getAudioTracks().forEach(function (track) {
-      track.enabled = !track.enabled;
-    });
+    let audioElem = audioElems[streamId];
+    if (audioElem) {
+      let stream = audioElems[streamId].srcObject;
+      stream.getAudioTracks().forEach(function (track) {
+        track.enabled = !track.enabled;
+      });
+    }
   }
 
   /**
@@ -870,16 +877,14 @@ var mouseVis = function () {
           case "new-connection":
             remoteClients[tmp[0]]["conn"] = conn;
             break;
-          case "mute":
-            toggleAudioElement(tmp[2]);
-            document.getElementById(tmp[0]).innerText = `${remoteClients[tmp[0]]["name"]} (muted)`;
-            console.log(`muted ${tmp[0]}`);
-            break;
-          case "unmute":
-            toggleAudioElement(tmp[2]);
-            document.getElementById(tmp[0]).innerText = `${remoteClients[tmp[0]]["name"]}`;
-            console.log(`unmuted ${tmp[0]}`);
-            break;
+          // case "mute":
+          //   toggleAudioElement(tmp[2]);
+          //   console.log(`muted ${tmp[0]}`);
+          //   break;
+          // case "unmute":
+          //   toggleAudioElement(tmp[2]);
+          //   console.log(`unmuted ${tmp[0]}`);
+          //   break;
         }
       });
       conn.on('open', function () {
@@ -919,16 +924,14 @@ var mouseVis = function () {
           case "new-connection":
             remoteClients[tmp[0]]["conn"] = conn;
             break;
-          case "mute":
-            toggleAudioElement(tmp[2]);
-            document.getElementById(tmp[0]).innerText = `${remoteClients[tmp[0]]["name"]} (muted)`;
-            console.log(`muted ${tmp[0]}`);
-            break;
-          case "unmute":
-            toggleAudioElement(tmp[2]);
-            document.getElementById(tmp[0]).innerText = `${remoteClients[tmp[0]]["name"]}`;
-            console.log(`unmuted ${tmp[0]}`);
-            break;
+          // case "mute":
+          //   toggleAudioElement(tmp[2]);
+          //   console.log(`muted ${tmp[0]}`);
+          //   break;
+          // case "unmute":
+          //   toggleAudioElement(tmp[2]);
+          //   console.log(`unmuted ${tmp[0]}`);
+          //   break;
         }
       });
 
