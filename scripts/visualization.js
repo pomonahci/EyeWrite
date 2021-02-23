@@ -689,8 +689,8 @@ var mouseVis = function () {
     if (userId != snapshot.key) {                                   // when the updated child is not the local client
       snapshot.forEach(function (child) {
         remoteClients[snapshot.key][child.key] = child.val();
-        muteStatus[snapshot.child("stream_id")] = snapshot.child("is_muted");
-        toggleAudioElement(snapshot.child("stream_id"));
+        muteStatus[snapshot.child("stream_id").val()] = snapshot.child("is_muted").val();
+        toggleAudioElement(snapshot.child("stream_id").val());
       });
 
     } else {                                                        // when the updated child is the local client
@@ -711,7 +711,7 @@ var mouseVis = function () {
    */
   voiceRef.on("child_removed", function (snapshot) {
     if (remoteClients[snapshot.key]) {
-      delete muteStatus[snapshot.child("stream_id")];
+      delete muteStatus[snapshot.child("stream_id").val()];
       delete remoteClients[snapshot.key];
     }
     let streamId = snapshot.child("stream_id").val()
