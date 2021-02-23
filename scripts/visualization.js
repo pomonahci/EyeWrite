@@ -16,16 +16,16 @@ var mouseVis = function () {
   var mousePosRef = firebaseRef.child("mice");
   var gazePosRef = firebaseRef.child("gaze");
   var voiceRef = firebaseRef.child("voice");      // reference to voice tree in firebase realtime database
-  
+
   // state variables (0 for none, 1 for mouse, 2 for gaze)
   window.sendDataState = 0;
-  window.visualizationState = 0;   
+  window.visualizationState = 0;
 
   //when this user closes their window, removes them from the database and removes their mouse
   window.addEventListener("beforeunload", function () {
     if (document.getElementById('voiceChatSwitch').checked) {
       onLeave();
-      document.getElementById('voiceChatSwitch').checked=false;
+      document.getElementById('voiceChatSwitch').checked = false;
     }
     mousePosRef.child(userId).set(null);
     gazePosRef.child(userId).set(null);
@@ -253,83 +253,83 @@ var mouseVis = function () {
 
     //Controls toggling for mouse vs. gaze
 
-      function getDataState(val) {
-        if (val == 0) return 'none';
-        else if (val == 1) return 'mouse';
-        else if (val == 2) return 'gaze';
-        else return 'invalid';
+    function getDataState(val) {
+      if (val == 0) return 'none';
+      else if (val == 1) return 'mouse';
+      else if (val == 2) return 'gaze';
+      else return 'invalid';
+    }
+
+    mouseSendSwitch.addEventListener("change", function () {
+      if (mouseSendSwitch.checked) {
+        gazeSendSwitch.checked = false;
+        window.sendDataState = 1;
+      } else {
+        if (!gazeSendSwitch.checked) {
+          window.sendDataState = 0;
+        }
       }
+      console.log(`send data state: ${getDataState(window.sendDataState)}`);
+    });
 
-      mouseSendSwitch.addEventListener("change", function () {
-        if (mouseSendSwitch.checked) {
-          gazeSendSwitch.checked = false;
-          window.sendDataState = 1;
-        } else {
-          if (!gazeSendSwitch.checked) {
-            window.sendDataState = 0;
-          }
+    gazeSendSwitch.addEventListener("change", function () {
+      if (gazeSendSwitch.checked) {
+        mouseSendSwitch.checked = false;
+        window.sendDataState = 2;
+      } else {
+        if (!mouseSendSwitch.checked) {
+          window.sendDataState = 0;
         }
-        console.log(`send data state: ${getDataState(window.sendDataState)}`);
-      });
+      }
+      console.log(`send data state: ${getDataState(window.sendDataState)}`);
+    });
 
-      gazeSendSwitch.addEventListener("change", function () {
-        if (gazeSendSwitch.checked) {
-          mouseSendSwitch.checked = false;
-          window.sendDataState = 2;
-        } else {
-          if (!mouseSendSwitch.checked) {
-            window.sendDataState = 0;
-          }
-        }
-        console.log(`send data state: ${getDataState(window.sendDataState)}`);
-      });
-
-      mouseVisSwitch.addEventListener("change", function () {
-        if (mouseVisSwitch.checked) {
-          if (gazeVisSwitch.checked) {
-            gazeVisSwitch.checked = false;
-            gazePosRef.off("value", visualize);
-          }
-          if (window.visualizationState != 1) window.visualizationState = 1;
-          mousePosRef.on("value", visualize);
-        } else {
-          if (!gazeVisSwitch.checked) {
-            window.visualizationState = 0;
-            mousePosRef.off("value", visualize);
-          }
-        }
-        console.log(`visualization state: ${getDataState(window.visualizationState)}`);
-      });
-
-      gazeVisSwitch.addEventListener("change", function () {
+    mouseVisSwitch.addEventListener("change", function () {
+      if (mouseVisSwitch.checked) {
         if (gazeVisSwitch.checked) {
-          if (mouseVisSwitch.checked) {
-            mouseVisSwitch.checked = false;
-            mousePosRef.off("value", visualize);
-          }
-          if (window.visualizationState != 2) window.visualizationState = 2;
-          gazePosRef.on("value", visualize);
-        } else {
-          if (!mouseVisSwitch.checked) {
-            window.visualizationState = 0;
-            gazePosRef.off("value", visualize);
-          }
+          gazeVisSwitch.checked = false;
+          gazePosRef.off("value", visualize);
         }
-        console.log(`visualization state: ${getDataState(window.visualizationState)}`);
-      });
+        if (window.visualizationState != 1) window.visualizationState = 1;
+        mousePosRef.on("value", visualize);
+      } else {
+        if (!gazeVisSwitch.checked) {
+          window.visualizationState = 0;
+          mousePosRef.off("value", visualize);
+        }
+      }
+      console.log(`visualization state: ${getDataState(window.visualizationState)}`);
+    });
+
+    gazeVisSwitch.addEventListener("change", function () {
+      if (gazeVisSwitch.checked) {
+        if (mouseVisSwitch.checked) {
+          mouseVisSwitch.checked = false;
+          mousePosRef.off("value", visualize);
+        }
+        if (window.visualizationState != 2) window.visualizationState = 2;
+        gazePosRef.on("value", visualize);
+      } else {
+        if (!mouseVisSwitch.checked) {
+          window.visualizationState = 0;
+          gazePosRef.off("value", visualize);
+        }
+      }
+      console.log(`visualization state: ${getDataState(window.visualizationState)}`);
+    });
 
     voiceChatSwitch.addEventListener("change", function () {
       if (voiceChatSwitch.checked == true) {
-        voiceChatSwitch.disabled=true;
+        voiceChatSwitch.disabled = true;
         onJoin();
       } else {
-        voiceChatSwitch.disabled=true;
+        voiceChatSwitch.disabled = true;
         onLeave();
       }
     });
 
     voiceMuteButton.onclick = toggleMuteButton;
-    
+
   });
 
   //Callback for mouse movement
@@ -431,7 +431,7 @@ var mouseVis = function () {
     //the index found using the function isToken which checks if each element is the given token
     let index = lineTokens.findIndex(isToken);
 
-    // var slider = document.getElementById("sentenceSlider");
+    var slider = document.getElementById("sentenceSlider");
 
     if (index != -1) {
 
@@ -689,20 +689,20 @@ var mouseVis = function () {
     let muteBtn = document.getElementById("mute");
     if (muteBtn.innerText == "Mute") {
       // alert('muting')
-      voiceRef.child(userId).update({is_muted: true});
+      voiceRef.child(userId).update({ is_muted: true });
       muteBtn.innerText = "Unmute";
       for (uId in remoteClients) {
         if (remoteClients[uId]["conn"]) remoteClients[uId]["conn"].send(`${userId} mute ${myStream.id}`);
       }
     } else if (muteBtn.innerText == "Unmute") {
       // alert('unmuting')
-      voiceRef.child(userId).update({is_muted: false});
+      voiceRef.child(userId).update({ is_muted: false });
       muteBtn.innerText = "Mute";
       for (uId in remoteClients) {
         if (remoteClients[uId]["conn"]) remoteClients[uId]["conn"].send(`${userId} unmute ${myStream.id}`);
       }
     } else {
-        console.log("Error");
+      console.log("Error");
     }
   }
 
@@ -710,16 +710,16 @@ var mouseVis = function () {
    * Starts local stream, creates local client's peer, and creates a mute button.
    */
   function startMyStream() {
-    navigator.mediaDevices.getUserMedia({video: false, audio: true}).then(function (stream) {
+    navigator.mediaDevices.getUserMedia({ video: false, audio: true }).then(function (stream) {
       myStream = stream;
       console.log(`${userId} turned on audio stream: ${myStream.id}`);
-      voiceRef.child(userId).update({is_ready: true, stream_id: myStream.id});
+      voiceRef.child(userId).update({ is_ready: true, stream_id: myStream.id });
       hasStream = true;
       createMyPeer();
       console.log(`${userId} joined the chat`);
       alert("Joining the voice chat.");
-      document.getElementById("voiceChatSwitch").disabled=false;
-      document.getElementById("mute").disabled=false;
+      document.getElementById("voiceChatSwitch").disabled = false;
+      document.getElementById("mute").disabled = false;
       // createMuteButton();
     }).catch(function (err) {
       console.error(`${userId} failed to turn on audio stream`, err);
@@ -733,7 +733,7 @@ var mouseVis = function () {
    * Ends local stream.
    */
   function endMyStream() {
-    myStream.getTracks().forEach(function(track) {
+    myStream.getTracks().forEach(function (track) {
       track.stop();
     });
     myStream = null;
@@ -794,12 +794,12 @@ var mouseVis = function () {
    */
   function createMyPeer() {
 
-    myPeer = new Peer({config: config, debug: 1});
+    myPeer = new Peer({ config: config, debug: 1 });
 
     // call backs for opening connection and error
-    myPeer.on('open', function(id) {
-      voiceRef.child(userId).update({peer_id: id, is_ready: readyToJoin});
-      if (readyToJoin) voiceRef.child(userId).update({stream_id: myStream.id});
+    myPeer.on('open', function (id) {
+      voiceRef.child(userId).update({ peer_id: id, is_ready: readyToJoin });
+      if (readyToJoin) voiceRef.child(userId).update({ stream_id: myStream.id });
     });
 
     myPeer.on('error', function (error) {
@@ -843,7 +843,7 @@ var mouseVis = function () {
       console.log(`${userId} answered a call`);
     });
   }
-      
+
   /**
    * Calls a remote client given the remote client's peer id.
    * 
@@ -892,7 +892,7 @@ var mouseVis = function () {
    */
   function onLeave() {
     console.log(`${userId} left the chat`);
-    (async function () {return await myPeer.destroy();})();
+    (async function () { return await myPeer.destroy(); })();
     myPeer = null;
     readyToJoin = false;
     endMyStream();
@@ -901,9 +901,9 @@ var mouseVis = function () {
     }
     voiceRef.child(userId).set(null);
     alert("Leaving the voice chat.");
-    document.getElementById("mute").disabled=true;
-    document.getElementById("mute").innerText="Mute";
-    document.getElementById("voiceChatSwitch").disabled=false;
+    document.getElementById("mute").disabled = true;
+    document.getElementById("mute").innerText = "Mute";
+    document.getElementById("voiceChatSwitch").disabled = false;
   }
 
 
