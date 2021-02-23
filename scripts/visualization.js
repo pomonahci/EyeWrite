@@ -400,31 +400,33 @@ var mouseVis = function () {
             let visToken = FirepadCM.getTokenAt({ line: line, ch: ch });
             // getTokenAt returns the entire paragraph (line corresponds to paragraph, ch corresponds to exact character in paragraph)
 
-            //transforms the word into multi-sentence range
-            let sentences = wordToLine(visToken, line);
-            console.log(line, ch);
-            console.log(visToken);
-            console.log(sentences);
+            // //transforms the word into multi-sentence range
+            // let sentences = wordToLines(visToken, line);
+            // console.log(line, ch);
+            // console.log(visToken);
+            // console.log(sentences);
 
-            // default for if something goes wrong and sentences is null
-            if (!sentences) {
-              sentences.left = visToken.start;
-              sentences.right = vistToken.end;
-            }
+            // // default for if something goes wrong and sentences is null
+            // if (!sentences) {
+            //   sentences.left = visToken.start;
+            //   sentences.right = vistToken.end;
+            // }
 
-            var userColorDiv = document.getElementsByClassName("firepad-user-" + childSnapshot.key)[0].getElementsByClassName("firepad-userlist-color-indicator")[0];
+            let region = wordToLines(visToken, line, ch);
 
-            if (isAboveView(line, cmScrollTop, sentences)) {
-              if (childSnapshot.key != userId) {
-                createUpArrow(childSnapshot.key, userColorDiv, line, sentences);
-              }
-            } else if (isBelowView(line, cmScrollBottom, sentences)) {
-              if (childSnapshot.key != userId) {
-                createDownArrow(childSnapshot.key, userColorDiv, line, sentences);
-              }
-            } else {
-              createHighlight(childSnapshot.key, userColorDiv, line, sentences);
-            }
+            // var userColorDiv = document.getElementsByClassName("firepad-user-" + childSnapshot.key)[0].getElementsByClassName("firepad-userlist-color-indicator")[0];
+
+            // if (isAboveView(line, cmScrollTop, sentences)) {
+            //   if (childSnapshot.key != userId) {
+            //     createUpArrow(childSnapshot.key, userColorDiv, line, sentences);
+            //   }
+            // } else if (isBelowView(line, cmScrollBottom, sentences)) {
+            //   if (childSnapshot.key != userId) {
+            //     createDownArrow(childSnapshot.key, userColorDiv, line, sentences);
+            //   }
+            // } else {
+            //   createHighlight(childSnapshot.key, userColorDiv, line, sentences);
+            // }
           }
 
         } else {
@@ -445,7 +447,8 @@ var mouseVis = function () {
 
   //takes a word (token) and a line and highlights the sentence that word
   //is in, as well as the sentence before and the sentence after
-  function wordToLine(token, line) {
+  // function wordToLines(token, line) {
+  function wordToLines(token, line, ch) {
 
     //function for finding the token index in the array of tokens
     const isToken = (element) => element.start == token.start && element.end == token.end;
@@ -459,47 +462,51 @@ var mouseVis = function () {
     var slider = document.getElementById("sentenceSlider");
 
     if (index != -1) {
+      console.log(slider.value);
+      console.log(index);
+      console.log(lineTokens);
 
-      //left and right bumpers for finding periods and determining the highlight range
-      let leftBump = index;
-      let rightBump = index;
+      // //left and right bumpers for finding periods and determining the highlight range
+      // let leftBump = index;
+      // let rightBump = index;
 
-      //counters for the number of periods allowed on the left of the word and on the right of the word
-      // let leftPeriodCount = slider.value;
-      // let rightPeriodCount = slider.value;
-      let leftPeriodCount = 2;
-      let rightPeriodCount = 2;
+      // //counters for the number of periods allowed on the left of the word and on the right of the word
+      // // let leftPeriodCount = slider.value;
+      // // let rightPeriodCount = slider.value;
+      // let leftPeriodCount = 2;
+      // let rightPeriodCount = 2;
 
-      //loop until period conditions are satisfied
-      while (true) {
-        //ticks left
-        if (lineTokens[leftBump].start > 0 && leftPeriodCount > 0) {
-          leftBump--;
-        }
-        //ticks right
-        if (lineTokens[rightBump].end < lineTokens[lineTokens.length - 1].end && rightPeriodCount > 0) {
-          rightBump++;
-        }
-        //counts down periods on the left
-        if (lineTokens[leftBump]["string"].includes(".")) {
-          leftPeriodCount--;
-        }
-        //counts down periods on the right
-        if (lineTokens[rightBump]["string"].includes(".")) {
-          rightPeriodCount--;
-        }
-        //if the period conditions are satisfied or we"re up against the begining of the line or the end of the line then break
-        if ((leftPeriodCount <= 0 || lineTokens[leftBump]["start"] == 0) && (rightPeriodCount <= 0 || lineTokens[rightBump]["end"] == lineTokens[lineTokens.length - 1]["end"])) {
-          break;
-        }
-      }
-      //Just because the highlighting of the starting period on the left is annoying, but if
-      //we"re at the begining of the line, the first character shouldn"t be left out of the highlight
-      if (lineTokens[leftBump]["start"] == 0) {
-        return { left: lineTokens[leftBump]["start"], right: lineTokens[rightBump]["end"] };
-      } else {
-        return { left: lineTokens[leftBump]["start"] + 1, right: lineTokens[rightBump]["end"] };
-      }
+      // //loop until period conditions are satisfied
+      // while (true) {
+      //   //ticks left
+      //   if (lineTokens[leftBump].start > 0 && leftPeriodCount > 0) {
+      //     leftBump--;
+      //   }
+      //   //ticks right
+      //   if (lineTokens[rightBump].end < lineTokens[lineTokens.length - 1].end && rightPeriodCount > 0) {
+      //     rightBump++;
+      //   }
+      //   //counts down periods on the left
+      //   if (lineTokens[leftBump]["string"].includes(".")) {
+      //     leftPeriodCount--;
+      //   }
+      //   //counts down periods on the right
+      //   if (lineTokens[rightBump]["string"].includes(".")) {
+      //     rightPeriodCount--;
+      //   }
+      //   //if the period conditions are satisfied or we"re up against the begining of the line or the end of the line then break
+      //   if ((leftPeriodCount <= 0 || lineTokens[leftBump]["start"] == 0) && (rightPeriodCount <= 0 || lineTokens[rightBump]["end"] == lineTokens[lineTokens.length - 1]["end"])) {
+      //     break;
+      //   }
+      // }
+      // //Just because the highlighting of the starting period on the left is annoying, but if
+      // //we"re at the begining of the line, the first character shouldn"t be left out of the highlight
+      // if (lineTokens[leftBump]["start"] == 0) {
+      //   return { left: lineTokens[leftBump]["start"], right: lineTokens[rightBump]["end"] };
+      // } else {
+      //   return { left: lineTokens[leftBump]["start"] + 1, right: lineTokens[rightBump]["end"] };
+      // }
+      return { left: null, right: null };
     } else {
       return { left: null, right: null };
     }
