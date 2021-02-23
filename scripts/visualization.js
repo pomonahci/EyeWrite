@@ -510,7 +510,8 @@ var mouseVis = function () {
 
     //creates a highlight (TextMarker object) for the multi-sentence highlight range and uses the user"s color
     let highlight = FirepadCM.markText(
-      { line: line, ch: sentences["left"] },
+      // { line: line, ch: sentences["left"] },
+      { line: line - 1, ch: 0 },
       { line: line, ch: sentences["right"] },
       { css: "background: " + hexToRgb(userColors[userId]) });
 
