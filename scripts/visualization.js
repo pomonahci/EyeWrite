@@ -714,7 +714,7 @@ var mouseVis = function () {
       delete muteStatus[snapshot.child("stream_id").val()];
       delete remoteClients[snapshot.key];
     }
-    let streamId = snapshot.child("stream_id").val()
+    let streamId = snapshot.child("stream_id").val();
     if (audioElems[streamId]) removeAudioElement(streamId);
     // document.getElementById(snapshot.key).remove();
   });
@@ -826,7 +826,7 @@ var mouseVis = function () {
    * @param {String} streamId 
    */
   function toggleAudioElement(streamId) {
-    console.log(streamId);
+    // console.log(streamId);
     if (audioElems[streamId]) {
       let stream = audioElems[streamId].srcObject;
       stream.getAudioTracks().forEach(function (track) {
