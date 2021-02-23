@@ -451,10 +451,10 @@ var mouseVis = function () {
   function wordToLines(token, line, ch) {
 
     //function for finding the token index in the array of tokens
-    const isToken = (element) => element.start == token.start && element.end == token.end;
+    // const isToken = (element) => element.start == token.start && element.end == token.end;
 
     //array of all tokens from the given line
-    let lineTokens = FirepadCM.getLineTokens(line);
+    // let lineTokens = FirepadCM.getLineTokens(line);
 
     //the index found using the function isToken which checks if each element is the given token
     let index = lineTokens.findIndex(isToken);
@@ -462,6 +462,16 @@ var mouseVis = function () {
     var slider = document.getElementById("sentenceSlider");
 
     if (index != -1) {
+      let numPad = Int(slider.value / 2);
+      if (slider.value % 2 == 0) {
+        if (ch <= Int(token.end - token.start / 2)) {
+          return { left: line - numPad, right: line + numPad - 1 };
+        } else {
+          return { left: line - numPad + 1, right: line + numPad };
+        }
+      } else {
+        return { left: line - numPad, right: line + numPad };
+      }
 
       //left and right bumpers for finding periods and determining the highlight range
       let leftBump = index;
@@ -535,8 +545,10 @@ var mouseVis = function () {
 
     //creates a highlight (TextMarker object) for the multi-sentence highlight range and uses the user"s color
     let highlight = FirepadCM.markText(
-      { line: line, ch: sentences["left"] },
-      { line: line, ch: sentences["right"] },
+      // { line: line, ch: sentences["left"] },
+      // { line: line, ch: sentences["right"] },
+      { line: sentences["left"], ch: 0 },
+      { line: sentences["right"], ch: 0 },
       { css: "background: " + hexToRgb(userColors[userId]) });
 
     //associates this highlight with the user it came from in our local dictionary to keep track
