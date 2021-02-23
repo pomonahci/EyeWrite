@@ -401,7 +401,7 @@ var mouseVis = function () {
             // getTokenAt returns the entire paragraph (line corresponds to paragraph, ch corresponds to exact character in paragraph)
 
             //transforms the word into multi-sentence range
-            let sentences = wordToLines(visToken, line);
+            let sentences = wordToLines(visToken, line, ch);
             // console.log(line, ch);
             // console.log(visToken);
             // console.log(sentences);
@@ -462,14 +462,6 @@ var mouseVis = function () {
     var slider = document.getElementById("sentenceSlider");
 
     if (index != -1) {
-      console.log({
-        index: index,
-        token: token,
-        line: line,
-        ch: ch,
-        slidervalue: slider.value,
-        lineTokens: lineTokens,
-      });
 
       //left and right bumpers for finding periods and determining the highlight range
       let leftBump = index;
@@ -506,6 +498,17 @@ var mouseVis = function () {
       }
       //Just because the highlighting of the starting period on the left is annoying, but if
       //we"re at the begining of the line, the first character shouldn"t be left out of the highlight
+
+      console.log({
+        index: index,
+        token: token,
+        line: line,
+        ch: ch,
+        slidervalue: slider.value,
+        lineTokens: lineTokens,
+      });
+
+
       if (lineTokens[leftBump]["start"] == 0) {
         return { left: lineTokens[leftBump]["start"], right: lineTokens[rightBump]["end"] };
       } else {
