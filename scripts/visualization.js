@@ -550,7 +550,7 @@ var mouseVis = function () {
       // { line: line, ch: sentences["right"] },
       { line: sentences["left"], ch: 0 },
       { line: sentences["right"], ch: 0 },
-      { css: `background-image: linear-gradient(0deg, rgba(0, 0, 0, 0), 0%, ${hexToRgb(userColors[userId])}, 100%);` });
+      { css: `background-color: white; background-image: linear-gradient(to bottom, rgba(255, 255, 255, 255), ${hexToRgb(userColors[userId])});` });
 
     //associates this highlight with the user it came from in our local dictionary to keep track
     userHighlights[userId] = highlight;
