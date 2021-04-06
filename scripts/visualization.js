@@ -12,6 +12,9 @@ var mouseVis = function () {
   var cmScrollTop;
   var cmScrollBottom;
 
+  //keeps track of CM
+  var cm = document.querySelector('.CodeMirror-code');
+
   //reference to firebase user mouse and gaze positions
   var mousePosRef = firebaseRef.child("mice");
   var gazePosRef = firebaseRef.child("gaze");
@@ -354,6 +357,109 @@ var mouseVis = function () {
     voiceMuteButton.onclick = toggleMuteButton;
 
   });
+
+
+  //Callback for setting gaze (buggy)
+  var setGazes = function (cm) {
+    var lines = cm.getElementsByTagName("pre");
+    var scroll = document.querySelector('.CodeMirror-scroll');
+    for (var id in gazes) {
+      var line = lines[gazes[id]['selectedLine']];
+      if (line !== undefined && id !== myUserId) { //&& id !== myUserId
+        var offsets = line.getBoundingClientRect();
+        var divc = document.getElementById(id + "div");
+        var divx = document.getElementById(id + "x");
+        var top = offsets.top + (gazes[id]['selectedSub'] - 1) * 24;
+        var upInd = document.getElementById(id + 'up');
+        var downInd = document.getElementById(id + 'down');
+        upInd.style.top = "83px";
+        downInd.style.top = window.innerHeight - 50 + "px";
+        var color = "#88a7d8"; //#88a7d8
+        if (gazes[id]['selectedSub'] >= gazes[myUserId]['selectedSub'] - 1 &&
+          gazes[id]['selectedSub'] <= gazes[myUserId]['selectedSub'] + 1 &&
+          gazes[id]['x'] >= gazes[myUserId]['x'] - 100 && gazes[id]['x'] <= gazes[myUserId]['x'] + 100) {
+          var color = "#72e082"; //a47fd1 //72e082
+        }
+
+        if (window.gazeSharing) {
+
+          if (top <= scroll.getBoundingClientRect().top) {
+            if (scroll.scrollY !== 0) {
+              divc.style.borderTop = "2px solid " + hex2rgb(color, 0.0);
+              divc.style.borderBottom = "2px solid " + hex2rgb(color, 0.0);
+              divx.style.background = "none";
+
+              upInd.style.background = `linear-gradient(${hex2rgb("#88a7d8", 0.5)}, ${hex2rgb("#88a7d8", 0.0)})`;
+              //downInd.style.cursor = "pointer";
+              //upInd.style.cursor = "pointer";
+              downInd.style.zIndex = -10;
+              upInd.style.zIndex = 10;
+            } else {
+              divc.style.borderTop = "2px solid " + hex2rgb(color, 0.3);
+              divc.style.borderBottom = "2px solid " + hex2rgb(color, 0.3);
+              divc.style.top = top + "px";
+              divc.style.left = offsets.left + "px";
+              divx.style.background = `linear-gradient(90deg, ${hex2rgb(color, 0.0)}, ${hex2rgb(color, 0.2)}, ${hex2rgb(color, 0.0)})`;
+              if (gazes[id]['x'] < offsets.left + 50) {
+                divx.style.left = offsets.left + "px";
+              } else if (gazes[id]['x'] > offsets.left + 960) {
+                divx.style.left = offsets.left + 910 + "px";
+              } else {
+                divx.style.left = (gazes[id]['x'] - 50) + "px";
+              }
+              divx.style.top = top + "px";
+
+              upInd.style.background = "none"
+              downInd.style.background = "none"
+              downInd.style.cursor = "cursor";
+              upInd.style.cursor = "cursor";
+              downInd.style.zIndex = -10;
+              upInd.style.zIndex = -10;
+            }
+          } else if (top >= window.innerHeight - 72) {
+            divc.style.borderTop = "2px solid " + hex2rgb(color, 0.0);
+            divc.style.borderBottom = "2px solid " + hex2rgb(color, 0.0);
+            divx.style.background = "none";
+
+            upInd.style.background = "none"
+            downInd.style.background = "none"
+            downInd.style.cursor = "cursor";
+            upInd.style.cursor = "cursor";
+            downInd.style.background = `linear-gradient(${hex2rgb("#88a7d8", 0.0)}, ${hex2rgb("#88a7d8", 1.0)})`;
+            downInd.style.zIndex = 10;
+            upInd.style.zIndex = -10;
+          } else {
+            divc.style.borderTop = "2px solid " + hex2rgb(color, 0.3);
+            divc.style.borderBottom = "2px solid " + hex2rgb(color, 0.3);
+            divc.style.top = top + "px";
+            divc.style.left = offsets.left + "px";
+            divx.style.background = `linear-gradient(90deg, ${hex2rgb(color, 0.0)}, ${hex2rgb(color, 0.4)}, ${hex2rgb(color, 0.0)})`;
+            if (gazes[id]['x'] < offsets.left + 50) {
+              divx.style.left = offsets.left + "px";
+            } else if (gazes[id]['x'] > offsets.left + 960) {
+              divx.style.left = offsets.left + 910 + "px";
+            } else {
+              divx.style.left = (gazes[id]['x'] - 50) + "px";
+            }
+            divx.style.top = top + "px";
+
+            upInd.style.background = "none"
+            downInd.style.background = "none"
+            downInd.style.cursor = "cursor";
+            upInd.style.cursor = "cursor";
+            downInd.style.zIndex = -10;
+            upInd.style.zIndex = -10;
+          }
+        } else {
+          upInd.style.background = "none";
+          downInd.style.background = "none";
+          divx.style.background = "none";
+          divc.style.borderTop = "none";
+          divc.style.borderBottom = "none";
+        }
+      }
+    }
+  }
 
   //Callback for mouse movement
   function mouseMove(event) {
