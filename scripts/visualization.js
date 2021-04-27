@@ -77,29 +77,6 @@ var mouseVis = function () {
     }
   });
 
-  $("#visualize-checkboxes").multiselect({
-    includeSelectAllOption: true,
-    disableIfEmpty: true,
-    //for UI button positioning purposes
-    buttonContainer: $("#visualize-control-container"),
-    buttonClass: "visualize-checkboxes",
-    buttonText: function () {
-      return "Visualize Data";
-    },
-    //updates local dictionaries if a checked value changes
-    onChange: function (option, checked, select) {
-      console.log('onChange');
-    },
-    //separate callback for select all
-    onSelectAll: function () {
-      console.log('onSelectAll');
-    },
-    //separate callback for deselect all
-    onDeselectAll: function () {
-      console.log('onDeselectAll');
-    }
-  });
-
   // FIREBASE TOGGLES HERE
   firepad.on("ready", function () {
 
