@@ -219,10 +219,10 @@ var mouseVis = function () {
       }
 
       if (window.sendDataState == 0 || window.sendDataState == 1) {
-        gazePosRef.child(userId).update({ line: -1, ch: -1 });
+        gazePosRef.child(userId).update({ region: null, relX: null, relY: null });
       } else {
-        var gazePosition = FirepadCM.coordsChar({ left: data.x, top: data.y }, "window");
-        gazePosRef.child(userId).update({ line: gazePosition.line, ch: gazePosition.ch });
+        var encodedLoc = encodeLocation(data.x, data.y);
+        gazePosRef.child(userId).update(encodedLoc);
       }
     }).begin();
 
@@ -390,72 +390,62 @@ var mouseVis = function () {
 
   });
 
-  function mouseMove(event) {
-    // console.log(event.clientY);
-    if (window.sendDataState == 1 || window.sendDataState == 3) {
-      // var mouse = FirepadCM.coordsChar({ left: event.clientX, top: event.clientY }, "window"); //else send as a CodeMirror line and ch
+  function encodeLocation(xpos, ypos) {
+    var cmsizerDim = document.querySelector(".CodeMirror-sizer").getBoundingClientRect();
+    var firepadDim = document.getElementById("firepad").getBoundingClientRect();
 
-      var cmsizerDim = document.querySelector(".CodeMirror-sizer").getBoundingClientRect();
-      // console.log(docDimensions.left, docDimensions.top);
-      var firepadDim = document.getElementById("firepad").getBoundingClientRect();
+    var bodyDim = document.querySelector("body").getBoundingClientRect();
 
-      var bodyDim = document.querySelector("body").getBoundingClientRect();
+    var relX, relY;
+    var region;
 
-      var relX, relY;
-      var region;
-
-      if (event.clientX <= firepadDim.left) {
-        region = 0;
-        relX = event.clientX - bodyDim.left;
-        relY = event.clientY;
-      } else if (event.clientX > firepadDim.left && event.clientX < cmsizerDim.left) {
-        // console.log("trashland 1")
-        relX = (event.clientX - firepadDim.left) / (cmsizerDim.left - firepadDim.left);
-        // relY = event.clientY - docDimensions.top;
-        if (event.clientY < 84) {
-          region = 1;
-          relY = event.clientY;
-        } else {
-          region = 4;
-          relY = event.clientY - cmsizerDim.top;
-        }
-      } else if (event.clientX >= cmsizerDim.left && event.clientX <= cmsizerDim.right) {
-        relX = event.clientX - cmsizerDim.left;
-
-        if (event.clientY < 84) {
-          region = 2;
-          relY = event.clientY;
-        } else {
-          region = 5;
-          relY = event.clientY - cmsizerDim.top;
-          // console.log(relY);
-        }
-
-      } else if (event.clientX > cmsizerDim.right && event.clientX < firepadDim.right) {
-
-        relX = (event.clientX - cmsizerDim.right) / (firepadDim.right - cmsizerDim.right);
-        if (event.clientY < 84) {
-          region = 3;
-          relY = event.clientY;
-        } else {
-          region = 6;
-          relY = event.clientY - cmsizerDim.top;
-        }
-        // relY = event.clientY - docDimensions.top;
-        // console.log("region 3")
+    if (xpos <= firepadDim.left) {
+      region = 0;
+      relX = xpos - bodyDim.left;
+      relY = ypos;
+    } else if (xpos > firepadDim.left && xpos < cmsizerDim.left) {
+      relX = (xpos - firepadDim.left) / (cmsizerDim.left - firepadDim.left);
+      if (ypos < 84) {
+        region = 1;
+        relY = ypos;
       } else {
-        region = 7;
-        relX = event.clientX - firepadDim.right;
-        relY = event.clientY;
-        // console.log("trashland 2")
+        region = 4;
+        relY = ypos - cmsizerDim.top;
+      }
+    } else if (xpos >= cmsizerDim.left && xpos <= cmsizerDim.right) {
+      relX = xpos - cmsizerDim.left;
+
+      if (ypos < 84) {
+        region = 2;
+        relY = ypos;
+      } else {
+        region = 5;
+        relY = ypos - cmsizerDim.top;
       }
 
-      // console.log(`region: ${region}`);
-      // console.log(event.clientX, event.clientY);
+    } else if (xpos > cmsizerDim.right && xpos < firepadDim.right) {
 
-      // console.log("sent: { ", "region:", region, ", relX:", relX, ", relY:", relY, ", clientX:", event.clientX, ", clientY:", event.clientY, ", cmLeft:", cmsizerDim.left, ", cmTop:", cmsizerDim.top, ", fpLeft:", firepadDim.left, ", fpTop:", firepadDim.top, ", bodyLeft:", bodyDim.left, ", bodyTop:", bodyDim.top, "}");
+      relX = (xpos - cmsizerDim.right) / (firepadDim.right - cmsizerDim.right);
+      if (ypos < 84) {
+        region = 3;
+        relY = ypos;
+      } else {
+        region = 6;
+        relY = ypos; - cmsizerDim.top;
+      }
+    } else {
+      region = 7;
+      relX = xpos - firepadDim.right;
+      relY = ypos;
+    }
+    return { region: region, x: relX, y: relY }
+  }
 
-      mousePosRef.child(userId).update({ region: region, x: relX, y: relY });
+  function mouseMove(event) {
+    if (window.sendDataState == 1 || window.sendDataState == 3) {
+
+      encodedLoc = encodeLocation(event.clientX, event.clientY);
+      mousePosRef.child(userId).update(encodedLoc);
     }
   }
 
