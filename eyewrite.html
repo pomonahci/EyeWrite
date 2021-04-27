@@ -101,9 +101,23 @@
 
     </div>
 
+    <script type="text/javascript">
+      $('#vis-shape').multiselect();
+    </script>
+    <!-- Note the missing multiple attribute! -->
+    <div class="radio-buttons" style="display: flex; flex-direction: column;">
+      <p>Highlight Shape</p>
+      <div style="margin: auto;">
+        <select id="vis-shape" style="width: 120px; margin: 0 auto; margin-bottom: 10px; margin-top: 0px;">
+          <option value="circle">Circle</option>
+          <option value="gradient">Gradient</option>
+        </select>
+      </div>
+    </div>
+
     <div id="slider-container">
       <p class="slider-text">Highlight Size: <span id="numSentences"></span></p>
-      <input type="range" min="1" max="50" value="10" id="sentenceSlider">
+      <input type="range" min="1" max="25" value="3" id="sentenceSlider">
     </div>
 
     <div class="radio-buttons">
@@ -179,6 +193,7 @@
         </div>
       </div>
     </div>
+
 
     <A href="./WebGazer/www/calibration.html" id="calibrationLink">
       <input type="button" id="calibrationButton" value="Calibrate Gaze">

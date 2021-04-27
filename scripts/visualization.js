@@ -15,6 +15,14 @@ var mouseVis = function () {
   window.sendDataState = 0;
   window.visualizationState = 0;
 
+  var visShapeSelector = document.querySelector("#vis-shape");
+  window.visShape = visShapeSelector.value;
+
+  visShapeSelector.onchange = function () {
+    window.visShape = visShapeSelector.value;
+    // console.log(window.visShape);
+  };
+
   //when this user closes their window, removes them from the database and removes their mouse
   window.addEventListener("beforeunload", function () {
     if (document.getElementById('voiceChatSwitch').checked) {
@@ -227,6 +235,8 @@ var mouseVis = function () {
     //Mouse Listeners
     // var target = document.getElementById("firepad");
     document.addEventListener("mousemove", mouseMove);
+    // document.addEventListener("mousedown", mouseMove);
+    // document.addEventListener("oncl")
     document.addEventListener("mouseleave", mouseLeave);
 
     //Fetches the buttons responsible for toggling mouse vs. gaze and send vs. block
@@ -256,6 +266,34 @@ var mouseVis = function () {
     //     singleUserHighlight.clear();
     //   }
     // }
+
+    function startVisualization(dataType) {
+      if (dataType == "gaze") {
+        gazePosRef.on("child_added", visualize);
+        gazePosRef.on("child_changed", visualize);
+        gazePosRef.on("child_removed", removeHighlight2);
+      } else if (dataType == "mouse") {
+        mousePosRef.on("child_added", visualize);
+        mousePosRef.on("child_changed", visualize);
+        mousePosRef.on("child_removed", removeHighlight2);
+      } else {
+        console.log("Invalid data type!");
+      }
+    }
+
+    function stopVisualization(dataType) {
+      if (dataType == "gaze") {
+        gazePosRef.off("child_added", visualize);
+        gazePosRef.off("child_changed", visualize);
+        gazePosRef.off("child_removed", removeHighlight2);
+      } else if (dataType == "mouse") {
+        mousePosRef.off("child_added", visualize);
+        mousePosRef.off("child_changed", visualize);
+        mousePosRef.off("child_removed", removeHighlight2);
+      } else {
+        console.log("Invalid data type!");
+      }
+    }
 
     mouseSendSwitch.addEventListener("change", function () {
       if (mouseSendSwitch.checked) {
@@ -297,18 +335,15 @@ var mouseVis = function () {
       if (mouseVisSwitch.checked) {
         if (gazeVisSwitch.checked) {
           gazeVisSwitch.checked = false;
-          gazePosRef.off("value", visualize);
+          stopVisualization("gaze");
+          clearAllHighlights();
         }
         if (window.visualizationState != 1) window.visualizationState = 1;
-        mousePosRef.on("child_added", visualize);
-        mousePosRef.on("child_changed", visualize);
-        mousePosRef.on("child_removed", removeHighlight2);
+        startVisualization("mouse");
       } else {
         if (!gazeVisSwitch.checked) {
           window.visualizationState = 0;
-          mousePosRef.off("child_added", visualize);
-          mousePosRef.off("child_changed", visualize);
-          mousePosRef.off("child_removed", removeHighlight2);
+          stopVisualization("mouse");
           clearAllHighlights();
         }
       }
@@ -319,14 +354,15 @@ var mouseVis = function () {
       if (gazeVisSwitch.checked) {
         if (mouseVisSwitch.checked) {
           mouseVisSwitch.checked = false;
-          mousePosRef.off("value", visualize);
+          stopVisualization("mouse");
+          clearAllHighlights();
         }
         if (window.visualizationState != 2) window.visualizationState = 2;
-        gazePosRef.on("value", visualize);
+        startVisualization("gaze");
       } else {
         if (!mouseVisSwitch.checked) {
           window.visualizationState = 0;
-          gazePosRef.off("value", visualize);
+          stopVisualization("gaze");
           clearAllHighlights();
         }
       }
@@ -355,14 +391,15 @@ var mouseVis = function () {
   });
 
   function mouseMove(event) {
+    // console.log(event.clientY);
     if (window.sendDataState == 1 || window.sendDataState == 3) {
       // var mouse = FirepadCM.coordsChar({ left: event.clientX, top: event.clientY }, "window"); //else send as a CodeMirror line and ch
 
-      var cmlinesDim = document.querySelector(".CodeMirror-lines").getBoundingClientRect();
+      var cmsizerDim = document.querySelector(".CodeMirror-sizer").getBoundingClientRect();
       // console.log(docDimensions.left, docDimensions.top);
       var firepadDim = document.getElementById("firepad").getBoundingClientRect();
 
-      var bodyDim = document.querySelector("BODY").getBoundingClientRect();
+      var bodyDim = document.querySelector("body").getBoundingClientRect();
 
       var relX, relY;
       var region;
@@ -371,49 +408,52 @@ var mouseVis = function () {
         region = 0;
         relX = event.clientX - bodyDim.left;
         relY = event.clientY;
-      } else if (event.clientX > firepadDim.left && event.clientX < cmlinesDim.left) {
+      } else if (event.clientX > firepadDim.left && event.clientX < cmsizerDim.left) {
         // console.log("trashland 1")
-        relX = (event.clientX - bodyDim.left - firepadDim.left) / (cmlinesDim.left - firepadDim.left);
+        relX = (event.clientX - firepadDim.left) / (cmsizerDim.left - firepadDim.left);
         // relY = event.clientY - docDimensions.top;
-        if (event.clientY < 82) {
+        if (event.clientY < 84) {
           region = 1;
           relY = event.clientY;
         } else {
           region = 4;
-          relY = event.clientY - cmlinesDim.top;
+          relY = event.clientY - cmsizerDim.top;
         }
-      } else if (event.clientX >= cmlinesDim.left && event.clientX <= cmlinesDim.right) {
-        relX = event.clientX - cmlinesDim.left - bodyDim.left;
+      } else if (event.clientX >= cmsizerDim.left && event.clientX <= cmsizerDim.right) {
+        relX = event.clientX - cmsizerDim.left;
 
-        if (event.clientY < 82) {
+        if (event.clientY < 84) {
           region = 2;
           relY = event.clientY;
         } else {
           region = 5;
-          relY = event.clientY - cmlinesDim.top;
+          relY = event.clientY - cmsizerDim.top;
+          // console.log(relY);
         }
 
-      } else if (event.clientX > cmlinesDim.right && event.clientX < firepadDim.right) {
+      } else if (event.clientX > cmsizerDim.right && event.clientX < firepadDim.right) {
 
-        relX = (event.clientX - bodyDim.left - cmlinesDim.right) / (firepadDim.right - cmlinesDim.right);
-        if (event.clientY < 82) {
+        relX = (event.clientX - cmsizerDim.right) / (firepadDim.right - cmsizerDim.right);
+        if (event.clientY < 84) {
           region = 3;
           relY = event.clientY;
         } else {
           region = 6;
-          relY = event.clientY - cmlinesDim.top;
+          relY = event.clientY - cmsizerDim.top;
         }
         // relY = event.clientY - docDimensions.top;
         // console.log("region 3")
       } else {
         region = 7;
-        relX = event.clientX - bodyDim.left - firepadDim.right;
+        relX = event.clientX - firepadDim.right;
         relY = event.clientY;
         // console.log("trashland 2")
       }
 
       // console.log(`region: ${region}`);
       // console.log(event.clientX, event.clientY);
+
+      // console.log("sent: { ", "region:", region, ", relX:", relX, ", relY:", relY, ", clientX:", event.clientX, ", clientY:", event.clientY, ", cmLeft:", cmsizerDim.left, ", cmTop:", cmsizerDim.top, ", fpLeft:", firepadDim.left, ", fpTop:", firepadDim.top, ", bodyLeft:", bodyDim.left, ", bodyTop:", bodyDim.top, "}");
 
       mousePosRef.child(userId).update({ region: region, x: relX, y: relY });
     }
@@ -450,18 +490,14 @@ var mouseVis = function () {
 
   //callback function for visualization
   function visualize(snapshot) {
-    // console.log(snapshot.child(userId).key);
 
     userLocations[snapshot.key] = snapshot.val();
-    // console.log(snapshot.val());
-    // console.log(typeof snapshot.key);
     if (usersChecked[snapshot.key]) {
       if (userColors[snapshot.key]) updateHighlight(snapshot.key);
     } else {
       if (userHighlights[snapshot.key]) removeHighlight(snapshot.key);
     }
 
-    // updateHighlight(snapshot.key);
   }
 
   function decodePosition(loc) {
@@ -469,44 +505,44 @@ var mouseVis = function () {
     var xpos = loc.x;
     var ypos = loc.y;
 
-    var cmlinesDim = document.querySelector(".CodeMirror-lines").getBoundingClientRect();
+    var cmsizerDim = document.querySelector(".CodeMirror-sizer").getBoundingClientRect();
     // console.log(docDimensions.left, docDimensions.top);
     var firepadDim = document.getElementById("firepad").getBoundingClientRect();
-    var bodyDim = document.querySelector("BODY").getBoundingClientRect();
+    var bodyDim = document.querySelector("body").getBoundingClientRect();
 
     var relX, relY;
 
     switch (region) {
       case 0:
-        relX = xpos; // + bodyDim.left;
+        relX = xpos; // bodyDim.left;
         relY = ypos;
         break;
       case 1:
-        relX = firepadDim.left + (cmlinesDim.left - firepadDim.left) * xpos;
+        relX = firepadDim.left - bodyDim.left + (cmsizerDim.left - firepadDim.left) * xpos;
         relY = ypos;
         break;
       case 2:
-        relX = xpos + cmlinesDim.left;
+        relX = xpos + cmsizerDim.left - bodyDim.left;
         relY = ypos;
         break;
       case 3:
-        relX = cmlinesDim.right + (firepadDim.right - cmlinesDim.right) * xpos;
+        relX = cmsizerDim.right - bodyDim.left + (firepadDim.right - cmsizerDim.right) * xpos;
         relY = ypos;
         break;
       case 4:
-        relX = firepadDim.left + (cmlinesDim.left - firepadDim.left) * xpos;
-        relY = ypos + cmlinesDim.top;
-        if (relY < 82) relY -= 10000000000;
+        relX = firepadDim.left - bodyDim.left + (cmsizerDim.left - firepadDim.left) * xpos;
+        relY = ypos + cmsizerDim.top;
+        if (relY < 84) relY = -10000000000;
         break;
       case 5:
-        relX = xpos + cmlinesDim.left;
-        relY = ypos + cmlinesDim.top;
-        if (relY < 82) relY -= 10000000000;
+        relX = xpos + cmsizerDim.left - bodyDim.left;
+        relY = ypos + cmsizerDim.top;
+        if (relY < 84) relY = -10000000000;
         break;
       case 6:
-        relX = cmlinesDim.right + (firepadDim.right - cmlinesDim.right) * xpos;
-        relY = ypos + cmlinesDim.top;
-        if (relY < 82) relY -= 10000000000;
+        relX = cmsizerDim.right - bodyDim.left + (firepadDim.right - cmsizerDim.right) * xpos;
+        relY = ypos + cmsizerDim.top;
+        if (relY < 84) relY = -10000000000;
         break;
       case 7:
         relX = xpos + firepadDim.right;
@@ -516,30 +552,48 @@ var mouseVis = function () {
         console.log("invalid region");
     }
 
+    // console.log("received: { ", "region:", region, ", relX:", xpos, ", relY:", ypos, ", clientX:", relX, ", clientY:", relY, ", cmLeft:", cmsizerDim.left, ", cmTop:", cmsizerDim.top, ", fpLeft:", firepadDim.left, ", fpTop:", firepadDim.top, ", bodyLeft:", bodyDim.left, ", bodyTop:", bodyDim.top, "}");
+
     return { x: relX, y: relY }
   }
 
   function updateHighlight(uID) {
     var circle;
+    // var debugStatement;
 
     if (userHighlights[uID] != null) {
       circle = userHighlights[uID];
+      // debugStatement = circle.firstChild;
     } else {
       circle = document.createElement("DIV");
       circle.id = `${uID}`;
       userHighlights[uID] = circle;
       document.body.append(circle);
+      // debugStatement = document.createElement("DIV");
+      // circle.append(debugStatement);
     }
 
     var loc = decodePosition(userLocations[uID]);
 
-    var docDimensions = document.querySelector(".CodeMirror-lines").getBoundingClientRect();
-
     var transparentColor = hex2rgb(userColors[uID], 0.0);
-    var color = hex2rgb(userColors[uID], 0.5);
+    var color = hex2rgb(userColors[uID], 1.0);
     var sizeCoeff = document.getElementById("sentenceSlider").value;
 
-    circle.style = `position: absolute; pointer-events: none; left: ${loc.x - 8 * sizeCoeff}px; top: ${loc.y - 8 * sizeCoeff}px; width:${16 * sizeCoeff}px; height:${16 * sizeCoeff}px; background-color: ${color}; border-radius: 100%`;
+
+    var visShape, visSize;
+    if (window.visShape == "circle") {
+      visShape = `background-color: ${color}; border-radius: 100%; opacity: 0.5;`;
+      visSize = `left: ${loc.x - 8 * sizeCoeff}px; top: ${loc.y - 8 * sizeCoeff}px; width:${16 * sizeCoeff}px; height:${16 * sizeCoeff}px;`;
+    } else if (window.visShape == "gradient") {
+      visShape = `background: radial-gradient(${color} 0%, ${transparentColor} 66%, ${transparentColor}); opacity: 0.7;`;
+      visSize = `left: ${loc.x - 12 * sizeCoeff}px; top: ${loc.y - 12 * sizeCoeff}px; width:${24 * sizeCoeff}px; height:${24 * sizeCoeff}px;`;
+    } else {
+      console.log("invalid shape!");
+    }
+
+    circle.style = `position: absolute; pointer-events: none; ${visSize} ${visShape}`;
+    // debugStatement.style = `position:relative; left: 20px; top: 20px; background-color: white; z-index: 2; border-style: solid; border-color: red; border-width: 2px; width: 200px;`
+    // debugStatement.innerHTML = `(x,y) = (${loc.x}, ${loc.y})`;
     // console.log(sizeCoeff);
   }
 
