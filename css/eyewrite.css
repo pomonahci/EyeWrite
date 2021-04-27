@@ -359,3 +359,126 @@ body {
   right: 0px; 
   background-color: #FFBF86; 
 }
+
+html {
+	height: 100%;
+	width: 100%;
+	overflow-x: auto;
+	overflow-y: hidden;
+}
+
+body {
+	margin: 0;
+	height: 100%;
+	width: 100%;
+	overflow-y: hidden;
+	overflow-x: hidden;
+}
+
+a.powered-by-firepad {
+	display: none;
+}
+
+div.firepad-richtext.firepad-with-toolbar {
+	height: 100%;
+	/* min-width: 816px; */
+}
+
+/* div.CodeMirror-scroll {
+	overflow-y: scroll;
+} */
+
+/* div.CodeMirror.cm-s-default.CodeMirror-wrap {
+	overflow-y: scroll;
+} */
+
+div.CodeMirror-vscrollbar {
+	/* width: 16px; */
+	/* overflow: scroll; */
+	width: 16px;
+}
+
+div.firepad-toolbar {
+	/* /* width: 816px; */
+	/* margin: 0 auto; */
+	display: flex;
+	align-items: center;
+	/* left: calc((100vw / 2) - (816px / 2)); */
+}
+
+div.firepad-toolbar-wrapper {
+	margin: 0 auto;
+	/* padding: 20px; */
+	min-width: 816px;
+	width: 816px;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	/* border-style: solid;
+	border-color: red;
+	border-width: 1px; */
+	padding: 0px 20px;
+}
+
+div.CodeMirror-lines {
+	margin: 0 auto;
+
+	/* border-style: solid;
+	border-color: red;
+	border-width: 1px; */
+	width: 816px;
+	min-height: 1000px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	padding: 20px;
+}
+
+div.CodeMirror.cm-s-default.CodeMirror-wrap {
+	/* overflow: scroll; */
+	min-width: 816px;
+}
+
+/* div.CodeMirror-scroll {
+	overflow: scroll;
+} */
+
+/* div.CodeMirror-vscrollbar {
+	display: none;
+} */
+
+#controlContainer {
+	position:absolute;
+	width: 175px;
+	left: 0;
+	top: 0;
+	height: 100%;
+}
+
+#userlist {
+	/* height: auto; */
+	width: 175px;
+	padding-bottom: 10px;
+}
+
+#slider {
+	width: 175px;
+	height: 200px;
+	display: flex;
+	flex-direction: column;
+}
+
+
+
+#firepad {
+	position: absolute;
+	top: 0;
+	left: 200px;
+	right: 100px;
+	height: 100vh;
+	min-width: 916px;
+	overflow: hidden;
+	border-style: solid;
+	border-width: 1px;
+	border-color: lightgray;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	/* min-height: 100vh; */
+}

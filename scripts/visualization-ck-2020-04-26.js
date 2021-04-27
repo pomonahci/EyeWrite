@@ -361,79 +361,119 @@ var mouseVis = function () {
 
   });
 
-  function mouseMove(event) {
-    // var mouse = FirepadCM.coordsChar({ left: event.clientX, top: event.clientY }, "window"); //else send as a CodeMirror line and ch
 
-    var cmlinesDim = document.querySelector(".CodeMirror-lines").getBoundingClientRect();
-    // console.log(docDimensions.left, docDimensions.top);
-    var firepadDim = document.getElementById("firepad").getBoundingClientRect();
+  //Callback for setting gaze (buggy)
+  var setGazes = function (cm) {
+    var lines = cm.getElementsByTagName("pre");
+    var scroll = document.querySelector('.CodeMirror-scroll');
+    for (var id in gazes) {
+      var line = lines[gazes[id]['selectedLine']];
+      if (line !== undefined && id !== myUserId) { //&& id !== myUserId
+        var offsets = line.getBoundingClientRect();
+        var divc = document.getElementById(id + "div");
+        var divx = document.getElementById(id + "x");
+        var top = offsets.top + (gazes[id]['selectedSub'] - 1) * 24;
+        var upInd = document.getElementById(id + 'up');
+        var downInd = document.getElementById(id + 'down');
+        upInd.style.top = "83px";
+        downInd.style.top = window.innerHeight - 50 + "px";
+        var color = "#88a7d8"; //#88a7d8
+        if (gazes[id]['selectedSub'] >= gazes[myUserId]['selectedSub'] - 1 &&
+          gazes[id]['selectedSub'] <= gazes[myUserId]['selectedSub'] + 1 &&
+          gazes[id]['x'] >= gazes[myUserId]['x'] - 100 && gazes[id]['x'] <= gazes[myUserId]['x'] + 100) {
+          var color = "#72e082"; //a47fd1 //72e082
+        }
 
-    var bodyDim = document.querySelector("BODY").getBoundingClientRect();
+        if (window.gazeSharing) {
 
-    var relX, relY;
-    var region;
+          if (top <= scroll.getBoundingClientRect().top) {
+            if (scroll.scrollY !== 0) {
+              divc.style.borderTop = "2px solid " + hex2rgb(color, 0.0);
+              divc.style.borderBottom = "2px solid " + hex2rgb(color, 0.0);
+              divx.style.background = "none";
 
-    if (event.clientX <= firepadDim.left) {
-      region = 0;
-      relX = event.clientX - bodyDim.left;
-      relY = event.clientY;
-    } else if (event.clientX > firepadDim.left && event.clientX < cmlinesDim.left) {
-      // console.log("trashland 1")
-      relX = (event.clientX - bodyDim.left - firepadDim.left) / (cmlinesDim.left - firepadDim.left);
-      // relY = event.clientY - docDimensions.top;
-      if (event.clientY < 82) {
-        region = 1;
-        relY = event.clientY;
-      } else {
-        region = 4;
-        relY = event.clientY - cmlinesDim.top;
+              upInd.style.background = `linear-gradient(${hex2rgb("#88a7d8", 0.5)}, ${hex2rgb("#88a7d8", 0.0)})`;
+              //downInd.style.cursor = "pointer";
+              //upInd.style.cursor = "pointer";
+              downInd.style.zIndex = -10;
+              upInd.style.zIndex = 10;
+            } else {
+              divc.style.borderTop = "2px solid " + hex2rgb(color, 0.3);
+              divc.style.borderBottom = "2px solid " + hex2rgb(color, 0.3);
+              divc.style.top = top + "px";
+              divc.style.left = offsets.left + "px";
+              divx.style.background = `linear-gradient(90deg, ${hex2rgb(color, 0.0)}, ${hex2rgb(color, 0.2)}, ${hex2rgb(color, 0.0)})`;
+              if (gazes[id]['x'] < offsets.left + 50) {
+                divx.style.left = offsets.left + "px";
+              } else if (gazes[id]['x'] > offsets.left + 960) {
+                divx.style.left = offsets.left + 910 + "px";
+              } else {
+                divx.style.left = (gazes[id]['x'] - 50) + "px";
+              }
+              divx.style.top = top + "px";
+
+              upInd.style.background = "none"
+              downInd.style.background = "none"
+              downInd.style.cursor = "cursor";
+              upInd.style.cursor = "cursor";
+              downInd.style.zIndex = -10;
+              upInd.style.zIndex = -10;
+            }
+          } else if (top >= window.innerHeight - 72) {
+            divc.style.borderTop = "2px solid " + hex2rgb(color, 0.0);
+            divc.style.borderBottom = "2px solid " + hex2rgb(color, 0.0);
+            divx.style.background = "none";
+
+            upInd.style.background = "none"
+            downInd.style.background = "none"
+            downInd.style.cursor = "cursor";
+            upInd.style.cursor = "cursor";
+            downInd.style.background = `linear-gradient(${hex2rgb("#88a7d8", 0.0)}, ${hex2rgb("#88a7d8", 1.0)})`;
+            downInd.style.zIndex = 10;
+            upInd.style.zIndex = -10;
+          } else {
+            divc.style.borderTop = "2px solid " + hex2rgb(color, 0.3);
+            divc.style.borderBottom = "2px solid " + hex2rgb(color, 0.3);
+            divc.style.top = top + "px";
+            divc.style.left = offsets.left + "px";
+            divx.style.background = `linear-gradient(90deg, ${hex2rgb(color, 0.0)}, ${hex2rgb(color, 0.4)}, ${hex2rgb(color, 0.0)})`;
+            if (gazes[id]['x'] < offsets.left + 50) {
+              divx.style.left = offsets.left + "px";
+            } else if (gazes[id]['x'] > offsets.left + 960) {
+              divx.style.left = offsets.left + 910 + "px";
+            } else {
+              divx.style.left = (gazes[id]['x'] - 50) + "px";
+            }
+            divx.style.top = top + "px";
+
+            upInd.style.background = "none"
+            downInd.style.background = "none"
+            downInd.style.cursor = "cursor";
+            upInd.style.cursor = "cursor";
+            downInd.style.zIndex = -10;
+            upInd.style.zIndex = -10;
+          }
+        } else {
+          upInd.style.background = "none";
+          downInd.style.background = "none";
+          divx.style.background = "none";
+          divc.style.borderTop = "none";
+          divc.style.borderBottom = "none";
+        }
       }
-    } else if (event.clientX >= cmlinesDim.left && event.clientX <= cmlinesDim.right) {
-      relX = event.clientX - cmlinesDim.left - bodyDim.left;
-
-      if (event.clientY < 82) {
-        region = 2;
-        relY = event.clientY;
-      } else {
-        region = 5;
-        relY = event.clientY - cmlinesDim.top;
-      }
-
-    } else if (event.clientX > cmlinesDim.right && event.clientX < firepadDim.right) {
-
-      relX = (event.clientX - bodyDim.left - cmlinesDim.right) / (firepadDim.right - cmlinesDim.right);
-      if (event.clientY < 82) {
-        region = 3;
-        relY = event.clientY;
-      } else {
-        region = 6;
-        relY = event.clientY - cmlinesDim.top;
-      }
-      // relY = event.clientY - docDimensions.top;
-      // console.log("region 3")
-    } else {
-      region = 7;
-      relX = event.clientX - bodyDim.left - firepadDim.right;
-      relY = event.clientY;
-      // console.log("trashland 2")
     }
-
-    console.log(`region: ${region}`);
-    // console.log(event.clientX, event.clientY);
-
-    mousePosRef.child(userId).update({ region: region, x: relX, y: relY });
   }
 
-  // //Callback for mouse movement
-  // function mouseMove(event) {
-  //   //transforms mouse coordinates to codemirror document position
-  //   if (window.sendDataState == 0 || window.sendDataState == 2) {
-  //     mousePosRef.child(userId).update({ line: -1, ch: -1 }); //to signal in the database that this user's data is being blocked
-  //   } else {
-  //     var mouse = FirepadCM.coordsChar({ left: event.clientX, top: event.clientY }, "window"); //else send as a CodeMirror line and ch
-  //     mousePosRef.child(userId).update({ line: mouse.line, ch: mouse.ch });
-  //   }
-  // }
+  //Callback for mouse movement
+  function mouseMove(event) {
+    //transforms mouse coordinates to codemirror document position
+    if (window.sendDataState == 0 || window.sendDataState == 2) {
+      mousePosRef.child(userId).update({ line: -1, ch: -1 }); //to signal in the database that this user's data is being blocked
+    } else {
+      var mouse = FirepadCM.coordsChar({ left: event.clientX, top: event.clientY }, "window"); //else send as a CodeMirror line and ch
+      mousePosRef.child(userId).update({ line: mouse.line, ch: mouse.ch });
+    }
+  }
 
   //Callback for when the mouse leaves the target
   function mouseLeave() {
@@ -441,12 +481,71 @@ var mouseVis = function () {
     mousePosRef.child(userId).update({ line: null, ch: null });
   }
 
-
-
   //callback function for visualization
   function visualize(snapshot) {
-    console.log(snapshot);
+    snapshot.forEach(function (childSnapshot) {
 
+      if (usersChecked[childSnapshot.key]) {
+        //grabs position info
+        let line = childSnapshot.child("line").val();
+        let ch = childSnapshot.child("ch").val();
+
+        //if there already exists a highlight for this user we clear it to make a new one
+        if (userHighlights[childSnapshot.key]) {
+          userHighlights[childSnapshot.key].clear();
+        }
+
+        //incase we get passed nulls
+        if (line != null && ch != null) {
+
+          if (line == -1 || ch == -1) {
+            if (userHighlights[childSnapshot.key]) {
+              userHighlights[childSnapshot.key].clear();
+            }
+
+          } else {
+
+            //finds the word (token) in the codemirror editor nearest to the position given
+            // NOT WORKING CORRECTLY, RETURNS TOKEN OF THE ENTIRE PARAGRAPH.
+            let visToken = FirepadCM.getTokenAt({ line: line, ch: ch });
+            // getTokenAt returns the entire paragraph (line corresponds to paragraph, ch corresponds to exact character in paragraph)
+
+            //transforms the word into multi-sentence range
+            let sentences = wordToLines(visToken, line, ch);
+            // console.log(line, ch);
+            // console.log(visToken);
+            // console.log(sentences);
+
+            // default for if something goes wrong and sentences is null
+            if (!sentences) {
+              sentences.left = visToken.start;
+              sentences.right = vistToken.end;
+            }
+
+            // let region = wordToLines(visToken, line, ch);
+
+            var userColorDiv = document.getElementsByClassName("firepad-user-" + childSnapshot.key)[0].getElementsByClassName("firepad-userlist-color-indicator")[0];
+
+            if (isAboveView(line, cmScrollTop, sentences)) {
+              if (childSnapshot.key != userId) {
+                createUpArrow(childSnapshot.key, userColorDiv, line, sentences);
+              }
+            } else if (isBelowView(line, cmScrollBottom, sentences)) {
+              if (childSnapshot.key != userId) {
+                createDownArrow(childSnapshot.key, userColorDiv, line, sentences);
+              }
+            } else {
+              createHighlight(childSnapshot.key, userColorDiv, line, sentences);
+            }
+          }
+
+        } else {
+          userHighlights[childSnapshot.key].clear();
+          var userColorDiv = document.getElementsByClassName("firepad-user-" + childSnapshot.key)[0].getElementsByClassName("firepad-userlist-color-indicator")[0];
+          clearArrow(userColorDiv);
+        }
+      }
+    });
   }
 
   //Transforms a string hex color to a string rgb color with a fixed opacity
