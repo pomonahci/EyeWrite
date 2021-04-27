@@ -71,6 +71,40 @@
     <select id='user-checkboxes' multiple='multiple'></select>
 
     <div class="radio-buttons">
+      <p>Send My Data:</p>
+
+      <div class="inline-toggle-container">
+        <p class="inline">Gaze</p>
+        <!-- <input type="radio" id="sendButton" name="dataChoice" checked>
+        <label for="sendButton" id="sendButtonLabel" type="radio">Send</label> -->
+        <div class="onoffswitch">
+          <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="gazeSendSwitch" tabindex="0">
+          <label class="onoffswitch-label" for="gazeSendSwitch">
+            <span class="onoffswitch-inner"></span>
+            <span class="onoffswitch-switch"></span>
+          </label>
+        </div>
+      </div>
+
+
+      <div class="inline-toggle-container">
+        <p>Mouse</p>
+        <!-- <input type="radio" id="blockButton" name="dataChoice">
+        <label for="blockButton" type="radio">Block</label> -->
+        <div>
+          <div class="onoffswitch">
+            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="mouseSendSwitch" tabindex="0">
+            <label class="onoffswitch-label" for="mouseSendSwitch">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="radio-buttons">
       <p>Visualize Data:</p>
 
       <div class="inline-toggle-container">
@@ -105,10 +139,10 @@
     </script>
     <!-- Note the missing multiple attribute! -->
     <div class="radio-buttons" style="display: flex; flex-direction: column;">
-      <p>Highlight Shape</p>
+      <p>Highlight Pattern</p>
       <div style="margin: auto;">
         <select id="vis-shape" style="width: 120px; margin: 0 auto; margin-bottom: 10px; margin-top: 0px;">
-          <option value="circle">Circle</option>
+          <option value="circle">Solid</option>
           <option value="gradient">Gradient</option>
         </select>
       </div>
@@ -119,39 +153,7 @@
       <input type="range" min="1" max="48" value="12" id="sentenceSlider">
     </div>
 
-    <div class="radio-buttons">
-      <p>Send My Data:</p>
 
-      <div class="inline-toggle-container">
-        <p class="inline">Gaze</p>
-        <!-- <input type="radio" id="sendButton" name="dataChoice" checked>
-        <label for="sendButton" id="sendButtonLabel" type="radio">Send</label> -->
-        <div class="onoffswitch">
-          <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="gazeSendSwitch" tabindex="0">
-          <label class="onoffswitch-label" for="gazeSendSwitch">
-            <span class="onoffswitch-inner"></span>
-            <span class="onoffswitch-switch"></span>
-          </label>
-        </div>
-      </div>
-
-
-      <div class="inline-toggle-container">
-        <p>Mouse</p>
-        <!-- <input type="radio" id="blockButton" name="dataChoice">
-        <label for="blockButton" type="radio">Block</label> -->
-        <div>
-          <div class="onoffswitch">
-            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="mouseSendSwitch" tabindex="0">
-            <label class="onoffswitch-label" for="mouseSendSwitch">
-              <span class="onoffswitch-inner"></span>
-              <span class="onoffswitch-switch"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-    </div>
     <!-- 
     <div class="radio-buttons">
       <p>Visualize:</p>

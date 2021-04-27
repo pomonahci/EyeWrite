@@ -437,7 +437,7 @@ var mouseVis = function () {
         relY = ypos;
       } else {
         region = 6;
-        relY = ypos; - cmsizerDim.top;
+        relY = ypos - cmsizerDim.top;
       }
     } else {
       region = 7;
