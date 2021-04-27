@@ -445,7 +445,7 @@ var mouseVis = function () {
       relY = ypos;
     }
 
-    console.log("sent: { ", "region:", region, ", relX:", xpos, ", relY:", ypos, ", clientX:", relX, ", clientY:", relY, ", cmLeft:", cmsizerDim.left, ", cmTop:", cmsizerDim.top, ", fpLeft:", firepadDim.left, ", fpTop:", firepadDim.top, ", bodyLeft:", bodyDim.left, ", bodyTop:", bodyDim.top, "}");
+    console.log("sent: { ", "region:", region, ", relX:", relX, ", relY:", relY, ", clientX:", xpos, ", clientY:", ypos, ", cmLeft:", cmsizerDim.left, ", cmTop:", cmsizerDim.top, ", fpLeft:", firepadDim.left, ", fpTop:", firepadDim.top, ", bodyLeft:", bodyDim.left, ", bodyTop:", bodyDim.top, "}");
 
     return { region: region, x: relX, y: relY }
   }
