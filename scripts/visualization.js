@@ -545,13 +545,13 @@ var mouseVis = function () {
 
     if (uID != userId) {
       if (isAboveView(loc)) {
-        console.log("above view!");
+        // console.log("above view!");
         createUpArrow(uID, loc);
       } else if (isBelowView(loc)) {
-        console.log("below view!");
+        // console.log("below view!");
         createDownArrow(uID, loc);
       } else {
-        console.log("in view!");
+        // console.log("in view!");
         clearArrow(uID);
       }
     }
