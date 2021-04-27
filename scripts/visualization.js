@@ -397,7 +397,7 @@ var mouseVis = function () {
   });
 
   function encodeLocation(xpos, ypos) {
-    var cmsizerDim = document.querySelector(".CodeMirror-sizer").getBoundingClientRect();
+    var cmsizerDim = document.querySelector(".CodeMirror-code").getBoundingClientRect();
     var firepadDim = document.getElementById("firepad").getBoundingClientRect();
 
     var bodyDim = document.querySelector("body").getBoundingClientRect();
@@ -504,7 +504,7 @@ var mouseVis = function () {
     var xpos = loc.x;
     var ypos = loc.y;
 
-    var cmsizerDim = document.querySelector(".CodeMirror-sizer").getBoundingClientRect();
+    var cmsizerDim = document.querySelector(".CodeMirror-code").getBoundingClientRect();
     // console.log(docDimensions.left, docDimensions.top);
     var firepadDim = document.getElementById("firepad").getBoundingClientRect();
     var bodyDim = document.querySelector("body").getBoundingClientRect();
