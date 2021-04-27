@@ -249,6 +249,7 @@ body {
   background-color: var(--sub-box-padding);
   border: 1px solid var(--outer-border);
   border-radius: 4px;
+  padding-bottom: 20px;
 }
 
 .slider-text {
@@ -258,11 +259,13 @@ body {
   font-size: 16px;
   margin-left: 10px;
   margin-top: 5px;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
 }
 
 #sentenceSlider {
   position: relative;
-  float: bottom;
+  /* float: bottom; */
   width: 125px;
   margin-left: 10px;
   margin-top: 10px;
