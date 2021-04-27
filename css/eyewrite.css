@@ -9,13 +9,28 @@
   --arrow-color: #FFFFFF;
 }
 
-html {
+/* html {
   height: 100%;
 }
 
 body {
   margin: 0;
   height: 100%;
+} */
+
+html {
+	height: 100%;
+	width: 100%;
+	overflow-x: auto;
+	overflow-y: hidden;
+}
+
+body {
+	margin: 0;
+	height: 100%;
+	width: 100%;
+	overflow-y: hidden;
+	overflow-x: hidden;
 }
 
 /* Height / width / positioning can be customized for your use case.
@@ -360,20 +375,7 @@ body {
   background-color: #FFBF86; 
 }
 
-html {
-	height: 100%;
-	width: 100%;
-	overflow-x: auto;
-	overflow-y: hidden;
-}
 
-body {
-	margin: 0;
-	height: 100%;
-	width: 100%;
-	overflow-y: hidden;
-	overflow-x: hidden;
-}
 
 a.powered-by-firepad {
 	display: none;

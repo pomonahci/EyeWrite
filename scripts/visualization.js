@@ -1,19 +1,10 @@
 var mouseVis = function () {
-  //reference for our firepad's instance of codemirror
-  var FirepadCM;
-  //dictionary for user colors
-  var userColors = {};
-  //dictionary for user highlights
-  var userHighlights = {};
-  //dictionary for visualization checkboxes
-  var usersChecked = {};
 
-  //keeps track of CM viewport
-  var cmScrollTop;
-  var cmScrollBottom;
-
-  //keeps track of CM
-  var cm = document.querySelector('.CodeMirror-code');
+  var FirepadCM;            // reference for our firepad's codemirror instance
+  var userColors = {};      // object for user colors
+  var userHighlights = {};  // dictionary for user highlights
+  var userLocations = {};   // dictionary for user locations
+  var usersChecked = {};    // dictionary for visualization checkboxes
 
   //reference to firebase user mouse and gaze positions
   var mousePosRef = firebaseRef.child("mice");
@@ -54,26 +45,26 @@ var mouseVis = function () {
     //updates local dictionaries if a checked value changes
     onChange: function (option, checked, select) {
       usersChecked[option.val()] = checked;
-      if (userHighlights[option.val()]) {
-        userHighlights[option.val()].clear();
-      }
+      // if (userHighlights[option.val()]) {
+      //   userHighlights[option.val()].clear();
+      // }
     },
     //separate callback for select all
     onSelectAll: function () {
       for (key in usersChecked) {
         usersChecked[key] = true;
-        if (userHighlights[key]) {
-          userHighlights[key].clear();
-        }
+        // if (userHighlights[key]) {
+        //   userHighlights[key].clear();
+        // }
       }
     },
     //separate callback for deselect all
     onDeselectAll: function () {
       for (key in usersChecked) {
         usersChecked[key] = false;
-        if (userHighlights[key]) {
-          userHighlights[key].clear();
-        }
+        // if (userHighlights[key]) {
+        //   userHighlights[key].clear();
+        // }
       }
     }
   });
@@ -234,9 +225,9 @@ var mouseVis = function () {
     webgazer.showPredictionPoints(false);
 
     //Mouse Listeners
-    var target = document.getElementById("firepad");
-    target.addEventListener("mousemove", mouseMove);
-    target.addEventListener("mouseleave", mouseLeave);
+    // var target = document.getElementById("firepad");
+    document.addEventListener("mousemove", mouseMove);
+    document.addEventListener("mouseleave", mouseLeave);
 
     //Fetches the buttons responsible for toggling mouse vs. gaze and send vs. block
     var mouseButton = document.getElementById("mouseButton");
@@ -260,11 +251,11 @@ var mouseVis = function () {
       else return 'invalid';
     }
 
-    function clearHighlights() {
-      for (const [_, singleUserHighlight] of Object.entries(userHighlights)) {
-        singleUserHighlight.clear();
-      }
-    }
+    // function clearHighlights() {
+    //   for (const [_, singleUserHighlight] of Object.entries(userHighlights)) {
+    //     singleUserHighlight.clear();
+    //   }
+    // }
 
     mouseSendSwitch.addEventListener("change", function () {
       if (mouseSendSwitch.checked) {
@@ -279,7 +270,6 @@ var mouseVis = function () {
           window.sendDataState = 2;
         } else {
           window.sendDataState = 0;
-          // clearHighlights();
         }
       }
       // console.log(`send data state: ${getDataState(window.sendDataState)}`);
@@ -298,7 +288,6 @@ var mouseVis = function () {
           window.sendDataState = 1;
         } else {
           window.sendDataState = 0;
-          // clearHighlights();
         }
       }
       // console.log(`send data state: ${getDataState(window.sendDataState)}`);
@@ -311,12 +300,16 @@ var mouseVis = function () {
           gazePosRef.off("value", visualize);
         }
         if (window.visualizationState != 1) window.visualizationState = 1;
-        mousePosRef.on("value", visualize);
+        mousePosRef.on("child_added", visualize);
+        mousePosRef.on("child_changed", visualize);
+        mousePosRef.on("child_removed", removeHighlight2);
       } else {
         if (!gazeVisSwitch.checked) {
           window.visualizationState = 0;
-          mousePosRef.off("value", visualize);
-          clearHighlights();
+          mousePosRef.off("child_added", visualize);
+          mousePosRef.off("child_changed", visualize);
+          mousePosRef.off("child_removed", removeHighlight2);
+          clearAllHighlights();
         }
       }
       console.log(`visualization state: ${getDataState(window.visualizationState)}`);
@@ -334,7 +327,7 @@ var mouseVis = function () {
         if (!mouseVisSwitch.checked) {
           window.visualizationState = 0;
           gazePosRef.off("value", visualize);
-          clearHighlights();
+          clearAllHighlights();
         }
       }
       console.log(`visualization state: ${getDataState(window.visualizationState)}`);
@@ -362,91 +355,207 @@ var mouseVis = function () {
   });
 
   function mouseMove(event) {
-    // var mouse = FirepadCM.coordsChar({ left: event.clientX, top: event.clientY }, "window"); //else send as a CodeMirror line and ch
+    if (window.sendDataState == 1 || window.sendDataState == 3) {
+      // var mouse = FirepadCM.coordsChar({ left: event.clientX, top: event.clientY }, "window"); //else send as a CodeMirror line and ch
+
+      var cmlinesDim = document.querySelector(".CodeMirror-lines").getBoundingClientRect();
+      // console.log(docDimensions.left, docDimensions.top);
+      var firepadDim = document.getElementById("firepad").getBoundingClientRect();
+
+      var bodyDim = document.querySelector("BODY").getBoundingClientRect();
+
+      var relX, relY;
+      var region;
+
+      if (event.clientX <= firepadDim.left) {
+        region = 0;
+        relX = event.clientX - bodyDim.left;
+        relY = event.clientY;
+      } else if (event.clientX > firepadDim.left && event.clientX < cmlinesDim.left) {
+        // console.log("trashland 1")
+        relX = (event.clientX - bodyDim.left - firepadDim.left) / (cmlinesDim.left - firepadDim.left);
+        // relY = event.clientY - docDimensions.top;
+        if (event.clientY < 82) {
+          region = 1;
+          relY = event.clientY;
+        } else {
+          region = 4;
+          relY = event.clientY - cmlinesDim.top;
+        }
+      } else if (event.clientX >= cmlinesDim.left && event.clientX <= cmlinesDim.right) {
+        relX = event.clientX - cmlinesDim.left - bodyDim.left;
+
+        if (event.clientY < 82) {
+          region = 2;
+          relY = event.clientY;
+        } else {
+          region = 5;
+          relY = event.clientY - cmlinesDim.top;
+        }
+
+      } else if (event.clientX > cmlinesDim.right && event.clientX < firepadDim.right) {
+
+        relX = (event.clientX - bodyDim.left - cmlinesDim.right) / (firepadDim.right - cmlinesDim.right);
+        if (event.clientY < 82) {
+          region = 3;
+          relY = event.clientY;
+        } else {
+          region = 6;
+          relY = event.clientY - cmlinesDim.top;
+        }
+        // relY = event.clientY - docDimensions.top;
+        // console.log("region 3")
+      } else {
+        region = 7;
+        relX = event.clientX - bodyDim.left - firepadDim.right;
+        relY = event.clientY;
+        // console.log("trashland 2")
+      }
+
+      // console.log(`region: ${region}`);
+      // console.log(event.clientX, event.clientY);
+
+      mousePosRef.child(userId).update({ region: region, x: relX, y: relY });
+    }
+  }
+
+  //Callback for when the mouse leaves the target
+  function mouseLeave() {
+    mousePosRef.child(userId).update({ region: null, x: null, y: null });
+  }
+
+  function exists(val) {
+    return val !== null && val !== undefined;
+  }
+
+  function hex2rgb(hex, transparency) {
+    if (typeof hex !== 'string') {
+      // console.log(typeof hex);
+      throw new TypeError('Expected a string');
+    }
+    hex = hex.replace(/^#/, '');
+    if (hex.length === 3) {
+      hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+    }
+    var num = parseInt(hex, 16);
+    var rgb = [num >> 16, num >> 8 & 255, num & 255];
+    var type = 'rgb';
+    if (exists(transparency)) {
+      type = 'rgba';
+      rgb.push(transparency);
+    }
+    // rgb(r, g, b) or rgba(r, g, b, t)
+    return type + '(' + rgb.join(',') + ')';
+  }
+
+  //callback function for visualization
+  function visualize(snapshot) {
+    // console.log(snapshot.child(userId).key);
+
+    userLocations[snapshot.key] = snapshot.val();
+    // console.log(snapshot.val());
+    // console.log(typeof snapshot.key);
+    if (usersChecked[snapshot.key]) {
+      if (userColors[snapshot.key]) updateHighlight(snapshot.key);
+    } else {
+      if (userHighlights[snapshot.key]) removeHighlight(snapshot.key);
+    }
+
+    // updateHighlight(snapshot.key);
+  }
+
+  function decodePosition(loc) {
+    var region = loc.region;
+    var xpos = loc.x;
+    var ypos = loc.y;
 
     var cmlinesDim = document.querySelector(".CodeMirror-lines").getBoundingClientRect();
     // console.log(docDimensions.left, docDimensions.top);
     var firepadDim = document.getElementById("firepad").getBoundingClientRect();
-
     var bodyDim = document.querySelector("BODY").getBoundingClientRect();
 
     var relX, relY;
-    var region;
 
-    if (event.clientX <= firepadDim.left) {
-      region = 0;
-      relX = event.clientX - bodyDim.left;
-      relY = event.clientY;
-    } else if (event.clientX > firepadDim.left && event.clientX < cmlinesDim.left) {
-      // console.log("trashland 1")
-      relX = (event.clientX - bodyDim.left - firepadDim.left) / (cmlinesDim.left - firepadDim.left);
-      // relY = event.clientY - docDimensions.top;
-      if (event.clientY < 82) {
-        region = 1;
-        relY = event.clientY;
-      } else {
-        region = 4;
-        relY = event.clientY - cmlinesDim.top;
-      }
-    } else if (event.clientX >= cmlinesDim.left && event.clientX <= cmlinesDim.right) {
-      relX = event.clientX - cmlinesDim.left - bodyDim.left;
-
-      if (event.clientY < 82) {
-        region = 2;
-        relY = event.clientY;
-      } else {
-        region = 5;
-        relY = event.clientY - cmlinesDim.top;
-      }
-
-    } else if (event.clientX > cmlinesDim.right && event.clientX < firepadDim.right) {
-
-      relX = (event.clientX - bodyDim.left - cmlinesDim.right) / (firepadDim.right - cmlinesDim.right);
-      if (event.clientY < 82) {
-        region = 3;
-        relY = event.clientY;
-      } else {
-        region = 6;
-        relY = event.clientY - cmlinesDim.top;
-      }
-      // relY = event.clientY - docDimensions.top;
-      // console.log("region 3")
-    } else {
-      region = 7;
-      relX = event.clientX - bodyDim.left - firepadDim.right;
-      relY = event.clientY;
-      // console.log("trashland 2")
+    switch (region) {
+      case 0:
+        relX = xpos; // + bodyDim.left;
+        relY = ypos;
+        break;
+      case 1:
+        relX = firepadDim.left + (cmlinesDim.left - firepadDim.left) * xpos;
+        relY = ypos;
+        break;
+      case 2:
+        relX = xpos + cmlinesDim.left;
+        relY = ypos;
+        break;
+      case 3:
+        relX = cmlinesDim.right + (firepadDim.right - cmlinesDim.right) * xpos;
+        relY = ypos;
+        break;
+      case 4:
+        relX = firepadDim.left + (cmlinesDim.left - firepadDim.left) * xpos;
+        relY = ypos + cmlinesDim.top;
+        if (relY < 82) relY -= 10000000000;
+        break;
+      case 5:
+        relX = xpos + cmlinesDim.left;
+        relY = ypos + cmlinesDim.top;
+        if (relY < 82) relY -= 10000000000;
+        break;
+      case 6:
+        relX = cmlinesDim.right + (firepadDim.right - cmlinesDim.right) * xpos;
+        relY = ypos + cmlinesDim.top;
+        if (relY < 82) relY -= 10000000000;
+        break;
+      case 7:
+        relX = xpos + firepadDim.right;
+        relY = ypos;
+        break;
+      default:
+        console.log("invalid region");
     }
 
-    console.log(`region: ${region}`);
-    // console.log(event.clientX, event.clientY);
-
-    mousePosRef.child(userId).update({ region: region, x: relX, y: relY });
+    return { x: relX, y: relY }
   }
 
-  // //Callback for mouse movement
-  // function mouseMove(event) {
-  //   //transforms mouse coordinates to codemirror document position
-  //   if (window.sendDataState == 0 || window.sendDataState == 2) {
-  //     mousePosRef.child(userId).update({ line: -1, ch: -1 }); //to signal in the database that this user's data is being blocked
-  //   } else {
-  //     var mouse = FirepadCM.coordsChar({ left: event.clientX, top: event.clientY }, "window"); //else send as a CodeMirror line and ch
-  //     mousePosRef.child(userId).update({ line: mouse.line, ch: mouse.ch });
-  //   }
-  // }
+  function updateHighlight(uID) {
+    var circle;
 
-  //Callback for when the mouse leaves the target
-  function mouseLeave() {
-    //send nulls to firebase to signal the user is off target but has not closed the window
-    mousePosRef.child(userId).update({ line: null, ch: null });
+    if (userHighlights[uID] != null) {
+      circle = userHighlights[uID];
+    } else {
+      circle = document.createElement("DIV");
+      circle.id = `${uID}`;
+      userHighlights[uID] = circle;
+      document.body.append(circle);
+    }
+
+    var loc = decodePosition(userLocations[uID]);
+
+    var docDimensions = document.querySelector(".CodeMirror-lines").getBoundingClientRect();
+
+    var transparentColor = hex2rgb(userColors[uID], 0.0);
+    var color = hex2rgb(userColors[uID], 0.5);
+    var sizeCoeff = document.getElementById("sentenceSlider").value;
+
+    circle.style = `position: absolute; pointer-events: none; left: ${loc.x - 8 * sizeCoeff}px; top: ${loc.y - 8 * sizeCoeff}px; width:${16 * sizeCoeff}px; height:${16 * sizeCoeff}px; background-color: ${color}; border-radius: 100%`;
+    // console.log(sizeCoeff);
   }
 
+  function removeHighlight(uID) {
+    // if (typeof uID != String) uID = uID.key;
+    document.body.removeChild(userHighlights[uID]);
+    delete userHighlights[uID];
+  }
 
+  function removeHighlight2(snapshot) {
+    document.body.removeChild(userHighlights[snapshot.key]);
+    delete userHighlights[snapshot.key];
+  }
 
-  //callback function for visualization
-  function visualize(snapshot) {
-    console.log(snapshot);
-
+  function clearAllHighlights() {
+    for (let uID in userHighlights) removeHighlight(uID);
   }
 
   //Transforms a string hex color to a string rgb color with a fixed opacity
@@ -454,91 +563,6 @@ var mouseVis = function () {
     let opacity = 0.35;
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? "rgb(" + parseInt(result[1], 16) + "," + parseInt(result[2], 16) + "," + parseInt(result[3], 16) + "," + opacity + ")" : null;
-  }
-
-  //takes a word (token) and a line and highlights the sentence that word
-  //is in, as well as the sentence before and the sentence after
-  // function wordToLines(token, line) {
-  function wordToLines(token, line, ch) {
-
-    //function for finding the token index in the array of tokens
-    const isToken = (element) => element.start == token.start && element.end == token.end;
-
-    //array of all tokens from the given line
-    let lineTokens = FirepadCM.getLineTokens(line);
-
-    //the index found using the function isToken which checks if each element is the given token
-    let index = lineTokens.findIndex(isToken);
-
-    var slider = document.getElementById("sentenceSlider");
-
-    if (index != -1) {
-      let numPad = Math.floor(slider.value / 2);
-      if (slider.value % 2 == 0) {
-        if (ch <= Math.floor((token.end - token.start) / 2)) {
-          return { left: line - numPad, right: line + numPad };
-        } else {
-          return { left: line - numPad + 1, right: line + numPad + 1 };
-        }
-      } else {
-        return { left: line - numPad, right: line + numPad + 1 };
-      }
-
-      //left and right bumpers for finding periods and determining the highlight range
-      let leftBump = index;
-      let rightBump = index;
-
-      //counters for the number of periods allowed on the left of the word and on the right of the word
-      let leftPeriodCount = slider.value;
-      let rightPeriodCount = slider.value;
-      // let leftPeriodCount = 2;
-      // let rightPeriodCount = 2;
-
-      //loop until period conditions are satisfied
-      while (true) {
-        //ticks left
-        if (lineTokens[leftBump].start > 0 && leftPeriodCount > 0) {
-          leftBump--;
-        }
-        //ticks right
-        if (lineTokens[rightBump].end < lineTokens[lineTokens.length - 1].end && rightPeriodCount > 0) {
-          rightBump++;
-        }
-        //counts down periods on the left
-        if (lineTokens[leftBump]["string"].includes(".")) {
-          leftPeriodCount--;
-        }
-        //counts down periods on the right
-        if (lineTokens[rightBump]["string"].includes(".")) {
-          rightPeriodCount--;
-        }
-        //if the period conditions are satisfied or we"re up against the begining of the line or the end of the line then break
-        if ((leftPeriodCount <= 0 || lineTokens[leftBump]["start"] == 0) && (rightPeriodCount <= 0 || lineTokens[rightBump]["end"] == lineTokens[lineTokens.length - 1]["end"])) {
-          break;
-        }
-      }
-      //Just because the highlighting of the starting period on the left is annoying, but if
-      //we"re at the begining of the line, the first character shouldn"t be left out of the highlight
-
-      console.log({
-        index: index,
-        token: token,
-        line: line,
-        ch: ch,
-        slidervalue: slider.value,
-        lineTokens: lineTokens,
-      });
-
-
-      if (lineTokens[leftBump]["start"] == 0) {
-        return { left: lineTokens[leftBump]["start"], right: lineTokens[rightBump]["end"] };
-      } else {
-        return { left: lineTokens[leftBump]["start"] + 1, right: lineTokens[rightBump]["end"] };
-      }
-      // return { left: null, right: null };
-    } else {
-      return { left: null, right: null };
-    }
   }
 
   //Checks if a highlight is above the client view port
@@ -551,20 +575,7 @@ var mouseVis = function () {
     return line > viewBottom["line"] || (line == viewBottom["line"] && sentences["left"] > viewBottom["ch"]);
   }
 
-  function createHighlight(userId, userColorDiv, line, sentences) {
-    clearArrow(userColorDiv);
 
-    //creates a highlight (TextMarker object) for the multi-sentence highlight range and uses the user"s color
-    let highlight = FirepadCM.markText(
-      // { line: line, ch: sentences["left"] },
-      // { line: line, ch: sentences["right"] },
-      { line: sentences["left"], ch: 0 },
-      { line: sentences["right"], ch: 0 },
-      { css: `background-color: ${hexToRgb(userColors[userId])});` });
-
-    //associates this highlight with the user it came from in our local dictionary to keep track
-    userHighlights[userId] = highlight;
-  }
 
   //Creates up arrow indicating a user's highlight is above the view port
   function createUpArrow(userId, userColorDiv, line, sentences) {
@@ -584,7 +595,8 @@ var mouseVis = function () {
       arrow.onclick = function () {
         FirepadCM.on("refresh", function mark() {
           FirepadCM.off("refresh", mark);
-          createHighlight(userId, userColorDiv, line, sentences);
+          // createHighlight(userId, userColorDiv, line, sentences);
+          console.log("Old highlight function called!");
         });
         FirepadCM.scrollIntoView({ line: line, ch: sentences["left"] });
         FirepadCM.refresh();
@@ -597,7 +609,8 @@ var mouseVis = function () {
       userColorDiv.firstChild.onclick = function () { //if there's already an up arrow, update the position to jump to
         FirepadCM.on("refresh", function mark() {
           FirepadCM.off("refresh", mark);
-          createHighlight(userId, userColorDiv, line, sentences);
+          // createHighlight(userId, userColorDiv, line, sentences);
+          console.log("Old highlight function called!");
         });
         FirepadCM.scrollIntoView({ line: line, ch: sentences["left"] });
         FirepadCM.refresh();
@@ -623,7 +636,8 @@ var mouseVis = function () {
       arrow.onclick = function () {
         FirepadCM.on("refresh", function mark() {
           FirepadCM.off("refresh", mark);
-          createHighlight(userId, userColorDiv, line, sentences);
+          // createHighlight(userId, userColorDiv, line, sentences);
+          console.log("Old highlight function called!");
         });
         FirepadCM.scrollIntoView({ line: line, ch: sentences["right"] });
         FirepadCM.refresh();
@@ -637,7 +651,8 @@ var mouseVis = function () {
       userColorDiv.firstChild.onclick = function () { //if there's already a down arrow
         FirepadCM.on("refresh", function mark() {
           FirepadCM.off("refresh", mark);
-          createHighlight(userId, userColorDiv, line, sentences);
+          // createHighlight(userId, userColorDiv, line, sentences);
+          console.log("Old highlight function called!");
         });
         FirepadCM.scrollIntoView({ line: line, ch: sentences["right"] });
         FirepadCM.refresh();
