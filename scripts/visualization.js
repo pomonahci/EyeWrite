@@ -593,7 +593,7 @@ var mouseVis = function () {
 
 
     var visShape, visSize;
-    if (window.visShape == "circle") {
+    if (window.visShape == "solid") {
       visShape = `background-color: ${color}; border-radius: 100%; opacity: 0.5;`;
       visSize = `left: ${loc.x - 8 * sizeCoeff}px; top: ${loc.y - 8 * sizeCoeff}px; width:${16 * sizeCoeff}px; height:${16 * sizeCoeff}px;`;
     } else if (window.visShape == "gradient") {
