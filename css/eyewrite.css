@@ -49,15 +49,6 @@ body {
   border-radius: 4px;
 }
 
-#firepad {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 175px;
-  height: auto;
-}
-
 .arrow-up {
   width: 0;
   height: 0;
@@ -126,6 +117,7 @@ body {
   margin-top: 10px;
   padding: 4px 6px 2px 6px;
   width: 145px;
+  /* padding-left: 0px; */
 }
 
 .user-checkboxes:hover {
@@ -162,21 +154,26 @@ body {
 
 .radio-buttons {
   position: relative;
+  display: flex;
+  flex-direction: column;
   width: 145px;
   margin-top: 10px;
   margin-left: 15px;
   background-color: var(--sub-box-padding);
   border: 1px solid var(--outer-border);
   border-radius: 4px;
+  padding: 5px;
+  padding-left: 10px;
 }
 
 .radio-buttons p {
   color: var(--title-text);
-  margin-top: 5px;
-  margin-left: 10px;
+  /* margin-top: 5px; */
+  /* margin-left: 5px; */
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 500;
   font-size: 16px;
+  margin-bottom: 5px;
 }
 
 .border {
@@ -216,25 +213,39 @@ body {
 .radio-buttons .inline-toggle-container {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  /* margin-top: 0;
+  padding-top: 0;
+  margin-bottom: 0;
+  padding-bottom: 0; */
+  margin-bottom: 0;
+  margin-top: 0;
+  padding-top: 0;
 }
 
 .radio-buttons .inline-toggle-container p {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
+  margin-bottom: 0;
+  margin-top: 0;
+  padding-bottom: 0;
 }
 
 .radio-buttons .inline-toggle-container #mute {
   width: 60px;
   height: 26px;
-  margin-right: 5px;
+  margin: auto 0;
   text-align: center;
   color: black;
+  font-size: 14px;
+  /* margin-bottom: 0;
+  margin-top: 0; */
 }
 
 .radio-buttons .inline-toggle-container #mute:disabled {
   width: 60px;
   height: 26px;
-  margin-right: 5px;
+  margin: auto 0;
   text-align: center;
   color: lightgray;
 }
@@ -327,9 +338,6 @@ body {
 }
 
 .onoffswitch {
-  margin-right:5px;
-  margin-left:5px;
-  margin-bottom:10px;
   position: relative; width: 64px;
   -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
 }
@@ -341,6 +349,7 @@ body {
 .onoffswitch-label {
   display: block; overflow: hidden; cursor: pointer;
   border: 2px solid #FFFFFF; border-radius: 0px;
+  margin-bottom: 0;
 }
 .onoffswitch-inner {
   display: block; width: 200%; margin-left: -100%;
@@ -449,28 +458,6 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
 /* div.CodeMirror-vscrollbar {
 	display: none;
 } */
-
-#controlContainer {
-	position:absolute;
-	width: 175px;
-	left: 0;
-	top: 0;
-	height: 100%;
-}
-
-#userlist {
-	/* height: auto; */
-	width: 175px;
-	padding-bottom: 10px;
-}
-
-#slider {
-	width: 175px;
-	height: 200px;
-	display: flex;
-	flex-direction: column;
-}
-
 
 
 #firepad {

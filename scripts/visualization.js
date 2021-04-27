@@ -5,6 +5,7 @@ var mouseVis = function () {
   var userHighlights = {};  // dictionary for user highlights
   var userLocations = {};   // dictionary for user locations
   var usersChecked = {};    // dictionary for visualization checkboxes
+  var userArrows = {};
 
   //reference to firebase user mouse and gaze positions
   var mousePosRef = firebaseRef.child("mice");
@@ -455,7 +456,7 @@ var mouseVis = function () {
     return type + '(' + rgb.join(',') + ')';
   }
 
-  //callback function for visualization
+  // visfunc
   function visualize(snapshot) {
 
     userLocations[snapshot.key] = snapshot.val();
@@ -521,7 +522,7 @@ var mouseVis = function () {
 
     // console.log("received: { ", "region:", region, ", relX:", xpos, ", relY:", ypos, ", clientX:", relX, ", clientY:", relY, ", cmLeft:", cmsizerDim.left, ", cmTop:", cmsizerDim.top, ", fpLeft:", firepadDim.left, ", fpTop:", firepadDim.top, ", bodyLeft:", bodyDim.left, ", bodyTop:", bodyDim.top, "}");
 
-    return { x: relX, y: relY }
+    return { region: region, x: relX, y: relY }
   }
 
   function updateHighlight(uID) {
@@ -541,6 +542,19 @@ var mouseVis = function () {
     }
 
     var loc = decodePosition(userLocations[uID]);
+
+    if (uID != userId) {
+      if (isAboveView(loc)) {
+        console.log("above view!");
+        createUpArrow(uID, loc);
+      } else if (isBelowView(loc)) {
+        console.log("below view!");
+        createDownArrow(uID, loc);
+      } else {
+        console.log("in view!");
+        clearArrow(uID);
+      }
+    }
 
     var transparentColor = hex2rgb(userColors[uID], 0.0);
     var color = hex2rgb(userColors[uID], 1.0);
@@ -587,21 +601,30 @@ var mouseVis = function () {
   }
 
   //Checks if a highlight is above the client view port
-  function isAboveView(line, viewTop, sentences) {
-    return line < viewTop["line"] || (line == viewTop["line"] && sentences["right"] < viewTop["ch"]);
+  function isAboveView(loc) {
+    return loc.y < 84 && (loc.region == 4 || loc.region == 5 || loc.region == 6);
   }
 
   //Checks if a highlight is bellow the client view port
-  function isBelowView(line, viewBottom, sentences) {
-    return line > viewBottom["line"] || (line == viewBottom["line"] && sentences["left"] > viewBottom["ch"]);
+  function isBelowView(loc) {
+    return loc.y > document.querySelector("body").getBoundingClientRect().height && (loc.region == 4 || loc.region == 5 || loc.region == 6);
   }
 
 
 
   //Creates up arrow indicating a user's highlight is above the view port
-  function createUpArrow(userId, userColorDiv, line, sentences) {
-    if (!userColorDiv.hasChildNodes()) {
-      var arrow = document.createElement("div");
+  function createUpArrow(uID, loc) {
+
+    var arrow = userArrows[uID];
+    if (arrow && arrow.className == "down-arrow") {
+      clearArrow(uID);
+    }
+
+    if (!userArrows[uID]) {
+      var userColorDiv = document.querySelector(`div.firepad-userlist-user.firepad-user-${uID}`).getElementsByClassName("firepad-userlist-color-indicator")[0];
+      arrow = document.createElement("div");
+      arrow.className = "up-arrow";
+      userColorDiv.appendChild(arrow);
 
       //constructing arrow shape
       var arrowTip = document.createElement("div");
@@ -612,81 +635,46 @@ var mouseVis = function () {
       arrowStem.className = "arrow-stem";
       arrow.appendChild(arrowStem);
 
-      //Click for "jump-to" functionality
-      arrow.onclick = function () {
-        FirepadCM.on("refresh", function mark() {
-          FirepadCM.off("refresh", mark);
-          // createHighlight(userId, userColorDiv, line, sentences);
-          console.log("Old highlight function called!");
-        });
-        FirepadCM.scrollIntoView({ line: line, ch: sentences["left"] });
-        FirepadCM.refresh();
-      }
-      userColorDiv.appendChild(arrow);
-    } else if (userColorDiv.firstChild.firstChild.className == "arrow-stem") { //if there's already a down arrow
-      clearArrow(userColorDiv);
-      createUpArrow(userId, userColorDiv, line, sentences);
-    } else {
-      userColorDiv.firstChild.onclick = function () { //if there's already an up arrow, update the position to jump to
-        FirepadCM.on("refresh", function mark() {
-          FirepadCM.off("refresh", mark);
-          // createHighlight(userId, userColorDiv, line, sentences);
-          console.log("Old highlight function called!");
-        });
-        FirepadCM.scrollIntoView({ line: line, ch: sentences["left"] });
-        FirepadCM.refresh();
-      }
+      userArrows[uID] = arrow;
     }
+
   }
 
   //Creates down arrow indicating a user's highlight is bellow the view port
-  function createDownArrow(userId, userColorDiv, line, sentences) {
-    if (!userColorDiv.hasChildNodes()) {
-      var arrow = document.createElement("div");
+  function createDownArrow(uID, loc) {
+
+    var arrow = userArrows[uID];
+    if (arrow && arrow.className == "up-arrow") {
+      clearArrow(uID);
+    }
+
+    if (!userArrows[uID]) {
+      var userColorDiv = document.querySelector(`div.firepad-userlist-user.firepad-user-${uID}`).getElementsByClassName("firepad-userlist-color-indicator")[0];
+      arrow = document.createElement("div");
+      arrow.className = "down-arrow";
+      userColorDiv.appendChild(arrow);
 
       //constructing arrow shape
+
       var arrowStem = document.createElement("div");
       arrowStem.className = "arrow-stem";
       arrow.appendChild(arrowStem);
-
       var arrowTip = document.createElement("div");
       arrowTip.className = "arrow-down";
       arrow.appendChild(arrowTip);
 
-      //Click for "jump-to" functionality
-      arrow.onclick = function () {
-        FirepadCM.on("refresh", function mark() {
-          FirepadCM.off("refresh", mark);
-          // createHighlight(userId, userColorDiv, line, sentences);
-          console.log("Old highlight function called!");
-        });
-        FirepadCM.scrollIntoView({ line: line, ch: sentences["right"] });
-        FirepadCM.refresh();
-      }
-      userColorDiv.appendChild(arrow);
 
-    } else if (userColorDiv.firstChild.firstChild.className == "arrow-up") { //if there's already an up arrow
-      clearArrow(userColorDiv);
-      createDownArrow(userId, userColorDiv, line, sentences);
-    } else {
-      userColorDiv.firstChild.onclick = function () { //if there's already a down arrow
-        FirepadCM.on("refresh", function mark() {
-          FirepadCM.off("refresh", mark);
-          // createHighlight(userId, userColorDiv, line, sentences);
-          console.log("Old highlight function called!");
-        });
-        FirepadCM.scrollIntoView({ line: line, ch: sentences["right"] });
-        FirepadCM.refresh();
-      }
+      userArrows[uID] = arrow;
     }
+
   }
 
   //Clears the color indicator of any arrow
-  function clearArrow(userColorDiv) {
-    if (userColorDiv.hasChildNodes()) {
-      while (userColorDiv.firstChild) {
-        userColorDiv.removeChild(userColorDiv.firstChild);
-      }
+  function clearArrow(uID) {
+    if (uID in userArrows) {
+      var userColorDiv = document.querySelector(`div.firepad-userlist-user.firepad-user-${uID}`).getElementsByClassName("firepad-userlist-color-indicator")[0];
+      userColorDiv.removeChild(userArrows[uID]);
+      delete userArrows[uID];
     }
   }
 
