@@ -444,6 +444,9 @@ var mouseVis = function () {
       relX = xpos - firepadDim.right;
       relY = ypos;
     }
+
+    console.log("sent: { ", "region:", region, ", relX:", xpos, ", relY:", ypos, ", clientX:", relX, ", clientY:", relY, ", cmLeft:", cmsizerDim.left, ", cmTop:", cmsizerDim.top, ", fpLeft:", firepadDim.left, ", fpTop:", firepadDim.top, ", bodyLeft:", bodyDim.left, ", bodyTop:", bodyDim.top, "}");
+
     return { region: region, x: relX, y: relY }
   }
 
@@ -548,7 +551,7 @@ var mouseVis = function () {
         console.log("invalid region");
     }
 
-    // console.log("received: { ", "region:", region, ", relX:", xpos, ", relY:", ypos, ", clientX:", relX, ", clientY:", relY, ", cmLeft:", cmsizerDim.left, ", cmTop:", cmsizerDim.top, ", fpLeft:", firepadDim.left, ", fpTop:", firepadDim.top, ", bodyLeft:", bodyDim.left, ", bodyTop:", bodyDim.top, "}");
+    console.log("received: { ", "region:", region, ", relX:", xpos, ", relY:", ypos, ", clientX:", relX, ", clientY:", relY, ", cmLeft:", cmsizerDim.left, ", cmTop:", cmsizerDim.top, ", fpLeft:", firepadDim.left, ", fpTop:", firepadDim.top, ", bodyLeft:", bodyDim.left, ", bodyTop:", bodyDim.top, "}");
 
     return { region: region, x: relX, y: relY }
   }
