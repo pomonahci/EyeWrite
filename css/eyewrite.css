@@ -35,7 +35,7 @@ body {
 
 .CodeMirror {
   line-height: 1.2;
-  font-family: Arial, monospace;
+  font-family: Arial, sans-serif;
   font-size: 16px;
 }
 
