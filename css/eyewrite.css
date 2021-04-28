@@ -34,6 +34,7 @@ body {
 }
 
 .CodeMirror {
+  line-height: 1.2;
   font-family: Arial, monospace;
   font-size: 16px;
 }
@@ -455,15 +456,6 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
 	/* overflow: scroll; */
 	min-width: 816px;
 }
-
-/* div.CodeMirror-scroll {
-	overflow: scroll;
-} */
-
-/* div.CodeMirror-vscrollbar {
-	display: none;
-} */
-
 
 #firepad {
 	position: absolute;
