@@ -16,5 +16,5 @@ app.get('/', function (req, res) {
 
 //run server
 http.listen(localPort, function () {
-  console.log("server running on port: http://localhost:" + localPort);
+  console.log("server running on port: http://localhost:" + localPort + "\n");
 });
