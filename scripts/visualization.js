@@ -1,4 +1,4 @@
-var mouseVis = function () {
+var visualization = function () {
 
   var FirepadCM;            // reference for our firepad's codemirror instance
   var cmElement;
@@ -22,7 +22,7 @@ var mouseVis = function () {
 
   visShapeSelector.onchange = function () {
     window.visShape = visShapeSelector.value;
-    // console.log(window.visShape);
+    // if (window.debug) console.log(window.visShape);
   };
 
   //when this user closes their window, removes them from the database and removes their mouse
@@ -254,7 +254,7 @@ var mouseVis = function () {
         mousePosRef.on("child_changed", visualize);
         mousePosRef.on("child_removed", removeHighlight2);
       } else {
-        console.log("Invalid data type!");
+        if (window.debug) console.log("Invalid data type!");
       }
     }
 
@@ -268,7 +268,7 @@ var mouseVis = function () {
         mousePosRef.off("child_changed", visualize);
         mousePosRef.off("child_removed", removeHighlight2);
       } else {
-        console.log("Invalid data type!");
+        if (window.debug) console.log("Invalid data type!");
       }
     }
 
@@ -287,7 +287,7 @@ var mouseVis = function () {
           window.sendDataState = 0;
         }
       }
-      // console.log(`send data state: ${getDataState(window.sendDataState)}`);
+      // if (window.debug) console.log(`send data state: ${getDataState(window.sendDataState)}`);
     });
 
     gazeSendSwitch.addEventListener("change", function () {
@@ -305,7 +305,7 @@ var mouseVis = function () {
           window.sendDataState = 0;
         }
       }
-      // console.log(`send data state: ${getDataState(window.sendDataState)}`);
+      // if (window.debug) console.log(`send data state: ${getDataState(window.sendDataState)}`);
     });
 
     mouseVisSwitch.addEventListener("change", function () {
@@ -324,7 +324,7 @@ var mouseVis = function () {
           clearAllHighlights();
         }
       }
-      console.log(`visualization state: ${getDataState(window.visualizationState)}`);
+      if (window.debug) console.log(`visualization state: ${getDataState(window.visualizationState)}`);
     });
 
     gazeVisSwitch.addEventListener("change", function () {
@@ -343,7 +343,7 @@ var mouseVis = function () {
           clearAllHighlights();
         }
       }
-      console.log(`visualization state: ${getDataState(window.visualizationState)}`);
+      if (window.debug) if (window.debug) console.log(`visualization state: ${getDataState(window.visualizationState)}`);
     });
 
     // voiceChatSwitch.addEventListener("change", function () {
@@ -391,7 +391,7 @@ var mouseVis = function () {
 
     var scrollbar = document.querySelector(".CodeMirror-vscrollbar");
     scrollbar.addEventListener('scroll', function (e) {
-      // console.log('hi');
+      // if (window.debug) console.log('hi');
       // lastKnownScrollPosition = window.scrollY;
 
       if (!ticking) {
@@ -455,7 +455,7 @@ var mouseVis = function () {
       relY = ypos;
     }
 
-    console.log("sent: { ", "region:", region, ", relX:", relX, ", relY:", relY, ", clientX:", xpos, ", clientY:", ypos, ", cmLeft:", cmsizerDim.left, ", cmTop:", cmsizerDim.top, ", fpLeft:", firepadDim.left, ", fpTop:", firepadDim.top, ", bodyLeft:", bodyDim.left, ", bodyTop:", bodyDim.top, "}");
+    if (window.debug) console.log("sent: { ", "region:", region, ", relX:", relX, ", relY:", relY, ", clientX:", xpos, ", clientY:", ypos, ", cmLeft:", cmsizerDim.left, ", cmTop:", cmsizerDim.top, ", fpLeft:", firepadDim.left, ", fpTop:", firepadDim.top, ", bodyLeft:", bodyDim.left, ", bodyTop:", bodyDim.top, "}");
 
     return { region: region, x: relX, y: relY }
   }
@@ -479,7 +479,7 @@ var mouseVis = function () {
 
   function hex2rgb(hex, transparency) {
     if (typeof hex !== 'string') {
-      // console.log(typeof hex);
+      // if (window.debug) console.log(typeof hex);
       throw new TypeError('Expected a string');
     }
     hex = hex.replace(/^#/, '');
@@ -515,7 +515,7 @@ var mouseVis = function () {
     var ypos = loc.y;
 
     var cmsizerDim = document.querySelector(".CodeMirror-code").getBoundingClientRect();
-    // console.log(docDimensions.left, docDimensions.top);
+    // if (window.debug) console.log(docDimensions.left, docDimensions.top);
     var firepadDim = document.getElementById("firepad").getBoundingClientRect();
     var bodyDim = document.querySelector("body").getBoundingClientRect();
 
@@ -558,10 +558,10 @@ var mouseVis = function () {
         relY = ypos;
         break;
       default:
-        console.log("invalid region");
+        if (window.debug) console.log("invalid region");
     }
 
-    console.log("received: { ", "region:", region, ", relX:", xpos, ", relY:", ypos, ", clientX:", relX, ", clientY:", relY, ", cmLeft:", cmsizerDim.left, ", cmTop:", cmsizerDim.top, ", fpLeft:", firepadDim.left, ", fpTop:", firepadDim.top, ", bodyLeft:", bodyDim.left, ", bodyTop:", bodyDim.top, "}");
+    if (window.debug) console.log("received: { ", "region:", region, ", relX:", xpos, ", relY:", ypos, ", clientX:", relX, ", clientY:", relY, ", cmLeft:", cmsizerDim.left, ", cmTop:", cmsizerDim.top, ", fpLeft:", firepadDim.left, ", fpTop:", firepadDim.top, ", bodyLeft:", bodyDim.left, ", bodyTop:", bodyDim.top, "}");
 
     return { region: region, x: relX, y: relY }
   }
@@ -586,13 +586,13 @@ var mouseVis = function () {
 
     if (uID != userId) {
       if (isAboveView(loc)) {
-        // console.log("above view!");
+        // if (window.debug) console.log("above view!");
         createUpArrow(uID, loc);
       } else if (isBelowView(loc)) {
-        // console.log("below view!");
+        // if (window.debug) console.log("below view!");
         createDownArrow(uID, loc);
       } else {
-        // console.log("in view!");
+        // if (window.debug) console.log("in view!");
         clearArrow(uID);
       }
     }
@@ -610,13 +610,13 @@ var mouseVis = function () {
       visShape = `background: radial-gradient(${color} 0%, ${transparentColor} 66%, ${transparentColor}); opacity: 0.7;`;
       visSize = `left: ${loc.x - 12 * sizeCoeff}px; top: ${loc.y - 12 * sizeCoeff}px; width:${24 * sizeCoeff}px; height:${24 * sizeCoeff}px;`;
     } else {
-      console.log("invalid shape!");
+      if (window.debug) console.log("invalid shape!");
     }
 
     circle.style = `position: absolute; pointer-events: none; ${visSize} ${visShape}`;
     // debugStatement.style = `position:relative; left: 20px; top: 20px; background-color: white; z-index: 2; border-style: solid; border-color: red; border-width: 2px; width: 200px;`
     // debugStatement.innerHTML = `(x,y) = (${loc.x}, ${loc.y})`;
-    // console.log(sizeCoeff);
+    // if (window.debug) console.log(sizeCoeff);
   }
 
   function removeHighlight(uID) {
@@ -835,7 +835,7 @@ var mouseVis = function () {
   //     //   if (remoteClients[uId]["conn"]) remoteClients[uId]["conn"].send(`${userId} unmute ${myStream.id}`);
   //     // }
   //   } else {
-  //     console.log("Error");
+  //     if (window.debug) console.log("Error");
   //   }
   // }
 
@@ -845,11 +845,11 @@ var mouseVis = function () {
   // function startMyStream() {
   //   navigator.mediaDevices.getUserMedia({ video: false, audio: true }).then(function (stream) {
   //     myStream = stream;
-  //     console.log(`${userId} turned on audio stream: ${myStream.id}`);
+  //     if (window.debug) console.log(`${userId} turned on audio stream: ${myStream.id}`);
   //     voiceRef.child(userId).update({ is_ready: true, stream_id: myStream.id });
   //     hasStream = true;
   //     createMyPeer();
-  //     console.log(`${userId} joined the chat`);
+  //     if (window.debug) console.log(`${userId} joined the chat`);
   //     alert("Joining the voice chat.");
   //     document.getElementById("voiceChatSwitch").disabled = false;
   //     document.getElementById("mute").disabled = false;
@@ -891,7 +891,7 @@ var mouseVis = function () {
   //     audioElems[audio.id] = audio;
   //     if (muteStatus[stream.id]) toggleAudioElement(stream.id);
   //     document.querySelector("#audio-streams").append(audio);
-  //     console.log(`added ${stream.id} to #audio-streams`);
+  //     if (window.debug) console.log(`added ${stream.id} to #audio-streams`);
   //   }
   // }
 
@@ -901,7 +901,7 @@ var mouseVis = function () {
   //  * @param {String} streamId 
   //  */
   // function toggleAudioElement(streamId) {
-  //   // console.log(streamId);
+  //   // if (window.debug) console.log(streamId);
   //   if (audioElems[streamId]) {
   //     let stream = audioElems[streamId].srcObject;
   //     stream.getAudioTracks().forEach(function (track) {
@@ -923,7 +923,7 @@ var mouseVis = function () {
   //     });
   //     audio.remove();
   //     delete audioElems[streamId];
-  //     console.log(`removed ${streamId} from audio`);
+  //     if (window.debug) console.log(`removed ${streamId} from audio`);
   //   }
   // }
 
@@ -948,24 +948,24 @@ var mouseVis = function () {
   //   myPeer.on('connection', function (conn) {
   //     conn.on('data', function (data) {
   //       var tmp = data.split(" ");
-  //       console.log(`${tmp[0]} -> ${userId}: ${tmp.slice(1).join(" ")}`);
+  //       if (window.debug) console.log(`${tmp[0]} -> ${userId}: ${tmp.slice(1).join(" ")}`);
   //       switch (tmp[1]) {
   //         case "new-connection":
   //           remoteClients[tmp[0]]["conn"] = conn;
   //           break;
   //         // case "mute":
   //         //   toggleAudioElement(tmp[2]);
-  //         //   console.log(`muted ${tmp[0]}`);
+  //         //   if (window.debug) console.log(`muted ${tmp[0]}`);
   //         //   break;
   //         // case "unmute":
   //         //   toggleAudioElement(tmp[2]);
-  //         //   console.log(`unmuted ${tmp[0]}`);
+  //         //   if (window.debug) console.log(`unmuted ${tmp[0]}`);
   //         //   break;
   //       }
   //     });
   //     conn.on('open', function () {
   //       conn.send(`${userId} new-connection`);
-  //       // console.log(`sent: new-connection from ${userId}`);
+  //       // if (window.debug) console.log(`sent: new-connection from ${userId}`);
   //     });
   //   });
 
@@ -976,7 +976,7 @@ var mouseVis = function () {
   //     call.on('stream', function (stream) {
   //       addAudioElement(stream);
   //     });
-  //     console.log(`${userId} answered a call`);
+  //     if (window.debug) console.log(`${userId} answered a call`);
   //   });
   // }
 
@@ -989,31 +989,31 @@ var mouseVis = function () {
   //   if (!remoteClients[id]["conn"]) {
   //     remoteClients[id]["conn"] = true;
 
-  //     console.log(`${userId} started a call`);
+  //     if (window.debug) console.log(`${userId} started a call`);
   //     let peerId = remoteClients[id]["peer_id"];
   //     let conn = myPeer.connect(peerId);
 
   //     conn.on('data', function (data) {
   //       var tmp = data.split(" ");
-  //       console.log(`${tmp[0]} -> ${userId}: ${tmp.slice(1).join(" ")}`);
+  //       if (window.debug) console.log(`${tmp[0]} -> ${userId}: ${tmp.slice(1).join(" ")}`);
   //       switch (tmp[1]) {
   //         case "new-connection":
   //           remoteClients[tmp[0]]["conn"] = conn;
   //           break;
   //         // case "mute":
   //         //   toggleAudioElement(tmp[2]);
-  //         //   console.log(`muted ${tmp[0]}`);
+  //         //   if (window.debug) console.log(`muted ${tmp[0]}`);
   //         //   break;
   //         // case "unmute":
   //         //   toggleAudioElement(tmp[2]);
-  //         //   console.log(`unmuted ${tmp[0]}`);
+  //         //   if (window.debug) console.log(`unmuted ${tmp[0]}`);
   //         //   break;
   //       }
   //     });
 
   //     conn.on('open', function () {
   //       conn.send(`${userId} new-connection`);
-  //       // console.log(`sent: new-connection from ${userId}`);
+  //       // if (window.debug) console.log(`sent: new-connection from ${userId}`);
   //     });
 
   //     let call = myPeer.call(peerId, myStream);
@@ -1025,7 +1025,7 @@ var mouseVis = function () {
   //  * Callback for when the user clicks the leave button.
   //  */
   // function onLeave() {
-  //   console.log(`${userId} left the chat`);
+  //   if (window.debug) console.log(`${userId} left the chat`);
   //   (async function () { return await myPeer.destroy(); })();
   //   myPeer = null;
   //   readyToJoin = false;
