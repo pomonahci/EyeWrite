@@ -1,0 +1,252 @@
+<!doctype html>
+
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <!-- Firebase -->
+  <script src='https://www.gstatic.com/firebasejs/7.6.2/firebase-app.js'></script>
+  <script src='https://www.gstatic.com/firebasejs/7.6.2/firebase-database.js'></script>
+
+  <!-- CodeMirror -->
+  <script src='./node_modules/codemirror/lib/codemirror.js'></script>
+  <link rel='stylesheet' href='./node_modules/codemirror/lib/codemirror.css' />
+
+  <!-- Firepad -->
+  <link rel='stylesheet' href='https://firepad.io/releases/v1.5.10/firepad.css' />
+  <script src='https://firepad.io/releases/v1.5.10/firepad.js'></script>
+
+  <!-- Firepad (for visualizations) -->
+  <!-- <link rel='stylesheet' href='lib/firepad.css' />
+  <script src='lib/firepad-full-custom-vis.js'></script> -->
+
+  <!-- Firepad Userlist -->
+  <script src='./scripts/firepad-userlist.js'></script>
+  <link rel='stylesheet' href='./css/firepad-userlist.css' />
+
+  <!-- WebGazer -->
+  <script type='text/javascript' src='./WebGazer/www/webgazer.js'></script>
+
+  <!-- Peer.JS -->
+  <script src="./node_modules/peerjs/dist/peerjs.js"></script>
+
+  <!-- Include Twitter Bootstrap and jQuery: -->
+  <link rel='stylesheet' href='./node_modules/bootstrap-multiselect/docs/css/bootstrap-3.3.2.min.css' type='text/css' />
+  <script type='text/javascript' src='./node_modules/bootstrap-multiselect/docs/js/jquery-2.1.3.min.js'></script>
+  <script type='text/javascript' src='./node_modules/bootstrap-multiselect/docs/js/bootstrap-3.3.2.min.js'></script>
+
+  <!-- Include the plugin's CSS and JS: -->
+  <script type='text/javascript' src='./node_modules/bootstrap-multiselect/dist/js/bootstrap-multiselect.js'></script>
+  <link rel='stylesheet' href='./node_modules/bootstrap-multiselect/dist/css/bootstrap-multiselect.css'
+    type='text/css' />
+
+  <!-- 'nano' theme -->
+  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css' />
+
+  <!-- Modern or es5 bundle -->
+  <script src='https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js'></script>
+
+  <link rel='stylesheet' href='./css/eyewrite.css' />
+</head>
+
+<body>
+  <div id='userlist'></div>
+  <div id='firepad'></div>
+
+  <div id='colorpicker'></div>
+
+  <div id="controlContainer">
+
+    <div id='user-checkboxes-container'></div>
+    <select id='user-checkboxes' multiple='multiple'></select>
+
+    <div class="radio-buttons">
+      <p>Visualize Data:</p>
+
+      <div class="inline-toggle-container">
+        <p class="inline">Gaze</p>
+        <!-- <input type="radio" id="sendButton" name="dataChoice" checked>
+        <label for="sendButton" id="sendButtonLabel" type="radio">Send</label> -->
+        <div class="onoffswitch">
+          <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="gazeVisSwitch" tabindex="0">
+          <label class="onoffswitch-label" for="gazeVisSwitch">
+            <span class="onoffswitch-inner"></span>
+            <span class="onoffswitch-switch"></span>
+          </label>
+        </div>
+      </div>
+
+
+      <div class="inline-toggle-container">
+        <p>Mouse</p>
+        <!-- <input type="radio" id="blockButton" name="dataChoice">
+        <label for="blockButton" type="radio">Block</label> -->
+        <div>
+          <div class="onoffswitch">
+            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="mouseVisSwitch" tabindex="0">
+            <label class="onoffswitch-label" for="mouseVisSwitch">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="slider-container">
+      <p class="slider-text">Highlight Size: <span id="numSentences"></span></p>
+      <input type="range" min="1" max="8" value="1" id="sentenceSlider">
+    </div>
+
+    <div class="radio-buttons">
+      <p>Send My Data:</p>
+
+      <div class="inline-toggle-container">
+        <p class="inline">Gaze</p>
+        <!-- <input type="radio" id="sendButton" name="dataChoice" checked>
+        <label for="sendButton" id="sendButtonLabel" type="radio">Send</label> -->
+        <div class="onoffswitch">
+          <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="gazeSendSwitch" tabindex="0">
+          <label class="onoffswitch-label" for="gazeSendSwitch">
+            <span class="onoffswitch-inner"></span>
+            <span class="onoffswitch-switch"></span>
+          </label>
+        </div>
+      </div>
+
+
+      <div class="inline-toggle-container">
+        <p>Mouse</p>
+        <!-- <input type="radio" id="blockButton" name="dataChoice">
+        <label for="blockButton" type="radio">Block</label> -->
+        <div>
+          <div class="onoffswitch">
+            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="mouseSendSwitch" tabindex="0">
+            <label class="onoffswitch-label" for="mouseSendSwitch">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- 
+    <div class="radio-buttons">
+      <p>Visualize:</p>
+      <input type="radio" id="gazeButton" name="visualizeChoice">
+      <label for="gazeButton" type="radio">Gaze</label>
+
+      <input type="radio" id="mouseButton" name="visualizeChoice" checked>
+      <label for="mouseButton" type="radio">Mouse</label>
+    </div> -->
+
+
+    <div>
+      <div class="radio-buttons">
+        <div>
+          <p>Voice Chat</p>
+        </div>
+
+        <!-- <input type="radio" id="voiceOnButton" name="voiceChoice">
+        <label for="voiceOnButton" type="radio">On</label>
+  
+        <input type="radio" id="voiceOffButton" name="voiceChoice" checked>
+        <label for="voiceOffButton" type="radio">Off</label>
+
+        <div id="toggle-wrapper">
+          <p>voice chat</p>
+          <button>on</button>
+        </div> -->
+        <div class="inline-toggle-container">
+          <div class="onoffswitch">
+            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="voiceChatSwitch" tabindex="0">
+            <label class="onoffswitch-label" for="voiceChatSwitch">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+
+          <button id="mute" disabled=True>Mute</button>
+        </div>
+      </div>
+    </div>
+
+    <A href="./WebGazer/www/calibration.html" id="calibrationLink">
+      <input type="button" id="calibrationButton" value="Calibrate Gaze">
+    </A>
+
+  </div>
+  <div id="audio-streams"></div>
+
+  <script>
+    var firebaseConfig = {
+      apiKey: "AIzaSyAmD2D9XCpVDQcJF08chqCbkCpL-_Jfu_Y",
+      authDomain: "eyewrite-62d75.firebaseapp.com",
+      databaseURL: "https://eyewrite-62d75.firebaseio.com",
+      projectId: "eyewrite-62d75",
+      storageBucket: "eyewrite-62d75.appspot.com",
+      messagingSenderId: "998123311342",
+      appId: "1:998123311342:web:abed435afee503a2eb63ff",
+      measurementId: "G-8EGTMW2Q4G"
+    };
+    // var firebaseConfig = {
+    //   apiKey: "AIzaSyB2cQN9gOLWPAfShtqB1oecNrXy2e8ThZs",
+    //   authDomain: "ewri-a5f65.firebaseapp.com",
+    //   databaseURL: "https://ewri-a5f65-default-rtdb.firebaseio.com",
+    //   projectId: "ewri-a5f65",
+    //   storageBucket: "ewri-a5f65.appspot.com",
+    //   messagingSenderId: "946530877533",
+    //   appId: "1:946530877533:web:1e585c0d350f695dfd0db4"
+    // };
+
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    //// Get Firebase Database reference.
+    var firebaseRef = getRef();
+
+    //// Create CodeMirror (with lineWrapping on).
+    var codeMirror = CodeMirror(document.getElementById('firepad'), {
+      lineWrapping: true, inputStyle: 'contenteditable', historyEventDelay: 2500,
+      autofocus: true, workTime: 5, workDelay: 5, pollInterval: 5, viewportMargin: 2
+    });
+
+    // Create a random ID to use as our user ID (we must give this to firepad and FirepadUserList).
+    var userId = Math.floor(Math.random() * 9999999999).toString();
+
+    //// Create Firepad (with rich text features and our desired userId).
+    var firepad = Firepad.fromCodeMirror(firebaseRef, codeMirror,
+      { richTextToolbar: true, richTextShortcuts: true, userId: userId });
+
+    //// Create FirepadUserList (with our desired userId).
+    var firepadUserList = FirepadUserList.fromDiv(firebaseRef.child('users'),
+      document.getElementById('userlist'), userId);
+
+    // Helper to get hash from end of URL or generate a random one.
+    function getRef() {
+      var ref = firebase.database().ref();
+      var hash = window.location.hash.replace(/#/g, '');
+      if (hash) {
+        ref = ref.child(hash);
+      } else {
+        ref = ref.push(); // generate unique location.
+        window.location = window.location + '#' + ref.key; // add it as a hash to the URL.
+      }
+      return ref;
+    }
+
+
+  </script>
+</body>
+
+<!-- UI Adjustments Script -->
+
+<script src='./scripts/UIAdjustments.js'></script>
+
+<!-- Visualization Script -->
+<script src='./scripts/visualization.js'></script>
+
+</html>
