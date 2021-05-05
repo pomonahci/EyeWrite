@@ -1,5 +1,8 @@
 /**
- * TODO: add voice chat code here and export to eye-write.js
+ * voice-chat.js adds voice chat functionality to EyeWrite.
+ * 
+ * Name: chanhakim
+ * Date: 05/04/2021
  */
 
 var voiceChat = function () {

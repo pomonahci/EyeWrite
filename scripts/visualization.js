@@ -614,9 +614,6 @@ var visualization = function () {
     }
 
     circle.style = `position: absolute; pointer-events: none; ${visSize} ${visShape}`;
-    // debugStatement.style = `position:relative; left: 20px; top: 20px; background-color: white; z-index: 2; border-style: solid; border-color: red; border-width: 2px; width: 200px;`
-    // debugStatement.innerHTML = `(x,y) = (${loc.x}, ${loc.y})`;
-    // if (window.debug) console.log(sizeCoeff);
   }
 
   function removeHighlight(uID) {
