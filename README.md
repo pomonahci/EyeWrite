@@ -32,13 +32,15 @@ If you want to build the source code from this repository, please follow these i
 
 Note: may need to port WebGazer module from hci.pomona server.
 
-## Run EyeWrite locally
+## Run EyeWrite locally (for development)
 
     # Ensure that port 3000 on localhost is open and run the following script
     `npm start`
 
 * Visit (http://localhost:3000) on your browser
 * Follow the instructions on the welcome page to create or join a collaborative document
+
+## Preparing EyeWrite for deployment
 
 
 ## UI Walkthrough
