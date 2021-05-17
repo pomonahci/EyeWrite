@@ -19,7 +19,7 @@ EyeWrite is an online collaborative text editor which utilizes eye tracking to s
 
 ## Development Guide
 
-### Introduction to the EyeWrite UI
+### Intro to EyeWrite UI
 * Left Panel: User list, visualization control, and audio toggles.
 * Main Panel: Rich Text Editor (Firepad, Code Mirror) with toolbar at the top.
 
