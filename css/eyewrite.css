@@ -1,3 +1,4 @@
+/* global style */
 :root {
   --outer-border: #BBB;
   --sub-box-padding: #FCFCFC;
@@ -24,12 +25,65 @@ body {
 	overflow-x: hidden;
 }
 
+/* Firepad/CodeMirror Style */
+#firepad {
+	position: absolute;
+	top: 0;
+	left: 200px;
+	right: 100px;
+	height: 100vh;
+	min-width: 916px;
+	overflow: hidden;
+	border-style: solid;
+	border-width: 1px;
+	border-color: lightgray;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
 .CodeMirror {
   line-height: 1.2;
 }
 
-/* Height / width / positioning can be customized for your use case.
-   For demo purposes, we make the user list 175px and firepad fill the rest of the page. */
+a.powered-by-firepad {
+	display: none;
+}
+
+div.firepad-richtext.firepad-with-toolbar {
+	height: 100%;
+}
+
+div.CodeMirror-vscrollbar {
+	width: 16px;
+}
+
+div.firepad-toolbar {
+	display: flex;
+	align-items: center;
+}
+
+div.firepad-toolbar-wrapper {
+	margin: 0 auto;
+	min-width: 816px;
+	width: 816px;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	padding: 0px 20px;
+}
+
+div.CodeMirror-lines {
+	margin: 0 auto;
+	width: 816px;
+	min-height: 1000px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	padding: 20px;
+}
+
+div.CodeMirror.cm-s-default.CodeMirror-wrap {
+	min-width: 816px;
+}
+
+/* User List Style */
 #userlist {
   position: absolute;
   top: 0;
@@ -44,6 +98,7 @@ body {
   border-radius: 4px;
 }
 
+/* Arrow Style (styles relative position arrows in User List) */
 .arrow-up {
   width: 0;
   height: 0;
@@ -67,6 +122,7 @@ body {
   margin-left: 10px;
 }
 
+/* Color Picker Style (styles color picker in User List) */
 .colorpicker-button {
   position: absolute;
   top: 0px;
@@ -85,7 +141,7 @@ body {
   width: 20px;
 }
 
-
+/* Control Container Style */
 #controlContainer {
   background-color: #EBEBEB;
   width: 175px;
@@ -112,7 +168,6 @@ body {
   margin-top: 10px;
   padding: 4px 6px 2px 6px;
   width: 145px;
-  /* padding-left: 0px; */
 }
 
 .user-checkboxes:hover {
@@ -147,6 +202,7 @@ body {
   color: var(--button-text);
 }
 
+/* Radio Button Style */
 .radio-buttons {
   position: relative;
   display: flex;
@@ -163,8 +219,6 @@ body {
 
 .radio-buttons p {
   color: var(--title-text);
-  /* margin-top: 5px; */
-  /* margin-left: 5px; */
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 500;
   font-size: 16px;
@@ -209,10 +263,6 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* margin-top: 0;
-  padding-top: 0;
-  margin-bottom: 0;
-  padding-bottom: 0; */
   margin-bottom: 0;
   margin-top: 0;
   padding-top: 0;
@@ -226,6 +276,7 @@ body {
   padding-bottom: 0;
 }
 
+/* Mute Button Style */
 .radio-buttons .inline-toggle-container #mute {
   width: 60px;
   height: 26px;
@@ -233,8 +284,6 @@ body {
   text-align: center;
   color: black;
   font-size: 14px;
-  /* margin-bottom: 0;
-  margin-top: 0; */
 }
 
 .radio-buttons .inline-toggle-container #mute:disabled {
@@ -271,7 +320,6 @@ body {
 
 #sentenceSlider {
   position: relative;
-  /* float: bottom; */
   width: 125px;
   margin-left: 10px;
   margin-top: 10px;
@@ -332,6 +380,7 @@ body {
   border-color: var(--button-hover-border);
 }
 
+/* On/Off Switch Style */
 .onoffswitch {
   position: relative; width: 64px;
   -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
@@ -380,83 +429,4 @@ body {
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
   right: 0px; 
   background-color: #FFBF86; 
-}
-
-
-
-a.powered-by-firepad {
-	display: none;
-}
-
-div.firepad-richtext.firepad-with-toolbar {
-	height: 100%;
-	/* min-width: 816px; */
-}
-
-/* div.CodeMirror-scroll {
-	overflow-y: scroll;
-} */
-
-/* div.CodeMirror.cm-s-default.CodeMirror-wrap {
-	overflow-y: scroll;
-} */
-
-div.CodeMirror-vscrollbar {
-	/* width: 16px; */
-	/* overflow: scroll; */
-	width: 16px;
-}
-
-div.firepad-toolbar {
-	/* /* width: 816px; */
-	/* margin: 0 auto; */
-	display: flex;
-	align-items: center;
-	/* left: calc((100vw / 2) - (816px / 2)); */
-}
-
-div.firepad-toolbar-wrapper {
-	margin: 0 auto;
-	/* padding: 20px; */
-	min-width: 816px;
-	width: 816px;
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	/* border-style: solid;
-	border-color: red;
-	border-width: 1px; */
-	padding: 0px 20px;
-}
-
-div.CodeMirror-lines {
-	margin: 0 auto;
-
-	/* border-style: solid;
-	border-color: red;
-	border-width: 1px; */
-	width: 816px;
-	min-height: 1000px;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-	padding: 20px;
-}
-
-div.CodeMirror.cm-s-default.CodeMirror-wrap {
-	/* overflow: scroll; */
-	min-width: 816px;
-}
-
-#firepad {
-	position: absolute;
-	top: 0;
-	left: 200px;
-	right: 100px;
-	height: 100vh;
-	min-width: 916px;
-	overflow: hidden;
-	border-style: solid;
-	border-width: 1px;
-	border-color: lightgray;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-	/* min-height: 100vh; */
 }
