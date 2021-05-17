@@ -1,8 +1,8 @@
 /**
  * ui-adjustments.js handles some UI customization
  * 
- * Name: Dave
- * Date: n/a
+ * Name: davecarroll
+ * Date: Summer 2020 (?)
  */
 
 var UIAdjustments = function () {
