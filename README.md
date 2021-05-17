@@ -16,9 +16,27 @@ EyeWrite is an online collaborative text editor which utilizes eye tracking to s
 * Option to alter visualization.js to use an external eye tracker 
 * WebRTC-based voice chat for optional audio communication
 * Option to customize visualizations (highlight pattern and size)
-* (instructions in code comments)
 
-## Build the repository
+## Development Guide
+
+### Introduction to the EyeWrite UI
+* Left Panel: User list, visualization control, and audio toggles.
+* Main Panel: Rich Text Editor (Firepad, Code Mirror) with toolbar at the top.
+
+### Code Organization
+| Content                       | Location                                                      |
+| ----------------------------- | ------------------------------------------------------------- |
+| home page                     | index.html                                                    |
+| document page                 | eyewrite.html                                                 |
+| server file (for development) | index.js                                                      |
+| basic UI styling/adjustments  | css (for stylesheets), scripts/ui-adjustments.js              |
+| visualization control/toggles | scripts/visualization-control.js                              |
+| voice chat functions          | scripts/voice-chat.js                                         |
+| highlight styling             | scripts/highlight-styles.js, scripts/visualization-control.js |
+
+Note: any changes made in the javascript files will likely require changes in the html files.
+
+### Building the Source Code
 
 If you want to build the source code from this repository, please follow these instructions:
 
@@ -30,31 +48,17 @@ If you want to build the source code from this repository, please follow these i
     cd node_modules/webgazer
     npm install
 
-Note: may need to port WebGazer module from hci.pomona server.
+Note: you may need to import WebGazer module from hci.pomona server
 
-## Run EyeWrite locally (for development)
+### Running EyeWrite locally
 
-    # Ensure that port 3000 on localhost is open and run the following script
+    # Make sure that port 3000 on localhost is open.
+    # Then, run the following script.
     `npm start`
 
 * Visit (http://localhost:3000) on your browser
 * Follow the instructions on the welcome page to create or join a collaborative document
 
-## Preparing EyeWrite for deployment
-
-
-## UI Walkthrough
-
-
-## Code Walkthrough
-Directories:
-* css: stylesheets for EyeWrite
-* font: fonts for firepad (?)
-* graphics: images/svgs (e.g., pencil.png is used for the pencil icon on the user color).
-* scripts: folder containing EyeWrite functions (for userlist, voice chat, and visualization)
-  * visualizations: folder containing code for visualizations
-
-
-## Important Files/Directories
-* `scripts/visualization.js`
-* `scripts/voice-chat.js`
+### Deploying
+* Push changes to GitHub repo.
+* Log into the HCI server (requires a VPN connection), go to the project folder in the web directory, and pull changes.
