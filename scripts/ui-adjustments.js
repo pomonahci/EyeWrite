@@ -1,8 +1,8 @@
 /**
  * ui-adjustments.js handles some UI customization
  * 
- * Name: davecarroll
- * Date: Summer 2020 (?)
+ * Name: davecarroll, chanhakim
+ * Date: Summer 2020
  */
 
 var UIAdjustments = function () {
@@ -102,15 +102,24 @@ var UIAdjustments = function () {
     if (existingColors.length > 0) {
       firepad.firebaseAdapter_.setColor('#ffffff');
     }
-    console.log(existingColors, 'Now generate a new color for current user!');
+    // console.log(existingColors, 'Now generate a new color for current user!');
 
-    var newUserColor = select_new_color(existingColors, firepad.firebaseAdapter_.color_);
-    console.log(newUserColor, chroma(newUserColor).hcl());
+    // Pick a new color for the user.
+    var newUserColor = selectNewColor(existingColors, firepad.firebaseAdapter_.color_);
     firepad.firebaseAdapter_.setColor(newUserColor);
 
   });
 
-  function select_new_color(existingColors, currentColor) {
+  /**
+   * selectNewColor selects a new color given the existing colors
+   * by picking out the largest gap between among the existing colors
+   * based on the HCL color space and returns the middle color in that gap.
+   * 
+   * @param {*} existingColors 
+   * @param {*} currentColor 
+   * @returns a new color
+   */
+  function selectNewColor(existingColors, currentColor) {
     var numColors = existingColors.length;
     if (numColors == 0) {
       return currentColor;
@@ -123,8 +132,6 @@ var UIAdjustments = function () {
         return a[0] < b[0] ? -1 : 1;
       }
     });
-
-    // console.log(existingColors);
 
     var l = Math.max(Math.min(Math.random() * 100.0, 90.0), 30.0);
     var c = Math.max(Math.min(Math.random() * 100.0, 75.0), 25.0);
