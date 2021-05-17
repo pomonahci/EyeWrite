@@ -1,17 +1,22 @@
 /**
  * voice-chat.js adds voice chat functionality to EyeWrite.
+ * Users peer.js as p2p communication protocol.
  * 
  * Name: chanhakim
  * Date: 05/04/2021
  */
 
 var voiceChat = function () {
-	// PeerDemo Integration
-	var voiceRef = firebaseRef.child("voice");
+	var voiceRef = firebaseRef.child("voice");		// reference to user voice info
 
+	// references to voice chat switch and mute button.
 	var voiceChatSwitch = document.getElementById("voiceChatSwitch");
 	var voiceMuteButton = document.getElementById("mute");
 
+	/**
+	 * Listener for voice chat switch.
+	 * Toggle on voice chat when the switch is on. Otherwise, turn off voice chat.
+	 */
 	voiceChatSwitch.addEventListener("change", function () {
 		if (voiceChatSwitch.checked == true) {
 			voiceChatSwitch.disabled = true;
@@ -22,43 +27,37 @@ var voiceChat = function () {
 			onLeave();
 		}
 	});
-
 	voiceMuteButton.onclick = toggleMuteButton;
 
-	/**
-	 * Instance Variables
-	 */
+
 	var myPeer;                 // the local client's peer
 	var myStream;               // the local client's media stream
 	var readyToJoin = false;    // whether the local client is ready to join
 	var remoteClients = {};     // collection of remote clients, indexed by user id
-	var audioElems = {};        // collection of (active) audio elements
+	var audioElts = {};        // collection of (active) audio elements
 	var muteStatus = {};        // collection of mute status for each audio element
+
+	// public ICE servers (required by peer.js for free p2p communicatio protocl)
 	var config = {
 		'iceServers': [
 			{ 'urls': 'stun:stun.services.mozilla.com' },
 			{ 'urls': 'stun:stun.l.google.com:19302' }
 		]
 	};
-	var muteBtn = document.getElementById("mute");
 
 	/**
 	 * Listener for new additions to voiceRef.
 	 */
 	voiceRef.on("child_added", function (snapshot) {
-		if (userId != snapshot.key) {                       // when the added child is not the local client
+		if (userId != snapshot.key) {
+			// when the added child is not the local client
 			remoteClients[snapshot.key] = snapshot.val();
-		} else {                                            // when the added child is the local client
+		} else {
+			// when the added child is the local client
 			if (snapshot.child("is_ready")) {
 				readyToJoin = true;
 			}
 		}
-
-		// // Display meeting members to client.
-		// var memberTag = document.createElement("p");
-		// memberTag.id = snapshot.key;
-		// memberTag.innerText = snapshot.child("name").val();
-		// document.getElementById("member-list").appendChild(memberTag);
 	});
 
 	/**
@@ -94,7 +93,7 @@ var voiceChat = function () {
 			delete remoteClients[snapshot.key];
 		}
 		let streamId = snapshot.child("stream_id").val();
-		if (audioElems[streamId]) removeAudioElement(streamId);
+		if (audioElts[streamId]) removeAudioElement(streamId);
 		// document.getElementById(snapshot.key).remove();
 	});
 
@@ -103,38 +102,23 @@ var voiceChat = function () {
 	 */
 	function onJoin() {
 		startMyStream();
-		// startMyStream();        // start my local stream
-		// createMyPeer();         // create my peer
 	}
-
-	// /**
-	//  * Creates a mute button.
-	//  */
-	// function createMuteButton() {
-	//   btn = document.createElement("button");
-	//   btn.className = "btn btn-primary";
-	//   btn.id = "mute";
-	//   btn.type = "button";
-	//   btn.innerText = "mute";
-	//   btn.onclick = toggleMuteButton;
-	//   document.getElementById('buttons').appendChild(btn);
-	// }
 
 	/**
 	 * Toggles the mute button.
 	 */
 	function toggleMuteButton() {
-		if (muteBtn.innerText == "Mute") {
+		if (voiceMuteButton.innerText == "Mute") {
 			// alert('muting')
 			voiceRef.child(userId).update({ is_muted: true });
-			muteBtn.innerText = "Unmute";
+			voiceMuteButton.innerText = "Unmute";
 			// for (uId in remoteClients) {
 			//   if (remoteClients[uId]["conn"]) remoteClients[uId]["conn"].send(`${userId} mute ${myStream.id}`);
 			// }
-		} else if (muteBtn.innerText == "Unmute") {
+		} else if (voiceMuteButton.innerText == "Unmute") {
 			// alert('unmuting')
 			voiceRef.child(userId).update({ is_muted: false });
-			muteBtn.innerText = "Mute";
+			voiceMuteButton.innerText = "Mute";
 			// for (uId in remoteClients) {
 			//   if (remoteClients[uId]["conn"]) remoteClients[uId]["conn"].send(`${userId} unmute ${myStream.id}`);
 			// }
@@ -183,7 +167,7 @@ var voiceChat = function () {
 	 * @param {mediaStream} stream 
 	 */
 	function addAudioElement(stream) {
-		if (!audioElems[stream.id]) {
+		if (!audioElts[stream.id]) {
 			var audio = document.createElement("audio");
 			audio.autoplay = true;
 			audio.load();
@@ -192,7 +176,7 @@ var voiceChat = function () {
 			}, true);
 			audio.id = stream.id;
 			audio.srcObject = stream;
-			audioElems[audio.id] = audio;
+			audioElts[audio.id] = audio;
 			if (muteStatus[stream.id]) toggleAudioElement(stream.id);
 			document.querySelector("#audio-streams").append(audio);
 			console.log(`added ${stream.id} to #audio-streams`);
@@ -206,8 +190,8 @@ var voiceChat = function () {
 	 */
 	function toggleAudioElement(streamId) {
 		// console.log(streamId);
-		if (audioElems[streamId]) {
-			let stream = audioElems[streamId].srcObject;
+		if (audioElts[streamId]) {
+			let stream = audioElts[streamId].srcObject;
 			stream.getAudioTracks().forEach(function (track) {
 				track.enabled = !muteStatus[streamId];
 			});
@@ -220,13 +204,13 @@ var voiceChat = function () {
 	 * @param {String} streamId 
 	 */
 	function removeAudioElement(streamId) {
-		let audio = audioElems[streamId];
+		let audio = audioElts[streamId];
 		if (audio != -1) {
 			audio.srcObject.getTracks().forEach(function (track) {
 				track.stop();
 			});
 			audio.remove();
-			delete audioElems[streamId];
+			delete audioElts[streamId];
 			console.log(`removed ${streamId} from audio`);
 		}
 	}
@@ -238,7 +222,7 @@ var voiceChat = function () {
 
 		myPeer = new Peer({ config: config, debug: 1 });
 
-		// call backs for opening connection and error
+		// callbacks for opening connection and error
 		myPeer.on('open', function (id) {
 			voiceRef.child(userId).update({ peer_id: id, is_ready: readyToJoin });
 			if (readyToJoin) voiceRef.child(userId).update({ stream_id: myStream.id });
@@ -355,13 +339,3 @@ var voiceChat = function () {
 		voiceRef.child(userId).remove();
 	});
 }();
-
-
-
-	 // /**
-	 //  * Listens for when the user exits the tab or window.
-	 //  */
-	 // window.addEventListener("beforeunload", function () {
-	 //   if (document.getElementById('join').disabled) onLeave();
-	 //   voiceRef.child(userId).set(null);
-	 // });
