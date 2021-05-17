@@ -30,11 +30,9 @@
   <!-- Peer.JS -->
   <script src="./node_modules/peerjs/dist/peerjs.js"></script>
 
-
-
+  <!-- Bootstrap and jQuery -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
     integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
-
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
     integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
     crossorigin="anonymous"></script>
@@ -70,9 +68,9 @@
     <div id='user-checkboxes-container'></div>
     <select id='user-checkboxes' multiple='multiple'></select>
 
+    <!-- Send Data Component -->
     <div class="radio-buttons">
       <p>Send My Data:</p>
-
       <div class="inline-toggle-container">
         <p class="inline">Gaze</p>
         <div class="onoffswitch">
@@ -102,6 +100,7 @@
 
     </div>
 
+    <!-- Visualize Data Component -->
     <div class="radio-buttons">
       <p>Visualize Data:</p>
 
@@ -135,7 +134,8 @@
     <script type="text/javascript">
       $('#vis-shape').multiselect();
     </script>
-    <!-- Note the missing multiple attribute! -->
+
+    <!-- Highlight Pattern Component -->
     <div class="radio-buttons" style="display: flex; flex-direction: column;">
       <p>Highlight Pattern</p>
       <div style="margin: auto;">
@@ -146,11 +146,13 @@
       </div>
     </div>
 
+    <!-- Highlight Size Component -->
     <div id="slider-container">
       <p class="slider-text">Highlight Size: <span id="numSentences"></span></p>
       <input type="range" min="1" max="48" value="12" id="sentenceSlider">
     </div>
 
+    <!-- Voice Chat Component -->
     <div>
       <div class="radio-buttons">
         <div>
@@ -177,7 +179,7 @@
       </div>
     </div>
 
-
+    <!-- WebGazer Calibration Component -->
     <A href="./WebGazer/www/calibration.html" id="calibrationLink">
       <input type="button" id="calibrationButton" value="Calibrate Gaze">
     </A>
@@ -188,27 +190,27 @@
   <script>
     window.debug = false;  // turn off to remove debug statements
 
-    // var firebaseConfig = {
-    //   apiKey: "AIzaSyAmD2D9XCpVDQcJF08chqCbkCpL-_Jfu_Y",
-    //   authDomain: "eyewrite-62d75.firebaseapp.com",
-    //   databaseURL: "https://eyewrite-62d75.firebaseio.com",
-    //   projectId: "eyewrite-62d75",
-    //   storageBucket: "eyewrite-62d75.appspot.com",
-    //   messagingSenderId: "998123311342",
-    //   appId: "1:998123311342:web:abed435afee503a2eb63ff",
-    //   measurementId: "G-8EGTMW2Q4G"
-    // };
-
-
     var firebaseConfig = {
-      apiKey: "AIzaSyAkIIeqpNNzGp98UHRI21GOvp6CmH_hdZU",
-      authDomain: "eyewrite2-642f5.firebaseapp.com",
-      databaseURL: "https://eyewrite2-642f5-default-rtdb.firebaseio.com",
-      projectId: "eyewrite2-642f5",
-      storageBucket: "eyewrite2-642f5.appspot.com",
-      messagingSenderId: "360420484918",
-      appId: "1:360420484918:web:df36b1d345145448f7b597"
+      apiKey: "AIzaSyAmD2D9XCpVDQcJF08chqCbkCpL-_Jfu_Y",
+      authDomain: "eyewrite-62d75.firebaseapp.com",
+      databaseURL: "https://eyewrite-62d75.firebaseio.com",
+      projectId: "eyewrite-62d75",
+      storageBucket: "eyewrite-62d75.appspot.com",
+      messagingSenderId: "998123311342",
+      appId: "1:998123311342:web:abed435afee503a2eb63ff",
+      measurementId: "G-8EGTMW2Q4G"
     };
+
+    // REPLACE WITH DEVELOPMENT SERVER
+    // var firebaseConfig = {
+    //   apiKey: "AIzaSyAkIIeqpNNzGp98UHRI21GOvp6CmH_hdZU",
+    //   authDomain: "eyewrite2-642f5.firebaseapp.com",
+    //   databaseURL: "https://eyewrite2-642f5-default-rtdb.firebaseio.com",
+    //   projectId: "eyewrite2-642f5",
+    //   storageBucket: "eyewrite2-642f5.appspot.com",
+    //   messagingSenderId: "360420484918",
+    //   appId: "1:360420484918:web:df36b1d345145448f7b597"
+    // };
 
 
     // Initialize Firebase
@@ -251,9 +253,9 @@
 </body>
 
 <!-- Additional Scripts -->
-<script src='./scripts/ui-adjustments.js'></script> // UI Adjustments
-<script src="./scripts/highlight-style.js"></script> // Highlight Style
-<script src='./scripts/visualization.js'></script> // Visualization
-<script src="./scripts/voice-chat.js"></script> // Voice Chat
+<script src='./scripts/ui-adjustments.js'></script> <!-- UI Adjustments -->
+<script src="./scripts/highlight-style.js"></script> <!-- Highlight Style -->
+<script src='./scripts/visualization-control.js'></script> <!-- Visualization Control -->
+<script src="./scripts/voice-chat.js"></script> <!-- Voice Chat -->
 
 </html>
