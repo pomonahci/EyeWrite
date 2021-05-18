@@ -318,10 +318,11 @@ var visualizationControl = function () {
     gazeSendSwitch.addEventListener("change", function () {
       if (gazeSendSwitch.checked) {
         // mouseSendSwitch.checked = false;
-        if (document.isWebGazerActive == false) {
-          document.isWebGazerActive = true;
+        if (window.isWebGazerActive == false) {
+          window.isWebGazerActive = true;
           startWebGazer();
         }
+
         if (mouseSendSwitch.checked) {
           window.sendDataState = 3;
         } else {
