@@ -206,6 +206,7 @@ var visualizationControl = function () {
      */
     var startWebGazer = function () {
       //Listens for WebGazer gaze predictions, sends to firebase
+      console.log('starting webgazer');
       webgazer.setGazeListener(function (data, elapsedTime) {
         if (data == null) {
           return;
