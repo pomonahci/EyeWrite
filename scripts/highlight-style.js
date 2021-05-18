@@ -32,7 +32,8 @@ function createSolidCircleHighlightStyle(pos, size, color) {
  * @returns a gradient circle of pos, size, and color
  */
 function createGradientCircleHighlightStyle(pos, size, color) {
-	var hShapeAndColor = `background: radial-gradient(${color} 0%, #00ffffff 66%, #00ffffff; opacity: 0.7;`;
+	var hShapeAndColor = `background: radial-gradient(${color} 0%, rgba(1, 1, 1, 0) 66%, rgba(1, 1, 1, 0)); opacity: 0.7;`;
+	// hShapeAndColor = 'background: radial-gradient(black);';
 	var hSize = `width:${24 * size.coeff}px; height:${24 * size.coeff}px;`;
 	var hPosition = `left: ${pos.x - 12 * size.coeff}px; top: ${pos.y - 12 * size.coeff}px;`
 
