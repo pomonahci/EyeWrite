@@ -583,8 +583,8 @@ var visualizationControl = function () {
    * mouseLeave is the callback function for when the mouse leaves the viewport.
    * It sets the local user's mouse location in the database to null.
    */
-  function mouseLeave() {
-    mousePosRef.child(userId).update({ region: null, x: null, y: null });
+  function mouseLeave(event) {
+    mousePosRef.child(userId).remove();
   }
 
   /**
