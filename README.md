@@ -17,26 +17,7 @@ EyeWrite is an online collaborative text editor which utilizes eye tracking to s
 * WebRTC-based voice chat for optional audio communication
 * Option to customize visualizations (highlight pattern and size)
 
-## Development Guide
-
-### Intro to EyeWrite UI
-* Left Panel: User list, visualization control, and audio toggles.
-* Main Panel: Rich Text Editor (Firepad, Code Mirror) with toolbar at the top.
-
-### Code Organization
-| Content                       | Location                                                      |
-| ----------------------------- | ------------------------------------------------------------- |
-| home page                     | index.html                                                    |
-| document page                 | eyewrite.html                                                 |
-| server file (for development) | index.js                                                      |
-| basic UI styling/adjustments  | css (for stylesheets), scripts/ui-adjustments.js              |
-| visualization control/toggles | scripts/visualization-control.js                              |
-| voice chat functions          | scripts/voice-chat.js                                         |
-| highlight styling             | scripts/highlight-styles.js, scripts/visualization-control.js |
-
-Note: any changes made in the javascript files will likely require changes in the html files.
-
-### Building the Source Code
+## Building the Source Code
 
 If you want to build the source code from this repository, please follow these instructions:
 
@@ -50,15 +31,11 @@ If you want to build the source code from this repository, please follow these i
 
 Note: you may need to import WebGazer module from hci.pomona server
 
-### Running EyeWrite locally
+## Running EyeWrite locally
 
     # Make sure that port 3000 on localhost is open.
     # Then, run the following script.
     `npm start`
 
 * Visit (http://localhost:3000) on your browser
-* Follow the instructions on the welcome page to create or join a collaborative document
-
-### Deploying
-* Push changes to GitHub repo.
-* Log into the HCI server (requires a VPN connection), go to the project folder in the web directory, and pull changes.
+* Follow the instructions on the welcome page to create or join a collaborative document.
