@@ -37,9 +37,8 @@ var visualizationControl = function () {
   /**
    * Adds callback for unload event.
    */
-  var f = window.onbeforeunload;
   window.addEventListener("beforeunload", function () {
-    f();
+    window.onbeforeunload();
     mousePosRef.child(userId).set(null);
     gazePosRef.child(userId).set(null);
     firebaseRef.child("users").child(userId).set(null);
@@ -205,7 +204,7 @@ var visualizationControl = function () {
     /**
      * startWebGazer starts webgazer.
      */
-    function startWebGazer() {
+    var startWebGazer = function () {
       //Listens for WebGazer gaze predictions, sends to firebase
       webgazer.setGazeListener(function (data, elapsedTime) {
         if (data == null) {
@@ -225,7 +224,7 @@ var visualizationControl = function () {
       webgazer.showFaceOverlay(false);
       webgazer.showFaceFeedbackBox(false);
       webgazer.showPredictionPoints(false);
-    }
+    };
 
     // Mouse Listeners
     document.addEventListener("mousemove", mouseMove);
