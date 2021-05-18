@@ -38,7 +38,6 @@ var visualizationControl = function () {
    * Adds callback for unload event.
    */
   window.addEventListener("beforeunload", function () {
-    window.onbeforeunload();
     mousePosRef.child(userId).set(null);
     gazePosRef.child(userId).set(null);
     firebaseRef.child("users").child(userId).set(null);

@@ -328,9 +328,7 @@ var voiceChat = function () {
 		document.getElementById("voiceChatSwitch").disabled = false;
 	}
 
-	var f = window.onbeforeunload;
 	window.addEventListener("beforeunload", function () {
-		f();
 		if (document.getElementById('voiceChatSwitch').checked) {
 			onLeave();
 			document.getElementById('voiceChatSwitch').checked = false;
