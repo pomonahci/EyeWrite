@@ -30,15 +30,10 @@
   <!-- Peer.JS -->
   <script src="./node_modules/peerjs/dist/peerjs.js"></script>
 
-  <!-- Bootstrap and jQuery -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
-    integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
-    crossorigin="anonymous"></script>
+  <!-- Include Twitter Bootstrap and jQuery: -->
+  <link rel='stylesheet' href='./node_modules/bootstrap-multiselect/docs/css/bootstrap-3.3.2.min.css' type='text/css' />
+  <script type='text/javascript' src='./node_modules/bootstrap-multiselect/docs/js/jquery-2.1.3.min.js'></script>
+  <script type='text/javascript' src='./node_modules/bootstrap-multiselect/docs/js/bootstrap-3.3.2.min.js'></script>
 
   <!-- Include the plugin's CSS and JS: -->
   <script type='text/javascript' src='./node_modules/bootstrap-multiselect/dist/js/bootstrap-multiselect.js'></script>
@@ -50,9 +45,6 @@
 
   <!-- Modern or es5 bundle -->
   <script src='https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js'></script>
-
-  <!-- Chroma JS -->
-  <script type="text/javascript" src="./node_modules/chroma-js/chroma.js"></script>
 
   <link rel='stylesheet' href='./css/eyewrite.css' />
 </head>
@@ -68,11 +60,52 @@
     <div id='user-checkboxes-container'></div>
     <select id='user-checkboxes' multiple='multiple'></select>
 
-    <!-- Send Data Component -->
     <div class="radio-buttons">
-      <p>Send My Data:</p>
+      <p>Visualize Data:</p>
+
       <div class="inline-toggle-container">
         <p class="inline">Gaze</p>
+        <!-- <input type="radio" id="sendButton" name="dataChoice" checked>
+        <label for="sendButton" id="sendButtonLabel" type="radio">Send</label> -->
+        <div class="onoffswitch">
+          <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="gazeVisSwitch" tabindex="0">
+          <label class="onoffswitch-label" for="gazeVisSwitch">
+            <span class="onoffswitch-inner"></span>
+            <span class="onoffswitch-switch"></span>
+          </label>
+        </div>
+      </div>
+
+
+      <div class="inline-toggle-container">
+        <p>Mouse</p>
+        <!-- <input type="radio" id="blockButton" name="dataChoice">
+        <label for="blockButton" type="radio">Block</label> -->
+        <div>
+          <div class="onoffswitch">
+            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="mouseVisSwitch" tabindex="0">
+            <label class="onoffswitch-label" for="mouseVisSwitch">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="slider-container">
+      <p class="slider-text">Highlight Size: <span id="numSentences"></span></p>
+      <input type="range" min="1" max="8" value="1" id="sentenceSlider">
+    </div>
+
+    <div class="radio-buttons">
+      <p>Send My Data:</p>
+
+      <div class="inline-toggle-container">
+        <p class="inline">Gaze</p>
+        <!-- <input type="radio" id="sendButton" name="dataChoice" checked>
+        <label for="sendButton" id="sendButtonLabel" type="radio">Send</label> -->
         <div class="onoffswitch">
           <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="gazeSendSwitch" tabindex="0">
           <label class="onoffswitch-label" for="gazeSendSwitch">
@@ -99,87 +132,47 @@
       </div>
 
     </div>
-
-    <!-- Visualize Data Component -->
+    <!-- 
     <div class="radio-buttons">
-      <p>Visualize Data:</p>
+      <p>Visualize:</p>
+      <input type="radio" id="gazeButton" name="visualizeChoice">
+      <label for="gazeButton" type="radio">Gaze</label>
 
-      <div class="inline-toggle-container">
-        <p style="margin-bottom: 0;">Gaze</p>
-        <div class="onoffswitch">
-          <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="gazeVisSwitch" tabindex="0">
-          <label class="onoffswitch-label" for="gazeVisSwitch">
-            <span class="onoffswitch-inner"></span>
-            <span class="onoffswitch-switch"></span>
-          </label>
-        </div>
-      </div>
+      <input type="radio" id="mouseButton" name="visualizeChoice" checked>
+      <label for="mouseButton" type="radio">Mouse</label>
+    </div> -->
 
 
-      <div class="inline-toggle-container">
-        <p>Mouse</p>
-        <div>
-          <div class="onoffswitch">
-            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="mouseVisSwitch" tabindex="0">
-            <label class="onoffswitch-label" for="mouseVisSwitch">
-              <span class="onoffswitch-inner"></span>
-              <span class="onoffswitch-switch"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <script type="text/javascript">
-      $('#vis-shape').multiselect();
-    </script>
-
-    <!-- Highlight Pattern Component -->
-    <div class="radio-buttons" style="display: flex; flex-direction: column;">
-      <p>Highlight Pattern</p>
-      <div style="margin: auto;">
-        <select id="vis-shape" style="width: 120px; margin: 0 auto; margin-bottom: 10px; margin-top: 0px;">
-          <option value="solid">Solid</option>
-          <option value="gradient">Gradient</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Highlight Size Component -->
-    <div id="slider-container">
-      <p class="slider-text">Highlight Size: <span id="numSentences"></span></p>
-      <input type="range" min="1" max="48" value="12" id="sentenceSlider">
-    </div>
-
-    <!-- Voice Chat Component -->
     <div>
       <div class="radio-buttons">
         <div>
           <p>Voice Chat</p>
         </div>
 
-        <div>
-          <div class="inline-toggle-container">
-            <div>
-              <div class="onoffswitch">
-                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="voiceChatSwitch"
-                  tabindex="0">
-                <label class="onoffswitch-label" for="voiceChatSwitch">
-                  <span class="onoffswitch-inner"></span>
-                  <span class="onoffswitch-switch"></span>
-                </label>
-              </div>
-            </div>
+        <!-- <input type="radio" id="voiceOnButton" name="voiceChoice">
+        <label for="voiceOnButton" type="radio">On</label>
+  
+        <input type="radio" id="voiceOffButton" name="voiceChoice" checked>
+        <label for="voiceOffButton" type="radio">Off</label>
 
-            <button id="mute" disabled=True>Mute</button>
+        <div id="toggle-wrapper">
+          <p>voice chat</p>
+          <button>on</button>
+        </div> -->
+        <div class="inline-toggle-container">
+          <div class="onoffswitch">
+            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="voiceChatSwitch" tabindex="0">
+            <label class="onoffswitch-label" for="voiceChatSwitch">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
           </div>
-        </div>
 
+          <button id="mute" disabled=True>Mute</button>
+        </div>
       </div>
     </div>
 
-    <!-- WebGazer Calibration Component -->
     <A href="./WebGazer/www/calibration.html" id="calibrationLink">
       <input type="button" id="calibrationButton" value="Calibrate Gaze">
     </A>
@@ -188,8 +181,6 @@
   <div id="audio-streams"></div>
 
   <script>
-    window.debug = false;  // turn off to remove debug statements
-
     var firebaseConfig = {
       apiKey: "AIzaSyAmD2D9XCpVDQcJF08chqCbkCpL-_Jfu_Y",
       authDomain: "eyewrite-62d75.firebaseapp.com",
@@ -200,16 +191,14 @@
       appId: "1:998123311342:web:abed435afee503a2eb63ff",
       measurementId: "G-8EGTMW2Q4G"
     };
-
-    // REPLACE WITH DEVELOPMENT SERVER
     // var firebaseConfig = {
-    //   apiKey: "AIzaSyAkIIeqpNNzGp98UHRI21GOvp6CmH_hdZU",
-    //   authDomain: "eyewrite2-642f5.firebaseapp.com",
-    //   databaseURL: "https://eyewrite2-642f5-default-rtdb.firebaseio.com",
-    //   projectId: "eyewrite2-642f5",
-    //   storageBucket: "eyewrite2-642f5.appspot.com",
-    //   messagingSenderId: "360420484918",
-    //   appId: "1:360420484918:web:df36b1d345145448f7b597"
+    //   apiKey: "AIzaSyB2cQN9gOLWPAfShtqB1oecNrXy2e8ThZs",
+    //   authDomain: "ewri-a5f65.firebaseapp.com",
+    //   databaseURL: "https://ewri-a5f65-default-rtdb.firebaseio.com",
+    //   projectId: "ewri-a5f65",
+    //   storageBucket: "ewri-a5f65.appspot.com",
+    //   messagingSenderId: "946530877533",
+    //   appId: "1:946530877533:web:1e585c0d350f695dfd0db4"
     // };
 
 
@@ -249,16 +238,15 @@
       return ref;
     }
 
+
   </script>
 </body>
 
-<!-- UI Adjustments -->
-<script src='./scripts/ui-adjustments.js'></script>
-<!-- Highlight Style -->
-<script src="./scripts/highlight-styles.js"></script>
-<!-- Visualization Control -->
-<script src='./scripts/visualization-control.js'></script>
-<!-- Voice Chat -->
-<script src="./scripts/voice-chat.js"></script>
+<!-- UI Adjustments Script -->
+
+<script src='./scripts/UIAdjustments.js'></script>
+
+<!-- Visualization Script -->
+<script src='./scripts/visualization.js'></script>
 
 </html>
