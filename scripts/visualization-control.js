@@ -625,42 +625,35 @@ var visualizationControl = function () {
       circle.id = `${uID}`;
       userHighlights[uID] = circle;
       document.body.append(circle);
-      // debugStatement = document.createElement("DIV");
-      // circle.append(debugStatement);
     }
 
-    var loc = decodeLocation(userLocations[uID]);
+    var hPos = decodeLocation(userLocations[uID]);
 
     if (uID != userId) {
-      if (isAboveView(loc)) {
+      if (isAboveView(hPos)) {
         if (window.debug) console.log("above view!");
-        createUpArrow(uID, loc);
-      } else if (isBelowView(loc)) {
+        createUpArrow(uID, hPos);
+      } else if (isBelowView(hPos)) {
         if (window.debug) console.log("below view!");
-        createDownArrow(uID, loc);
+        createDownArrow(uID, hPos);
       } else {
         if (window.debug) console.log("in view!");
         clearArrow(uID);
       }
     }
 
-    var transparentColor = hex2rgb(userColors[uID], 0.0);
-    var color = hex2rgb(userColors[uID], 1.0);
-    var sizeCoeff = document.getElementById("sentenceSlider").value;
+    var hColor = hex2rgb(userColors[uID], 1.0);
+    var hSize = { coeff: document.getElementById("sentenceSlider").value };
 
 
-    var visShape, visSize;
+    // var visShape, visSize;
     if (window.visShape == "solid") {
-      visShape = `background-color: ${color}; border-radius: 100%; opacity: 0.5;`;
-      visSize = `left: ${loc.x - 8 * sizeCoeff}px; top: ${loc.y - 8 * sizeCoeff}px; width:${16 * sizeCoeff}px; height:${16 * sizeCoeff}px;`;
+      circle.style = createSolidCircleHighlightStyle(hPos, hSize, hColor);
     } else if (window.visShape == "gradient") {
-      visShape = `background: radial-gradient(${color} 0%, ${transparentColor} 66%, ${transparentColor}); opacity: 0.7;`;
-      visSize = `left: ${loc.x - 12 * sizeCoeff}px; top: ${loc.y - 12 * sizeCoeff}px; width:${24 * sizeCoeff}px; height:${24 * sizeCoeff}px;`;
+      circle.style = createGradientCircleHighlightStyle(hPos, hSize, hColor);
     } else {
       if (window.debug) console.log("invalid shape!");
     }
-
-    circle.style = `position: absolute; pointer-events: none; ${visSize} ${visShape}`;
   }
 
   /**
