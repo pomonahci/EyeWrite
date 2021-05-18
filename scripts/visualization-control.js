@@ -19,6 +19,10 @@ var visualizationControl = function () {
   var gazePosRef = firebaseRef.child("gaze");
 
   // sendData and visualization state variables
+  // 0 = no active
+  // 1 = mouse only
+  // 2 = gaze only
+  // 3 = mouse and gaze
   window.sendDataState = 0;
   window.visualizationState = 0;
 
@@ -196,26 +200,32 @@ var visualizationControl = function () {
     window.saveDataAcrossSessions = true;
     //applying smoothing filter
     window.applyKalmanFilter = true;
+    window.isWebGazerActive = false;
 
-    //Listens for WebGazer gaze predictions, sends to firebase
-    webgazer.setGazeListener(function (data, elapsedTime) {
-      if (data == null) {
-        return;
-      }
+    /**
+     * startWebGazer starts webgazer.
+     */
+    function startWebGazer() {
+      //Listens for WebGazer gaze predictions, sends to firebase
+      webgazer.setGazeListener(function (data, elapsedTime) {
+        if (data == null) {
+          return;
+        }
 
-      if (window.sendDataState == 0 || window.sendDataState == 1) {
-        gazePosRef.child(userId).update({ region: null, x: null, y: null });
-      } else {
-        var encodedLoc = encodeLocation(data.x, data.y);
-        gazePosRef.child(userId).update(encodedLoc);
-      }
-    }).begin();
+        if (window.sendDataState == 0 || window.sendDataState == 1) {
+          gazePosRef.child(userId).update({ region: null, x: null, y: null });
+        } else {
+          var encodedLoc = encodeLocation(data.x, data.y);
+          gazePosRef.child(userId).update(encodedLoc);
+        }
+      }).begin();
 
-    // WebGazer specifications
-    webgazer.showVideo(false);
-    webgazer.showFaceOverlay(false);
-    webgazer.showFaceFeedbackBox(false);
-    webgazer.showPredictionPoints(false);
+      // WebGazer specifications
+      webgazer.showVideo(false);
+      webgazer.showFaceOverlay(false);
+      webgazer.showFaceFeedbackBox(false);
+      webgazer.showPredictionPoints(false);
+    }
 
     // Mouse Listeners
     document.addEventListener("mousemove", mouseMove);
@@ -308,6 +318,10 @@ var visualizationControl = function () {
     gazeSendSwitch.addEventListener("change", function () {
       if (gazeSendSwitch.checked) {
         // mouseSendSwitch.checked = false;
+        if (document.isWebGazerActive == false) {
+          document.isWebGazerActive = true;
+          startWebGazer();
+        }
         if (mouseSendSwitch.checked) {
           window.sendDataState = 3;
         } else {
