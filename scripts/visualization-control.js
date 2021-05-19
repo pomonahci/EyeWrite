@@ -374,7 +374,7 @@ var visualizationControl = function () {
           clearAllHighlights();
         }
       }
-      if (window.debug) if (window.debug) console.log(`visualization state: ${getDataState(window.visualizationState)}`);
+      if (window.debug) console.log(`visualization state: ${getDataState(window.visualizationState)}`);
     });
 
     // fill the document if empty
