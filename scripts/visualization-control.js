@@ -87,6 +87,34 @@ var visualizationControl = function () {
   });
 
   /**
+   * startWebGazer starts webgazer.
+   */
+  var startWebGazer = function () {
+    //Listens for WebGazer gaze predictions, sends to firebase
+    console.log('starting webgazer');
+
+    
+    webgazer.setGazeListener(function (data, clock) {
+      console.log(data, clock);
+
+      if (data == null || window.sendDataState == 0 || window.sendDataState == 1) {
+        gazePosRef.child(userId).update({ region: null, x: null, y: null });
+      } else {
+        console.log('sending encoded loc!');
+        var encodedLoc = encodeLocation(data.x, data.y);
+        gazePosRef.child(userId).update(encodedLoc);
+      }
+    }).begin();
+
+    // WebGazer specifications
+    webgazer.params.showVideo = false;
+    webgazer.params.showGazeDot = true;
+    webgazer.params.showFaceOverlay = false;
+    webgazer.params.showFaceFeedbackBox = false;
+    webgazer.params.showPredictionPoints = false;
+  }
+
+  /**
    * Instantiate the Firepad document.
    * Contains firebase callback functions.
    */
@@ -199,32 +227,7 @@ var visualizationControl = function () {
     //applying smoothing filter
     window.applyKalmanFilter = true;
     window.isWebGazerActive = false;
-
-    /**
-     * startWebGazer starts webgazer.
-     */
-    var startWebGazer = function () {
-      //Listens for WebGazer gaze predictions, sends to firebase
-      console.log('starting webgazer');
-      webgazer.setGazeListener(function (data, elapsedTime) {
-        if (data == null) {
-          return;
-        }
-
-        if (window.sendDataState == 0 || window.sendDataState == 1) {
-          gazePosRef.child(userId).update({ region: null, x: null, y: null });
-        } else {
-          var encodedLoc = encodeLocation(data.x, data.y);
-          gazePosRef.child(userId).update(encodedLoc);
-        }
-      }).begin();
-
-      // WebGazer specifications
-      webgazer.showVideo(false);
-      webgazer.showFaceOverlay(false);
-      webgazer.showFaceFeedbackBox(false);
-      webgazer.showPredictionPoints(false);
-    };
+    
 
     // Mouse Listeners
     document.addEventListener("mousemove", mouseMove);
