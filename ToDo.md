@@ -1,11 +1,12 @@
 # TODO:
 
 Calibration button continuously makes new circles when clicking without resetting (completed)
+
 Need a backbutton from calibration to Document
 - Need Document id somehow (firebase?)
 - Or just keep the back in history version?
 
-?Turn Calibrate page Links into buttons
+Turn Calibrate page Links into buttons
 
 Recalibrate Button: Just stitch clearData and Calibrate functions together
 
