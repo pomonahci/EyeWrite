@@ -6,3 +6,7 @@ Need a backbutton from calibration to Document
 - Or just keep the back in history version?
 
 ?Turn Calibrate page Links into buttons
+
+Recalibrate Button: Just stitch clearData and Calibrate functions together
+
+Show accuracy of calibration after calibrating
