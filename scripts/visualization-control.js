@@ -86,29 +86,56 @@ var visualizationControl = function () {
     }
   });
 
+
   /**
    * startWebGazer starts webgazer.
    */
   var startWebGazer = function () {
+    //webgazer.trainModel();
     //Listens for WebGazer gaze predictions, sends to firebase
     console.log('starting webgazer');
+    // window.eyeWrite = true;
 
-    
+    webgazer.setRegression('ridge')
     webgazer.setGazeListener(function (data, clock) {
-      console.log(data, clock);
+      // console.log(data, clock);
 
       if (data == null || window.sendDataState == 0 || window.sendDataState == 1) {
         gazePosRef.child(userId).update({ region: null, x: null, y: null });
       } else {
         console.log('sending encoded loc!');
+        console.log(data);
         var encodedLoc = encodeLocation(data.x, data.y);
         gazePosRef.child(userId).update(encodedLoc);
       }
     }).begin();
+    
+    // webgazer.setRegression('ridge') /* currently must set regression and tracker */
+    // .setGazeListener(function(data, clock) {
+    //   if (data == null){
+    //     return;
+    //   }
+    //   if(window.sendDataState == 0 || window.sendDataState == 1) {
+    //     gazePosRef.child(userId).update({ region: null, x: null, y: null });
+    //   } else {
+    //     console.log('sending encoded loc!');
+    //     console.log(data);
+    //     if(isNaN(data.x) || isNaN(data.y) ){return;}
+    //     var encodedLoc = encodeLocation(data.x, data.y);
+
+    //     gazePosRef.child(userId).update(encodedLoc);
+    //   }
+    //   //   console.log(data); /* data is an object containing an x and y key which are the x and y prediction coordinates (no bounds limiting) */
+    //   //   console.log(clock); /* elapsed time in milliseconds since webgazer.begin() was called */
+    // })
+    // // .setStaticVideo(videoLoc)
+    // .begin()  // .then(value => value.showPredictionPoints(true));
+
 
     // WebGazer specifications
+    // webgazer.trainModel();
     webgazer.params.showVideo = false;
-    webgazer.params.showGazeDot = true;
+    webgazer.params.showGazeDot = false;
     webgazer.params.showFaceOverlay = false;
     webgazer.params.showFaceFeedbackBox = false;
     webgazer.params.showPredictionPoints = false;
@@ -313,7 +340,7 @@ var visualizationControl = function () {
           window.sendDataState = 0;
         }
       }
-      // if (window.debug) console.log(`send data state: ${getDataState(window.sendDataState)}`);
+      console.log(`send data state: ${getDataState(window.sendDataState)}`);
     });
 
     // Listener for gaze send switch.
@@ -337,7 +364,7 @@ var visualizationControl = function () {
           window.sendDataState = 0;
         }
       }
-      if (window.debug) console.log(`send data state: ${getDataState(window.sendDataState)}`);
+      console.log(`send data state: ${getDataState(window.sendDataState)}`);
     });
 
     // Listener for mouse visualization switch.
