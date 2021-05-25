@@ -1,6 +1,6 @@
 # TODO:
 
-Calibration button continuously makes new circles when clicking without resetting
+Calibration button continuously makes new circles when clicking without resetting (completed)
 Need a backbutton from calibration to Document
 - Need Document id somehow (firebase?)
 - Or just keep the back in history version?
