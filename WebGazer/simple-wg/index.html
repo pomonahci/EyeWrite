@@ -22,7 +22,7 @@
 
           </br></br></br></br></br></br></br></br>
           <!-- The basic function calls from targets.js you'll want to know are the constructor and targets.start() -->
-          <a class="right" onclick="var ts = new Targets(calibrationPoints, 'calibration', 5); ts.start()" href="#">Calibrate</a>
+          <a class="right" onclick="if(!document.getElementById('dot')){var ts = new Targets(calibrationPoints, 'calibration', 5); ts.start()}" href="#">Calibrate</a>
           <!-- </br>
           <a class="right" onclick="webgazer.trainModel()" href="#">Train Model</a> -->
           </br>
