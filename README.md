@@ -40,3 +40,4 @@ Note: you may need to import WebGazer module from hci.pomona server
 
 * Visit (http://localhost:3000) on your browser
 * Follow the instructions on the welcome page to create or join a collaborative document.
+
