@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+        <TITLE>Control</TITLE>
+        <link rel="stylesheet" type="text/css" href="./css/style.css">
+
+        <!-- This is for the calibration phase -->
+        <link rel="stylesheet" type="text/css" href="./css/targets.css">
+
+        <!-- This can be subbed for any version of webgazer -->
+        <script async type="text/javascript" src="./webgazer.js"></script>
+        <STYLE type="text/css">
+            .right { float: right; }
+        </STYLE>
+    </head>
+    <body LANG="en-US" LINK="#0000ff" DIR="LTR">
+          
+
+          <script src="./js/main.js"></script>
+          <script src="./js/targets.js"></script>
+
+          </br></br></br></br></br></br>
+          <!-- The basic function calls from targets.js you'll want to know are the constructor and targets.start() -->
+          <!-- <a class="right" onclick="var ts = new Targets(calibrationPoints, 'calibration', 5); ts.start()" href="#">Calibrate</a>
+          </br>
+          <a class="right" onclick="webgazer.trainModel()" href="#">Train Model</a>
+          </br>
+          <a class="right" onclick="webgazer.clearData()" href="#">Clear Data</a>
+          </br> -->
+          <a class="right"  href="index.html">To Calibrate</a> -->
+          </br>
+          <a class="right"  onclick="trainModelManually()" href="#">Train Model</a> -->
+        </br>
+        <a class="right"  onclick="showGaze()" href="#">ShowGaze</a> -->
+
+
+          <canvas id="plotting_canvas" width="500" height="500" style="cursor:crosshair;"></canvas>
+
+
+          <script type="text/javascript">
+          var trainModelManually = function (){
+            console.log("Training (regressing)");
+            webgazer.trainModel();
+          }
+          var showGaze = function(){
+            console.log("Showing Gaze");
+            webgazer.params.showGazeDot = true;
+          }
+            </script>
+
+    </body>
+</html>
