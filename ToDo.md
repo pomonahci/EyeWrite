@@ -10,3 +10,5 @@ Need a backbutton from calibration to Document
 Recalibrate Button: Just stitch clearData and Calibrate functions together
 
 Show accuracy of calibration after calibrating
+
+Add Instructions to Calibrate page (or have inbetween page for them)
