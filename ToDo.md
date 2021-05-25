@@ -12,3 +12,5 @@ Recalibrate Button: Just stitch clearData and Calibrate functions together
 Show accuracy of calibration after calibrating
 
 Add Instructions to Calibrate page (or have inbetween page for them)
+
+Noted Bugs: Turning of send mouse when view mouse is on: circle remains on-top of view mouse toggle
