@@ -25,10 +25,11 @@
           <div id="button-container" class="right"> 
             <!-- The basic function calls from targets.js you'll want to know are the constructor and targets.start() -->
             <button class="right" onclick="if(!document.getElementById('dot')){var ts = new Targets(calibrationPoints, 'calibration', 5); ts.start()}">Calibrate</button>
+            <button class = "right" onclick="if(!document.getElementById('dot')){webgazer.clearData(); ts = new Targets(calibrationPoints, 'calibration', 5); ts.start();}">Recalibrate</button>
             <button class="right" onclick="webgazer.trainModel()">Train Model</button>
-            <!-- <a class="right" href="control.html">To Control</a> -->
+            <button class="right" href="control.html">To Control</button>
             <button class='right' onclick="history.go(-2)">Back (After Calibrating)</button>
-            <button class="right" onclick="webgazer.clearData()" >Clear Data</button>
+            <button class="right" onclick="webgazer.clearData()">Clear Data</button>
           </div>
         </br>
 
