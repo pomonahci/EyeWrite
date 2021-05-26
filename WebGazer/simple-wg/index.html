@@ -21,17 +21,16 @@
           <script src="./js/targets.js"></script>
 
           </br></br></br></br></br></br></br></br>
-          <!-- The basic function calls from targets.js you'll want to know are the constructor and targets.start() -->
-          <a class="right" onclick="if(!document.getElementById('dot')){var ts = new Targets(calibrationPoints, 'calibration', 5); ts.start()}" href="#">Calibrate</a>
-          <!-- </br>
-          <a class="right" onclick="webgazer.trainModel()" href="#">Train Model</a> -->
-          </br>
-          <a class="right" href="control.html">To Control</a> -->
+
+          <div id="button-container" class="right"> 
+            <!-- The basic function calls from targets.js you'll want to know are the constructor and targets.start() -->
+            <button class="right" onclick="if(!document.getElementById('dot')){var ts = new Targets(calibrationPoints, 'calibration', 5); ts.start()}">Calibrate</button>
+            <button class="right" onclick="webgazer.trainModel()">Train Model</button>
+            <!-- <a class="right" href="control.html">To Control</a> -->
+            <button class='right' onclick="history.go(-2)">Back (After Calibrating)</button>
+            <button class="right" onclick="webgazer.clearData()" >Clear Data</button>
+          </div>
         </br>
-        <a class='right' href="#" onclick="history.go(-2)">Back (After Calibrating)</a>
-          </br>
-          <a class="right" onclick="webgazer.clearData()" href="#">Clear Data</a>
-          </br>
 
           <canvas id="plotting_canvas" width="500" height="500" style="cursor:crosshair;"></canvas>
 
