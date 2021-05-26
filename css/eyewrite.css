@@ -332,6 +332,7 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   margin-bottom: 0px;
 }
 
+
 #sentenceSlider {
   position: relative;
   width: 125px;
@@ -339,7 +340,6 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   margin-top: 10px;
 }
 
-<<<<<<< HEAD
 #sentenceSlider2 {
   position: relative;
   width: 125px;
@@ -347,12 +347,8 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   margin-top: 10px;
 }
 
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-  input[type='range'] {
-=======
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   input[type="range"] {
->>>>>>> df448aec787ebce64f0af98fc8c5731dc404cfb4
     display: inline;
     overflow: hidden;
     border: 1px solid var(--title-text);
