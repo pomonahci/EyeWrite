@@ -59,7 +59,7 @@
   <link rel='stylesheet' href='./css/eyewrite.css' />
 </head>
 
-<body>
+<body onload="updateGRatio()">
   <div id='userlist'></div>
   <div id='firepad'></div>
 
@@ -142,7 +142,7 @@
       <p>Highlight Pattern</p>
       <div style="margin: auto;">
         <select id="vis-shape" style="width: 120px; margin: 0 auto; margin-bottom: 10px; margin-top: 0px;">
-          <option value="solid">Solid</option>
+          <!-- <option value="solid">Solid</option> -->
           <option value="gradient">Gradient</option>
         </select>
       </div>
@@ -152,6 +152,12 @@
     <div id="slider-container">
       <p class="slider-text">Highlight Size: <span id="numSentences"></span></p>
       <input type="range" min="1" max="48" value="12" id="sentenceSlider">
+    </div>
+
+    <!-- Highlight Gradient Ratio Component -->
+    <div id="slider-container">
+      <p class="slider-text2">Gradient Ratio: <span id="numSentences2">100%</span></p>
+      <input type="range" min="0" max="66" value="100" id="sentenceSlider2">
     </div>
 
     <!-- Voice Chat Component -->
@@ -255,7 +261,10 @@
       }
       return ref;
     }
-
+    function updateGRatio(){
+      var val = document.getElementById("numSentences2");
+      val.innerHTML = "100%";
+    }
   </script>
 </body>
 

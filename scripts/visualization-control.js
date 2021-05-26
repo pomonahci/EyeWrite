@@ -103,8 +103,8 @@ var visualizationControl = function () {
       if (data == null || window.sendDataState == 0 || window.sendDataState == 1) {
         gazePosRef.child(userId).update({ region: null, x: null, y: null });
       } else {
-        console.log('sending encoded loc!');
-        console.log(data);
+        // console.log('sending encoded loc!');
+        // console.log(data);
         var encodedLoc = encodeLocation(data.x, data.y);
         gazePosRef.child(userId).update(encodedLoc);
       }
@@ -336,8 +336,10 @@ var visualizationControl = function () {
       } else {
         if (gazeSendSwitch.checked) {
           window.sendDataState = 2;
+          clearAllHighlights();
         } else {
           window.sendDataState = 0;
+          clearAllHighlights();
         }
       }
       console.log(`send data state: ${getDataState(window.sendDataState)}`);
@@ -360,8 +362,10 @@ var visualizationControl = function () {
       } else {
         if (mouseSendSwitch.checked) {
           window.sendDataState = 1;
+          clearAllHighlights();
         } else {
           window.sendDataState = 0;
+          clearAllHighlights();
         }
       }
       console.log(`send data state: ${getDataState(window.sendDataState)}`);
@@ -688,13 +692,14 @@ var visualizationControl = function () {
 
     var hColor = hex2rgb(userColors[uID], 1.0);
     var hSize = { coeff: document.getElementById("sentenceSlider").value };
+    var hrate = {coeff: document.getElementById("sentenceSlider2").value};
 
 
     // var visShape, visSize;
     if (window.visShape == "solid") {
       circle.style = createSolidCircleHighlightStyle(hPos, hSize, hColor);
     } else if (window.visShape == "gradient") {
-      circle.style = createGradientCircleHighlightStyle(hPos, hSize, hColor);
+      circle.style = createGradientCircleHighlightStyle(hPos, hSize, hColor, hrate);
     } else {
       if (window.debug) console.log("invalid shape!");
     }

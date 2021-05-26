@@ -85,6 +85,19 @@ var UIAdjustments = function () {
     output.innerHTML = this.value;
   }
 
+  var slider2 = document.getElementById("sentenceSlider2");
+  var output2 = document.getElementById("numSentences2");
+  output2.innerHTML = slider2.value;
+
+  slider2.oninput = function () {
+    var val = Math.floor((this.value/66) * 100);
+    output2.innerHTML = (val + "%");
+  }
+
+  slider2.onload = function () {
+    var val = Math.floor((this.value/66) * 100);
+    output2.innerHTML = (val + "%");
+  }
   var controlContainer = document.getElementById('controlContainer');
   controlContainer.style.top = (userlistBox.offsetTop + userlistBox.offsetHeight + 10) + "px";
 
