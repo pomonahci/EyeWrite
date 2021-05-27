@@ -25,12 +25,13 @@
 
           <div id="button-container" class="right"> 
             <!-- The basic function calls from targets.js you'll want to know are the constructor and targets.start() -->
-            <button class="right" onclick="if(!document.getElementById('dot')){var ts = new Targets(calibrationPoints, 'calibration', 5); ts.start()}">Calibrate</button>
-            <button class = "right" onclick="if(!document.getElementById('dot')){webgazer.clearData(); ts = new Targets(calibrationPoints, 'calibration', 5); ts.start();}">Recalibrate</button>
-            <button class="right" onclick="webgazer.trainModel()">Train Model</button>
-            <button class="right" href="control.html">To Control</button>
-            <button class='right' onclick="history.go(-2)">Back (After Calibrating)</button>
-            <button class="right" onclick="webgazer.clearData()">Clear Data</button>
+            <button class="right" id="HowTo" onclick="instructions()">How to Calibrate</button>
+            <button class="right tooltip" id="cal" onclick="hideButtons();if(!document.getElementById('dot')){var ts = new Targets(calibrationPoints, 'calibration', 5); ts.start()}">Calibrate<span class = tooltiptext>Add additional calibration images to the model and train the model</span></button>
+            <button class = "right tooltip" id="recal" onclick="hideButtons();if(!document.getElementById('dot')){webgazer.clearData(); ts = new Targets(calibrationPoints, 'calibration', 5); ts.start();}">Recalibrate<span class="tooltiptext">Clear current calibration images and calibrate again from scratch.</span></button>
+            <!-- <button class="right" onclick="webgazer.trainModel()">Train Model</button> -->
+            <!-- <button class="right" href="control.html">To Control</button> -->
+            <button class="right" id="clear" onclick="webgazer.clearData()">Clear Data</button>
+            <button class='right' id="back" onclick="history.go(-1)">Back</button>
           </div> 
         </br>
 
@@ -38,6 +39,25 @@
 
 
           <script type="text/javascript">
+            function instructions(){
+              alert('First make sure your face is positioned within the box in the top left. \n\nOnce "Calibrate" has been pressed, a target will appear in the top left corner. With your eyes, follow the target as it stops in 9 different positions and pulses, capturing images of your eyes to pass into our regression model.\n\nYou can "Calibrate" as many times as you like, adding more calibration images to the model, or you can "Recalibrate" and restart the calibration process, clearing all prior data and starting anew.\n\nOnce you are done calibrating, just click on "Back" to be returned from whence you came.');
+            }
+
+            function hideButtons(){
+              console.log("hidden");
+              document.getElementById("HowTo").style.visibility = "hidden";
+              document.getElementById("cal").style.visibility = "hidden";
+              document.getElementById("recal").style.visibility = "hidden";
+              document.getElementById("clear").style.visibility = "hidden";
+              document.getElementById("back").style.visibility = "hidden";
+              setTimeout(function(){
+              document.getElementById("HowTo").style.visibility = "visible";
+              document.getElementById("cal").style.visibility = "visible";
+              document.getElementById("recal").style.visibility = "visible";
+              document.getElementById("clear").style.visibility = "visible";
+              document.getElementById("back").style.visibility = "visible";
+              console.log("visible");},50000);
+            }
             // Basic 9 pt calibration
             var calibrationPoints = [
                 new TargetPoint(0.5, 0.5),
