@@ -59,7 +59,7 @@
   <link rel='stylesheet' href='./css/eyewrite.css' />
 </head>
 
-<body onload="updateGRatio()">
+<body onload="updateUI()">
   <div id='userlist'></div>
   <div id='firepad'></div>
 
@@ -156,8 +156,8 @@
 
     <!-- Highlight Gradient Ratio Component -->
     <div id="slider-container">
-      <p class="slider-text2">Gradient Ratio: <span id="numSentences2">100%</span></p>
-      <input type="range" min="0" max="66" value="100" id="sentenceSlider2">
+      <p class="slider-text2">Gradient Ratio: <span id="numSentences2"></span></p>
+      <input type="range" min="0" max="66" value="66" id="sentenceSlider2">
     </div>
 
     <!-- Voice Chat Component -->
@@ -261,9 +261,18 @@
       }
       return ref;
     }
-    function updateGRatio(){
-      var val = document.getElementById("numSentences2");
-      val.innerHTML = "100%";
+    function updateUI(){
+      //Update Gradient Ratio label to match slider value
+      var grad = document.getElementById("numSentences2");
+      var gradval = document.getElementById("sentenceSlider2");
+      grad.innerHTML = Math.floor((gradval.value/66) * 100)+"%";
+      //turn all switches off when page is loaded (class is onoffswitch-label)
+      document.getElementById("gazeSendSwitch").checked = false;
+      document.getElementById("mouseSendSwitch").checked = false;
+      document.getElementById("mouseVisSwitch").checked = false;
+      document.getElementById("gazeVisSwitch").checked = false;
+
+      
     }
   </script>
 </body>
