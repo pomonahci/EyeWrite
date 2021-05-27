@@ -30,6 +30,7 @@
             <button class = "right tooltip" id="recal" onclick="hideButtons();if(!document.getElementById('dot')){webgazer.clearData(); ts = new Targets(calibrationPoints, 'calibration', 5); ts.start();}">Recalibrate<span class="tooltiptext">Clear current calibration images and calibrate again from scratch.</span></button>
             <!-- <button class="right" onclick="webgazer.trainModel()">Train Model</button> -->
             <!-- <button class="right" href="control.html">To Control</button> -->
+            <button class="right" id="error" onclick="hideButtons();var ts = new Targets(calibrationPoints, 'error', 5); ts.start()">Test Error</button>
             <button class="right" id="clear" onclick="webgazer.clearData()">Clear Data</button>
             <button class='right' id="back" onclick="history.go(-1)">Back</button>
           </div> 
@@ -50,12 +51,14 @@
               document.getElementById("recal").style.visibility = "hidden";
               document.getElementById("clear").style.visibility = "hidden";
               document.getElementById("back").style.visibility = "hidden";
+              document.getElementById("error").style.visibility = "hidden";
               setTimeout(function(){
               document.getElementById("HowTo").style.visibility = "visible";
               document.getElementById("cal").style.visibility = "visible";
               document.getElementById("recal").style.visibility = "visible";
               document.getElementById("clear").style.visibility = "visible";
               document.getElementById("back").style.visibility = "visible";
+              document.getElementById("error").style.visibility = "visible";
               console.log("visible");},50000);
             }
             // Basic 9 pt calibration
