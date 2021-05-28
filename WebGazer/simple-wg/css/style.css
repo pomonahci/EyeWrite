@@ -153,3 +153,9 @@ li {
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
+
+.inst {
+  position: relative;
+  left: 23%;
+  width: 900px;
+}
