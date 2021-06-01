@@ -160,17 +160,16 @@
       <input type="range" min="0" max="66" value="66" id="sentenceSlider2">
     </div>
 
-    <!-- Voice Chat Component -->
+    <!-- Voice/Video Chat Component -->
     <div>
       <div class="radio-buttons">
         <div>
-          <p>Voice Chat</p>
+          <p>Voice/Video Chat</p>
         </div>
-
         <div>
           <div class="inline-toggle-container">
             <div>
-              <div class="onoffswitch">
+              <div class="onoffswitch vvSwitch">
                 <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="voiceChatSwitch"
                   tabindex="0">
                 <label class="onoffswitch-label" for="voiceChatSwitch">
@@ -180,22 +179,29 @@
               </div>
             </div>
 
-            <button id="mute" disabled=True>Mute</button>
+          </div>
+          <div class="inline-toggle-container"> 
+            <p>Audio</p>
+            
+            <button id="aud" disabled=True>Off</button>
+           </div>
+          <div class="inline-toggle-container"> 
+            <p>Video</p>
+            <button id="cam" disabled=True>Off</button>
           </div>
         </div>
-
       </div>
     </div>
 
     <!-- WebGazer Calibration Component -->
-    <!-- <A href="./WebGazer/www/simple-wg/index.html" id="calibrationLink">
-      <input type="button" id="calibrationButton" value="Calibrate Gaze">
-    </A> -->
-
     <A href="./WebGazer/simple-wg/index.html" id="calibrationLink">
       <input type="button" id="calibrationButton" value="Calibrate Gaze">
     </A>
     
+    <div id="video-streams">
+      <video id="my-camera"  width="100" height="100" autoplay="autoplay" muted="true" class="mx-auto d-block"></video>
+    </div>
+
 
   </div>
   <div id="audio-streams"></div>
@@ -284,6 +290,6 @@
 <!-- Visualization Control -->
 <script src='./scripts/visualization-control.js'></script>
 <!-- Voice Chat -->
-<script src="./scripts/voice-chat.js"></script>
-
+<!-- <script src="./scripts/voice-chat.js"></script> -->
+<script src="./scripts/media-call.js"></script>
 </html>
