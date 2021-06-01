@@ -1,164 +1,252 @@
-<!doctype html>
+<!DOCTYPE html>
 
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
 
-<head>
-  <meta charset='utf-8' />
-  <!-- Firebase -->
-  <script src='https://www.gstatic.com/firebasejs/7.6.2/firebase-app.js'></script>
-  <script src='https://www.gstatic.com/firebasejs/7.6.2/firebase-database.js'></script>
+    <!-- CodeMirror -->
+    <script src="./node_modules/codemirror/lib/codemirror.js"></script>
+    <link
+      rel="stylesheet"
+      href="./node_modules/codemirror/lib/codemirror.css"
+    />
 
-  <!-- CodeMirror -->
-  <script src='./node_modules/codemirror/lib/codemirror.js'></script>
-  <link rel='stylesheet' href='./node_modules/codemirror/lib/codemirror.css' />
+    <!-- Firepad -->
+    <link
+      rel="stylesheet"
+      href="https://firepad.io/releases/v1.5.10/firepad.css"
+    />
+    <script src="https://firepad.io/releases/v1.5.10/firepad.js"></script>
 
-  <!-- Firepad -->
-  <link rel='stylesheet' href='https://firepad.io/releases/v1.5.10/firepad.css' />
-  <script src='https://firepad.io/releases/v1.5.10/firepad.js'></script>
-
-  <!-- Firepad (for visualizations) -->
-  <!-- <link rel='stylesheet' href='lib/firepad.css' />
+    <!-- Firepad (for visualizations) -->
+    <!-- <link rel='stylesheet' href='lib/firepad.css' />
   <script src='lib/firepad-full-custom-vis.js'></script> -->
 
-  <!-- Firepad Userlist -->
-  <script src='./scripts/firepad-userlist.js'></script>
-  <link rel='stylesheet' href='./css/firepad-userlist.css' />
+    <!-- Firepad Userlist -->
+    <script src="./scripts/firepad-userlist.js"></script>
+    <link rel="stylesheet" href="./css/firepad-userlist.css" />
 
-  <!-- WebGazer -->
-  <!-- <script type='text/javascript' src='./WebGazer/www/simple-wg/webgazer.js'></script> -->
-  <script type='text/javascript' src='./WebGazer/simple-wg/webgazer.js'></script>
+    <!-- WebGazer -->
+    <!-- <script type='text/javascript' src='./WebGazer/www/simple-wg/webgazer.js'></script> -->
+    <script
+      type="text/javascript"
+      src="./WebGazer/simple-wg/webgazer.js"
+    ></script>
 
+    <!-- Peer.JS -->
+    <script src="./node_modules/peerjs/dist/peerjs.js"></script>
 
-  <!-- Peer.JS -->
-  <script src="./node_modules/peerjs/dist/peerjs.js"></script>
+    <!-- Bootstrap and jQuery -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+      integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+      crossorigin="anonymous"
+    ></script>
 
-  <!-- Bootstrap and jQuery -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
-    integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
-    crossorigin="anonymous"></script>
+    <!-- Include the plugin's CSS and JS: -->
+    <script
+      type="text/javascript"
+      src="./node_modules/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="./node_modules/bootstrap-multiselect/dist/css/bootstrap-multiselect.css"
+      type="text/css"
+    />
 
-  <!-- Include the plugin's CSS and JS: -->
-  <script type='text/javascript' src='./node_modules/bootstrap-multiselect/dist/js/bootstrap-multiselect.js'></script>
-  <link rel='stylesheet' href='./node_modules/bootstrap-multiselect/dist/css/bootstrap-multiselect.css'
-    type='text/css' />
+    <!-- 'nano' theme -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css"
+    />
 
-  <!-- 'nano' theme -->
-  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css' />
+    <!-- Modern or es5 bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
 
-  <!-- Modern or es5 bundle -->
-  <script src='https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js'></script>
+    <!-- Chroma JS -->
+    <script
+      type="text/javascript"
+      src="./node_modules/chroma-js/chroma.js"
+    ></script>
 
-  <!-- Chroma JS -->
-  <script type="text/javascript" src="./node_modules/chroma-js/chroma.js"></script>
+    <link rel="stylesheet" href="./css/eyewrite.css" />
+    <!-- Firechat -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.firebase.com/libs/firechat/3.0.1/firechat.min.css"
+    />
+    <script src="https://cdn.firebase.com/libs/firechat/3.0.1/firechat.min.js"></script>
 
-  <link rel='stylesheet' href='./css/eyewrite.css' />
-</head>
+    <!-- Custom CSS -->
+    <style>
+      #firechat-wrapper {
+        /* height: 475px;
+        width: 325px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        margin: none;
+        text-align: center;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        -webkit-box-shadow: 0 5px 25px #666;
+        -moz-box-shadow: 0 5px 25px #666;
+        box-shadow: 0 5px 25px #666;
+        z-index: 11;
+        position: absolute;
+        left: 1575px;
+        top: 425px; */
+      }
+    </style>
+  </head>
 
-<body onload="updateUI()">
-  <div id='userlist'></div>
-  <div id='firepad'></div>
+  <body onload="updateUI()">
+    <div id="userlist"></div>
+    <div id="firepad"></div>
 
-  <div id='colorpicker'></div>
+    <div id="colorpicker"></div>
 
-  <div id="controlContainer">
+    <div id="controlContainer">
+      <div id="user-checkboxes-container"></div>
+      <select id="user-checkboxes" multiple="multiple"></select>
 
-    <div id='user-checkboxes-container'></div>
-    <select id='user-checkboxes' multiple='multiple'></select>
-
-    <!-- Send Data Component -->
-    <div class="radio-buttons">
-      <p>Send My Data:</p>
-      <div class="inline-toggle-container">
-        <p class="inline">Gaze</p>
-        <div class="onoffswitch">
-          <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="gazeSendSwitch" tabindex="0">
-          <label class="onoffswitch-label" for="gazeSendSwitch">
-            <span class="onoffswitch-inner"></span>
-            <span class="onoffswitch-switch"></span>
-          </label>
+      <!-- Send Data Component -->
+      <div class="radio-buttons">
+        <p>Send My Data:</p>
+        <div class="inline-toggle-container">
+          <p class="inline">Gaze</p>
+          <div class="onoffswitch">
+            <input
+              type="checkbox"
+              name="onoffswitch"
+              class="onoffswitch-checkbox"
+              id="gazeSendSwitch"
+              tabindex="0"
+            />
+            <label class="onoffswitch-label" for="gazeSendSwitch">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
         </div>
-      </div>
 
-
-      <div class="inline-toggle-container">
-        <p>Mouse</p>
-        <!-- <input type="radio" id="blockButton" name="dataChoice">
+        <div class="inline-toggle-container">
+          <p>Mouse</p>
+          <!-- <input type="radio" id="blockButton" name="dataChoice">
         <label for="blockButton" type="radio">Block</label> -->
-        <div>
+          <div>
+            <div class="onoffswitch">
+              <input
+                type="checkbox"
+                name="onoffswitch"
+                class="onoffswitch-checkbox"
+                id="mouseSendSwitch"
+                tabindex="0"
+              />
+              <label class="onoffswitch-label" for="mouseSendSwitch">
+                <span class="onoffswitch-inner"></span>
+                <span class="onoffswitch-switch"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visualize Data Component -->
+      <div class="radio-buttons">
+        <p>Visualize Data:</p>
+
+        <div class="inline-toggle-container">
+          <p style="margin-bottom: 0">Gaze</p>
           <div class="onoffswitch">
-            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="mouseSendSwitch" tabindex="0">
-            <label class="onoffswitch-label" for="mouseSendSwitch">
+            <input
+              type="checkbox"
+              name="onoffswitch"
+              class="onoffswitch-checkbox"
+              id="gazeVisSwitch"
+              tabindex="0"
+            />
+            <label class="onoffswitch-label" for="gazeVisSwitch">
               <span class="onoffswitch-inner"></span>
               <span class="onoffswitch-switch"></span>
             </label>
           </div>
         </div>
-      </div>
 
-    </div>
-
-    <!-- Visualize Data Component -->
-    <div class="radio-buttons">
-      <p>Visualize Data:</p>
-
-      <div class="inline-toggle-container">
-        <p style="margin-bottom: 0;">Gaze</p>
-        <div class="onoffswitch">
-          <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="gazeVisSwitch" tabindex="0">
-          <label class="onoffswitch-label" for="gazeVisSwitch">
-            <span class="onoffswitch-inner"></span>
-            <span class="onoffswitch-switch"></span>
-          </label>
-        </div>
-      </div>
-
-
-      <div class="inline-toggle-container">
-        <p>Mouse</p>
-        <div>
-          <div class="onoffswitch">
-            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="mouseVisSwitch" tabindex="0">
-            <label class="onoffswitch-label" for="mouseVisSwitch">
-              <span class="onoffswitch-inner"></span>
-              <span class="onoffswitch-switch"></span>
-            </label>
+        <div class="inline-toggle-container">
+          <p>Mouse</p>
+          <div>
+            <div class="onoffswitch">
+              <input
+                type="checkbox"
+                name="onoffswitch"
+                class="onoffswitch-checkbox"
+                id="mouseVisSwitch"
+                tabindex="0"
+              />
+              <label class="onoffswitch-label" for="mouseVisSwitch">
+                <span class="onoffswitch-inner"></span>
+                <span class="onoffswitch-switch"></span>
+              </label>
+            </div>
           </div>
         </div>
       </div>
 
-    </div>
+      <script type="text/javascript">
+        $("#vis-shape").multiselect();
+      </script>
 
-    <script type="text/javascript">
-      $('#vis-shape').multiselect();
-    </script>
-
-    <!-- Highlight Pattern Component -->
-    <div class="radio-buttons" style="display: flex; flex-direction: column;">
-      <p>Highlight Pattern</p>
-      <div style="margin: auto;">
-        <select id="vis-shape" style="width: 120px; margin: 0 auto; margin-bottom: 10px; margin-top: 0px;">
-          <!-- <option value="solid">Solid</option> -->
-          <option value="gradient">Gradient</option>
-        </select>
+      <!-- Highlight Pattern Component -->
+      <div class="radio-buttons" style="display: flex; flex-direction: column">
+        <p>Highlight Pattern</p>
+        <div style="margin: auto">
+          <select
+            id="vis-shape"
+            style="
+              width: 120px;
+              margin: 0 auto;
+              margin-bottom: 10px;
+              margin-top: 0px;
+            "
+          >
+            <!-- <option value="solid">Solid</option> -->
+            <option value="gradient">Gradient</option>
+          </select>
+        </div>
       </div>
-    </div>
 
-    <!-- Highlight Size Component -->
-    <div id="slider-container">
-      <p class="slider-text">Highlight Size: <span id="numSentences"></span></p>
-      <input type="range" min="1" max="48" value="12" id="sentenceSlider">
-    </div>
+      <!-- Highlight Size Component -->
+      <div id="slider-container">
+        <p class="slider-text">
+          Highlight Size: <span id="numSentences"></span>
+        </p>
+        <input type="range" min="1" max="48" value="12" id="sentenceSlider" />
+      </div>
 
-    <!-- Highlight Gradient Ratio Component -->
-    <div id="slider-container">
-      <p class="slider-text2">Gradient Ratio: <span id="numSentences2"></span></p>
-      <input type="range" min="0" max="66" value="66" id="sentenceSlider2">
-    </div>
+      <!-- Highlight Gradient Ratio Component -->
+      <div id="slider-container">
+        <p class="slider-text2">
+          Gradient Ratio: <span id="numSentences2"></span>
+        </p>
+        <input type="range" min="0" max="66" value="66" id="sentenceSlider2" />
+      </div>
 
     <!-- Voice/Video Chat Component -->
     <div>
@@ -177,7 +265,6 @@
                   <span class="onoffswitch-switch"></span>
                 </label>
               </div>
-            </div>
 
           </div>
           <div class="inline-toggle-container"> 
@@ -191,7 +278,6 @@
           </div>
         </div>
       </div>
-    </div>
 
     <!-- WebGazer Calibration Component -->
     <A href="./WebGazer/simple-wg/index.html" id="calibrationLink">
@@ -204,8 +290,8 @@
 
 
   </div>
+  <div id="firechat-wrapper"></div>
   <div id="audio-streams"></div>
-
   <script>
     window.debug = false;  // turn off to remove debug statements
 
