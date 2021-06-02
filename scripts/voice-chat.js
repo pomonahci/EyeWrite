@@ -3,7 +3,7 @@
  * Users peer.js as p2p communication protocol.
  * 
  * Name: chanhakim
- * Date: 05/04/2021
+ * Date: 05/27/2021
  */
 
 var voiceChat = function () {
@@ -37,6 +37,7 @@ var voiceChat = function () {
 	var audioElts = {};        // collection of (active) audio elements
 	var muteStatus = {};        // collection of mute status for each audio element
 
+
 	// public ICE servers (required by peer.js for free p2p communicatio protocl)
 	var config = {
 		'iceServers': [
@@ -48,6 +49,7 @@ var voiceChat = function () {
 	/**
 	 * Listener for new additions to voiceRef.
 	 */
+	// voiceRef.on("child_added", function (snapshot) {
 	voiceRef.on("child_added", function (snapshot) {
 		if (userId != snapshot.key) {
 			// when the added child is not the local client
@@ -59,6 +61,7 @@ var voiceChat = function () {
 			}
 		}
 	});
+
 
 	/**
 	 * Listener for updates to voiceRef.
@@ -262,6 +265,8 @@ var voiceChat = function () {
 			// Answer the call
 			call.answer(myStream);
 			call.on('stream', function (stream) {
+				// `stream` is the MediaStream of the remote peer.
+  				// Here you'd add it to an HTML video/canvas element.
 				addAudioElement(stream);
 			});
 			console.log(`${userId} answered a call`);
