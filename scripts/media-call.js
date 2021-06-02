@@ -42,7 +42,7 @@ var mediaCall = function () {
 	var audioElts = {};        // collection of (active) audio elements
 	var audStatus = {};        // collection of audio status for each audio element
 
-	var vidElts = {};			//collection of (active) video elements
+	var videoElts = {};			//collection of (active) video elements
 	var camStatus = {};			//collection of camera status for each video element
 
 	// public ICE servers (required by peer.js for free p2p communicatio protocl)
@@ -111,7 +111,7 @@ var mediaCall = function () {
 		}
 		let streamId = snapshot.child("stream_id").val();
 		if (audioElts[streamId]) removeAudioElement(streamId);
-		if (vidElts[streamId]) removeVideoElements(streamId);
+		if (videoElts[streamId]) removeVideoElements(streamId);
 		// document.getElementById(snapshot.key).remove();
 	});
 
@@ -224,7 +224,7 @@ var mediaCall = function () {
 			}, true);
 			video.id = stream.id;
 			video.srcObject = stream;
-			vidElts[audio.id] = audio;
+			videoElts[audio.id] = audio;
 			if (!camStatus[stream.id]) toggleVideoElement(stream.id);
 			document.querySelector("#video-streams").append(video);
 			console.log(`added ${stream.id} to #video-streams`);
