@@ -45,6 +45,9 @@ var mediaCall = function () {
 	var videoElts = {};			//collection of (active) video elements
 	var camStatus = {};			//collection of camera status for each video element
 
+	var userColors = {};      // object for user colors
+
+
 	// public ICE servers (required by peer.js for free p2p communicatio protocl)
 	var config = {
 		'iceServers': [
@@ -59,6 +62,7 @@ var mediaCall = function () {
 	// voiceRef.on("child_added", function (snapshot) {
 	mediaRef.on("child_added", function (snapshot) {
 		console.log("child added.");
+		userColors[snapshot.key] = snapshot.child("color").val();
 		if (userId != snapshot.key) {
 			// when the added child is not the local client
 			remoteClients[snapshot.key] = snapshot.val();
@@ -104,6 +108,9 @@ var mediaCall = function () {
 	 */
 	mediaRef.on("child_removed", function (snapshot) {
 		console.log("child removed.");
+		if (userColors[snapshot.key]) {
+			delete userColors[snapshot.key];
+		  }
 		if (remoteClients[snapshot.key]) {
 			delete audStatus[snapshot.child("stream_id").val()];
 			delete camStatus[snapshot.child("stream_id").val()];
@@ -219,6 +226,7 @@ var mediaCall = function () {
 			var video = document.createElement("video");
 			video.setAttribute("width","175px");
 			video.setAttribute("muted","true");
+			// video.setAttribute("style","box-shadow: 0 0 0 1pt"+hex2rgb(userColors[userId], 1.0));
 			video.autoplay = true;
 			video.load();
 			video.addEventListener("load", function () {
@@ -382,6 +390,7 @@ var mediaCall = function () {
 		}
 		mediaRef.child(userId).set(null);
 		// alert("Leaving the media call.");
+		document.getElementById("my-camera").srcObject=null;
 		document.getElementById("aud").disabled = true;
 		document.getElementById("aud").innerText = "Off";
 		document.getElementById("cam").disabled = true;
