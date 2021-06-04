@@ -377,8 +377,8 @@ var mediaCall = function () {
 		readyToJoin = false;
 		endMyStream();
 		for (uId in remoteClients) {
-			removeAudioElement(remoteClients[uId]["stream_id"]);
-			removeVideoElement(remoteClients[uId]["stream_id"]);
+			if (audioElts[remoteClients[uId]["stream_id"]]) removeAudioElement(remoteClients[uId]["stream_id"]);
+			if (videoElts[remoteClients[uId]["stream_id"]]) removeVideoElement(remoteClients[uId]["stream_id"]);
 		}
 		mediaRef.child(userId).set(null);
 		// alert("Leaving the media call.");
