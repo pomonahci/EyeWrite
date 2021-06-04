@@ -62,7 +62,7 @@ var mediaCall = function () {
 	// voiceRef.on("child_added", function (snapshot) {
 	mediaRef.on("child_added", function (snapshot) {
 		console.log("child added. "+ snapshot.key);
-		userColors[snapshot.key] = firebaseRef.child("users").child(snapshot.key).child("color").val();
+		userColors[snapshot.key] = firebaseRef.child("users").child(String(snapshot.key)).child("color").val();
 		if (userId != snapshot.key) {
 			// when the added child is not the local client
 			remoteClients[snapshot.key] = snapshot.val();
