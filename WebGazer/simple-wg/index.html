@@ -11,7 +11,6 @@
         <!-- This can be subbed for any version of webgazer -->
         <script async type="text/javascript" src="./webgazer.js"></script>
 
-        <script src="./js/precision_calculation.js"></script>
         <script src="./js/precision_store_points.js"></script>
 
 
@@ -29,16 +28,19 @@
               <p>First make sure your face is positioned within the box in the top left. <br><br> Once "Calibrate" has been pressed, a target will appear in the top left corner. With your eyes, follow the target as it stops in 9 different positions and pulses, capturing images of your eyes to pass into our regression model. <br><br>You can "Calibrate" as many times as you like, adding more calibration images to the model, or you can "Recalibrate" and restart the calibration process, clearing all prior data and starting anew. <br><br>Once you are done calibrating, just click on "Back" to be returned from whence you came.</p>
         </div>
           <!-- </br></br></br></br></br></br></br></br> -->
+          <div>
+            <p id=resultsDisp style="float: center; padding: 5px;  border-radius: 10px;box-shadow: 0 0 0 1pt rgb(0, 0, 0); visibility: hidden;"></p>
+          </div>
 
 
           <div id="button-container" class="right"> 
             <!-- The basic function calls from targets.js you'll want to know are the constructor and targets.start() -->
             <!-- <button class="right" id="HowTo" onclick="instructions()">How to Calibrate</button> -->
-            <button class="right tooltip" id="cal" onclick="hideButtons();if(!document.getElementById('dot')){var ts = new Targets(calibrationPoints, 'calibration', 5); ts.start()}">Calibrate<span class = tooltiptext>Add additional calibration images to the model and train the model</span></button>
+            <button class="right tooltip" id="cal" onclick="hideButtons();if(!document.getElementById('dot')){var ts = new Targets(calibrationPoints, 'calibration', 5); ts.start();}">Calibrate<span class = tooltiptext>Add additional calibration images to the model and train the model</span></button>
             <button class = "right tooltip" id="recal" onclick="hideButtons();if(!document.getElementById('dot')){webgazer.clearData(); ts = new Targets(calibrationPoints, 'calibration', 5); ts.start();}">Recalibrate<span class="tooltiptext">Clear current calibration images and calibrate again from scratch.</span></button>
             <!-- <button class="right" onclick="webgazer.trainModel()">Train Model</button> -->
             <!-- <button class="right" href="control.html">To Control</button> -->
-            <button class="right" id="error" onclick="hideButtons();var ts = new Targets(calibrationPoints, 'error', 5); ts.start()">Test Error</button>
+            <button class="right" id="error" onclick="hideButtons();getErr();">Test Error</button>
             <button class="right" id="clear" onclick="webgazer.clearData()">Clear Data</button>
             <button class='right' id="back" onclick="history.go(-1)">Back</button>
           </div> 
@@ -62,6 +64,7 @@
               document.getElementById("webgazerVideoFeed").style.visibility = "hidden";
               document.getElementById("webgazerFaceOverlay").style.visibility = "hidden";
               document.getElementById("webgazerFaceFeedbackBox").style.visibility = "hidden";
+              document.getElementById("resultsDisp").style.visibility = "hidden";
               setTimeout(function(){
               document.getElementById("instructions").style.visibility = "visible";
               document.getElementById("cal").style.visibility = "visible";
@@ -87,6 +90,10 @@
                 new TargetPoint(0.05, 0.05)
             ];
 
+            function getErr(){
+              var ts = new Targets(calibrationPoints, 'error', 5);
+              ts.start()
+            }
             
         </script>
 

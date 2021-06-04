@@ -108,14 +108,17 @@ class Targets {
                     else {
                         console.log("calculating error");
                         var out = [];
+                        var distances = 0;
                         out.push("actualX,actualY,predictedX,predictedY");
                         this.measurements.forEach((item, index) => {
-                            console.log(item);
+                            // console.log(item);
                             for (var i = 0; i < item.xPredArray.length; i++) {
                                 out.push(`${item.x},${item.y},${item.xPredArray[i]},${item.yPredArray[i]}`)
+                                distances += Math.sqrt((item.x-item.xPredArray[i])**2 + (item.y-item.yPredArray[i])**2)
                             }
                         });
                         console.log(out.join('\n'));
+                        displayError(Math.floor(distances/(this.measurements.length*5)));
                     }
                 })
             })
@@ -284,3 +287,10 @@ class Targets {
     }
 }
 
+function displayError(result){
+    var results = "Your average pixel error between the target and trained model prediction is: " + result + " pixels.";
+    document.getElementById("resultsDisp").innerHTML = results;
+    document.getElementById("resultsDisp").style.visibility = "visible";
+
+
+}

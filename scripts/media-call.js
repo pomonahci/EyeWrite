@@ -150,6 +150,7 @@ var mediaCall = function () {
 			} else if (videoCamButton.innerText == "On") {
 				mediaRef.child(userId).update({ camera: false });
 				videoCamButton.innerText = "Off";
+				document.getElementById("my-camera").srcObject=null;
 			} else {
 				console.log("Video Button Error");
 			}
@@ -170,7 +171,6 @@ var mediaCall = function () {
 			document.getElementById("voiceChatSwitch").disabled = false;
 			document.getElementById("aud").disabled = false;
 			document.getElementById("cam").disabled = false;
-			// document.getElementById("my-camera").srcObject = myStream;
 		}).catch(function (err) {
 			console.error(`${userId} failed to turn on media stream`, err);
 			voiceChatSwitch = document.getElementById("voiceChatSwitch");
@@ -217,6 +217,8 @@ var mediaCall = function () {
 		console.log("adding video element");
 		if (!videoElts[stream.id]) {
 			var video = document.createElement("video");
+			video.setAttribute("width","175px");
+			video.setAttribute("muted","true");
 			video.autoplay = true;
 			video.load();
 			video.addEventListener("load", function () {
@@ -395,6 +397,8 @@ var mediaCall = function () {
 		mediaRef.child(userId).set(null);
 		mediaRef.child(userId).remove();
 	});
+
+
 
 }();
 

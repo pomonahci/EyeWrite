@@ -118,11 +118,17 @@
 
   <body onload="updateUI()">
     <div id="userlist"></div>
+
     <div id="firepad"></div>
+
+    <div id="video-streams">
+      <video id="my-camera"  width="175" autoplay="autoplay" muted="true" ></video>
+    </div>
 
     <div id="colorpicker"></div>
 
     <div id="controlContainer">
+      
       <div id="user-checkboxes-container"></div>
       <select id="user-checkboxes" multiple="multiple"></select>
 
@@ -248,136 +254,137 @@
         <input type="range" min="0" max="66" value="66" id="sentenceSlider2" />
       </div>
 
-    <!-- Voice/Video Chat Component -->
-    <div>
-      <div class="radio-buttons">
-        <div>
-          <p>Voice/Video Chat</p>
-        </div>
-        <div>
-          <div class="inline-toggle-container">
-            <div>
-              <div class="onoffswitch vvSwitch">
-                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="voiceChatSwitch"
-                  tabindex="0">
-                <label class="onoffswitch-label" for="voiceChatSwitch">
-                  <span class="onoffswitch-inner"></span>
-                  <span class="onoffswitch-switch"></span>
-                </label>
-              </div>
-            </div>
-
+      <!-- Voice/Video Chat Component -->
+      <div>
+        <div class="radio-buttons">
+          <div>
+            <p>Voice/Video Chat</p>
           </div>
-          <div class="inline-toggle-container"> 
-            <p>Audio</p>
-            
-            <button id="aud" disabled=True>Off</button>
-           </div>
-          <div class="inline-toggle-container"> 
-            <p>Video</p>
-            <button id="cam" disabled=True>Off</button>
+          <div>
+            <div class="inline-toggle-container">
+              <div>
+                <div class="onoffswitch vvSwitch">
+                  <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="voiceChatSwitch"
+                    tabindex="0">
+                  <label class="onoffswitch-label" for="voiceChatSwitch">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                  </label>
+                </div>
+              </div>
+
+            </div>
+            <div class="inline-toggle-container"> 
+              <p>Audio</p>
+              
+              <button id="aud" disabled=True>Off</button>
+            </div>
+            <div class="inline-toggle-container"> 
+              <p>Video</p>
+              <button id="cam" disabled=True>Off</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
 
-    <!-- WebGazer Calibration Component -->
-    <A href="./WebGazer/simple-wg/index.html" id="calibrationLink">
-      <input type="button" id="calibrationButton" value="Calibrate Gaze">
-    </A>
-    
-    <div id="video-streams">
-      <video id="my-camera"  width="100" height="100" autoplay="autoplay" muted="true" class="mx-auto d-block"></video>
-    </div>
-
-
-  <div id="audio-streams"></div>
-  <div id="firechat-wrapper"></div>
-  <script>
-    window.debug = false;  // turn off to remove debug statements
-
-    var firebaseConfig = {
-      apiKey: "AIzaSyAmD2D9XCpVDQcJF08chqCbkCpL-_Jfu_Y",
-      authDomain: "eyewrite-62d75.firebaseapp.com",
-      databaseURL: "https://eyewrite-62d75.firebaseio.com",
-      projectId: "eyewrite-62d75",
-      storageBucket: "eyewrite-62d75.appspot.com",
-      messagingSenderId: "998123311342",
-      appId: "1:998123311342:web:abed435afee503a2eb63ff",
-      measurementId: "G-8EGTMW2Q4G"
-    };
-
-    // REPLACE WITH DEVELOPMENT SERVER
-    // var firebaseConfig = {
-    //   apiKey: "AIzaSyAkIIeqpNNzGp98UHRI21GOvp6CmH_hdZU",
-    //   authDomain: "eyewrite2-642f5.firebaseapp.com",
-    //   databaseURL: "https://eyewrite2-642f5-default-rtdb.firebaseio.com",
-    //   projectId: "eyewrite2-642f5",
-    //   storageBucket: "eyewrite2-642f5.appspot.com",
-    //   messagingSenderId: "360420484918",
-    //   appId: "1:360420484918:web:df36b1d345145448f7b597"
-    // };
-
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-
-    //// Get Firebase Database reference.
-    var firebaseRef = getRef();
-
-    //// Create CodeMirror (with lineWrapping on).
-    var codeMirror = CodeMirror(document.getElementById('firepad'), {
-      lineWrapping: true, inputStyle: 'contenteditable', historyEventDelay: 2500,
-      autofocus: true, workTime: 5, workDelay: 5, pollInterval: 5, viewportMargin: 2
-    });
-
-    // Create a random ID to use as our user ID (we must give this to firepad and FirepadUserList).
-    var userId = Math.floor(Math.random() * 9999999999).toString();
-
-    //// Create Firepad (with rich text features and our desired userId).
-    var firepad = Firepad.fromCodeMirror(firebaseRef, codeMirror,
-      { richTextToolbar: true, richTextShortcuts: true, userId: userId });
-
-    //// Create FirepadUserList (with our desired userId).
-    var firepadUserList = FirepadUserList.fromDiv(firebaseRef.child('users'),
-      document.getElementById('userlist'), userId);
-
-    // Helper to get hash from end of URL or generate a random one.
-    function getRef() {
-      var ref = firebase.database().ref();
-      var hash = window.location.hash.replace(/#/g, '');
-      if (hash) {
-        ref = ref.child(hash);
-      } else {
-        ref = ref.push(); // generate unique location.
-        window.location = window.location + '#' + ref.key; // add it as a hash to the URL.
-      }
-      return ref;
-    }
-    function updateUI(){
-      //Update Gradient Ratio label to match slider value
-      var grad = document.getElementById("numSentences2");
-      var gradval = document.getElementById("sentenceSlider2");
-      grad.innerHTML = Math.floor((gradval.value/66) * 100)+"%";
-      //turn all switches off when page is loaded (class is onoffswitch-label)
-      document.getElementById("gazeSendSwitch").checked = false;
-      document.getElementById("mouseSendSwitch").checked = false;
-      document.getElementById("mouseVisSwitch").checked = false;
-      document.getElementById("gazeVisSwitch").checked = false;
-
+      <!-- WebGazer Calibration Component -->
+      <A href="./WebGazer/simple-wg/index.html" id="calibrationLink">
+        <input type="button" id="calibrationButton" value="Calibrate Gaze">
+      </A>
       
-    }
-  </script>
-</body>
+    </div> 
 
-<!-- UI Adjustments -->
-<script src='./scripts/ui-adjustments.js'></script>
-<!-- Highlight Style -->
-<script src="./scripts/highlight-styles.js"></script>
-<!-- Visualization Control -->
-<script src='./scripts/visualization-control.js'></script>
-<!-- Voice Chat -->
-<!-- <script src="./scripts/voice-chat.js"></script> -->
-<script src="./scripts/media-call.js"></script>
+    <div id="audio-streams"></div>
+    <div id="firechat-wrapper"></div>
+
+
+
+    <script>
+      window.debug = false;  // turn off to remove debug statements
+
+      var firebaseConfig = {
+        apiKey: "AIzaSyAmD2D9XCpVDQcJF08chqCbkCpL-_Jfu_Y",
+        authDomain: "eyewrite-62d75.firebaseapp.com",
+        databaseURL: "https://eyewrite-62d75.firebaseio.com",
+        projectId: "eyewrite-62d75",
+        storageBucket: "eyewrite-62d75.appspot.com",
+        messagingSenderId: "998123311342",
+        appId: "1:998123311342:web:abed435afee503a2eb63ff",
+        measurementId: "G-8EGTMW2Q4G"
+      };
+
+      // REPLACE WITH DEVELOPMENT SERVER
+      // var firebaseConfig = {
+      //   apiKey: "AIzaSyAkIIeqpNNzGp98UHRI21GOvp6CmH_hdZU",
+      //   authDomain: "eyewrite2-642f5.firebaseapp.com",
+      //   databaseURL: "https://eyewrite2-642f5-default-rtdb.firebaseio.com",
+      //   projectId: "eyewrite2-642f5",
+      //   storageBucket: "eyewrite2-642f5.appspot.com",
+      //   messagingSenderId: "360420484918",
+      //   appId: "1:360420484918:web:df36b1d345145448f7b597"
+      // };
+
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+
+      //// Get Firebase Database reference.
+      var firebaseRef = getRef();
+
+      //// Create CodeMirror (with lineWrapping on).
+      var codeMirror = CodeMirror(document.getElementById('firepad'), {
+        lineWrapping: true, inputStyle: 'contenteditable', historyEventDelay: 2500,
+        autofocus: true, workTime: 5, workDelay: 5, pollInterval: 5, viewportMargin: 2
+      });
+
+      // Create a random ID to use as our user ID (we must give this to firepad and FirepadUserList).
+      var userId = Math.floor(Math.random() * 9999999999).toString();
+
+      //// Create Firepad (with rich text features and our desired userId).
+      var firepad = Firepad.fromCodeMirror(firebaseRef, codeMirror,
+        { richTextToolbar: true, richTextShortcuts: true, userId: userId });
+
+      //// Create FirepadUserList (with our desired userId).
+      var firepadUserList = FirepadUserList.fromDiv(firebaseRef.child('users'),
+        document.getElementById('userlist'), userId);
+
+      // Helper to get hash from end of URL or generate a random one.
+      function getRef() {
+        var ref = firebase.database().ref();
+        var hash = window.location.hash.replace(/#/g, '');
+        if (hash) {
+          ref = ref.child(hash);
+        } else {
+          ref = ref.push(); // generate unique location.
+          window.location = window.location + '#' + ref.key; // add it as a hash to the URL.
+        }
+        return ref;
+      }
+      function updateUI(){
+        //Update Gradient Ratio label to match slider value
+        var grad = document.getElementById("numSentences2");
+        var gradval = document.getElementById("sentenceSlider2");
+        grad.innerHTML = Math.floor((gradval.value/66) * 100)+"%";
+        //turn all switches off when page is loaded (class is onoffswitch-label)
+        document.getElementById("gazeSendSwitch").checked = false;
+        document.getElementById("mouseSendSwitch").checked = false;
+        document.getElementById("mouseVisSwitch").checked = false;
+        document.getElementById("gazeVisSwitch").checked = false;
+
+        
+      }
+    </script>
+    
+  </body>
+
+  <!-- UI Adjustments -->
+  <script src='./scripts/ui-adjustments.js'></script>
+  <!-- Highlight Style -->
+  <script src="./scripts/highlight-styles.js"></script>
+  <!-- Visualization Control -->
+  <script src='./scripts/visualization-control.js'></script>
+  <!-- Voice Chat -->
+  <!-- <script src="./scripts/voice-chat.js"></script> -->
+  <script src="./scripts/media-call.js"></script>
 </html>
