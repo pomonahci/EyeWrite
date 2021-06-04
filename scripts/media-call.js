@@ -111,7 +111,7 @@ var mediaCall = function () {
 		}
 		let streamId = snapshot.child("stream_id").val();
 		if (audioElts[streamId]) removeAudioElement(streamId);
-		if (videoElts[streamId]) removeVideoElements(streamId);
+		if (videoElts[streamId]) removeVideoElement(streamId);
 		// document.getElementById(snapshot.key).remove();
 	});
 
