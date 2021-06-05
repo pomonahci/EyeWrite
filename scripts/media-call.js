@@ -63,6 +63,15 @@ var mediaCall = function () {
 	mediaRef.on("child_added", function (snapshot) {
 		console.log("child added. "+ snapshot.key);
 		// userColors[snapshot.key] = firebaseRef.child("users").child(snapshot.key).child("color").val();
+		
+		firebaseRef.child("users").child(snapshot.key).on("value", function (snapshot) {
+			if (snapshot.child("color").val()) {
+			  userColors[snapshot.key]= snapshot.child("color").val();
+			  //remove the listener
+			  firebaseRef.child("users").child(snapshot.key).off("value");
+			}
+		  });
+
 		if (userId != snapshot.key) {
 			// when the added child is not the local client
 			remoteClients[snapshot.key] = snapshot.val();
@@ -110,9 +119,9 @@ var mediaCall = function () {
 	 */
 	mediaRef.on("child_removed", function (snapshot) {
 		console.log("child removed.");
-		// if (userColors[snapshot.key]) {
-		// 	delete userColors[snapshot.key];
-		//   }
+		if (userColors[snapshot.key]) {
+			delete userColors[snapshot.key];
+		  }
 		if (remoteClients[snapshot.key]) {
 			delete audStatus[snapshot.child("stream_id").val()];
 			delete camStatus[snapshot.child("stream_id").val()];
@@ -228,7 +237,7 @@ var mediaCall = function () {
 			var video = document.createElement("video");
 			video.setAttribute("width","175px");
 			video.setAttribute("muted","true");
-			// video.setAttribute("style","box-shadow: 0 0 0 1pt"+hex2rgb(userColors[userId], 1.0));
+			video.setAttribute("style","box-shadow: 0 0 0 1pt"+hex2rgb(userColors[userId], 1.0));
 			video.autoplay = true;
 			video.load();
 			video.addEventListener("load", function () {
