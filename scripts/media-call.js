@@ -237,7 +237,7 @@ var mediaCall = function () {
 			var video = document.createElement("video");
 			video.setAttribute("width","175px");
 			video.setAttribute("muted","true");
-			video.setAttribute("style","box-shadow: 0 0 0 1pt"+hex2rgb(userColors[userId], 1.0));
+			video.setAttribute("style","box-shadow: 0 0 0 1pt"+userColors[userId]);
 			video.autoplay = true;
 			video.load();
 			video.addEventListener("load", function () {
