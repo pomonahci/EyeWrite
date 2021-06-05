@@ -62,15 +62,15 @@ var mediaCall = function () {
 	// voiceRef.on("child_added", function (snapshot) {
 	mediaRef.on("child_added", function (snapshot) {
 		console.log("child added. "+ snapshot.key);
+		// console.log(snapshot.child("stream_id").val());
 		// userColors[snapshot.key] = firebaseRef.child("users").child(snapshot.key).child("color").val();
-		
-		firebaseRef.child("users").child(snapshot.key).on("value", function (snapshot) {
-			if (snapshot.child("color").val()) {
-			  userColors[snapshot.key]= snapshot.child("color").val();
-			  //remove the listener
-			  firebaseRef.child("users").child(snapshot.key).off("value");
-			}
-		  });
+		// firebaseRef.child("users").child(snapshot.key).on("value", function (snapshot) {
+		// 	if (snapshot.child("color").val()) {
+		// 	  userColors[snapshot.key]= snapshot.child("color").val();
+		// 	  //remove the listener
+		// 	  firebaseRef.child("users").child(snapshot.key).off("value");
+		// 	}
+		//   });
 
 		if (userId != snapshot.key) {
 			// when the added child is not the local client
@@ -99,12 +99,20 @@ var mediaCall = function () {
 				toggleAudioElement(snapshot.child("stream_id").val());
 				toggleVideoElement(snapshot.child("stream_id").val());
 			});
-
 		} else {                                                        // when the updated child is the local client
 			if (snapshot.child("is_ready")) {
 				readyToJoin = true;
 			}
 		}
+		console.log("part 2 " + snapshot.child("stream_id").val());
+		var id = snapshot.child("stream_id").val();
+		firebaseRef.child("users").child(snapshot.key).on("value", function (snapshot) {
+			if (snapshot.child("color").val()) {
+			  userColors[id]= snapshot.child("color").val();
+			  //remove the listener
+			  firebaseRef.child("users").child(snapshot.key).off("value");
+			}
+		  });
 
 		if (myPeer && myPeer.id && readyToJoin) { // audio and camera buttons trigger this
 			console.log(remoteClients);
@@ -182,6 +190,9 @@ var mediaCall = function () {
 			myStream = stream;
 			console.log(`${userId} turned on media stream: ${myStream.id}`);
 			mediaRef.child(userId).update({ is_ready: true, stream_id: myStream.id });
+
+ 
+
 			hasStream = true;
 			createMyPeer();
 			console.log(`${userId} joined the media chat`);
@@ -237,7 +248,7 @@ var mediaCall = function () {
 			var video = document.createElement("video");
 			video.setAttribute("width","175px");
 			video.setAttribute("muted","true");
-			video.setAttribute("style","background-color:" +userColors[userId] + ";box-shadow: 0 0 0 5pt"+userColors[userId]);
+			video.setAttribute("style","box-shadow: 0 0 0 5pt"+userColors[stream.id]);//need to use streamid to query the actual userif (user if takes local id)
 			video.autoplay = true;
 			video.load();
 			video.addEventListener("load", function () {
