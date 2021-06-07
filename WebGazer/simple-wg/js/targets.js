@@ -1,3 +1,5 @@
+// const e = require("express");
+
 /**
  * (x,y) coordinate representing a destination point for a target
  * @param {*} x proportion representing how far left across the window the point is
@@ -108,17 +110,15 @@ class Targets {
                     else {
                         console.log("calculating error");
                         var out = [];
-                        var distances = 0;
                         out.push("actualX,actualY,predictedX,predictedY");
                         this.measurements.forEach((item, index) => {
                             // console.log(item);
                             for (var i = 0; i < item.xPredArray.length; i++) {
                                 out.push(`${item.x},${item.y},${item.xPredArray[i]},${item.yPredArray[i]}`)
-                                distances += Math.sqrt((item.x-item.xPredArray[i])**2 + (item.y-item.yPredArray[i])**2)
                             }
                         });
                         console.log(out.join('\n'));
-                        displayError(Math.floor(distances/(this.measurements.length*5)));
+                        this.displayError();
                     }
                 })
             })
@@ -285,12 +285,67 @@ class Targets {
     sleep = (milliseconds) => {
         return new Promise(resolve => setTimeout(resolve, milliseconds))
     }
+
+    displayError(){
+        var ratios = 0;
+        this.measurements.forEach((item, index) => {
+            // console.log(item);
+            var m;
+            var px1;
+            var py1;
+            var px2;
+            var py2;
+            var length;
+            var b;
+            for (var i = 0; i < item.xPredArray.length; i++) {
+                // out.push(`${item.x},${item.y},${item.xPredArray[i]},${item.yPredArray[i]}`)
+                if (item.x == item.xPredArray[i]){//if x values are the same, take a vertical line
+                    length = window.innerHeight;
+                }
+                else if (item.y == item.yPredArray[i]){//if y values are the same, take a horizontal line
+                    length = window.innerWidth;
+                }
+                else{
+                    m = (item.y-item.yPredArray[i])/(item.x - item.xPredArray[i]);
+                    b = item.y-(m*item.x);
+                    
+                    py1 = 0;
+                    py2 = window.innerHeight;
+                    px1 = (py1-b)/m;
+                    px2 = (py2-b)/m;
+
+                    if (px1 < px2){
+                        if ( px1 < 0 || px1 > window.innerWidth){
+                            px1 = 0;
+                            py1 = b;
+                        }
+                        if ( px2 < 0 || px2 > window.innerWidth){
+                            px2 = window.innerWidth;
+                            py2 = px2 * m + b;
+                        }
+                    }
+                    else {
+                        if ( px1 < 0 || px1 > window.innerWidth){
+                            px1 = window.innerWidth;
+                            py1 = px1*m + b;
+                        }
+                        if ( px2 < 0 || px2 > window.innerWidth){
+                            px2 = 0;
+                            py2 =  b;
+                        }
+                    }
+                    length = Math.sqrt((px1-px2)**2 + (py1-py2)**2);
+                }
+                console.log("length: "+ length);
+                console.log("distance: "+ Math.sqrt((item.x-item.xPredArray[i])**2 + (item.y-item.yPredArray[i])**2));
+                console.log("ratio: " +  (Math.sqrt((item.x-item.xPredArray[i])**2 + (item.y-item.yPredArray[i])**2))/length);
+                ratios += (Math.sqrt((item.x-item.xPredArray[i])**2 + (item.y-item.yPredArray[i])**2))/length;
+            }
+        });
+        var result = Math.floor((ratios/(this.measurements.length*5)) * 100);
+        var results = "Your average percent error between the target and trained model prediction is: " + result + "%.";
+        document.getElementById("resultsDisp").innerHTML = results;
+        document.getElementById("resultsDisp").style.visibility = "visible";
+    }
 }
 
-function displayError(result){
-    var results = "Your average pixel error between the target and trained model prediction is: " + result + " pixels.";
-    document.getElementById("resultsDisp").innerHTML = results;
-    document.getElementById("resultsDisp").style.visibility = "visible";
-
-
-}

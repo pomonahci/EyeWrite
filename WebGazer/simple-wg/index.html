@@ -40,7 +40,7 @@
             <button class = "right tooltip" id="recal" onclick="hideButtons();if(!document.getElementById('dot')){webgazer.clearData(); ts = new Targets(calibrationPoints, 'calibration', 5); ts.start();}">Recalibrate<span class="tooltiptext">Clear current calibration images and calibrate again from scratch.</span></button>
             <!-- <button class="right" onclick="webgazer.trainModel()">Train Model</button> -->
             <!-- <button class="right" href="control.html">To Control</button> -->
-            <button class="right" id="error" onclick="hideButtons();getErr();">Test Error</button>
+            <button class="right" id="error" onclick="hideButtons();var ts = new Targets(calibrationPoints, 'error', 5);ts.start();">Test Error</button>
             <button class="right" id="clear" onclick="webgazer.clearData()">Clear Data</button>
             <button class='right' id="back" onclick="history.go(-1)">Back</button>
           </div> 
@@ -90,10 +90,7 @@
                 new TargetPoint(0.05, 0.05)
             ];
 
-            function getErr(){
-              var ts = new Targets(calibrationPoints, 'error', 5);
-              ts.start()
-            }
+
             
         </script>
 
