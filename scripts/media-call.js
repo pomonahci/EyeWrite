@@ -246,7 +246,7 @@ var mediaCall = function () {
 			video.srcObject = stream;
 			videoElts[video.id] = video;
 			if (!camStatus[stream.id]) toggleVideoElement(stream.id);
-			// document.querySelector("#video-streams").append(video);
+			document.querySelector("#video-streams").append(video);
 			console.log(`added ${stream.id} to #video-streams`);
 		}
 	}
@@ -268,12 +268,12 @@ var mediaCall = function () {
 			
 		// }
 
-		// if (audioElts[streamId]) {
-		// 	let stream = audioElts[streamId].srcObject;
-		// 	stream.getAudioTracks().forEach(function (track) {
-		// 		track.enabled = audStatus[streamId];
-		// 	});
-		// }
+		if (audioElts[streamId]) {
+			let stream = audioElts[streamId].srcObject;
+			stream.getAudioTracks().forEach(function (track) {
+				track.enabled = audStatus[streamId];
+			});
+		}
 	}
 
 	function toggleVideoElement(streamId) {
@@ -355,7 +355,7 @@ var mediaCall = function () {
 			call.answer(myStream);
 			call.on('stream', function (stream) {
 				// addAudioElement(stream);
-				addVideoElement(stream);
+				// addVideoElement(stream);
 			});
 			console.log(`${userId} answered a call`);
 		});
@@ -391,7 +391,7 @@ var mediaCall = function () {
 			let call = myPeer.call(peerId, myStream);
 			call.on('stream', function (stream) {
 				// addAudioElement(stream);
-				addVideoElement(stream);
+				// addVideoElement(stream);
 			});		}
 	}
 
