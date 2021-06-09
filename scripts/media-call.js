@@ -48,6 +48,7 @@ var mediaCall = function () {
 	var userColors = {};      // object for user colors
 
 
+
 	// public ICE servers (required by peer.js for free p2p communicatio protocl)
 	var config = {
 		'iceServers': [
@@ -95,15 +96,15 @@ var mediaCall = function () {
 			}
 		}
 		// adding User's color to list to use as video border later
-		var id = snapshot.child("stream_id").val();
-		console.log("coloradding: "+snapshot.key);
-		firebaseRef.child("users").child(snapshot.key).on("value", function (snapshot) {
-			if (snapshot.child("color").val()) {
-			  userColors[id]= snapshot.child("color").val();
-			  //remove the listener
-			  firebaseRef.child("users").child(snapshot.key).off("value");
-			}
-		  });
+		// var id = snapshot.child("stream_id").val();
+		// console.log("coloradding: "+snapshot.key);//snapshshot.key = userId for the user being changed!
+		// firebaseRef.child("users").child(snapshot.key).on("value", function (snapshot) {
+		// 	if (snapshot.child("color").val()) {
+		// 	  userColors[id]= snapshot.child("color").val();
+		// 	  //remove the listener
+		// 	  firebaseRef.child("users").child(snapshot.key).off("value");
+		// 	}
+		//   });
 
 		if (myPeer && myPeer.id && readyToJoin) { // audio and camera buttons trigger this
 			console.log(remoteClients);
@@ -231,15 +232,20 @@ var mediaCall = function () {
 		}
 	}
 
+	function getKeyByValue(object, value) {
+		return Object.keys(object).find(key => object[key].stream_id === value);
+	  }
+
 	function addVideoElement(stream){
 		console.log("adding video element");
 		console.log(userId);
-		mediaRef.orderByChild("stream_id").equalTo(stream.id).on("value", function (snapshot) {
-			console.log(stream.id);
-			console.log(snapshot.key);
-			console.log(userId);
-			//remove the listener
-			firebaseRef.child("users").child(snapshot.key).off("value");
+		var id = getKeyByValue(remoteClients,stream.id);
+		firebaseRef.child("users").child(id).on("value", function (snapshot) {
+			if (snapshot.child("color").val()) {
+			  userColors[id]= snapshot.child("color").val();
+			  //remove the listener
+			  firebaseRef.child("users").child(snapshot.key).off("value");
+			}
 		  });
 		if (!videoElts[stream.id]) {
 			var video = document.createElement("video");
