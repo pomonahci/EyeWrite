@@ -144,7 +144,7 @@ var mediaCall = function () {
 	 * Toggles the mute button.
 	 */
 	function toggleAudButton() {
-		var vid = document.getElementById(remoteClients[userId][stream_id]);
+		var vid = document.getElementById(remoteClients[userId]["stream_id"]);
 		if (voiceAudButton.innerText == "On") {
 			mediaRef.child(userId).update({ audio: false });
 			voiceAudButton.innerText = "Off";
