@@ -267,6 +267,7 @@ var mediaCall = function () {
 			document.querySelector("#video-streams").append(video);
 			console.log(`added ${stream.id} to #video-streams`);
 			observer.observe(video,{attributes:true});
+			video.muted = false;
 		}
 	}
 
