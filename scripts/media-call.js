@@ -142,6 +142,7 @@ var mediaCall = function () {
 	 * Toggles the mute button.
 	 */
 	function toggleAudButton() {
+		console.log(userId);
 		if (voiceAudButton.innerText == "On") {
 			mediaRef.child(userId).update({ audio: false });
 			voiceAudButton.innerText = "Off";
