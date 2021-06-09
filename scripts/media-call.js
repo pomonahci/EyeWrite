@@ -96,6 +96,7 @@ var mediaCall = function () {
 		}
 		// adding User's color to list to use as video border later
 		var id = snapshot.child("stream_id").val();
+		console.log("coloradding: "+snapshot.key);
 		firebaseRef.child("users").child(snapshot.key).on("value", function (snapshot) {
 			if (snapshot.child("color").val()) {
 			  userColors[id]= snapshot.child("color").val();
