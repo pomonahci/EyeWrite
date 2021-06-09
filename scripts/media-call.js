@@ -62,16 +62,6 @@ var mediaCall = function () {
 	// voiceRef.on("child_added", function (snapshot) {
 	mediaRef.on("child_added", function (snapshot) {
 		console.log("child added. "+ snapshot.key);
-		// console.log(snapshot.child("stream_id").val());
-		// userColors[snapshot.key] = firebaseRef.child("users").child(snapshot.key).child("color").val();
-		// firebaseRef.child("users").child(snapshot.key).on("value", function (snapshot) {
-		// 	if (snapshot.child("color").val()) {
-		// 	  userColors[snapshot.key]= snapshot.child("color").val();
-		// 	  //remove the listener
-		// 	  firebaseRef.child("users").child(snapshot.key).off("value");
-		// 	}
-		//   });
-
 		if (userId != snapshot.key) {
 			// when the added child is not the local client
 			remoteClients[snapshot.key] = snapshot.val();
@@ -104,7 +94,7 @@ var mediaCall = function () {
 				readyToJoin = true;
 			}
 		}
-		console.log("part 2 " + snapshot.child("stream_id").val());
+		// adding User's color to list to use as video border later
 		var id = snapshot.child("stream_id").val();
 		firebaseRef.child("users").child(snapshot.key).on("value", function (snapshot) {
 			if (snapshot.child("color").val()) {
@@ -129,7 +119,7 @@ var mediaCall = function () {
 		console.log("child removed.");
 		if (userColors[snapshot.key]) {
 			delete userColors[snapshot.key];
-		  }
+		}
 		if (remoteClients[snapshot.key]) {
 			delete audStatus[snapshot.child("stream_id").val()];
 			delete camStatus[snapshot.child("stream_id").val()];
@@ -172,11 +162,11 @@ var mediaCall = function () {
 			if (videoCamButton.innerText == "Off") {
 				mediaRef.child(userId).update({ camera: true });
 				videoCamButton.innerText = "On";
-				document.getElementById("my-camera").srcObject=myStream;
+				// document.getElementById("my-camera").srcObject=myStream;
 			} else if (videoCamButton.innerText == "On") {
 				mediaRef.child(userId).update({ camera: false });
 				videoCamButton.innerText = "Off";
-				document.getElementById("my-camera").srcObject=null;
+				// document.getElementById("my-camera").srcObject=null;
 			} else {
 				console.log("Video Button Error");
 			}
@@ -190,8 +180,6 @@ var mediaCall = function () {
 			myStream = stream;
 			console.log(`${userId} turned on media stream: ${myStream.id}`);
 			mediaRef.child(userId).update({ is_ready: true, stream_id: myStream.id });
-
- 
 
 			hasStream = true;
 			createMyPeer();
@@ -270,12 +258,22 @@ var mediaCall = function () {
 	 */
 	function toggleAudioElement(streamId) {
 		console.log("Toggling Audio Element" + streamId);
-		if (audioElts[streamId]) {
-			let stream = audioElts[streamId].srcObject;
-			stream.getAudioTracks().forEach(function (track) {
-				track.enabled = audStatus[streamId];
-			});
-		}
+
+		// var vid = document.getElementById(streamId);
+		// if (audioElts[streamId]) {
+		// 	vid.setAttribute("muted","false");
+		// }
+		// else{
+		// 	vid.setAttribute("muted","true");
+			
+		// }
+
+		// if (audioElts[streamId]) {
+		// 	let stream = audioElts[streamId].srcObject;
+		// 	stream.getAudioTracks().forEach(function (track) {
+		// 		track.enabled = audStatus[streamId];
+		// 	});
+		// }
 	}
 
 	function toggleVideoElement(streamId) {
@@ -356,7 +354,7 @@ var mediaCall = function () {
 			// Answer the call
 			call.answer(myStream);
 			call.on('stream', function (stream) {
-				addAudioElement(stream);
+				// addAudioElement(stream);
 				addVideoElement(stream);
 			});
 			console.log(`${userId} answered a call`);
@@ -392,7 +390,7 @@ var mediaCall = function () {
 
 			let call = myPeer.call(peerId, myStream);
 			call.on('stream', function (stream) {
-				addAudioElement(stream);
+				// addAudioElement(stream);
 				addVideoElement(stream);
 			});		}
 	}
@@ -412,7 +410,7 @@ var mediaCall = function () {
 		}
 		mediaRef.child(userId).set(null);
 		// alert("Leaving the media call.");
-		document.getElementById("my-camera").srcObject=null;
+		// document.getElementById("my-camera").srcObject=null;
 		document.getElementById("aud").disabled = true;
 		document.getElementById("aud").innerText = "Off";
 		document.getElementById("cam").disabled = true;
