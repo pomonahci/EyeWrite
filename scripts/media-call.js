@@ -234,10 +234,10 @@ var mediaCall = function () {
 		console.log("adding video element");
 		if (!videoElts[stream.id]) {
 			var video = document.createElement("video");
-			video.setAttribute("width","175px");
-			video.setAttribute("muted","true");
-			video.setAttribute("style","box-shadow: 0 0 0 5pt"+userColors[stream.id]);//need to use streamid to query the actual userif (user if takes local id)
-			video.autoplay = true;
+			// video.setAttribute("width","175px");
+			// video.setAttribute("muted","true");
+			// video.setAttribute("style","box-shadow: 0 0 0 5pt"+userColors[stream.id]);//need to use streamid to query the actual userif (user if takes local id)
+			// video.autoplay = true;
 			video.load();
 			video.addEventListener("load", function () {
 				video.play();
@@ -245,9 +245,9 @@ var mediaCall = function () {
 			video.id = stream.id;
 			video.srcObject = stream;
 			videoElts[video.id] = video;
-			if (!camStatus[stream.id]) toggleVideoElement(stream.id);
-			document.querySelector("#video-streams").append(video);
-			console.log(`added ${stream.id} to #video-streams`);
+			// if (!camStatus[stream.id]) toggleVideoElement(stream.id);
+			// document.querySelector("#video-streams").append(video);
+			// console.log(`added ${stream.id} to #video-streams`);
 		}
 	}
 
@@ -355,7 +355,7 @@ var mediaCall = function () {
 			call.answer(myStream);
 			call.on('stream', function (stream) {
 				// addAudioElement(stream);
-				// addVideoElement(stream);
+				addVideoElement(stream);
 			});
 			console.log(`${userId} answered a call`);
 		});
@@ -391,7 +391,7 @@ var mediaCall = function () {
 			let call = myPeer.call(peerId, myStream);
 			call.on('stream', function (stream) {
 				// addAudioElement(stream);
-				// addVideoElement(stream);
+				addVideoElement(stream);
 			});		}
 	}
 
