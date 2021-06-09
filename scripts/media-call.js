@@ -266,6 +266,7 @@ var mediaCall = function () {
 			if (!camStatus[stream.id]) toggleVideoElement(stream.id);
 			document.querySelector("#video-streams").append(video);
 			console.log(`added ${stream.id} to #video-streams`);
+			observer.observe(video,{attributes:true});
 		}
 	}
 
@@ -445,4 +446,3 @@ var observer = new MutationObserver(function(mutations){
 	});
 });
 
-observer.observe(element,{attributes:true});
