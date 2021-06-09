@@ -142,7 +142,6 @@ var mediaCall = function () {
 	 * Toggles the mute button.
 	 */
 	function toggleAudButton() {
-		console.log(userId);
 		if (voiceAudButton.innerText == "On") {
 			mediaRef.child(userId).update({ audio: false });
 			voiceAudButton.innerText = "Off";
@@ -233,6 +232,14 @@ var mediaCall = function () {
 
 	function addVideoElement(stream){
 		console.log("adding video element");
+		console.log(userId);
+		mediaRef.orderByChild("stream_id").equalTo(stream.id).on("value", function (snapshot) {
+			console.log(stream.id);
+			console.log(snapshot.key);
+			console.log(userId);
+			//remove the listener
+			firebaseRef.child("users").child(snapshot.key).off("value");
+		  });
 		if (!videoElts[stream.id]) {
 			var video = document.createElement("video");
 			video.setAttribute("width","175px");
