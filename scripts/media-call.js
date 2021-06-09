@@ -246,7 +246,7 @@ var mediaCall = function () {
 			video.srcObject = stream;
 			videoElts[video.id] = video;
 			if (!camStatus[stream.id]) toggleVideoElement(stream.id);
-			document.querySelector("#video-streams").append(video);
+			// document.querySelector("#video-streams").append(video);
 			console.log(`added ${stream.id} to #video-streams`);
 		}
 	}
