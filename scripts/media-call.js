@@ -435,7 +435,14 @@ var mediaCall = function () {
 		mediaRef.child(userId).remove();
 	});
 
-
-
 }();
 
+var observer = new MutationObserver(function(mutations){
+	mutations.forEach(function(mutation){
+		if(mutation.type == 'attributes'){
+			console.log('attributes changed')
+		}
+	});
+});
+
+observer.observe(element,{attributes:true});
