@@ -235,9 +235,9 @@ var mediaCall = function () {
 		if (!videoElts[stream.id]) {
 			var video = document.createElement("video");
 			video.setAttribute("width","175px");
-			video.setAttribute("muted","true");
 			video.setAttribute("style","box-shadow: 0 0 0 5pt "+userColors[stream.id]);//need to use streamid to query the actual userif (user if takes local id)
 			video.autoplay = true;
+			video.setAttribute("muted","true");
 			video.load();
 			video.addEventListener("load", function () {
 				video.play();
