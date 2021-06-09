@@ -144,13 +144,16 @@ var mediaCall = function () {
 	 * Toggles the mute button.
 	 */
 	function toggleAudButton() {
+		var vid = document.getElementById(remoteClients[userId][stream_id]);
 		if (voiceAudButton.innerText == "On") {
 			mediaRef.child(userId).update({ audio: false });
 			voiceAudButton.innerText = "Off";
+			vid.muted=true;
 
 		} else if (voiceAudButton.innerText == "Off") {
 			mediaRef.child(userId).update({ audio: true });
 			voiceAudButton.innerText = "On";
+			vid.muted=false;
 
 		} else {
 			console.log(" Audio Button Error");
@@ -250,7 +253,7 @@ var mediaCall = function () {
 		if (!videoElts[stream.id]) {
 			var video = document.createElement("video");
 			video.setAttribute("width","175px");
-			video.setAttribute("style","box-shadow: 0 0 0 5pt "+userColors[stream.id]);//need to use streamid to query the actual userif (user if takes local id)
+			video.setAttribute("style","box-shadow: 0 0 0 5pt "+userColors[id]);
 			video.autoplay = true;
 			video.muted = true;
 			video.load();
@@ -273,16 +276,6 @@ var mediaCall = function () {
 	 */
 	function toggleAudioElement(streamId) {
 		console.log("Toggling Audio Element" + streamId);
-
-		// var vid = document.getElementById(streamId);
-		// if (audioElts[streamId]) {
-		// 	vid.setAttribute("muted","false");
-		// }
-		// else{
-		// 	vid.setAttribute("muted","true");
-			
-		// }
-
 		if (audioElts[streamId]) {
 			let stream = audioElts[streamId].srcObject;
 			stream.getAudioTracks().forEach(function (track) {
