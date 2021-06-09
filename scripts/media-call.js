@@ -181,7 +181,7 @@ var mediaCall = function () {
 	 * Starts local stream, creates local client's peer, and creates a mute button.
 	 */
 	function startMyStream() {
-		navigator.mediaDevices.getUserMedia({ video: false, audio: false }).then(function (stream) {
+		navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(function (stream) {
 			myStream = stream;
 			console.log(`${userId} turned on media stream: ${myStream.id}`);
 			mediaRef.child(userId).update({ is_ready: true, stream_id: myStream.id });
