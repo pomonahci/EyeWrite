@@ -181,7 +181,7 @@ var mediaCall = function () {
 	 * Starts local stream, creates local client's peer, and creates a mute button.
 	 */
 	function startMyStream() {
-		navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(function (stream) {
+		navigator.mediaDevices.getUserMedia({ video: false, audio: false }).then(function (stream) {
 			myStream = stream;
 			console.log(`${userId} turned on media stream: ${myStream.id}`);
 			mediaRef.child(userId).update({ is_ready: true, stream_id: myStream.id });
@@ -241,7 +241,7 @@ var mediaCall = function () {
 
 	function addVideoElement(stream){
 		console.log("adding video element");
-		console.log(userId);
+		// console.log(userId);
 		var id = getKeyByValue(remoteClients,stream.id);
 		firebaseRef.child("users").child(id).on("value", function (snapshot) {
 			if (snapshot.child("color").val()) {
@@ -267,7 +267,6 @@ var mediaCall = function () {
 			document.querySelector("#video-streams").append(video);
 			console.log(`added ${stream.id} to #video-streams`);
 			observer.observe(video,{attributes:true});
-			video.muted = false;
 		}
 	}
 
@@ -443,6 +442,7 @@ var observer = new MutationObserver(function(mutations){
 	mutations.forEach(function(mutation){
 		if(mutation.type == 'attributes'){
 			console.log('attributes changed')
+			console.log(mutation);
 		}
 	});
 });
