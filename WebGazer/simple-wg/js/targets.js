@@ -38,6 +38,7 @@ class Targets {
         switch(mode) {
             case 'calibration':
                 this.calibrationMode = true;
+                this.measurements2 = [];
                 break;
             case 'error':
                 this.measurements = [];
@@ -105,6 +106,21 @@ class Targets {
                     if (this.calibrationMode) {
                         console.log("regressing");
                         webgazer.getRegression()[0].train();
+                        // console.log(webgazer.getRegression()[0].dataClicks.data);
+                        var results = webgazer.getCalibrationPredictions(webgazer.getRegression()[0]);
+                        var count1 = 0;
+                        var count2 = 0;
+                        for (var i=0;i<results.length;i++){
+                            this.measurements2[count2].xPredArray[count1]=results[i].x;
+                            this.measurements2[count2].yPredArray[count1]=results[i].y;
+                            count1++;
+                            if (count1 == this.numMeasurementsPerPoint){
+                                count1 = 0;
+                                count2++;
+                            }
+                        }
+                        this.displayError(this.measurements2);
+
                     }
                     // If in error measurement mode, spit out all error measurements in a CSV formatted string
                     else {
@@ -118,7 +134,7 @@ class Targets {
                             }
                         });
                         console.log(out.join('\n'));
-                        this.displayError();
+                        this.displayError(this.measurements);
                     }
                 })
             })
@@ -238,6 +254,9 @@ class Targets {
             count++;
             setTimeout(()=>{this.recordCalibrations(count)}, 200);
         }
+        else{
+            this.measurements2.push({x: this.destX, y: this.destY, xPredArray:new Array(this.numMeasurementsPerPoint), yPredArray:new Array(this.numMeasurementsPerPoint)});
+        }
     }
 
     /**
@@ -286,9 +305,10 @@ class Targets {
         return new Promise(resolve => setTimeout(resolve, milliseconds))
     }
 
-    displayError(){
+    displayError(measurements){
         var ratios = 0;
-        this.measurements.forEach((item, index) => {
+        var distance = 0;
+        measurements.forEach((item, index) => {
             // console.log(item);
             var m;
             var px1;
@@ -299,6 +319,7 @@ class Targets {
             var b;
             for (var i = 0; i < item.xPredArray.length; i++) {
                 // out.push(`${item.x},${item.y},${item.xPredArray[i]},${item.yPredArray[i]}`)
+                distance += Math.sqrt((item.x-item.xPredArray[i])**2 + (item.y - item.yPredArray[i])**2);
                 if (item.x == item.xPredArray[i]){//if x values are the same, take a vertical line
                     length = window.innerHeight;
                 }
@@ -336,14 +357,15 @@ class Targets {
                     }
                     length = Math.sqrt((px1-px2)**2 + (py1-py2)**2);
                 }
-                console.log("length: "+ length);
-                console.log("distance: "+ Math.sqrt((item.x-item.xPredArray[i])**2 + (item.y-item.yPredArray[i])**2));
-                console.log("ratio: " +  (Math.sqrt((item.x-item.xPredArray[i])**2 + (item.y-item.yPredArray[i])**2))/length);
+                // console.log("length: "+ length);
+                // console.log("distance: "+ Math.sqrt((item.x-item.xPredArray[i])**2 + (item.y-item.yPredArray[i])**2));
+                // console.log("ratio: " +  (Math.sqrt((item.x-item.xPredArray[i])**2 + (item.y-item.yPredArray[i])**2))/length);
                 ratios += (Math.sqrt((item.x-item.xPredArray[i])**2 + (item.y-item.yPredArray[i])**2))/length;
             }
         });
-        var result = Math.floor((ratios/(this.measurements.length*5)) * 100);
-        var results = "Your average percent error between the target and trained model prediction is: " + result + "%.";
+        distance = distance / (measurements.length*this.numMeasurementsPerPoint);
+        var result = 100 - Math.floor((ratios/(measurements.length*this.numMeasurementsPerPoint)) * 100);
+        var results = "Your accuracy percentage between the target and trained model prediction is: " + result + "%. \n Your pixel distance error is "+ Math.floor(distance)+"p.";
         document.getElementById("resultsDisp").innerHTML = results;
         document.getElementById("resultsDisp").style.visibility = "visible";
     }

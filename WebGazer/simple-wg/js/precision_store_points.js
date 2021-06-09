@@ -23,3 +23,10 @@ function store_points_variable(){
     pastPoints[1] = yPastPoints;
     return pastPoints;
   }  
+
+  function get_points2(){
+    var pastPoints = new Array(2);
+    pastPoints[0] = xPastPoints2;
+    pastPoints[1] = yPastPoints2;
+    return pastPoints;
+  }  

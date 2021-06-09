@@ -43956,7 +43956,7 @@ function supports_ogg_theora_video() {
             this.addData(data[i].eyes, data[i].screenPos, data[i].type);
         }
         if(data.length>0){
-            console.log("All Data Set: "+ data.length  + " data points set. Training Model.");
+            console.log("All Data Set: "+ data.length  + " data points set.");
             webgazer.trainModel();
         } else {
             console.log("No data points. Data not set.");
@@ -45988,6 +45988,32 @@ function store_points(x, y, k) {
         return [webgazer.params.videoViewerWidth / videoElement.videoWidth, webgazer.params.videoViewerHeight / videoElement.videoHeight];
     }
 
+
+    webgazer.getCalibrationPredictions = function(reg){
+        var smoothingVals2 = new webgazer.util.DataWindow(4);
+        var prediction;
+        var data = reg.dataClicks.data
+        var results = []
+        for (var i=0;i<data.length;i++){
+            prediction = reg.predict(data[i].eyes);
+
+            smoothingVals2.push(prediction);
+            var x = 0;
+            var y = 0;
+            var len = smoothingVals2.length;
+            // if(i<3){len=i;}
+            for (var d in smoothingVals2.data) {
+                x += smoothingVals2.get(d).x;
+                y += smoothingVals2.get(d).y;
+            }
+
+            var pred = webgazer.util.bound({'x':x/len, 'y':y/len});
+
+            results.push({'x':pred.x,'y':pred.y});
+
+        }
+        return results;
+    }
 }(window));
 
 //# sourceMappingURL=webgazer.js.map
