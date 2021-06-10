@@ -307,7 +307,7 @@ var mediaCall = function () {
 			});
 			let vid = mediaElts[stream.id];
 			if(getKeyByStreamId(remoteClients,stream.id))
-				vid.muted = audStatus[streamId];
+				vid.muted = !audStatus[streamId];
 		}
 	}
 
