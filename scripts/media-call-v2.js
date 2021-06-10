@@ -49,7 +49,7 @@ var mediaCall = function () {
 
 	var streamContainers = {};
 
-	// var streams = {};
+	var streams = {};
 
 	// var userColors = {};      // object for user colors
 
@@ -138,7 +138,7 @@ var mediaCall = function () {
 			if(remoteClients[snapshot.key]){
 				var sid = remoteClients[snapshot.key]["stream_id"];
 				if(document.getElementById(sid+"container")){
-					document.getElementById(sid).setAttribute('style',"box-shadow: 0 0 0 5pt "+snapshot.child("color").val());
+					document.getElementById(sid).setAttribute('style',"box-shadow: 10px 0 0 0 "+snapshot.child("color").val());
 					document.getElementById(sid+"username").innerHTML = snapshot.child("name").val();
 				}
 			}
@@ -146,7 +146,7 @@ var mediaCall = function () {
 		else{
 			if(myStream){
 				if(document.getElementById(myStream.id+"container")){
-					document.getElementById(myStream.id).setAttribute('style',"box-shadow: 0 0 0 5pt "+snapshot.child("color").val());
+					document.getElementById(myStream.id).setAttribute('style',"box-shadow: 10px 0 0 0 "+snapshot.child("color").val());
 					document.getElementById(myStream.id+'username').innerHTML = snapshot.child("name").val();
 				}
 			}
@@ -211,6 +211,14 @@ var mediaCall = function () {
 
 			//adding local camera
 			addVideoElement(myStream);
+
+			
+			//add all current active cameras
+			for (item in mediaElts){
+				if(!document.getElementById(item)){
+					addVideoElement(item)
+				}
+			}
 		}).catch(function (err) {
 			console.error(`${userId} failed to turn on media stream`, err);
 			voiceChatSwitch = document.getElementById("voiceChatSwitch");
