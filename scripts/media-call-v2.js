@@ -281,7 +281,9 @@ var mediaCall = function () {
 			video.autoplay = true;
 			video.muted = true;
 			// video.style.visibility = 'hidden';
-			if (!remoteClients[id].camera) container.style.visibility = 'hidden';
+			if(id!= userId){
+				if (!remoteClients[id].camera) container.style.visibility = 'hidden';
+			}else container.style.visibility = 'hidden';
 			video.load();
 			video.addEventListener("load", function () {
 				video.play();
