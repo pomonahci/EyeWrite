@@ -210,7 +210,7 @@ var mediaCall = function () {
 			document.getElementById("cam").disabled = false;
 
 			//adding local camera
-			// addVideoElement(myStream);
+			addVideoElement(myStream);
 
 			
 			//add all current active cameras (need to catch if this doesnt work so I can switch off the stream ui button)
