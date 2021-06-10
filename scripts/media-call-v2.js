@@ -264,8 +264,8 @@ var mediaCall = function () {
 			
 		});
 
-		// if (!mediaElts[stream.id]) {
-		if (!document.getElementById(stream.id)){
+		if (!mediaElts[stream.id]) {
+		// if (!document.getElementById(stream.id)){
 
 			var container = document.createElement('div');
 			var label = document.createElement('p');
@@ -281,7 +281,7 @@ var mediaCall = function () {
 			video.autoplay = true;
 			video.muted = true;
 			// video.style.visibility = 'hidden';
-			container.style.visibility = 'hidden';
+			if (!remoteClients[id].camera) container.style.visibility = 'hidden';
 			video.load();
 			video.addEventListener("load", function () {
 				video.play();
