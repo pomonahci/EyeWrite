@@ -212,13 +212,6 @@ var mediaCall = function () {
 			//adding local camera
 			addVideoElement(myStream);
 
-			
-			//add all current active cameras (need to catch if this doesnt work so I can switch off the stream ui button)
-			// for (item in remoteClients){
-			// 	if(remoteClients[item].camera){
-			// 		addVideoElement(mediaElts[remoteClients[item].stream_id]);
-			// 	}
-			// }
 		}).catch(function (err) {
 			console.error(`${userId} failed to turn on media stream`, err);
 			voiceChatSwitch = document.getElementById("voiceChatSwitch");
@@ -265,7 +258,6 @@ var mediaCall = function () {
 		});
 
 		if (!mediaElts[stream.id]) {
-		// if (!document.getElementById(stream.id)){
 
 			var container = document.createElement('div');
 			var label = document.createElement('p');
@@ -277,10 +269,9 @@ var mediaCall = function () {
 
 			var video = document.createElement("video");
 			video.setAttribute("width","175px");
-			video.setAttribute("style","box-shadow: 10px 0 0 0 "+color);//userColors[id]);
+			video.setAttribute("style","box-shadow: 10px 0 0 0 "+color);
 			video.autoplay = true;
 			video.muted = true;
-			// video.style.visibility = 'hidden';
 			if(id!= userId){
 				if (!remoteClients[id].camera) container.style.visibility = 'hidden';
 			}else container.style.visibility = 'hidden';
@@ -314,10 +305,10 @@ var mediaCall = function () {
 			stream.getAudioTracks().forEach(function (track) {
 				track.enabled = audStatus[streamId];
 			});
+			let vid = mediaElts[stream.id];
+			vid.muted = !vid.muted;
 		}
 	}
-	// myStream.getAudioTracks()[0].enabled = false;
-	// myStream.getVideoTracks()[0].enabled = false;
 
 	function toggleVideoElement(streamId) {
 		 console.log("Toggling Video Element: " + streamId);
@@ -444,8 +435,7 @@ var mediaCall = function () {
 			if (mediaElts[remoteClients[uId]["stream_id"]]) removeVideoElement(remoteClients[uId]["stream_id"]);
 		}
 		mediaRef.child(userId).set(null);
-		// alert("Leaving the media call.");
-		// document.getElementById("my-camera").srcObject=null;
+
 		document.getElementById("aud").disabled = true;
 		document.getElementById("aud").innerText = "Muted";
 		document.getElementById("cam").disabled = true;
