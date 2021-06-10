@@ -214,9 +214,9 @@ var mediaCall = function () {
 
 			
 			//add all current active cameras
-			for (item in mediaElts){
-				if(!document.getElementById(item)){
-					addVideoElement(item)
+			for (item in remoteClients){
+				if(item.camera){
+					addVideoElement(mediaElts[item.stream_id]);
 				}
 			}
 		}).catch(function (err) {
