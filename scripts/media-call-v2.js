@@ -47,6 +47,8 @@ var mediaCall = function () {
 
 	var mediaElts = {};			// collection of active media elements
 
+	var streamContainers = {};
+
 	// var userColors = {};      // object for user colors
 
 
@@ -135,12 +137,16 @@ var mediaCall = function () {
 		console.log("User Information Changed");
 		if (userId != snapshot.key){//if not local client
 			var sid = remoteClients[snapshot.key]["stream_id"];
-			if(document.getElementById(sid)){
+			if(document.getElementById(sid+"container")){
 				document.getElementById(sid).setAttribute('style',"box-shadow: 0 0 0 5pt "+snapshot.child("color").val());
+				document.getElementById(sid+"username").innerHTML = snapshot.child("name").val();
 			}
 		}
 		else{
-			document.getElementById(myStream.id).setAttribute('style',"box-shadow: 0 0 0 5pt "+snapshot.child("color").val());
+			if(document.getElementById(myStream.id+"container")){
+				document.getElementById(myStream.id).setAttribute('style',"box-shadow: 0 0 0 5pt "+snapshot.child("color").val());
+				document.getElementById(myStream.id+'username').innerHTML = snapshot.child("name").val();
+			}
 		}
 	})
 
@@ -235,22 +241,37 @@ var mediaCall = function () {
 			id = userId;
 		}
 		var color = "red";
+		var name = "Doe";
 		firebaseRef.child("users").child(id).on("value", function (snapshot) {
 			if (snapshot.child("color").val()) {
-			//   userColors[id]= snapshot.child("color").val();
 			  color = snapshot.child("color").val();
+			}
+			if (snapshot.child("name").val()) {
+
+				name = snapshot.child("name").val();
+			}
 			  //remove the listener
 			  firebaseRef.child("users").child(snapshot.key).off("value");
-			}
+			
 		  });
 
 		if (!mediaElts[stream.id]) {
+
+			var container = document.createElement('div');
+			var label = document.createElement('p');
+			label.setAttribute('style','position:absolute;color:white;font-size:12px;align-self:center;font-weight:bold;background-color:black;');
+			label.innerHTML = name;
+			label.id = stream.id + "username";
+			container.appendChild(label);
+			container.id = stream.id + "container";
+
 			var video = document.createElement("video");
 			video.setAttribute("width","175px");
 			video.setAttribute("style","box-shadow: 0 0 0 5pt "+color);//userColors[id]);
 			video.autoplay = true;
 			video.muted = true;
-			video.style.visibility = 'hidden';
+			// video.style.visibility = 'hidden';
+			container.style.visibility = 'hidden';
 			video.load();
 			video.addEventListener("load", function () {
 				video.play();
@@ -259,7 +280,12 @@ var mediaCall = function () {
 			video.srcObject = stream;
 			mediaElts[video.id] = video;
 			if (!camStatus[stream.id]) toggleVideoElement(stream.id);
-			document.querySelector("#video-streams").append(video);
+
+			container.appendChild(video);
+			streamContainers[container.id] = container;
+
+			// document.querySelector("#video-streams").append(video);
+			document.querySelector("#video-streams").append(container);
 			console.log(`added ${stream.id} to #video-streams`);
 		}
 	}
@@ -289,10 +315,10 @@ var mediaCall = function () {
 			});
 			if (document.getElementById(streamId)){
 				if(camStatus[streamId]){
-					document.getElementById(streamId).style.visibility = 'visible';
+					document.getElementById(streamId+"container").style.visibility = 'visible';
 				}
 				else {
-					document.getElementById(streamId).style.visibility = 'hidden';
+					document.getElementById(streamId+"container").style.visibility = 'hidden';
 				}
 			}
 		}
@@ -301,12 +327,15 @@ var mediaCall = function () {
 
 	function removeVideoElement(streamId) {
 		let video = mediaElts[streamId];
+		let container = streamContainers[streamId+"container"];
 		if (video != "-1") {
 			video.srcObject.getTracks().forEach(function (track) {
 				track.stop();
 			});
-			video.remove();
+			// video.remove();
+			container.remove();
 			delete mediaElts[streamId];
+			delete streamContainers[streamId+"container"];
 			console.log(`removed ${streamId} from video`);
 		}
 	}
