@@ -265,7 +265,7 @@ var mediaCall = function () {
 		});
 
 		// if (!mediaElts[stream.id]) {
-		if (!document.getElementById(stream.id))
+		if (!document.getElementById(stream.id)){
 
 			var container = document.createElement('div');
 			var label = document.createElement('p');
