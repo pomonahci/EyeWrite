@@ -49,6 +49,8 @@ var mediaCall = function () {
 
 	var streamContainers = {};
 
+	// var streams = {};
+
 	// var userColors = {};      // object for user colors
 
 
@@ -77,9 +79,6 @@ var mediaCall = function () {
 			}
 		}
 	});
-
-
-
 
 	/**
 	 * Listener for updates to voiceRef.
@@ -202,9 +201,6 @@ var mediaCall = function () {
 			console.log(`${userId} turned on media stream: ${myStream.id}`);
 			mediaRef.child(userId).update({ is_ready: true, stream_id: myStream.id });
 
-			// myStream.getAudioTracks()[0].enabled = false;
-			// myStream.getVideoTracks()[0].enabled = false;
-
 			hasStream = true;
 			createMyPeer();
 			console.log(`${userId} joined the media chat`);
@@ -215,6 +211,7 @@ var mediaCall = function () {
 
 			//adding local camera
 			addVideoElement(myStream);
+			// streams[stream.id] = stream;
 		}).catch(function (err) {
 			console.error(`${userId} failed to turn on media stream`, err);
 			voiceChatSwitch = document.getElementById("voiceChatSwitch");
@@ -238,60 +235,61 @@ var mediaCall = function () {
 	}
 
 	function addVideoElement(stream){
-		console.log("adding video element");
-		// getting color of stream's user source
-		var id = getKeyByStreamId(remoteClients,stream.id);
-		if(!id){
-			id = userId;
-		}
-		var color = "red";
-		var name = "Doe";
-		firebaseRef.child("users").child(id).on("value", function (snapshot) {
-			if (snapshot.child("color").val()) {
-			  color = snapshot.child("color").val();
+
+			console.log("adding video element");
+			// getting color of stream's user source
+			var id = getKeyByStreamId(remoteClients,stream.id);
+			if(!id){
+				id = userId;
 			}
-			if (snapshot.child("name").val()) {
+			var color = "red";
+			var name = "Doe";
+			firebaseRef.child("users").child(id).on("value", function (snapshot) {
+				if (snapshot.child("color").val()) {
+				color = snapshot.child("color").val();
+				}
+				if (snapshot.child("name").val()) {
 
-				name = snapshot.child("name").val();
+					name = snapshot.child("name").val();
+				}
+				//remove the listener
+				firebaseRef.child("users").child(snapshot.key).off("value");
+				
+			});
+
+			if (!mediaElts[stream.id]) {
+
+				var container = document.createElement('div');
+				var label = document.createElement('p');
+				label.setAttribute('style','position:absolute;color:white;font-size:12px;align-self:center;font-weight:bold;background-color:black;');
+				label.innerHTML = name;
+				label.id = stream.id + "username";
+				container.appendChild(label);
+				container.id = stream.id + "container";
+
+				var video = document.createElement("video");
+				video.setAttribute("width","175px");
+				video.setAttribute("style","box-shadow: 5 0 0 0 "+color);//userColors[id]);
+				video.autoplay = true;
+				video.muted = true;
+				// video.style.visibility = 'hidden';
+				container.style.visibility = 'hidden';
+				video.load();
+				video.addEventListener("load", function () {
+					video.play();
+				}, true);
+				video.id = stream.id;
+				video.srcObject = stream;
+				mediaElts[video.id] = video;
+				if (!camStatus[stream.id]) toggleVideoElement(stream.id);
+
+				container.appendChild(video);
+				streamContainers[container.id] = container;
+
+				// document.querySelector("#video-streams").append(video);
+				document.querySelector("#video-streams").append(container);
+				console.log(`added ${stream.id} to #video-streams`);
 			}
-			  //remove the listener
-			  firebaseRef.child("users").child(snapshot.key).off("value");
-			
-		  });
-
-		if (!mediaElts[stream.id]) {
-
-			var container = document.createElement('div');
-			var label = document.createElement('p');
-			label.setAttribute('style','position:absolute;color:white;font-size:12px;align-self:center;font-weight:bold;background-color:black;');
-			label.innerHTML = name;
-			label.id = stream.id + "username";
-			container.appendChild(label);
-			container.id = stream.id + "container";
-
-			var video = document.createElement("video");
-			video.setAttribute("width","175px");
-			video.setAttribute("style","box-shadow: 5 0 0 0 "+color);//userColors[id]);
-			video.autoplay = true;
-			video.muted = true;
-			// video.style.visibility = 'hidden';
-			container.style.visibility = 'hidden';
-			video.load();
-			video.addEventListener("load", function () {
-				video.play();
-			}, true);
-			video.id = stream.id;
-			video.srcObject = stream;
-			mediaElts[video.id] = video;
-			if (!camStatus[stream.id]) toggleVideoElement(stream.id);
-
-			container.appendChild(video);
-			streamContainers[container.id] = container;
-
-			// document.querySelector("#video-streams").append(video);
-			document.querySelector("#video-streams").append(container);
-			console.log(`added ${stream.id} to #video-streams`);
-		}
 	}
 
 	/**
@@ -310,6 +308,7 @@ var mediaCall = function () {
 	}
 	// myStream.getAudioTracks()[0].enabled = false;
 	// myStream.getVideoTracks()[0].enabled = false;
+
 	function toggleVideoElement(streamId) {
 		 console.log("Toggling Video Element: " + streamId);
 		if (mediaElts[streamId]) {
@@ -326,6 +325,7 @@ var mediaCall = function () {
 				}
 			}
 		}
+
 	}
 
 
@@ -336,7 +336,6 @@ var mediaCall = function () {
 			video.srcObject.getTracks().forEach(function (track) {
 				track.stop();
 			});
-			// video.remove();
 			container.remove();
 			delete mediaElts[streamId];
 			delete streamContainers[streamId+"container"];
