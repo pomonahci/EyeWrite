@@ -213,12 +213,12 @@ var mediaCall = function () {
 			addVideoElement(myStream);
 
 			
-			//add all current active cameras
-			for (item in remoteClients){
-				if(remoteClients[item].camera){
-					addVideoElement(mediaElts[remoteClients[item].stream_id]);
-				}
-			}
+			//add all current active cameras (need to catch if this doesnt work so I can switch off the stream ui button)
+			// for (item in remoteClients){
+			// 	if(remoteClients[item].camera){
+			// 		addVideoElement(mediaElts[remoteClients[item].stream_id]);
+			// 	}
+			// }
 		}).catch(function (err) {
 			console.error(`${userId} failed to turn on media stream`, err);
 			voiceChatSwitch = document.getElementById("voiceChatSwitch");
