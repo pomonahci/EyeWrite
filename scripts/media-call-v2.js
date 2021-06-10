@@ -136,16 +136,20 @@ var mediaCall = function () {
 	firebaseRef.child("users").on("child_changed", function(snapshot){
 		console.log("User Information Changed");
 		if (userId != snapshot.key){//if not local client
-			var sid = remoteClients[snapshot.key]["stream_id"];
-			if(document.getElementById(sid+"container")){
-				document.getElementById(sid).setAttribute('style',"box-shadow: 0 0 0 5pt "+snapshot.child("color").val());
-				document.getElementById(sid+"username").innerHTML = snapshot.child("name").val();
+			if(remoteClients[snapshot.key]){
+				var sid = remoteClients[snapshot.key]["stream_id"];
+				if(document.getElementById(sid+"container")){
+					document.getElementById(sid).setAttribute('style',"box-shadow: 0 0 0 5pt "+snapshot.child("color").val());
+					document.getElementById(sid+"username").innerHTML = snapshot.child("name").val();
+				}
 			}
 		}
 		else{
-			if(document.getElementById(myStream.id+"container")){
-				document.getElementById(myStream.id).setAttribute('style',"box-shadow: 0 0 0 5pt "+snapshot.child("color").val());
-				document.getElementById(myStream.id+'username').innerHTML = snapshot.child("name").val();
+			if(myStream){
+				if(document.getElementById(myStream.id+"container")){
+					document.getElementById(myStream.id).setAttribute('style',"box-shadow: 0 0 0 5pt "+snapshot.child("color").val());
+					document.getElementById(myStream.id+'username').innerHTML = snapshot.child("name").val();
+				}
 			}
 		}
 	})
