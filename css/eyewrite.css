@@ -486,7 +486,7 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
 }
 
 
-/* Control Container Style */
+/* Video Container Style */
 #video-streams {
   /* background-color: lightblue; */
   width: 200px;
@@ -495,3 +495,4 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   overflow: scroll;
   right: 0px;
 }
+
