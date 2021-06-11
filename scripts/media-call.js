@@ -393,7 +393,14 @@ var mediaCall = function () {
 	 * @param {String} id 
 	 */
 	function callRemotePeer(id) {
-		if (!remoteClients[id]["conn"].peerConnection) {
+		var hasConnection = false;
+		if(remoteClients[id]["conn"]){
+			if(remoteClients[id]["conn"].peerConnection){
+				hasConnection = true;
+			}
+		}
+		// if (!remoteClients[id]["conn"]) {
+		if(!hasConnection){
 			remoteClients[id]["conn"] = true;
 
 			console.log(`${userId} started a call`);
