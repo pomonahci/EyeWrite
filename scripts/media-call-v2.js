@@ -289,6 +289,7 @@ var mediaCall = function () {
 
 			if(id!=userId){
 				video.srcObject.getVideoTracks()[0].enabled = remoteClients[id].camera;
+				video.mute = !remoteClients[id].audio;
 			}
 			// document.querySelector("#video-streams").append(video);
 			document.querySelector("#video-streams").append(container);
