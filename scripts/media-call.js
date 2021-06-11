@@ -350,7 +350,7 @@ var mediaCall = function () {
 		myPeer = new Peer({ config: config, debug: 1 });
 
 		// callbacks for opening connection and error
-		myPeer.on('open', function (id) {
+		myPeer.on('open', function (id) { //works here
 			mediaRef.child(userId).update({ peer_id: id, is_ready: readyToJoin });
 			if (readyToJoin) mediaRef.child(userId).update({ stream_id: myStream.id });
 		});
@@ -360,7 +360,7 @@ var mediaCall = function () {
 		});
 
 		// handling incoming data connection
-		myPeer.on('connection', function (conn) {
+		myPeer.on('connection', function (conn) { //also doesnt go into here
 			conn.on('data', function (data) {
 				var tmp = data.split(" ");
 				console.log(`${tmp[0]} -> ${userId}: ${tmp.slice(1).join(" ")}`);
@@ -371,13 +371,13 @@ var mediaCall = function () {
 
 				}
 			});
-			conn.on('open', function () {
+			conn.on('open', function () { //Might have to put this open before data but inside connect (and data inside that open)? (https://stackoverflow.com/questions/26958404/peerjs-peer-not-receiving-data)
 				conn.send(`${userId} new-connection`);
 			});
 		});
 
 		// handling incoming audio connection
-		myPeer.on('call', function (call) {
+		myPeer.on('call', function (call) { //doesn't go into this code on the bug
 			// Answer the call
 			call.answer(myStream);
 			call.on('stream', function (stream) {
@@ -393,7 +393,7 @@ var mediaCall = function () {
 	 * @param {String} id 
 	 */
 	function callRemotePeer(id) {
-		if (!remoteClients[id]["conn"]) {
+		if (!remoteClients[id]["conn"].peerConnection) {
 			remoteClients[id]["conn"] = true;
 
 			console.log(`${userId} started a call`);
