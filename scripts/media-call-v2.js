@@ -287,8 +287,9 @@ var mediaCall = function () {
 			container.appendChild(video);
 			streamContainers[container.id] = container;
 
-			video.srcObject.getVideoTracks()[0].enabled = camStatus[stream.id];
-
+			if(id!=userId){
+				video.srcObject.getVideoTracks()[0].enabled = remoteClients[id].camera;
+			}
 			// document.querySelector("#video-streams").append(video);
 			document.querySelector("#video-streams").append(container);
 			console.log(`added ${stream.id} to #video-streams`);
