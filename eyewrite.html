@@ -1,70 +1,103 @@
 <!DOCTYPE html>
 
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
 
-<head>
-  <meta charset="utf-8" />
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-database.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
+    <!-- CodeMirror -->
+    <script src="./node_modules/codemirror/lib/codemirror.js"></script>
+    <link
+      rel="stylesheet"
+      href="./node_modules/codemirror/lib/codemirror.css"
+    />
 
-  <!-- CodeMirror -->
-  <script src="./node_modules/codemirror/lib/codemirror.js"></script>
-  <link rel="stylesheet" href="./node_modules/codemirror/lib/codemirror.css" />
+    <script src="node_modules/heatmap.js/build/heatmap.js"></script>
 
-  <!-- Firepad -->
-  <link rel="stylesheet" href="https://firepad.io/releases/v1.5.10/firepad.css" />
-  <script src="https://firepad.io/releases/v1.5.10/firepad.js"></script>
+    <!-- Firepad -->
+    <link
+      rel="stylesheet"
+      href="https://firepad.io/releases/v1.5.10/firepad.css"
+    />
+    <script src="https://firepad.io/releases/v1.5.10/firepad.js"></script>
 
-  <!-- Firepad (for visualizations) -->
-  <!-- <link rel='stylesheet' href='lib/firepad.css' />
+    <!-- Firepad (for visualizations) -->
+    <!-- <link rel='stylesheet' href='lib/firepad.css' />
   <script src='lib/firepad-full-custom-vis.js'></script> -->
 
-  <!-- Firepad Userlist -->
-  <script src="./scripts/firepad-userlist.js"></script>
-  <link rel="stylesheet" href="./css/firepad-userlist.css" />
+    <!-- Firepad Userlist -->
+    <script src="./scripts/firepad-userlist.js"></script>
+    <link rel="stylesheet" href="./css/firepad-userlist.css" />
 
-  <!-- WebGazer -->
-  <!-- <script type='text/javascript' src='./WebGazer/www/simple-wg/webgazer.js'></script> -->
-  <script type="text/javascript" src="./WebGazer/simple-wg/webgazer.js"></script>
+    <!-- WebGazer -->
+    <!-- <script type='text/javascript' src='./WebGazer/www/simple-wg/webgazer.js'></script> -->
+    <script
+      type="text/javascript"
+      src="./WebGazer/simple-wg/webgazer.js"
+    ></script>
 
-  <!-- Peer.JS -->
-  <script src="./node_modules/peerjs/dist/peerjs.js"></script>
+    <!-- Peer.JS -->
+    <script src="./node_modules/peerjs/dist/peerjs.js"></script>
 
-  <!-- Bootstrap and jQuery -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
-    integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous" />
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
-    crossorigin="anonymous"></script>
+    <!-- Bootstrap and jQuery -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+      integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+      crossorigin="anonymous"
+    ></script>
 
-  <!-- Include the plugin's CSS and JS: -->
-  <script type="text/javascript" src="./node_modules/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"></script>
-  <link rel="stylesheet" href="./node_modules/bootstrap-multiselect/dist/css/bootstrap-multiselect.css"
-    type="text/css" />
+    <!-- Include the plugin's CSS and JS: -->
+    <script
+      type="text/javascript"
+      src="./node_modules/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="./node_modules/bootstrap-multiselect/dist/css/bootstrap-multiselect.css"
+      type="text/css"
+    />
 
-  <!-- 'nano' theme -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css" />
+    <!-- 'nano' theme -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css"
+    />
 
-  <!-- Modern or es5 bundle -->
-  <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+    <!-- Modern or es5 bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
 
-  <!-- Chroma JS -->
-  <script type="text/javascript" src="./node_modules/chroma-js/chroma.js"></script>
+    <!-- Chroma JS -->
+    <script
+      type="text/javascript"
+      src="./node_modules/chroma-js/chroma.js"
+    ></script>
 
-  <link rel="stylesheet" href="./css/eyewrite.css" />
-  <!-- Firechat -->
-  <link rel="stylesheet" href="https://cdn.firebase.com/libs/firechat/3.0.1/firechat.min.css" />
-  <script src="https://cdn.firebase.com/libs/firechat/3.0.1/firechat.min.js"></script>
+    <link rel="stylesheet" href="./css/eyewrite.css" />
+    <!-- Firechat -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.firebase.com/libs/firechat/3.0.1/firechat.min.css"
+    />
+    <script src="https://cdn.firebase.com/libs/firechat/3.0.1/firechat.min.js"></script>
 
-  <!-- Custom CSS -->
-  <style>
-    #firechat-wrapper {
-      /* height: 475px;
+    <!-- Custom CSS -->
+    <style>
+      #firechat-wrapper {
+        /* height: 475px;
         width: 325px;
         padding: 10px;
         border: 1px solid #ccc;
@@ -81,247 +114,312 @@
         position: absolute;
         left: 1575px;
         top: 425px; */
-    }
-  </style>
-</head>
+      }
+    </style>
+  </head>
 
-<body onload="updateUI()">
-  <div id="userlist"></div>
+  <body onload="updateUI()">
+    <div id="userlist"></div>
 
-  <div id="firepad"></div>
+    <div id="firepad"></div>
 
-  <div id="video-streams">
-  </div>
+    <div id="video-streams"></div>
 
-  <div id="colorpicker"></div>
+    <div id="colorpicker"></div>
 
-  <div id="controlContainer">
+    <div id="heatmap" style="min-height: 100vh; min-width: 100vh"></div>
 
-    <div id="user-checkboxes-container"></div>
-    <select id="user-checkboxes" multiple="multiple"></select>
+    <div id="controlContainer">
+      <div id="user-checkboxes-container"></div>
+      <select id="user-checkboxes" multiple="multiple"></select>
 
-    <!-- Send Data Component -->
-    <div class="radio-buttons">
-      <p>Send My Data:</p>
-      <div class="inline-toggle-container">
-        <p class="inline">Gaze</p>
-        <div class="onoffswitch">
-          <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="gazeSendSwitch" tabindex="0" />
-          <label class="onoffswitch-label" for="gazeSendSwitch">
-            <span class="onoffswitch-inner"></span>
-            <span class="onoffswitch-switch"></span>
-          </label>
+      <!-- Send Data Component -->
+      <div class="radio-buttons">
+        <p>Send My Data:</p>
+        <div class="inline-toggle-container">
+          <p class="inline">Gaze</p>
+          <div class="onoffswitch">
+            <input
+              type="checkbox"
+              name="onoffswitch"
+              class="onoffswitch-checkbox"
+              id="gazeSendSwitch"
+              tabindex="0"
+            />
+            <label class="onoffswitch-label" for="gazeSendSwitch">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
         </div>
-      </div>
 
-      <div class="inline-toggle-container">
-        <p>Mouse</p>
-        <!-- <input type="radio" id="blockButton" name="dataChoice">
+        <div class="inline-toggle-container">
+          <p>Mouse</p>
+          <!-- <input type="radio" id="blockButton" name="dataChoice">
         <label for="blockButton" type="radio">Block</label> -->
-        <div>
+          <div>
+            <div class="onoffswitch">
+              <input
+                type="checkbox"
+                name="onoffswitch"
+                class="onoffswitch-checkbox"
+                id="mouseSendSwitch"
+                tabindex="0"
+              />
+              <label class="onoffswitch-label" for="mouseSendSwitch">
+                <span class="onoffswitch-inner"></span>
+                <span class="onoffswitch-switch"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visualize Data Component -->
+      <div class="radio-buttons">
+        <p>Visualize Data:</p>
+
+        <div class="inline-toggle-container">
+          <p style="margin-bottom: 0">Gaze</p>
           <div class="onoffswitch">
-            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="mouseSendSwitch" tabindex="0" />
-            <label class="onoffswitch-label" for="mouseSendSwitch">
+            <input
+              type="checkbox"
+              name="onoffswitch"
+              class="onoffswitch-checkbox"
+              id="gazeVisSwitch"
+              tabindex="0"
+            />
+            <label class="onoffswitch-label" for="gazeVisSwitch">
               <span class="onoffswitch-inner"></span>
               <span class="onoffswitch-switch"></span>
             </label>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Visualize Data Component -->
-    <div class="radio-buttons">
-      <p>Visualize Data:</p>
-
-      <div class="inline-toggle-container">
-        <p style="margin-bottom: 0">Gaze</p>
-        <div class="onoffswitch">
-          <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="gazeVisSwitch" tabindex="0" />
-          <label class="onoffswitch-label" for="gazeVisSwitch">
-            <span class="onoffswitch-inner"></span>
-            <span class="onoffswitch-switch"></span>
-          </label>
-        </div>
-      </div>
-
-      <div class="inline-toggle-container">
-        <p>Mouse</p>
-        <div>
-          <div class="onoffswitch">
-            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="mouseVisSwitch" tabindex="0" />
-            <label class="onoffswitch-label" for="mouseVisSwitch">
-              <span class="onoffswitch-inner"></span>
-              <span class="onoffswitch-switch"></span>
-            </label>
+        <div class="inline-toggle-container">
+          <p>Mouse</p>
+          <div>
+            <div class="onoffswitch">
+              <input
+                type="checkbox"
+                name="onoffswitch"
+                class="onoffswitch-checkbox"
+                id="mouseVisSwitch"
+                tabindex="0"
+              />
+              <label class="onoffswitch-label" for="mouseVisSwitch">
+                <span class="onoffswitch-inner"></span>
+                <span class="onoffswitch-switch"></span>
+              </label>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <script type="text/javascript">
-      $("#vis-shape").multiselect();
-    </script>
+      <script type="text/javascript">
+        $("#vis-shape").multiselect();
+      </script>
 
-    <!-- Highlight Pattern Component -->
-    <div class="radio-buttons" style="display: flex; flex-direction: column" visibility='hidden'>
-      <p>Highlight Pattern</p>
-      <div style="margin: auto">
-        <select id="vis-shape" style="
+      <!-- Highlight Pattern Component -->
+      <div
+        class="radio-buttons"
+        style="display: flex; flex-direction: column"
+        visibility="hidden"
+      >
+        <p>Highlight Pattern</p>
+        <div style="margin: auto">
+          <select
+            id="vis-shape"
+            style="
               width: 120px;
               margin: 0 auto;
               margin-bottom: 10px;
               margin-top: 0px;
-            ">
-          <!-- <option value="solid">Solid</option> -->
-          <option value="gradient">Gradient</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Highlight Size Component -->
-    <div id="slider-container">
-      <p class="slider-text">
-        Highlight Size: <span id="numSentences"></span>
-      </p>
-      <input type="range" min="1" max="48" value="12" id="sentenceSlider" />
-    </div>
-
-    <!-- Highlight Gradient Ratio Component -->
-    <div id="slider-container">
-      <p class="slider-text2">
-        Gradient Ratio: <span id="numSentences2"></span>
-      </p>
-      <input type="range" min="0" max="66" value="66" id="sentenceSlider2" />
-    </div>
-
-    <!-- Voice/Video Chat Component -->
-    <div>
-      <div class="radio-buttons">
-        <div>
-          <p style='text-align: center;'>Video Call</p>
-          <button id="videoCallJoin"
-            style="margin: 0;position: absolute;top: 35%;left: 50%;-ms-transform: translate(-50%, -50%);transform: translate(-50%, -50%); background-color: #ffbf86; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;  font-size: 14px;">
-            JOIN
-          </button>
-
-        </div>
-        <div>
-          <br><br>
-          <div class="inline-toggle-container">
-            <p>Audio</p>
-
-            <button id="aud" disabled=True
-              style="font-family: Trebuchet, Arial, sans-serif; font-weight: bold;  font-size: 14px;">Muted</button>
-          </div>
-          <div class="inline-toggle-container">
-            <p>Video</p>
-            <button id="cam" disabled=True
-              style="font-family: Trebuchet, Arial, sans-serif; font-weight: bold;  font-size: 14px;">Hidden</button>
-          </div>
+            "
+          >
+            <!-- <option value="solid">Solid</option> -->
+            <option value="gradient">Gradient</option>
+          </select>
         </div>
       </div>
+
+      <!-- Highlight Size Component -->
+      <div id="slider-container">
+        <p class="slider-text">
+          Highlight Size: <span id="numSentences"></span>
+        </p>
+        <input type="range" min="1" max="48" value="12" id="sentenceSlider" />
+      </div>
+
+      <!-- Highlight Gradient Ratio Component -->
+      <div id="slider-container">
+        <p class="slider-text2">
+          Gradient Ratio: <span id="numSentences2"></span>
+        </p>
+        <input type="range" min="0" max="66" value="66" id="sentenceSlider2" />
+      </div>
+
+      <!-- Voice/Video Chat Component -->
+      <div>
+        <div class="radio-buttons">
+          <div>
+            <p style="text-align: center">Video Call</p>
+            <button
+              id="videoCallJoin"
+              style="
+                margin: 0;
+                position: absolute;
+                top: 35%;
+                left: 50%;
+                -ms-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
+                background-color: #ffbf86;
+                font-family: Trebuchet, Arial, sans-serif;
+                font-weight: bold;
+                font-size: 14px;
+              "
+            >
+              JOIN
+            </button>
+          </div>
+          <div>
+            <br /><br />
+            <div class="inline-toggle-container">
+              <p>Audio</p>
+
+              <button
+                id="aud"
+                disabled="True"
+                style="
+                  font-family: Trebuchet, Arial, sans-serif;
+                  font-weight: bold;
+                  font-size: 14px;
+                "
+              >
+                Muted
+              </button>
+            </div>
+            <div class="inline-toggle-container">
+              <p>Video</p>
+              <button
+                id="cam"
+                disabled="True"
+                style="
+                  font-family: Trebuchet, Arial, sans-serif;
+                  font-weight: bold;
+                  font-size: 14px;
+                "
+              >
+                Hidden
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WebGazer Calibration Component -->
+      <a href="./WebGazer/simple-wg/index.html" id="calibrationLink">
+        <input type="button" id="calibrationButton" value="Calibrate Gaze" />
+      </a>
     </div>
 
+    <div id="audio-streams"></div>
+    <div id="firechat-wrapper"></div>
 
-    <!-- WebGazer Calibration Component -->
-    <A href="./WebGazer/simple-wg/index.html" id="calibrationLink">
-      <input type="button" id="calibrationButton" value="Calibrate Gaze">
-    </A>
+    <script>
+      window.debug = false; // turn off to remove debug statements
 
-  </div>
+      var firebaseConfig = {
+        apiKey: "AIzaSyAmD2D9XCpVDQcJF08chqCbkCpL-_Jfu_Y",
+        authDomain: "eyewrite-62d75.firebaseapp.com",
+        databaseURL: "https://eyewrite-62d75.firebaseio.com",
+        projectId: "eyewrite-62d75",
+        storageBucket: "eyewrite-62d75.appspot.com",
+        messagingSenderId: "998123311342",
+        appId: "1:998123311342:web:abed435afee503a2eb63ff",
+        measurementId: "G-8EGTMW2Q4G",
+      };
 
-  <div id="audio-streams"></div>
-  <div id="firechat-wrapper"></div>
+      // REPLACE WITH DEVELOPMENT SERVER
+      // var firebaseConfig = {
+      //   apiKey: "AIzaSyAkIIeqpNNzGp98UHRI21GOvp6CmH_hdZU",
+      //   authDomain: "eyewrite2-642f5.firebaseapp.com",
+      //   databaseURL: "https://eyewrite2-642f5-default-rtdb.firebaseio.com",
+      //   projectId: "eyewrite2-642f5",
+      //   storageBucket: "eyewrite2-642f5.appspot.com",
+      //   messagingSenderId: "360420484918",
+      //   appId: "1:360420484918:web:df36b1d345145448f7b597"
+      // };
 
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
 
+      //// Get Firebase Database reference.
+      var firebaseRef = getRef();
 
-  <script>
-    window.debug = false;  // turn off to remove debug statements
+      //// Create CodeMirror (with lineWrapping on).
+      var codeMirror = CodeMirror(document.getElementById("firepad"), {
+        lineWrapping: true,
+        inputStyle: "contenteditable",
+        historyEventDelay: 2500,
+        autofocus: true,
+        workTime: 5,
+        workDelay: 5,
+        pollInterval: 5,
+        viewportMargin: 2,
+      });
 
-    var firebaseConfig = {
-      apiKey: "AIzaSyAmD2D9XCpVDQcJF08chqCbkCpL-_Jfu_Y",
-      authDomain: "eyewrite-62d75.firebaseapp.com",
-      databaseURL: "https://eyewrite-62d75.firebaseio.com",
-      projectId: "eyewrite-62d75",
-      storageBucket: "eyewrite-62d75.appspot.com",
-      messagingSenderId: "998123311342",
-      appId: "1:998123311342:web:abed435afee503a2eb63ff",
-      measurementId: "G-8EGTMW2Q4G"
-    };
+      // Create a random ID to use as our user ID (we must give this to firepad and FirepadUserList).
+      var userId = Math.floor(Math.random() * 9999999999).toString();
 
-    // REPLACE WITH DEVELOPMENT SERVER
-    // var firebaseConfig = {
-    //   apiKey: "AIzaSyAkIIeqpNNzGp98UHRI21GOvp6CmH_hdZU",
-    //   authDomain: "eyewrite2-642f5.firebaseapp.com",
-    //   databaseURL: "https://eyewrite2-642f5-default-rtdb.firebaseio.com",
-    //   projectId: "eyewrite2-642f5",
-    //   storageBucket: "eyewrite2-642f5.appspot.com",
-    //   messagingSenderId: "360420484918",
-    //   appId: "1:360420484918:web:df36b1d345145448f7b597"
-    // };
+      //// Create Firepad (with rich text features and our desired userId).
+      var firepad = Firepad.fromCodeMirror(firebaseRef, codeMirror, {
+        richTextToolbar: true,
+        richTextShortcuts: true,
+        userId: userId,
+      });
 
+      //// Create FirepadUserList (with our desired userId).
+      var firepadUserList = FirepadUserList.fromDiv(
+        firebaseRef.child("users"),
+        document.getElementById("userlist"),
+        userId
+      );
 
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-
-    //// Get Firebase Database reference.
-    var firebaseRef = getRef();
-
-    //// Create CodeMirror (with lineWrapping on).
-    var codeMirror = CodeMirror(document.getElementById('firepad'), {
-      lineWrapping: true, inputStyle: 'contenteditable', historyEventDelay: 2500,
-      autofocus: true, workTime: 5, workDelay: 5, pollInterval: 5, viewportMargin: 2
-    });
-
-    // Create a random ID to use as our user ID (we must give this to firepad and FirepadUserList).
-    var userId = Math.floor(Math.random() * 9999999999).toString();
-
-    //// Create Firepad (with rich text features and our desired userId).
-    var firepad = Firepad.fromCodeMirror(firebaseRef, codeMirror,
-      { richTextToolbar: true, richTextShortcuts: true, userId: userId });
-
-    //// Create FirepadUserList (with our desired userId).
-    var firepadUserList = FirepadUserList.fromDiv(firebaseRef.child('users'),
-      document.getElementById('userlist'), userId);
-
-    // Helper to get hash from end of URL or generate a random one.
-    function getRef() {
-      var ref = firebase.database().ref();
-      var hash = window.location.hash.replace(/#/g, '');
-      if (hash) {
-        ref = ref.child(hash);
-      } else {
-        ref = ref.push(); // generate unique location.
-        window.location = window.location + '#' + ref.key; // add it as a hash to the URL.
+      // Helper to get hash from end of URL or generate a random one.
+      function getRef() {
+        var ref = firebase.database().ref();
+        var hash = window.location.hash.replace(/#/g, "");
+        if (hash) {
+          ref = ref.child(hash);
+        } else {
+          ref = ref.push(); // generate unique location.
+          window.location = window.location + "#" + ref.key; // add it as a hash to the URL.
+        }
+        return ref;
       }
-      return ref;
-    }
-    function updateUI() {
-      //Update Gradient Ratio label to match slider value
-      var grad = document.getElementById("numSentences2");
-      var gradval = document.getElementById("sentenceSlider2");
-      grad.innerHTML = Math.floor((gradval.value / 66) * 100) + "%";
-      //turn all switches off when page is loaded (class is onoffswitch-label)
-      document.getElementById("gazeSendSwitch").checked = false;
-      document.getElementById("mouseSendSwitch").checked = false;
-      document.getElementById("mouseVisSwitch").checked = false;
-      document.getElementById("gazeVisSwitch").checked = false;
+      function updateUI() {
+        //Update Gradient Ratio label to match slider value
+        var grad = document.getElementById("numSentences2");
+        var gradval = document.getElementById("sentenceSlider2");
+        grad.innerHTML = Math.floor((gradval.value / 66) * 100) + "%";
+        //turn all switches off when page is loaded (class is onoffswitch-label)
+        document.getElementById("gazeSendSwitch").checked = false;
+        document.getElementById("mouseSendSwitch").checked = false;
+        document.getElementById("mouseVisSwitch").checked = false;
+        document.getElementById("gazeVisSwitch").checked = false;
+      }
+    </script>
+  </body>
 
-
-    }
-  </script>
-
-</body>
-
-<!-- UI Adjustments -->
-<script src='./scripts/ui-adjustments.js'></script>
-<!-- Highlight Style -->
-<script src="./scripts/highlight-styles.js"></script>
-<!-- Visualization Control -->
-<script src='./scripts/visualization-control.js'></script>
-<!-- Voice Chat -->
-<!-- <script src="./scripts/voice-chat.js"></script> -->
-<script src="./scripts/media-call.js"></script>
-
+  <!-- UI Adjustments -->
+  <script src="./scripts/ui-adjustments.js"></script>
+  <!-- Highlight Style -->
+  <script src="./scripts/highlight-styles.js"></script>
+  <!-- Visualization Control -->
+  <script src="./scripts/visualization-control.js"></script>
+  <!-- Voice Chat -->
+  <!-- <script src="./scripts/voice-chat.js"></script> -->
+  <script src="./scripts/media-call.js"></script>
+  <script src="./scripts/heatmapVisualization.js"></script>
 </html>
