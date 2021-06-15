@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/static/css/main.7b8217d6.chunk.css",
+    "main.js": "/static/js/main.b1c55eb1.chunk.js",
+    "main.js.map": "/static/js/main.b1c55eb1.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.b010f032.js",
+    "runtime-main.js.map": "/static/js/runtime-main.b010f032.js.map",
+    "static/js/2.2497767d.chunk.js": "/static/js/2.2497767d.chunk.js",
+    "static/js/2.2497767d.chunk.js.map": "/static/js/2.2497767d.chunk.js.map",
+    "static/js/3.84eacff1.chunk.js": "/static/js/3.84eacff1.chunk.js",
+    "static/js/3.84eacff1.chunk.js.map": "/static/js/3.84eacff1.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/main.7b8217d6.chunk.css.map": "/static/css/main.7b8217d6.chunk.css.map",
+    "static/js/2.2497767d.chunk.js.LICENSE.txt": "/static/js/2.2497767d.chunk.js.LICENSE.txt",
+    "static/media/paper.64f19b60.png": "/static/media/paper.64f19b60.png",
+    "static/media/pencil1loop.e5fcd29b.mp3": "/static/media/pencil1loop.e5fcd29b.mp3",
+    "static/media/pencil2loop.1d70b1af.mp3": "/static/media/pencil2loop.1d70b1af.mp3",
+    "static/media/pencil3loop.f85ab838.mp3": "/static/media/pencil3loop.f85ab838.mp3"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.b010f032.js",
+    "static/js/2.2497767d.chunk.js",
+    "static/css/main.7b8217d6.chunk.css",
+    "static/js/main.b1c55eb1.chunk.js"
+  ]
+}
