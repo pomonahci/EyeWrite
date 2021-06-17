@@ -145,12 +145,13 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
 #controlContainer {
   background-color: #ebebeb;
   width: 175px;
-  position: relative;
+  position: absolute;
   border-radius: 4px;
   padding-bottom: 12px;
   height: auto;
   max-height: 65vh;
   overflow-y: scroll;
+  /* z-index: -1; */
 }
 
 #user-checkboxes-container {
@@ -280,7 +281,8 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
 }
 
 /* Mute Button Style */
-.radio-buttons .inline-toggle-container #aud, #cam {
+.radio-buttons .inline-toggle-container #aud,
+#cam {
   width: 60px;
   height: 26px;
   margin: auto 0;
@@ -288,10 +290,10 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   color: black;
   font-size: 14px;
   margin-bottom: 5px;
-
 }
 
-.radio-buttons .inline-toggle-container #aud:disabled, #cam:disabled {
+.radio-buttons .inline-toggle-container #aud:disabled,
+#cam:disabled {
   width: 60px;
   height: 26px;
   margin: auto 0;
@@ -334,7 +336,6 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   padding-bottom: 0px;
   margin-bottom: 0px;
 }
-
 
 #sentenceSlider {
   position: relative;
@@ -480,11 +481,10 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   right: 0px;
   background-color: #ffbf86;
 }
-.vvSwitch{
+.vvSwitch {
   left: 32px;
   margin-bottom: 5px;
 }
-
 
 /* Video Container Style */
 #video-streams {
@@ -496,3 +496,11 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   right: 0px;
 }
 
+#heatmap {
+  min-height: 100vh;
+  min-width: 100vw;
+  pointer-events: none;
+  position: absolute;
+  min-height: 100vh;
+  min-width: 100vw;
+}

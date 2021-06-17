@@ -1,49 +1,24 @@
 const config = {
     container: document.querySelector('#heatmap'),
-    radius: 10,
-    maxOpacity: .5,
+    // container: document.querySelector('html'),
+    radius: 20,
+    maxOpacity: .75,
     minOpacity: 0,
-    blur: .75
+    blur: .85,
+    // gradient: {
+    //     // enter n keys between 0 and 1 here
+    //     // for gradient color customization
+    //     '.5': 'blue',
+    //     '.1': 'red',
+    //     '.35': 'white',
+    //     '.15': 'yellow',
+    //     '.05': 'pink',
+    //     '.65': 'violet'
+    //   }
 }
 
 var heatmapInstance = h337.create(config);
 
-//   var testData = {
-//     max: 3,
-//     data: [{
-//         lat: 48.3333,
-//         lng: 16.35,
-//         count: 100
-//     }, {
-//         lat: 51.465558,
-//         lng: 0.010986,
-//         count: 100
-//     }, {
-//         lat: 33.5363,
-//         lng: -5.044,
-//         count: 100
-//     }]
-// };
-
-// heatmapInstance.setData(testData);
-
-// var dataPoint = {
-//     x: 5, // x coordinate of the datapoint, a number
-//     y: 5, // y coordinate of the datapoint, a number
-//     value: 100 // the value at datapoint(x, y)
-// };
-
-// var data = {
-//     max: 100,
-//     min: 0,
-//     data: [
-//       dataPoint, dataPoint, dataPoint, dataPoint
-//     ]
-// };
-// heatmapInstance.setData(data);
-
-
-// heatmapInstance.addData({x: 100, y: 100, value: 100});
 document.addEventListener('mousemove', (event) => {
 
 
@@ -51,7 +26,5 @@ document.addEventListener('mousemove', (event) => {
 
     console.log(`(${cx},${cy})`);
 
-    heatmapInstance.addData({x: cx || 0, y: cy, value: 100});
-    // console.log(heatmapInstance.getDataURL);
-    heatmapInstance.repaint();
+    heatmapInstance.addData({x: cx, y: cy, value: 100});
 })
