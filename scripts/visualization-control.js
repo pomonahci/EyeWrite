@@ -18,6 +18,26 @@ var visualizationControl = function () {
   var mousePosRef = firebaseRef.child("mice");
   var gazePosRef = firebaseRef.child("gaze");
 
+  const default_config = {
+    container: document.querySelector('#heatmap'),
+    radius: 20,
+    maxOpacity: .75,
+    minOpacity: 0,
+    blur: 1,
+    // gradient: {
+    //     // enter n keys between 0 and 1 here
+    //     // for gradient color customization
+    //     '.99': 'pink',
+    //     '.95': 'violet',
+    //     '.5': 'green',
+    //     '.8': 'yellow',
+    //     '.90': 'red',
+    //     '.25': 'blue'
+    //   }
+  }
+
+    const heatmapInstance = h337.create(default_config);
+
   // sendData and visualization state variables
   // 0 = no active
   // 1 = mouse only
@@ -31,6 +51,7 @@ var visualizationControl = function () {
 
   visShapeSelector.onchange = function () {
     window.visShape = visShapeSelector.value;
+    console.log(`vis shape changed to ${window.visShape}`);
     if (window.debug) console.log(window.visShape);
   };
 
@@ -691,7 +712,7 @@ var visualizationControl = function () {
     }
 
     var hColor = hex2rgb(userColors[uID], 1.0);
-    var hSize = { coeff: document.getElementById("sentenceSlider").value };
+    var hSize = {coeff: document.getElementById("sentenceSlider").value};
     var hrate = {coeff: document.getElementById("sentenceSlider2").value};
 
 
@@ -700,6 +721,9 @@ var visualizationControl = function () {
       circle.style = createSolidCircleHighlightStyle(hPos, hSize, hColor);
     } else if (window.visShape == "gradient") {
       circle.style = createGradientCircleHighlightStyle(hPos, hSize, hColor, hrate);
+    }else if(window.visShape == "heatmap"){
+        circle.style.visibility = "hidden";
+        heatmapInstance.addData({x: hPos.x, y: hPos.y, value: 200});
     } else {
       if (window.debug) console.log("invalid shape!");
     }
@@ -843,4 +867,3 @@ var visualizationControl = function () {
   }
 
 }();
-
