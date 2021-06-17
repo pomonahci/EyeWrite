@@ -413,6 +413,7 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+  user-select: none;
 }
 .onoffswitch-checkbox {
   position: absolute;

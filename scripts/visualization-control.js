@@ -36,7 +36,7 @@ var visualizationControl = function () {
     //   }
   }
 
-    const heatmapInstance = h337.create(default_config);
+  const heatmapInstance = h337.create(default_config);
 
   // sendData and visualization state variables
   // 0 = no active
