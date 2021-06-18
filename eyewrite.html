@@ -244,12 +244,35 @@
         </div>
       </div>
 
+      <!-- Heatmap parameters container (set to visible when "heatmap" value is selected) -->
+      <div class="slider-container2" id="heatmap-params-container">
+        <p class="slider-text">Heatmap Options</p>
+        <p class="hm-ui-options-text">
+          Radius Size: <span id="hm-radius"></span>
+        </p>
+        <input
+          type="range"
+          min="1"
+          max="48"
+          value="12"
+          class="sentenceSlider"
+          id="hm-radius-slider"
+        />
+      </div>
+
       <!-- Highlight Size Component -->
       <div id="slider-container">
         <p class="slider-text">
           Highlight Size: <span id="numSentences"></span>
         </p>
-        <input type="range" min="1" max="48" value="12" id="sentenceSlider" />
+        <input
+          type="range"
+          min="1"
+          max="48"
+          value="12"
+          class="sentenceSlider"
+          id="sentenceSlider"
+        />
       </div>
 
       <!-- Highlight Gradient Ratio Component -->
@@ -257,7 +280,14 @@
         <p class="slider-text2">
           Gradient Ratio: <span id="numSentences2"></span>
         </p>
-        <input type="range" min="0" max="66" value="66" id="sentenceSlider2" />
+        <input
+          type="range"
+          min="0"
+          max="66"
+          value="66"
+          class="sentenceSlider"
+          id="sentenceSlider2"
+        />
       </div>
 
       <!-- Voice/Video Chat Component -->
@@ -413,12 +443,12 @@
     </script>
   </body>
 
-  <!-- UI Adjustments -->
-  <script src="./scripts/ui-adjustments.js"></script>
   <!-- Highlight Style -->
   <script src="./scripts/highlight-styles.js"></script>
   <!-- Visualization Control -->
   <script src="./scripts/visualization-control.js"></script>
+  <!-- UI Adjustments -->
+  <script src="./scripts/ui-adjustments.js"></script>
   <!-- Voice Chat -->
   <!-- <script src="./scripts/voice-chat.js"></script> -->
   <script src="./scripts/media-call.js"></script>

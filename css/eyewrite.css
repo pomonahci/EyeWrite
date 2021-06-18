@@ -315,6 +315,20 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   padding-bottom: 20px;
 }
 
+.slider-container2 {
+  position: relative;
+  left: 15px;
+  width: 145px;
+  /* height: 70px; */
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: var(--sub-box-padding);
+  border: 1px solid var(--outer-border);
+  border-radius: 4px;
+  padding-bottom: 20px;
+  /* display: none; */
+}
+
 .slider-text {
   position: relative;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -337,19 +351,31 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   margin-bottom: 0px;
 }
 
-#sentenceSlider {
+.hm-ui-options-text {
+  position: relative;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  margin-left: 10px;
+  margin-top: 5px;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+  text-align: center;
+}
+
+.sentenceSlider {
   position: relative;
   width: 125px;
   margin-left: 10px;
   margin-top: 10px;
 }
-
+/* 
 #sentenceSlider2 {
   position: relative;
   width: 125px;
   margin-left: 10px;
   margin-top: 10px;
-}
+} */
 
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   input[type="range"] {

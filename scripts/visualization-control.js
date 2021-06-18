@@ -1,9 +1,29 @@
 /**
  * visualization.js
  * 
- * Name: davecarroll, chanhakim
+ * Name: davecarroll, chanhakim, aidangarton
  * Date: Summer 2020 - Spring 2021
  */
+ let default_config = {
+  container: document.querySelector('#heatmap'),
+  radius: 20,
+  maxOpacity: .75,
+  minOpacity: 0,
+  blur: 1,
+  // gradient: {
+  //     // enter n keys between 0 and 1 here
+  //     // for gradient color customization
+  //     '.99': 'pink',
+  //     '.95': 'violet',
+  //     '.5': 'green',
+  //     '.8': 'yellow',
+  //     '.90': 'red',
+  //     '.25': 'blue'
+  //   }
+}
+
+let heatmapInstance = h337.create(default_config);
+
 var visualizationControl = function () {
 
   var FirepadCM;            // reference for our firepad's codemirror instance
@@ -17,26 +37,6 @@ var visualizationControl = function () {
   // references to firebase user mouse and gaze positions
   var mousePosRef = firebaseRef.child("mice");
   var gazePosRef = firebaseRef.child("gaze");
-
-  const default_config = {
-    container: document.querySelector('#heatmap'),
-    radius: 20,
-    maxOpacity: .75,
-    minOpacity: 0,
-    blur: 1,
-    // gradient: {
-    //     // enter n keys between 0 and 1 here
-    //     // for gradient color customization
-    //     '.99': 'pink',
-    //     '.95': 'violet',
-    //     '.5': 'green',
-    //     '.8': 'yellow',
-    //     '.90': 'red',
-    //     '.25': 'blue'
-    //   }
-  }
-
-  const heatmapInstance = h337.create(default_config);
 
   // sendData and visualization state variables
   // 0 = no active
@@ -52,6 +52,15 @@ var visualizationControl = function () {
   visShapeSelector.onchange = function () {
     window.visShape = visShapeSelector.value;
     console.log(`vis shape changed to ${window.visShape}`);
+
+    const x = document.getElementById("heatmap-params-container");
+
+    if(visShapeSelector.value == "heatmap"){
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+
     if (window.debug) console.log(window.visShape);
   };
 
@@ -867,3 +876,15 @@ var visualizationControl = function () {
   }
 
 }();
+
+function updateHeatmapStyle(new_config){
+  default_config = new_config;
+
+  let new_heatmap = h337.create(new_config);
+  new_heatmap.setData(heatmapInstance.getData());
+
+  heatmapInstance.setData({data:[]});
+  heatmapInstance = new_heatmap;
+
+  heatmapInstance.repaint();
+}
