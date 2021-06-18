@@ -246,17 +246,28 @@
 
       <!-- Heatmap parameters container (set to visible when "heatmap" value is selected) -->
       <div class="slider-container2" id="heatmap-params-container">
-        <p class="slider-text">Heatmap Options</p>
+        <p class="slider-text3">Heatmap Customization</p>
+
         <p class="hm-ui-options-text">
           Radius Size: <span id="hm-radius"></span>
         </p>
         <input
           type="range"
-          min="1"
-          max="48"
-          value="12"
+          min="10"
+          max="50"
+          value="20"
           class="sentenceSlider"
           id="hm-radius-slider"
+        />
+
+        <p class="hm-ui-options-text">Opacity: <span id="hm-opacity"></span></p>
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value="60"
+          class="sentenceSlider"
+          id="hm-opacity-slider"
         />
       </div>
 

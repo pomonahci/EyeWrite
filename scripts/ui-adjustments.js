@@ -111,6 +111,24 @@ var UIAdjustments = function () {
       maxOpacity: .75,
       minOpacity: 0,
       blur: 1,
+      maxOpacity: .75,
+      minOpacity: 0,
+    })
+  }
+
+  var slider4 = document.getElementById("hm-opacity-slider");
+  var output4 = document.getElementById("hm-opacity");
+  output4.innerHTML = slider4.value + "%";
+
+  slider4.oninput = function () {
+    output4.innerHTML = this.value + "%";
+    updateHeatmapStyle({
+      container: document.querySelector('#heatmap'),
+      radius: slider3.value,
+      opacity: 1 - (slider4.value / 100),
+      blur: 1,
+      maxOpacity: .75,
+      minOpacity: 0,
     })
   }
 

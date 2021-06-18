@@ -6,9 +6,10 @@
  */
  let default_config = {
   container: document.querySelector('#heatmap'),
-  radius: 20,
+  radius: document.getElementById("hm-radius-slider").value,
   maxOpacity: .75,
   minOpacity: 0,
+  opacity: 1 - (document.getElementById("hm-opacity-slider").value / 100),
   blur: 1,
   // gradient: {
   //     // enter n keys between 0 and 1 here
@@ -732,7 +733,7 @@ var visualizationControl = function () {
       circle.style = createGradientCircleHighlightStyle(hPos, hSize, hColor, hrate);
     }else if(window.visShape == "heatmap"){
         circle.style.visibility = "hidden";
-        heatmapInstance.addData({x: hPos.x, y: hPos.y, value: 200});
+        heatmapInstance.addData({x: hPos.x, y: hPos.y, value: 100});
     } else {
       if (window.debug) console.log("invalid shape!");
     }

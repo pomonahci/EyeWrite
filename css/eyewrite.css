@@ -351,6 +351,18 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   margin-bottom: 0px;
 }
 
+.slider-text3 {
+  position: relative;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  /* margin-left: 10px; */
+  margin-top: 5px;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+  text-align: center;
+}
+
 .hm-ui-options-text {
   position: relative;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
