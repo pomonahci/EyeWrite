@@ -140,7 +140,7 @@ var UIAdjustments = function () {
   //     blur: document.getElementById("hm-blur-slider").value / 100,
   //   })
   // }
-
+  
   var controlContainer = document.getElementById('controlContainer');
   controlContainer.style.top = (userlistBox.offsetTop + userlistBox.offsetHeight + 10) + "px";
 

@@ -738,7 +738,7 @@ var visualizationControl = function () {
         if(intervalID == null){
           intervalID = window.setInterval(() => {heatmapInstance.setData({data:[]})}, 12000);
         }
-        heatmapInstance.addData({x: hPos.x, y: hPos.y, value: 100});
+        heatmapInstance.addData({x: hPos.x, y: hPos.y, value: 20});
 
         // if(heatmapDataPoints.length < 100){
           // heatmapDataPoints.push({x: hPos.x, y: hPos.y, value: 20});
