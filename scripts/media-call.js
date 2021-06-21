@@ -256,9 +256,10 @@ var mediaCall = function () {
 
 			var video = document.createElement("video");
 			video.setAttribute("width", "175px");
-			video.setAttribute("style", "box-shadow: 10px 0 0 0 " + color+";-moz-transform: scale(-1, 1); \
-			-webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1); \
-			transform: scale(-1, 1); filter: FlipH;");
+			video.setAttribute("style", "box-shadow: 10px 0 0 0 " + color);
+			// +";-moz-transform: scale(-1, 1); \
+			// -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1); \
+			// transform: scale(-1, 1); filter: FlipH;");
 			video.autoplay = true;
 			video.muted = true;
 			if (id != userId) {
