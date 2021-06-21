@@ -16,6 +16,7 @@ let default_config = {
 }
 let heatmapDataPoints = [];
 let intervalID;
+let removalType = "temporal";
 
 let heatmapInstance = h337.create(default_config);
 
@@ -735,21 +736,40 @@ var visualizationControl = function () {
     }else if(window.visShape == "heatmap"){
         circle.style.visibility = "hidden";
 
-        if(intervalID == null){
-          intervalID = window.setInterval(() => {heatmapInstance.setData({data:[]})}, 12000);
-        }
-        heatmapInstance.addData({x: hPos.x, y: hPos.y, value: 20});
-
-        // if(heatmapDataPoints.length < 100){
-          // heatmapDataPoints.push({x: hPos.x, y: hPos.y, value: 20});
-          // heatmapInstance.setData({data: []});
-          // heatmapInstance.setData(heatmapDataPoints);
-        // } else {
-        //   heatmapDataPoints.shift();
-        //   heatmapDataPoints.push({x: hPos.x, y: hPos.y, value: 20});
-        //   heatmapInstance.setData({data: []});
-        //   heatmapInstance.setData(heatmapDataPoints);
+        // switch(removalType){
+        //   case "temporal":
+        //     if(intervalID == null){
+        //       intervalID = window.setInterval(() => {heatmapInstance.setData({data:[]})}, 12000);
+        //     }
+        //     heatmapInstance.addData({x: hPos.x, y: hPos.y, value: 20});
+        //     return;
+        //   case "num-points":
+        //     if(heatmapDataPoints.length >= 500 && removeType == "num_points"){
+        //       heatmapDataPoints.shift();
+        //     }
+    
+        //     heatmapDataPoints.push({x: hPos.x, y: hPos.y, value: 20});
+        //     heatmapInstance.setData({data: []});
+        //     heatmapInstance.setData({data: heatmapDataPoints});
+        //     return
         // }
+
+        // if(intervalID == null){
+        //   intervalID = window.setInterval(() => {heatmapInstance.setData({data:[]})}, 12000);
+        // }
+        // heatmapInstance.addData({x: hPos.x, y: hPos.y, value: 20});
+
+        // if(id == null){
+        //   id = window.setInterval(a, 8000);
+        // }
+
+        if(heatmapDataPoints.length >= 500){
+          heatmapDataPoints.shift();
+        }
+
+          heatmapDataPoints.push({x: hPos.x, y: hPos.y, value: 20});
+          heatmapInstance.setData({max: 100, min: 0, data: heatmapDataPoints});
+        
     } else {
       if (window.debug) console.log("invalid shape!");
     }
@@ -895,15 +915,16 @@ var visualizationControl = function () {
 }();
 
 function updateHeatmapStyle(new_config){
-  // default_config = new_config;
+  default_config = new_config;
 
-  // let new_heatmap = h337.create(new_config);
-  // new_heatmap.setData(heatmapInstance.getData());
+  let new_heatmap = h337.create(new_config);
+  new_heatmap.setData(heatmapInstance.getData());
 
-  // heatmapInstance.setData({data:[]});
-  // heatmapInstance = new_heatmap;
+  heatmapDataPoints = [];
+  heatmapInstance.setData({max: 100, min:100, data:[]});
+  heatmapInstance = new_heatmap;
 
-  // heatmapInstance = h337.create(new_config);
+  heatmapInstance = h337.create(new_config);
 
-  // heatmapInstance.repaint();
+  heatmapInstance.repaint();
 }

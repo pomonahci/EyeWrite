@@ -99,19 +99,17 @@ var UIAdjustments = function () {
     output2.innerHTML = (val + "%");
   }
 
-  // var slider3 = document.getElementById("hm-radius-slider");
-  // var output3 = document.getElementById("hm-radius");
-  // output3.innerHTML = slider3.value;
+  var slider3 = document.getElementById("hm-radius-slider");
+  var output3 = document.getElementById("hm-radius");
+  output3.innerHTML = slider3.value;
 
-  // slider3.oninput = function () {
-  //   output3.innerHTML = this.value;
-  //   updateHeatmapStyle({
-  //     container: document.querySelector('#heatmap'),
-  //     radius: document.getElementById("hm-radius-slider").value,
-  //     // opacity: document.getElementById("hm-opacity-slider").value / 100,
-  //     blur: document.getElementById("hm-blur-slider").value / 100,
-  //   })
-  // }
+  slider3.oninput = function () {
+    output3.innerHTML = this.value;
+    updateHeatmapStyle({
+      container: document.querySelector('#heatmap'),
+      radius: document.getElementById("hm-radius-slider").value,
+    })
+  }
 
   // var slider4 = document.getElementById("hm-opacity-slider");
   // var output4 = document.getElementById("hm-opacity");
@@ -140,7 +138,7 @@ var UIAdjustments = function () {
   //     blur: document.getElementById("hm-blur-slider").value / 100,
   //   })
   // }
-  
+
   var controlContainer = document.getElementById('controlContainer');
   controlContainer.style.top = (userlistBox.offsetTop + userlistBox.offsetHeight + 10) + "px";
 
