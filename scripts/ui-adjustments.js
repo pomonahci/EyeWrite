@@ -99,38 +99,47 @@ var UIAdjustments = function () {
     output2.innerHTML = (val + "%");
   }
 
-  var slider3 = document.getElementById("hm-radius-slider");
-  var output3 = document.getElementById("hm-radius");
-  output3.innerHTML = slider3.value;
+  // var slider3 = document.getElementById("hm-radius-slider");
+  // var output3 = document.getElementById("hm-radius");
+  // output3.innerHTML = slider3.value;
 
-  slider3.oninput = function () {
-    output3.innerHTML = this.value;
-    updateHeatmapStyle({
-      container: document.querySelector('#heatmap'),
-      radius: slider3.value,
-      maxOpacity: .75,
-      minOpacity: 0,
-      blur: 1,
-      maxOpacity: .75,
-      minOpacity: 0,
-    })
-  }
+  // slider3.oninput = function () {
+  //   output3.innerHTML = this.value;
+  //   updateHeatmapStyle({
+  //     container: document.querySelector('#heatmap'),
+  //     radius: document.getElementById("hm-radius-slider").value,
+  //     // opacity: document.getElementById("hm-opacity-slider").value / 100,
+  //     blur: document.getElementById("hm-blur-slider").value / 100,
+  //   })
+  // }
 
-  var slider4 = document.getElementById("hm-opacity-slider");
-  var output4 = document.getElementById("hm-opacity");
-  output4.innerHTML = slider4.value + "%";
+  // var slider4 = document.getElementById("hm-opacity-slider");
+  // var output4 = document.getElementById("hm-opacity");
+  // output4.innerHTML = slider4.value + "%";
 
-  slider4.oninput = function () {
-    output4.innerHTML = this.value + "%";
-    updateHeatmapStyle({
-      container: document.querySelector('#heatmap'),
-      radius: slider3.value,
-      opacity: 1 - (slider4.value / 100),
-      blur: 1,
-      maxOpacity: .75,
-      minOpacity: 0,
-    })
-  }
+  // slider4.oninput = function () {
+  //   output4.innerHTML = this.value + "%";
+  //   updateHeatmapStyle({
+  //     container: document.querySelector('#heatmap'),
+  //     radius: document.getElementById("hm-radius-slider").value,
+  //     // opacity: document.getElementById("hm-opacity-slider").value / 100,
+  //     blur: document.getElementById("hm-blur-slider").value / 100,
+  //   })
+  // }
+
+  // var slider5 = document.getElementById("hm-blur-slider");
+  // var output5 = document.getElementById("hm-blur");
+  // output5.innerHTML = slider5.value;
+
+  // slider5.oninput = function () {
+  //   output5.innerHTML = this.value;
+  //   updateHeatmapStyle({
+  //     container: document.querySelector('#heatmap'),
+  //     radius: document.getElementById("hm-radius-slider").value,
+  //     // opacity: document.getElementById("hm-opacity-slider").value / 100,
+  //     blur: document.getElementById("hm-blur-slider").value / 100,
+  //   })
+  // }
 
   var controlContainer = document.getElementById('controlContainer');
   controlContainer.style.top = (userlistBox.offsetTop + userlistBox.offsetHeight + 10) + "px";

@@ -326,7 +326,7 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   border: 1px solid var(--outer-border);
   border-radius: 4px;
   padding-bottom: 20px;
-  /* display: none; */
+  display: none;
 }
 
 .slider-text {

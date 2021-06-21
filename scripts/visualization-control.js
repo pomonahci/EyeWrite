@@ -4,24 +4,18 @@
  * Name: davecarroll, chanhakim, aidangarton
  * Date: Summer 2020 - Spring 2021
  */
- let default_config = {
+//  let default_config = {
+//   container: document.querySelector('#heatmap'),
+//   radius: document.getElementById("hm-radius-slider").value,
+//   opacity: document.getElementById("hm-opacity-slider").value,
+//   blur: document.getElementById("hm-blur-slider").value / 100,
+// }
+
+let default_config = {
   container: document.querySelector('#heatmap'),
-  radius: document.getElementById("hm-radius-slider").value,
-  maxOpacity: .75,
-  minOpacity: 0,
-  opacity: 1 - (document.getElementById("hm-opacity-slider").value / 100),
-  blur: 1,
-  // gradient: {
-  //     // enter n keys between 0 and 1 here
-  //     // for gradient color customization
-  //     '.99': 'pink',
-  //     '.95': 'violet',
-  //     '.5': 'green',
-  //     '.8': 'yellow',
-  //     '.90': 'red',
-  //     '.25': 'blue'
-  //   }
 }
+let heatmapDataPoints = [];
+let intervalID;
 
 let heatmapInstance = h337.create(default_config);
 
@@ -725,15 +719,37 @@ var visualizationControl = function () {
     var hSize = {coeff: document.getElementById("sentenceSlider").value};
     var hrate = {coeff: document.getElementById("sentenceSlider2").value};
 
-
     // var visShape, visSize;
     if (window.visShape == "solid") {
       circle.style = createSolidCircleHighlightStyle(hPos, hSize, hColor);
+      
+      // get rid of clearing heatmap interval and clear heatmap data from screen
+      clearInterval(intervalID);
+      heatmapInstance.setData({data: []});
     } else if (window.visShape == "gradient") {
       circle.style = createGradientCircleHighlightStyle(hPos, hSize, hColor, hrate);
+
+      // get rid of clearing heatmap interval and clear heatmap data from screen
+      clearInterval(intervalID);
+      heatmapInstance.setData({data: []});
     }else if(window.visShape == "heatmap"){
         circle.style.visibility = "hidden";
+
+        if(intervalID == null){
+          intervalID = window.setInterval(() => {heatmapInstance.setData({data:[]})}, 12000);
+        }
         heatmapInstance.addData({x: hPos.x, y: hPos.y, value: 100});
+
+        // if(heatmapDataPoints.length < 100){
+          // heatmapDataPoints.push({x: hPos.x, y: hPos.y, value: 20});
+          // heatmapInstance.setData({data: []});
+          // heatmapInstance.setData(heatmapDataPoints);
+        // } else {
+        //   heatmapDataPoints.shift();
+        //   heatmapDataPoints.push({x: hPos.x, y: hPos.y, value: 20});
+        //   heatmapInstance.setData({data: []});
+        //   heatmapInstance.setData(heatmapDataPoints);
+        // }
     } else {
       if (window.debug) console.log("invalid shape!");
     }
@@ -879,13 +895,15 @@ var visualizationControl = function () {
 }();
 
 function updateHeatmapStyle(new_config){
-  default_config = new_config;
+  // default_config = new_config;
 
-  let new_heatmap = h337.create(new_config);
-  new_heatmap.setData(heatmapInstance.getData());
+  // let new_heatmap = h337.create(new_config);
+  // new_heatmap.setData(heatmapInstance.getData());
 
-  heatmapInstance.setData({data:[]});
-  heatmapInstance = new_heatmap;
+  // heatmapInstance.setData({data:[]});
+  // heatmapInstance = new_heatmap;
 
-  heatmapInstance.repaint();
+  // heatmapInstance = h337.create(new_config);
+
+  // heatmapInstance.repaint();
 }
