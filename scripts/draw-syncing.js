@@ -52,7 +52,7 @@ function sketchEdit(e) {
   console.log("edit made");
   editor = true;
   // console.log(firepad.firebaseAdapter_.revision_);
-  if(primSket.currentPath) primSket.currentPath.idCreator = userId;
+  if(e=='draw' || e=='move') primSket.currentPath.idCreator = userId;
   var srl = primSket.serialize()
   firepad.firebaseAdapter_.ref_.child('svg').transaction(function (current) {
     return srl;
