@@ -21,10 +21,10 @@ firebaseRef.child('svg').on('value', function (snapshot) {
 var editor = false;
 function sketchEdit(e) {
   console.log("edit made: " + e);
-  console.log(primSket);
   editor = true;
   if (e == 'draw' || e == 'move') primSket.currentPath.idCreator = userId;
   var srl = primSket.serialize()
+  console.log(srl);
   firepad.firebaseAdapter_.ref_.child('svg').transaction(function (current) {
     return srl;
   })
