@@ -19,11 +19,11 @@ function synchronize(snapshot) {
     //   primSket.displayLoadedSketch(false);
     // }
     // else 
-    if (userId != snapshot.val()[snapshot.val().length - 1].idCreator) {
+    // if (userId != snapshot.val()[snapshot.val().length - 1].idCreator) {
       console.log("Remote Update");
       primSket.loadSketch(snapshot.val());
       primSket.displayLoadedSketch(false);
-    }
+    // }
   }
   // console.log(firepad.firebaseAdapter_.revision_);
 }
@@ -37,18 +37,20 @@ function synchronize(snapshot) {
 
 // Listens always for updates to the svg canvas
 firebaseRef.child('svg').on('value', function (snapshot) {
-  synchronize(snapshot);
+  if(!editor) synchronize(snapshot);
+  editor = false;
 });
 
 function getKeyByRevNum(object, value) {
   return Object.keys(object).find(key => object[key].stream_id === value);
 }
-
+var editor = false;
 function sketchEdit(e) {
   // if (resetRevId && firepad.firebaseAdapter_.revision_ == 1) {
   //   firepad.firebaseAdapter_.revision_ = 0;
   // }
   console.log("edit made");
+  editor = true;
   // console.log(firepad.firebaseAdapter_.revision_);
   primSket.currentPath.idCreator = userId;
   var srl = primSket.serialize()
