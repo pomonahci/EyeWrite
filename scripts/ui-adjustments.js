@@ -108,22 +108,23 @@ var UIAdjustments = function () {
     updateHeatmapStyle({
       container: document.querySelector('#heatmap'),
       radius: document.getElementById("hm-radius-slider").value,
+      // opacity: document.getElementById("hm-opacity-slider").value / 100,
     })
   }
 
-  // var slider4 = document.getElementById("hm-opacity-slider");
-  // var output4 = document.getElementById("hm-opacity");
-  // output4.innerHTML = slider4.value + "%";
+  var slider4 = document.getElementById("hm-opacity-slider");
+  var output4 = document.getElementById("hm-opacity");
+  output4.innerHTML = slider4.value + "%";
 
-  // slider4.oninput = function () {
-  //   output4.innerHTML = this.value + "%";
-  //   updateHeatmapStyle({
-  //     container: document.querySelector('#heatmap'),
-  //     radius: document.getElementById("hm-radius-slider").value,
-  //     // opacity: document.getElementById("hm-opacity-slider").value / 100,
-  //     blur: document.getElementById("hm-blur-slider").value / 100,
-  //   })
-  // }
+  slider4.oninput = function () {
+    output4.innerHTML = this.value + "%";
+    updateHeatmapStyle({
+      container: document.querySelector('#heatmap'),
+      radius: document.getElementById("hm-radius-slider").value,
+      // opacity: document.getElementById("hm-opacity-slider").value / 100,
+      // blur: document.getElementById("hm-blur-slider").value / 100,
+    })
+  }
 
   // var slider5 = document.getElementById("hm-blur-slider");
   // var output5 = document.getElementById("hm-blur");

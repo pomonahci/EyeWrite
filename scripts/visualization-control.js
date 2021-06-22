@@ -4,6 +4,7 @@
  * Name: davecarroll, chanhakim, aidangarton
  * Date: Summer 2020 - Spring 2021
  */
+
 //  let default_config = {
 //   container: document.querySelector('#heatmap'),
 //   radius: document.getElementById("hm-radius-slider").value,
@@ -13,7 +14,10 @@
 
 let default_config = {
   container: document.querySelector('#heatmap'),
+  radius: document.getElementById("hm-radius-slider").value,
+  // opacity: document.getElementById("hm-opacity-slider").value / 100,
 }
+
 let heatmapDataPoints = [];
 let intervalID;
 let removalType = "temporal";
@@ -763,12 +767,27 @@ var visualizationControl = function () {
         //   id = window.setInterval(a, 8000);
         // }
 
-        if(heatmapDataPoints.length >= 500){
-          heatmapDataPoints.shift();
-        }
+
+        if(removalType == "temporal"){
+          if(intervalID == null){
+            intervalID = window.setInterval(() => {
+              // if(heatmapDataPoints.length >= 500){
+              heatmapDataPoints.shift();
+              heatmapInstance.setData({max: 100, min: 0, data: heatmapDataPoints});
+            }, 100);
+          }
 
           heatmapDataPoints.push({x: hPos.x, y: hPos.y, value: 20});
           heatmapInstance.setData({max: 100, min: 0, data: heatmapDataPoints});
+
+        } else if(removalType == "num-points"){
+          if(heatmapDataPoints.length >= 500){
+            heatmapDataPoints.shift();
+          }
+  
+          heatmapDataPoints.push({x: hPos.x, y: hPos.y, value: 20});
+          heatmapInstance.setData({max: 100, min: 0, data: heatmapDataPoints});
+        }
         
     } else {
       if (window.debug) console.log("invalid shape!");
