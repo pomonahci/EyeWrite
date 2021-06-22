@@ -1,7 +1,7 @@
 // var resetRevId = true;
 
 var primSket;
-var strokeCount = 1;
+var strokeCount = 0;
 
 var svgSYNC = true;//Responsible for initializing the svg on page startup
 function synchronize(snapshot) {
@@ -14,6 +14,7 @@ function synchronize(snapshot) {
 
 // Listens always for updates to the svg canvas
 firebaseRef.child('svg').on('value', function (snapshot) {
+  console.log("activated");
   if (!editor) synchronize(snapshot);
   editor = false;
   strokeCount++;
