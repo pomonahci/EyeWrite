@@ -1,6 +1,7 @@
 // var resetRevId = true;
 
 var primSket;
+var stokeCount = 1;
 
 var svgSYNC = true;//Responsible for initializing the svg on page startup
 function synchronize(snapshot) {
@@ -15,14 +16,19 @@ function synchronize(snapshot) {
 firebaseRef.child('svg').on('value', function (snapshot) {
   if (!editor) synchronize(snapshot);
   editor = false;
+  strokeCount++;
 });
 
 
 var editor = false;
 function sketchEdit(e) {
-  console.log("edit made: " + e);
+  console.log("edit made: ");
+  console.log(e);
   editor = true;
-  if (e == 'draw' || e == 'move') primSket.currentPath.idCreator = userId;
+  if (e == 'draw' || e == 'move') {
+    primSket.currentPath.idCreator = userId;
+    primSket.currentPath.idStroke = strokeCount;
+  }
   var srl = primSket.serialize()
   console.log(srl);
   firepad.firebaseAdapter_.ref_.child('svg').transaction(function (current) {
