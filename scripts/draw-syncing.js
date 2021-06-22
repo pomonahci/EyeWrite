@@ -26,6 +26,7 @@ var currRev;
 
 var svgSYNC = true;//Responsible for initializing the svg on page startup
 function synchronize(snapshot){
+  console.log("Me: "+userId+", Last Author: "+snapshot.val().a);
   if(svgSYNC){
     console.log("Initializing");
     svgSYNC = false;
