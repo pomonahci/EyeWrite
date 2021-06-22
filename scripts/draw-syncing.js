@@ -14,7 +14,6 @@ function synchronize(snapshot) {
 
 // Listens always for updates to the svg canvas
 firebaseRef.child('svg').on('value', function (snapshot) {
-  console.log("activated");
   if (!editor) synchronize(snapshot);
   editor = false;
   strokeCount++;
@@ -26,9 +25,10 @@ function sketchEdit(e) {
   console.log("edit made: ");
   console.log(e);
   editor = true;
-  if (e == 'draw' || e == 'move') {
+  if (e == 'draw' || e == 'move' || e=='erase') {
     primSket.currentPath.idCreator = userId;
     primSket.currentPath.idStroke = strokeCount;
+    primSket.created = e;
   }
   var srl = primSket.serialize()
   console.log(srl);
