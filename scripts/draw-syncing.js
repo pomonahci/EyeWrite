@@ -1,7 +1,7 @@
 // var resetRevId = true;
 
 var primSket;
-var stokeCount = 1;
+var strokeCount = 1;
 
 var svgSYNC = true;//Responsible for initializing the svg on page startup
 function synchronize(snapshot) {
