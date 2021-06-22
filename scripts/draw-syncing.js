@@ -5,7 +5,6 @@ var chrs = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 function versionId(revision) {
   if(resetRevId && revision == 1) {firepad.firebaseAdapter_.revision_ = 0;resetRevId=false;revision=0;}
   if (revision === 0) {
-    firepad.firebaseAdapter_.revision_++;
     return 'A0';
   }
   var str = '';
@@ -17,7 +16,6 @@ function versionId(revision) {
   }
   // Prefix with length (starting at 'A' for length 1) to ensure the id's sort lexicographically.
   var prefix = chrs[str.length + 9];
-  firepad.firebaseAdapter_.revision_++;
   return prefix + str;
 }
 
@@ -26,7 +24,8 @@ var currRev;
 
 var svgSYNC = true;//Responsible for initializing the svg on page startup
 function synchronize(snapshot){
-  console.log("Me: "+userId+", Last Author: "+snapshot.val().a);
+  firepad.firebaseAdapter_.revision_++;
+  console.log("after: "+firepad.firebaseAdapter_.revision_);
   if(svgSYNC){
     console.log("Initializing");
     svgSYNC = false;
@@ -54,7 +53,7 @@ function sketchEdit(e){
     firepad.firebaseAdapter_.revision_=currRev;
   }
   console.log("edit made");
-  console.log(firepad.firebaseAdapter_.revision_);
+  console.log("before: "+firepad.firebaseAdapter_.revision_);
   var ver = versionId(firepad.firebaseAdapter_.revision_);
   // console.log("version: "+ver);
   firepad.firebaseAdapter_.ref_.child('svg').child(ver).transaction(function(current) {
