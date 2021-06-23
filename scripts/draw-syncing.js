@@ -1,38 +1,53 @@
 // var resetRevId = true;
 
-var primSket;
-var strokeCount = 0;
+var primSket;//refernce to svg sketchpage
+var currentlyEditing = false;
+var ServerSketch;//json format of primSket kept on the firebase
 
-var svgSYNC = true;//Responsible for initializing the svg on page startup
-function synchronize(snapshot) {
-  if (snapshot.val()) {
+// var strokeCount = 0;
+
+function synchronize(sketch) {
+  if (sketch) {
     console.log("Remote Update");
-    primSket.loadSketch(snapshot.val());
+    primSket.loadSketch(sketch);
     primSket.displayLoadedSketch(false);
   }
 }
 
 // Listens always for updates to the svg canvas
 firebaseRef.child('svg').on('value', function (snapshot) {
-  if (!editor) synchronize(snapshot);
+  if (snapshot.val()) {
+    ServerSketch = snapshot.val();
+    if (!currentlyEditing && !editor) {
+      synchronize(ServerSketch);
+    }
+  }
+  // if (!editor) synchronize(snapshot);
   editor = false;
-  strokeCount++;
+  // strokeCount++;
 });
-
 
 var editor = false;
 function sketchEdit(e) {
   console.log("edit made: ");
   console.log(e);
   editor = true;
-  if (e == 'draw' || e == 'move' || e=='erase') {
+  if (e == 'draw' || e == 'move') {
     primSket.currentPath.idCreator = userId;
-    primSket.currentPath.idStroke = strokeCount;
+    primSket.currentPath.idStroke = ServerSketch.length + 1;
     primSket.created = e;
   }
-  var srl = primSket.serialize()
-  console.log(srl);
+
+
+  var srl = primSket.serialize();
+  var srl2 = ServerSketch;
+  srl2.push(primSket.currentPath.serialize());
+  console.log(srl2);
   firepad.firebaseAdapter_.ref_.child('svg').transaction(function (current) {
-    return srl;
+    //create a log to apache server
+    // var save_url = "http://hci.pomona.edu/Drawing?" + "x=" + x + ";y=" + y;
+    // var temp_image = new Image();
+    // temp_image.src = save_url;
+    return srl2;
   })
 }
