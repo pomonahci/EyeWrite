@@ -37,7 +37,7 @@ function sketchEdit(e) {
   if (e == 'draw' || e == 'move') {
     primSket.currentPath.idCreator = userId;
     primSket.currentPath.idStroke = ServerSketch.length + 1;
-    primSket.created = e;
+    primSket.currentPath.created = e;
   }
 
 
@@ -53,6 +53,7 @@ function sketchEdit(e) {
     console.log(userId);
     console.log(current);
     if (current) {
+      primSket.currentPath.idStroke = current.length+1;
       current.push(primSket.currentPath.serialize());
       return current;
     }
