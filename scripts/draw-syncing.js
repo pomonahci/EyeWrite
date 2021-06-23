@@ -50,6 +50,7 @@ function sketchEdit(e) {
     // var save_url = "http://hci.pomona.edu/Drawing?" + "x=" + x + ";y=" + y;
     // var temp_image = new Image();
     // temp_image.src = save_url;
+    console.log(userId);
     console.log(current);
     if (current) {
       current.push(primSket.currentPath.serialize());
