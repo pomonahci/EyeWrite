@@ -31,6 +31,7 @@ var editor = false;
 function sketchEdit(e) {
   console.log("edit made: ");
   console.log(e);
+  synchronize(ServerSketch);
   editor = true;
   if (e == 'draw' || e == 'move') {
     primSket.currentPath.idCreator = userId;
