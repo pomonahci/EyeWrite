@@ -289,6 +289,35 @@
             <option value="none">None</option>
           </select>
         </div>
+
+        <div id="hm-capacity-div" style="display: none">
+          <p class="hm-ui-options-text">
+            Capacity: <span id="hm-capacity"></span>
+          </p>
+          <input
+            type="range"
+            min="50"
+            max="500"
+            value="200"
+            class="sentenceSlider"
+            id="hm-capacity-slider"
+          />
+        </div>
+
+        <div id="hm-removal-rate-div" style="display: block">
+          <p class="hm-ui-options-text">
+            Removal Rate: <span id="hm-removal-rate"></span>
+          </p>
+          <input
+            type="range"
+            min="1"
+            max="100"
+            value="50"
+            class="sentenceSlider"
+            id="hm-removal-rate-slider"
+          />
+        </div>
+
         <div class="text-center" style="margin: 10px 10px 0px 10px">
           <button
             style="

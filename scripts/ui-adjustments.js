@@ -144,6 +144,27 @@ var UIAdjustments = function () {
 
   hmSwitch.onchange = function(){
     removalType = hmSwitch.value
+
+    if(removalType == "temporal"){
+      document.getElementById("hm-capacity-div").style.display = "none";
+      document.getElementById("hm-removal-rate-div").style.display = "block";
+    } else if(removalType == "capacity"){
+      document.getElementById("hm-capacity-div").style.display = "block";
+      document.getElementById("hm-removal-rate-div").style.display = "none";
+    } else {
+      document.getElementById("hm-removal-rate-div").style.display = "none";
+      document.getElementById("hm-capacity-div").style.display = "none";
+    }
+  }
+
+  const capSlider = document.getElementById("hm-capacity-slider");
+  const capLabel = document.getElementById("hm-capacity");
+
+  capLabel.innerHTML = capSlider.value;
+  
+  capSlider.oninput = function (){
+    capacity = capSlider.value;
+    capLabel.innerHTML = capSlider.value;
   }
 
   var controlContainer = document.getElementById('controlContainer');

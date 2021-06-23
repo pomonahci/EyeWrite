@@ -13,7 +13,9 @@ let default_config = {
 
 let heatmapDataPoints = [];
 let intervalID;
-let removalType = "temporal";
+let removalType = document.getElementById("heatmap-type-selector").value;
+let removalRate = document.getElementById("hm-removal-rate-slider").value;
+let capacity = document.getElementById("hm-capacity-slider").value;
 
 let heatmapInstance = h337.create(default_config);
 
@@ -742,7 +744,7 @@ var visualizationControl = function () {
             intervalID = window.setInterval(() => {
               heatmapDataPoints.shift();
               heatmapInstance.setData({max: 60, min: 0, data: heatmapDataPoints});
-            }, 100);
+            }, removalRate);
           }
 
           heatmapDataPoints.push({x: hPos.x, y: hPos.y, value: 20});
@@ -754,8 +756,15 @@ var visualizationControl = function () {
             intervalID = null;
           }
 
-          if(heatmapDataPoints.length >= 300){
+          if(heatmapDataPoints.length == capacity){
             heatmapDataPoints.shift();
+          }
+          
+          if(heatmapDataPoints.length > capacity){
+
+            for(let i = 0; i < heatmapDataPoints.length - capacity; i++){
+              heatmapDataPoints.shift();
+            }
           }
   
           heatmapDataPoints.push({x: hPos.x, y: hPos.y, value: 20});
