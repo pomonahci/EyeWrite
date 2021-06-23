@@ -52,7 +52,7 @@ function sketchEdit(e) {
     // temp_image.src = save_url;
     // console.log(current);
     if (current) {
-      if (ServerSketch.length + 1 != current.length) {
+      if (ServerSketch.length != current.length) {
         current.push(primSket.currentPath.serialize());
         return current;
       }
