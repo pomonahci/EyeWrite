@@ -369,7 +369,7 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 500;
   font-size: 13px;
-  margin-left: 10px;
+  /* margin-left: 10px; */
   margin-top: 5px;
   padding-bottom: 0px;
   margin-bottom: 0px;

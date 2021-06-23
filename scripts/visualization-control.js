@@ -54,6 +54,8 @@ var visualizationControl = function () {
       x.style.display = "none";
     }
 
+    clearHeatmap();
+
     if (window.debug) console.log(window.visShape);
   };
 
