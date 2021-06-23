@@ -50,12 +50,10 @@ function sketchEdit(e) {
     // var save_url = "http://hci.pomona.edu/Drawing?" + "x=" + x + ";y=" + y;
     // var temp_image = new Image();
     // temp_image.src = save_url;
-    // console.log(current);
+    console.log(current);
     if (current) {
-      if (ServerSketch.length != current.length) {
-        current.push(primSket.currentPath.serialize());
-        return current;
-      }
+      current.push(primSket.currentPath.serialize());
+      return current;
     }
     return srl2;
   })
