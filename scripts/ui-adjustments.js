@@ -99,32 +99,32 @@ var UIAdjustments = function () {
     output2.innerHTML = (val + "%");
   }
 
-  var slider3 = document.getElementById("hm-radius-slider");
-  var output3 = document.getElementById("hm-radius");
-  output3.innerHTML = slider3.value;
+  // var slider3 = document.getElementById("hm-radius-slider");
+  // var output3 = document.getElementById("hm-radius");
+  // output3.innerHTML = slider3.value;
 
-  slider3.oninput = function () {
-    output3.innerHTML = this.value;
-    updateHeatmapStyle({
-      container: document.querySelector('#heatmap'),
-      radius: document.getElementById("hm-radius-slider").value,
-      // opacity: document.getElementById("hm-opacity-slider").value / 100,
-    })
-  }
+  // slider3.oninput = function () {
+  //   output3.innerHTML = this.value;
+  //   updateHeatmapStyle({
+  //     container: document.querySelector('#heatmap'),
+  //     radius: document.getElementById("hm-radius-slider").value,
+  //     // opacity: document.getElementById("hm-opacity-slider").value / 100,
+  //   })
+  // }
 
-  var slider4 = document.getElementById("hm-opacity-slider");
-  var output4 = document.getElementById("hm-opacity");
-  output4.innerHTML = slider4.value + "%";
+  // var slider4 = document.getElementById("hm-opacity-slider");
+  // var output4 = document.getElementById("hm-opacity");
+  // output4.innerHTML = slider4.value + "%";
 
-  slider4.oninput = function () {
-    output4.innerHTML = this.value + "%";
-    updateHeatmapStyle({
-      container: document.querySelector('#heatmap'),
-      radius: document.getElementById("hm-radius-slider").value,
-      // opacity: document.getElementById("hm-opacity-slider").value / 100,
-      // blur: document.getElementById("hm-blur-slider").value / 100,
-    })
-  }
+  // slider4.oninput = function () {
+  //   output4.innerHTML = this.value + "%";
+  //   updateHeatmapStyle({
+  //     container: document.querySelector('#heatmap'),
+  //     radius: document.getElementById("hm-radius-slider").value,
+  //     // opacity: document.getElementById("hm-opacity-slider").value / 100,
+  //     // blur: document.getElementById("hm-blur-slider").value / 100,
+  //   })
+  // }
 
   // var slider5 = document.getElementById("hm-blur-slider");
   // var output5 = document.getElementById("hm-blur");
