@@ -17,6 +17,7 @@ function synchronize(sketch) {
 // Listens always for updates to the svg canvas
 firebaseRef.child('svg').on('value', function (snapshot) {
   if (snapshot.val()) {
+
     ServerSketch = snapshot.val();
     if (!currentlyEditing) {
       synchronize(ServerSketch);
@@ -32,7 +33,7 @@ function sketchEdit(e) {
   console.log("edit made: ");
   console.log(e);
   // synchronize(ServerSketch);
-  editor = true;
+  // editor = true;
   if (e == 'draw' || e == 'move') {
     primSket.currentPath.idCreator = userId;
     primSket.currentPath.idStroke = ServerSketch.length + 1;
@@ -43,12 +44,17 @@ function sketchEdit(e) {
   var srl = primSket.serialize();
   var srl2 = ServerSketch;
   srl2.push(primSket.currentPath.serialize());
-  console.log(srl2);
+  // console.log(srl2);
   firepad.firebaseAdapter_.ref_.child('svg').transaction(function (current) {
     //create a log to apache server
     // var save_url = "http://hci.pomona.edu/Drawing?" + "x=" + x + ";y=" + y;
     // var temp_image = new Image();
     // temp_image.src = save_url;
+    // console.log(current);
+    if(ServerSketch.length + 1 != current.length){
+      current.push(primSket.currentPath.serialize());
+      return current;
+    }
     return srl2;
   })
 }
