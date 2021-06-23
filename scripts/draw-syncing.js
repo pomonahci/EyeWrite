@@ -51,9 +51,11 @@ function sketchEdit(e) {
     // var temp_image = new Image();
     // temp_image.src = save_url;
     // console.log(current);
-    if(ServerSketch.length + 1 != current.length){
-      current.push(primSket.currentPath.serialize());
-      return current;
+    if (current) {
+      if (ServerSketch.length + 1 != current.length) {
+        current.push(primSket.currentPath.serialize());
+        return current;
+      }
     }
     return srl2;
   })
