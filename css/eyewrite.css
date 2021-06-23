@@ -349,6 +349,7 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   margin-top: 5px;
   padding-bottom: 0px;
   margin-bottom: 0px;
+  align-self: center;
 }
 
 .slider-text3 {
@@ -525,6 +526,11 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   margin-bottom: 5px;
 }
 
+.hmSwitch {
+  display: flex;
+  justify-content: space-around;
+}
+
 /* Video Container Style */
 #video-streams {
   /* background-color: lightblue; */
@@ -536,7 +542,8 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
 }
 
 #heatmap {
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  width: 100vw;
   pointer-events: none;
+  z-index: 1;
 }

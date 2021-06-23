@@ -254,7 +254,7 @@
         <input
           type="range"
           min="20"
-          max="55"
+          max="65"
           value="35"
           class="sentenceSlider"
           id="hm-radius-slider"
@@ -279,6 +279,25 @@
           class="sentenceSlider"
           id="hm-blur-slider"
         />
+
+        <div style="text-align: center">
+          <p class="hm-ui-options-text">Data Removal</p>
+
+          <select id="heatmap-type-selector">
+            <option value="temporal">Temporal</option>
+            <option value="capacity">Capacity</option>
+            <option value="none">None</option>
+          </select>
+        </div>
+        <div class="text-center" style="margin: 10px 10px 0px 10px">
+          <button
+            class="btn btn-secondary"
+            onclick="clearHeatmap()"
+            type="button"
+          >
+            Clear
+          </button>
+        </div>
       </div>
 
       <!-- Highlight Size Component -->

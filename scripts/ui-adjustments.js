@@ -140,6 +140,12 @@ var UIAdjustments = function () {
   //   })
   // }
 
+  const hmSwitch = document.getElementById("heatmap-type-selector");
+
+  hmSwitch.onchange = function(){
+    removalType = hmSwitch.value
+  }
+
   var controlContainer = document.getElementById('controlContainer');
   controlContainer.style.top = (userlistBox.offsetTop + userlistBox.offsetHeight + 10) + "px";
 

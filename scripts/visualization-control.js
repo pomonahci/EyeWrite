@@ -5,13 +5,6 @@
  * Date: Summer 2020 - Spring 2021
  */
 
-//  let default_config = {
-//   container: document.querySelector('#heatmap'),
-//   radius: document.getElementById("hm-radius-slider").value,
-//   opacity: document.getElementById("hm-opacity-slider").value,
-//   blur: document.getElementById("hm-blur-slider").value / 100,
-// }
-
 let default_config = {
   container: document.querySelector('#heatmap'),
   radius: document.getElementById("hm-radius-slider").value,
@@ -736,57 +729,41 @@ var visualizationControl = function () {
 
       // get rid of clearing heatmap interval and clear heatmap data from screen
       clearInterval(intervalID);
+      intervalID = null;
+
       heatmapInstance.setData({data: []});
     }else if(window.visShape == "heatmap"){
         circle.style.visibility = "hidden";
 
-        // switch(removalType){
-        //   case "temporal":
-        //     if(intervalID == null){
-        //       intervalID = window.setInterval(() => {heatmapInstance.setData({data:[]})}, 12000);
-        //     }
-        //     heatmapInstance.addData({x: hPos.x, y: hPos.y, value: 20});
-        //     return;
-        //   case "num-points":
-        //     if(heatmapDataPoints.length >= 500 && removeType == "num_points"){
-        //       heatmapDataPoints.shift();
-        //     }
-    
-        //     heatmapDataPoints.push({x: hPos.x, y: hPos.y, value: 20});
-        //     heatmapInstance.setData({data: []});
-        //     heatmapInstance.setData({data: heatmapDataPoints});
-        //     return
-        // }
-
-        // if(intervalID == null){
-        //   intervalID = window.setInterval(() => {heatmapInstance.setData({data:[]})}, 12000);
-        // }
-        // heatmapInstance.addData({x: hPos.x, y: hPos.y, value: 20});
-
-        // if(id == null){
-        //   id = window.setInterval(a, 8000);
-        // }
-
-
         if(removalType == "temporal"){
           if(intervalID == null){
             intervalID = window.setInterval(() => {
-              // if(heatmapDataPoints.length >= 500){
               heatmapDataPoints.shift();
-              heatmapInstance.setData({max: 100, min: 0, data: heatmapDataPoints});
+              heatmapInstance.setData({max: 60, min: 0, data: heatmapDataPoints});
             }, 100);
           }
 
           heatmapDataPoints.push({x: hPos.x, y: hPos.y, value: 20});
-          heatmapInstance.setData({max: 100, min: 0, data: heatmapDataPoints});
+          heatmapInstance.setData({max: 60, min: 0, data: heatmapDataPoints});
 
-        } else if(removalType == "num-points"){
-          if(heatmapDataPoints.length >= 500){
+        } else if(removalType == "capacity"){
+          if(intervalID != null){
+            clearInterval(intervalID);
+            intervalID = null;
+          }
+
+          if(heatmapDataPoints.length >= 300){
             heatmapDataPoints.shift();
           }
   
           heatmapDataPoints.push({x: hPos.x, y: hPos.y, value: 20});
-          heatmapInstance.setData({max: 100, min: 0, data: heatmapDataPoints});
+          heatmapInstance.setData({max: 60, min: 0, data: heatmapDataPoints});
+        } else if (removalType == "none"){
+          if(intervalID != null){
+            clearInterval(intervalID);
+          }
+          heatmapDataPoints.push({x: hPos.x, y: hPos.y, value: 20});
+          heatmapInstance.setData({max: 60, min: 0, data: heatmapDataPoints});
         }
         
     } else {
@@ -937,13 +914,16 @@ function updateHeatmapStyle(new_config){
   default_config = new_config;
 
   let new_heatmap = h337.create(new_config);
-  new_heatmap.setData(heatmapInstance.getData());
+  new_heatmap.setData({data: heatmapDataPoints});
 
-  heatmapDataPoints = [];
+  // heatmapDataPoints = [];
   heatmapInstance.setData({max: 100, min:100, data:[]});
   heatmapInstance = new_heatmap;
 
   heatmapInstance = h337.create(new_config);
+}
 
-  heatmapInstance.repaint();
+function clearHeatmap(){
+  heatmapDataPoints = [];
+  heatmapInstance.setData({max: 60, min:0, data:[]});
 }
