@@ -20,8 +20,10 @@ firebaseRef.child('svg').on('value', function (snapshot) {
     synchronize(ServerSketch);
   }
   else {
+    if(snapshot.val()[snapshot.val().length-1].idCreator != userId){
     console.log("server")
     console.log(snapshot.val());
+    }
   }
   // }
   // editor = false;
