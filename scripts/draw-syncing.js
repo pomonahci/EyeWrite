@@ -9,7 +9,7 @@ function synchronize(sketch) {
   primSket.loadSketch(sketch);
   primSket.displayLoadedSketch(false);
 }
-var tet = false;
+
 // Listens always for updates to the svg canvas
 firebaseRef.child('svg').on('value', function (snapshot) {
   // if (snapshot.val()) {
@@ -20,7 +20,8 @@ firebaseRef.child('svg').on('value', function (snapshot) {
     synchronize(ServerSketch);
   }
   else {
-    if(snapshot.val())tet = true;
+    console.log("server")
+    console.log(snapshot.val());
   }
   // }
   // editor = false;
@@ -35,7 +36,6 @@ function sketchEdit(e) {
   //   primSket.currentPath.idStroke = ServerSketch.length + 1;
   //   primSket.currentPath.created = e;
   // }
-
 
   // var srl = primSket.serialize();
   // var srl2 = ServerSketch;
@@ -87,9 +87,8 @@ function sketchEdit(e) {
         current.push(primSket.currentPath.serialize());
       }
     }
+    console.log("What I have")
     console.log(current);
-    if(tet) console.log('it worked');
-    tet = false;
     return current;
 
   })
