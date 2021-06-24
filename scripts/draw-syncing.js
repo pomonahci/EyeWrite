@@ -20,7 +20,7 @@ firebaseRef.child('svg').on('value', function (snapshot) {
     synchronize(ServerSketch);
   }
   else {
-    tet = true;
+    if(snapshot.val())tet = true;
   }
   // }
   // editor = false;
@@ -89,6 +89,7 @@ function sketchEdit(e) {
     }
     console.log(current);
     if(tet) console.log('it worked');
+    tet = false;
     return current;
 
   })
