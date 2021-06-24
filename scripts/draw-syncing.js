@@ -4,6 +4,7 @@ var currentlyEditing = false;
 var ServerSketch;//json format of primSket kept on the firebase
 var ecThis;
 var color;
+var date = new Date();
 
 function synchronize(sketch) {
   primSket.loadSketch(sketch);
@@ -13,7 +14,8 @@ function synchronize(sketch) {
 // Listens always for updates to the svg canvas
 firebaseRef.child('svg').on('value', function (snapshot) {
   // if (snapshot.val()) {
-    console.log("server")
+    console.log("server");
+    console.log(date.getTime());
     console.log(snapshot.val());
   ServerSketch = snapshot.val();
   if (!snapshot.val()) ServerSketch = [];
@@ -51,7 +53,8 @@ function sketchEdit(e) {
       primSket.currentPath.created = e;
       var thisPath = current.find(el => el.idStroke == primSket.currentPath.idStroke);
       current[current.indexOf(thisPath)] = primSket.currentPath.serialize();
-      console.log("What I have")
+      console.log("What I have");
+      console.log(date.getTime());
       console.log(current);
     }
     else if (e == 'move') {
