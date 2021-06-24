@@ -19,9 +19,11 @@ firebaseRef.child('svg').on('value', function (snapshot) {
 
 
   ServerSketch = snapshot.val();
-  if(ServerSketch.length == lastServer.length && ServerSketch[ServerSketch.length-1].idCreator != lastServer[lastServer.length-1].idCreator){
-    ServerSketch.push(lastServer[lastServer.length -1]);
-    firepad.firebaseAdapter_.ref_.child('svg').transaction(function (current) {return ServerSketch;});
+  if (snapshot.val()) {
+    if (ServerSketch.length == lastServer.length && ServerSketch[ServerSketch.length - 1].idCreator != lastServer[lastServer.length - 1].idCreator) {
+      ServerSketch.push(lastServer[lastServer.length - 1]);
+      firepad.firebaseAdapter_.ref_.child('svg').transaction(function (current) { return ServerSketch; });
+    }
   }
   lastServer = ServerSketch;
   console.log(ServerSketch);
