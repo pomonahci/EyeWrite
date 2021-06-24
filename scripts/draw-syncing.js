@@ -46,18 +46,10 @@ function sketchEdit(e) {
 
     if (!current) current = [];
     if (e == 'draw') {
-      // primSket.currentPath.idStroke = current.length + 1;
-      // current.push(primSket.currentPath.serialize());
-      primSket.currentPath.idCreator = userId;
       primSket.currentPath.created = e;
       var thisPath = current.find(el => el.idStroke == primSket.currentPath.idStroke);
-      if (thisPath) {
-        primSket.currentPath.idStroke = current.length;
-        current[current.indexOf(thisPath)] = primSket.currentPath.serialize();
-      }
-      else {
-        current.push(primSket.currentPath.serialize());
-      }
+      current[current.indexOf(thisPath)] = primSket.currentPath.serialize();
+
     }
     else if (e == 'move') {
       primSket.currentPath.idStroke = current.length + 1;
@@ -82,14 +74,16 @@ function sketchEdit(e) {
       console.log('redo');
     }
     else if (e == 'point') {
-      primSket.currentPath.idCreator = userId;
-      primSket.currentPath.created = e;
+
       console.log(primSket.currentPath);
       var thisPath = current.find(el => el.idStroke == primSket.currentPath.idStroke);
       if (thisPath) {
         current[current.indexOf(thisPath)] = primSket.currentPath.serialize();
       }
       else {
+        primSket.currentPath.idStroke = current.length + 1;
+        primSket.currentPath.idCreator = userId;
+        primSket.currentPath.created = e;
         current.push(primSket.currentPath.serialize());
       }
     }
