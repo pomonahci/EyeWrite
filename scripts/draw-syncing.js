@@ -65,7 +65,6 @@ function sketchEdit(e) {
       var thisPath = current.find(el => el.idStroke == primSket.currentPath.idStroke);
       current[current.indexOf(thisPath)] = primSket.currentPath.serialize();
       console.log("What I have");
-      console.log(date.getTime());
       console.log(current);
     }
     else if (e == 'move') {
