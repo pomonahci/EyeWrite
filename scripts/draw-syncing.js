@@ -4,7 +4,7 @@ var currentlyEditing = false;
 var ServerSketch;//json format of primSket kept on the firebase
 var ecThis;
 var color;
-var date = new Date();
+var lastServer = [];
 
 function synchronize(sketch) {
   primSket.loadSketch(sketch);
@@ -14,16 +14,24 @@ function synchronize(sketch) {
 // Listens always for updates to the svg canvas
 firebaseRef.child('svg').on('value', function (snapshot) {
   // if (snapshot.val()) {
-    console.log("server");
-    console.log(date.getTime());
-    console.log(snapshot.val());
+  console.log("server");
+  console.log(snapshot.val());
+
+
   ServerSketch = snapshot.val();
+  if(ServerSketch.length == lastServer.length && ServerSketch[ServerSketch.length-1].idCreator != lastServer[lastServer.length-1].idCreator){
+    ServerSketch.push(lastServer[lastServer.length -1]);
+    firepad.firebaseAdapter_.ref_.child('svg').transaction(function (current) {return ServerSketch;});
+  }
+  lastServer = ServerSketch;
+  console.log(ServerSketch);
+
   if (!snapshot.val()) ServerSketch = [];
   if (!currentlyEditing) {
     synchronize(ServerSketch);
   }
   else {
-    
+
   }
   // }
   // editor = false;
@@ -32,6 +40,7 @@ firebaseRef.child('svg').on('value', function (snapshot) {
 var editor = false;
 function sketchEdit(e) {
   // console.log("edit made: ");
+  if (e == 'draw') console.log('hit');
   // console.log(e);
   // if (e == 'draw' || e == 'move') {
   //   primSket.currentPath.idCreator = userId;
@@ -91,7 +100,7 @@ function sketchEdit(e) {
         current.push(primSket.currentPath.serialize());
       }
     }
-    
+
     return current;
 
   })
