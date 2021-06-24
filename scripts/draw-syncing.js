@@ -83,13 +83,10 @@ function sketchEdit(e) {
         primSket.currentPath.idStroke = current.length + 1;
         primSket.currentPath.idCreator = userId;
         primSket.currentPath.created = e;
-        if(current.find(el => el.idStroke == primSket.currentPath.idStroke)) {
-          primSket.currentPath.idStroke++;
-          console.log('this is helping');
-        }
         current.push(primSket.currentPath.serialize());
       }
     }
+    console.log(current);
     return current;
 
   })
