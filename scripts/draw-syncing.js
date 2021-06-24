@@ -1,14 +1,12 @@
-// var resetRevId = true;
 
 var primSket;//refernce to svg sketchpage
 var currentlyEditing = false;
 var ServerSketch;//json format of primSket kept on the firebase
-
-// var strokeCount = 0;
+var ecThis;
+var color;
 
 function synchronize(sketch) {
   if (sketch) {
-    console.log("Remote Update");
     primSket.loadSketch(sketch);
     primSket.displayLoadedSketch(false);
   }
@@ -23,44 +21,79 @@ firebaseRef.child('svg').on('value', function (snapshot) {
       synchronize(ServerSketch);
     }
   }
-  // if (!editor) synchronize(snapshot);
   editor = false;
-  // strokeCount++;
 });
 
 var editor = false;
 function sketchEdit(e) {
   console.log("edit made: ");
   console.log(e);
-  // synchronize(ServerSketch);
-  // editor = true;
-  if (e == 'draw' || e == 'move') {
-    primSket.currentPath.idCreator = userId;
-    primSket.currentPath.idStroke = ServerSketch.length + 1;
-    primSket.currentPath.created = e;
-  }
+  // if (e == 'draw' || e == 'move') {
+  //   primSket.currentPath.idCreator = userId;
+  //   primSket.currentPath.idStroke = ServerSketch.length + 1;
+  //   primSket.currentPath.created = e;
+  // }
 
 
   var srl = primSket.serialize();
   var srl2 = ServerSketch;
   srl2.push(primSket.currentPath.serialize());
-  // console.log(srl2);
   firepad.firebaseAdapter_.ref_.child('svg').transaction(function (current) {
     //create a log to apache server
     // var save_url = "http://hci.pomona.edu/Drawing?" + "x=" + x + ";y=" + y;
     // var temp_image = new Image();
     // temp_image.src = save_url;
-    console.log(current);
-    if (current) {
-      if (e == 'draw') {
-        primSket.currentPath.idStroke = current.length + 1;
+
+    if (!current) current = [];
+    if (e == 'draw') {
+      // primSket.currentPath.idStroke = current.length + 1;
+      // current.push(primSket.currentPath.serialize());
+      primSket.currentPath.idCreator = userId;
+      primSket.currentPath.created = e;
+      var thisPath = current.find(el => el.idStroke == primSket.currentPath.idStroke);
+      if (thisPath) {
+        primSket.currentPath.idStroke = current.length;
+        current[current.indexOf(thisPath)] = primSket.currentPath.serialize();
+      }
+      else {
         current.push(primSket.currentPath.serialize());
       }
-      if(e=='move'){
-        console.log('move');
-      }
-      return current;
     }
-    return srl2;
+    else if (e == 'move') {
+      primSket.currentPath.idStroke = current.length + 1;
+      current.find(el => el.idStroke == primSket.currentPath.idMovedFrom).status = 3;
+      current.push(primSket.currentPath.serialize());
+    }
+    else if (e == 'erase') {
+      var o = current.find(el => el.idStroke == ecThis.idStroke);
+      o.status = 2;
+      current.push(o);
+    }
+    else if (e == 'clear') {
+      current = [];
+    }
+    else if (e == 'color') {
+      current.find(el => el.idStroke == ecThis.idStroke).color = color;
+    }
+    else if (e == 'undo') {
+      console.log('undo');
+    }
+    else if (e == 'redo') {
+      console.log('redo');
+    }
+    else if (e == 'point') {
+      primSket.currentPath.idCreator = userId;
+      primSket.currentPath.created = e;
+      console.log(primSket.currentPath);
+      var thisPath = current.find(el => el.idStroke == primSket.currentPath.idStroke);
+      if (thisPath) {
+        current[current.indexOf(thisPath)] = primSket.currentPath.serialize();
+      }
+      else {
+        current.push(primSket.currentPath.serialize());
+      }
+    }
+    return current;
+
   })
 }
