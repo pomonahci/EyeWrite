@@ -5,6 +5,7 @@ var ServerSketch;//json format of primSket kept on the firebase
 var ecThis;
 var color;
 var lastServer = [];
+var undone = [];
 
 function synchronize(sketch) {
   primSket.loadSketch(sketch);
@@ -13,11 +14,6 @@ function synchronize(sketch) {
 
 // Listens always for updates to the svg canvas
 firebaseRef.child('svg').on('value', function (snapshot) {
-  // if (snapshot.val()) {
-  console.log("server");
-  console.log(snapshot.val());
-
-
   ServerSketch = snapshot.val();
   if (ServerSketch && lastServer) {
     if (ServerSketch.length == lastServer.length && ServerSketch[ServerSketch.length - 1].idCreator != lastServer[lastServer.length - 1].idCreator) {
@@ -27,56 +23,38 @@ firebaseRef.child('svg').on('value', function (snapshot) {
     }
   }
   lastServer = ServerSketch;
-  console.log(ServerSketch);
-
   if (!snapshot.val()) ServerSketch = [];
   if (!currentlyEditing) {
     synchronize(ServerSketch);
   }
-  else {
-
-  }
-  // }
-  // editor = false;
 });
 
-var editor = false;
 function sketchEdit(e) {
-  // console.log("edit made: ");
-  // console.log(e);
-  // if (e == 'draw' || e == 'move') {
-  //   primSket.currentPath.idCreator = userId;
-  //   primSket.currentPath.idStroke = ServerSketch.length + 1;
-  //   primSket.currentPath.created = e;
-  // }
-
-  // var srl = primSket.serialize();
-  // var srl2 = ServerSketch;
-  // srl2.push(primSket.currentPath.serialize());
   var x = 0;
   firepad.firebaseAdapter_.ref_.child('svg').transaction(function (current) {
     //create a log to apache server
     // var save_url = "http://hci.pomona.edu/Drawing?" + "x=" + x + ";y=" + y;
     // var temp_image = new Image();
     // temp_image.src = save_url;
-    console.log(x);x++;
+    console.log(x); x++;
     if (!current) current = [];
     if (e == 'draw') {
       primSket.currentPath.created = e;
       var thisPath = current.find(el => el.idStroke == primSket.currentPath.idStroke);
       current[current.indexOf(thisPath)] = primSket.currentPath.serialize();
-      console.log("What I have");
-      console.log(current);
+      undone = [];
     }
     else if (e == 'move') {
       primSket.currentPath.idStroke = current.length + 1;
       current.find(el => el.idStroke == primSket.currentPath.idMovedFrom).status = 3;
       current.push(primSket.currentPath.serialize());
+      undone = [];
     }
     else if (e == 'erase') {
       var o = current.find(el => el.idStroke == ecThis.idStroke);
       o.status = 2;
       current.push(o);
+      undone = [];
     }
     else if (e == 'clear') {
       current = [];
@@ -85,10 +63,22 @@ function sketchEdit(e) {
       current.find(el => el.idStroke == ecThis.idStroke).color = color;
     }
     else if (e == 'undo') {
-      console.log('undo');
+      undone.push(current.pop());
+      if (undone[undone.length-1].created == 'move'){
+        current.find(el => el.idStroke == undone[undone.length-1].idMovedFrom).status = 1;
+      }
+      else if(undone[undone.length-1].created == 'erase'){
+        current.find(el => el.idStroke == undone[undone.length-1].idStroke).status=1;
+      }
     }
     else if (e == 'redo') {
-      console.log('redo');
+      current.push(undone.pop());
+      if (current[current.length-1].created == 'move'){
+        current.find(el => el.idStroke == current[current.length-1].idMovedFrom).status = 3;
+      }
+      else if(undone[undone.length-1].created == 'erase'){
+        current.find(el => el.idStroke == current[current.length-1].idStroke).status=2;
+      }
     }
     else if (e == 'point') {
       var thisPath = current.find(el => el.idStroke == primSket.currentPath.idStroke);
@@ -101,6 +91,7 @@ function sketchEdit(e) {
         primSket.currentPath.created = e;
         current.push(primSket.currentPath.serialize());
       }
+      undone = [];
     }
 
     return current;
