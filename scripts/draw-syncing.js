@@ -13,17 +13,15 @@ function synchronize(sketch) {
 // Listens always for updates to the svg canvas
 firebaseRef.child('svg').on('value', function (snapshot) {
   // if (snapshot.val()) {
-
+    console.log("server")
+    console.log(snapshot.val());
   ServerSketch = snapshot.val();
   if (!snapshot.val()) ServerSketch = [];
   if (!currentlyEditing) {
     synchronize(ServerSketch);
   }
   else {
-    if(snapshot.val()[snapshot.val().length-1].idCreator != userId){
-    console.log("server")
-    console.log(snapshot.val());
-    }
+    
   }
   // }
   // editor = false;
