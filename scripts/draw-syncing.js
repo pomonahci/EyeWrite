@@ -75,6 +75,8 @@ function sketchEdit(e) {
     else if (e == 'point') {
       var thisPath = current.find(el => el.idStroke == primSket.currentPath.idStroke);
       if (thisPath && userId == primSket.currentPath.idCreator) {
+        console.log(primSket.currentPath.idStroke);
+        console.log(primSket.currentPath.idCreator);
         current[current.indexOf(thisPath)] = primSket.currentPath.serialize();
       }
       else {
