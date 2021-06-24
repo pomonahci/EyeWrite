@@ -79,7 +79,7 @@ function sketchEdit(e) {
         if (current[current.length - 1].created == 'move') {
           current.find(el => el.idStroke == current[current.length - 1].idMovedFrom).status = 3;
         }
-        else if (undone[undone.length - 1].created == 'erase') {
+        else if (current[current.length - 1].created == 'erase') {
           current.find(el => el.idStroke == current[current.length - 1].idStroke).status = 2;
         }
         else if(current.length == 0){
