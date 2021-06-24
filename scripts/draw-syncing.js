@@ -6,28 +6,27 @@ var ecThis;
 var color;
 
 function synchronize(sketch) {
-  if (sketch) {
-    primSket.loadSketch(sketch);
-    primSket.displayLoadedSketch(false);
-  }
+  primSket.loadSketch(sketch);
+  primSket.displayLoadedSketch(false);
 }
 
 // Listens always for updates to the svg canvas
 firebaseRef.child('svg').on('value', function (snapshot) {
-  if (snapshot.val()) {
+  // if (snapshot.val()) {
 
-    ServerSketch = snapshot.val();
-    if (!currentlyEditing) {
-      synchronize(ServerSketch);
-    }
-  }
-  editor = false;
+  ServerSketch = snapshot.val();
+  if (!snapshot.val()) ServerSketch = [];
+  // if (!currentlyEditing) {
+  synchronize(ServerSketch);
+  // }
+  // }
+  // editor = false;
 });
 
 var editor = false;
 function sketchEdit(e) {
-  console.log("edit made: ");
-  console.log(e);
+  // console.log("edit made: ");
+  // console.log(e);
   // if (e == 'draw' || e == 'move') {
   //   primSket.currentPath.idCreator = userId;
   //   primSket.currentPath.idStroke = ServerSketch.length + 1;
@@ -48,6 +47,10 @@ function sketchEdit(e) {
     if (e == 'draw') {
       primSket.currentPath.created = e;
       var thisPath = current.find(el => el.idStroke == primSket.currentPath.idStroke);
+      if (thisPath.idCreator < userId) {
+        primSket.currentPath.idStroke++
+      }
+
       current[current.indexOf(thisPath)] = primSket.currentPath.serialize();
 
     }
