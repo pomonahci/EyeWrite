@@ -74,10 +74,8 @@ function sketchEdit(e) {
       console.log('redo');
     }
     else if (e == 'point') {
-
-      console.log(primSket.currentPath);
       var thisPath = current.find(el => el.idStroke == primSket.currentPath.idStroke);
-      if (thisPath) {
+      if (thisPath && userId == primSket.currentPath.idCreator) {
         current[current.indexOf(thisPath)] = primSket.currentPath.serialize();
       }
       else {
