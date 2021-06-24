@@ -21,6 +21,7 @@ firebaseRef.child('svg').on('value', function (snapshot) {
   ServerSketch = snapshot.val();
   if (ServerSketch && lastServer) {
     if (ServerSketch.length == lastServer.length && ServerSketch[ServerSketch.length - 1].idCreator != lastServer[lastServer.length - 1].idCreator) {
+      lastServer[lastServer.length - 1].idStroke++;
       ServerSketch.push(lastServer[lastServer.length - 1]);
       firepad.firebaseAdapter_.ref_.child('svg').transaction(function (current) { return ServerSketch; });
     }
@@ -42,7 +43,6 @@ firebaseRef.child('svg').on('value', function (snapshot) {
 var editor = false;
 function sketchEdit(e) {
   // console.log("edit made: ");
-  if (e == 'draw') console.log('hit');
   // console.log(e);
   // if (e == 'draw' || e == 'move') {
   //   primSket.currentPath.idCreator = userId;
@@ -53,12 +53,13 @@ function sketchEdit(e) {
   // var srl = primSket.serialize();
   // var srl2 = ServerSketch;
   // srl2.push(primSket.currentPath.serialize());
+  var x = 0;
   firepad.firebaseAdapter_.ref_.child('svg').transaction(function (current) {
     //create a log to apache server
     // var save_url = "http://hci.pomona.edu/Drawing?" + "x=" + x + ";y=" + y;
     // var temp_image = new Image();
     // temp_image.src = save_url;
-
+    console.log(x);x++;
     if (!current) current = [];
     if (e == 'draw') {
       primSket.currentPath.created = e;
