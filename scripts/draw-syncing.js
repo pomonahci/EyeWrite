@@ -16,9 +16,9 @@ firebaseRef.child('svg').on('value', function (snapshot) {
 
   ServerSketch = snapshot.val();
   if (!snapshot.val()) ServerSketch = [];
-  // if (!currentlyEditing) {
-  synchronize(ServerSketch);
-  // }
+  if (!currentlyEditing) {
+    synchronize(ServerSketch);
+  }
   // }
   // editor = false;
 });
