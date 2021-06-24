@@ -30,13 +30,11 @@ firebaseRef.child('svg').on('value', function (snapshot) {
 });
 
 function sketchEdit(e) {
-  var x = 0;
   firepad.firebaseAdapter_.ref_.child('svg').transaction(function (current) {
     //create a log to apache server
     // var save_url = "http://hci.pomona.edu/Drawing?" + "x=" + x + ";y=" + y;
     // var temp_image = new Image();
     // temp_image.src = save_url;
-    console.log(x); x++;
     if (!current) current = [];
     if (e == 'draw') {
       primSket.currentPath.created = e;
@@ -56,7 +54,7 @@ function sketchEdit(e) {
       o.status = 2;
       var copy = JSON.parse(JSON.stringify(o));
       copy.created = 'erase';
-      current.push(o);
+      current.push(copy);
       undone = [];
     }
     else if (e == 'clear') {
