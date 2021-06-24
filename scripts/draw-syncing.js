@@ -34,9 +34,9 @@ function sketchEdit(e) {
   // }
 
 
-  var srl = primSket.serialize();
-  var srl2 = ServerSketch;
-  srl2.push(primSket.currentPath.serialize());
+  // var srl = primSket.serialize();
+  // var srl2 = ServerSketch;
+  // srl2.push(primSket.currentPath.serialize());
   firepad.firebaseAdapter_.ref_.child('svg').transaction(function (current) {
     //create a log to apache server
     // var save_url = "http://hci.pomona.edu/Drawing?" + "x=" + x + ";y=" + y;
