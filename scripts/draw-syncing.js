@@ -46,6 +46,7 @@ function sketchEdit(e) {
     }
     else if (e == 'move') {
       primSket.currentPath.idStroke = current.length + 1;
+      primSket.currentPath.created = e;
       current.find(el => el.idStroke == primSket.currentPath.idMovedFrom).status = 3;
       current.push(primSket.currentPath.serialize());
       undone = [];
@@ -53,10 +54,13 @@ function sketchEdit(e) {
     else if (e == 'erase') {
       var o = current.find(el => el.idStroke == ecThis.idStroke);
       o.status = 2;
+      var copy = JSON.parse(JSON.stringify(o));
+      copy.created = 'erase';
       current.push(o);
       undone = [];
     }
     else if (e == 'clear') {
+      undone = current;
       current = [];
     }
     else if (e == 'color') {
@@ -64,20 +68,26 @@ function sketchEdit(e) {
     }
     else if (e == 'undo') {
       undone.push(current.pop());
-      if (undone[undone.length-1].created == 'move'){
-        current.find(el => el.idStroke == undone[undone.length-1].idMovedFrom).status = 1;
+      if (undone[undone.length - 1].created == 'move') {
+        current.find(el => el.idStroke == undone[undone.length - 1].idMovedFrom).status = 1;
       }
-      else if(undone[undone.length-1].created == 'erase'){
-        current.find(el => el.idStroke == undone[undone.length-1].idStroke).status=1;
+      else if (undone[undone.length - 1].created == 'erase') {
+        current.find(el => el.idStroke == undone[undone.length - 1].idStroke).status = 1;
       }
     }
     else if (e == 'redo') {
-      current.push(undone.pop());
-      if (current[current.length-1].created == 'move'){
-        current.find(el => el.idStroke == current[current.length-1].idMovedFrom).status = 3;
-      }
-      else if(undone[undone.length-1].created == 'erase'){
-        current.find(el => el.idStroke == current[current.length-1].idStroke).status=2;
+      if (undone) {
+        current.push(undone.pop());
+        if (current[current.length - 1].created == 'move') {
+          current.find(el => el.idStroke == current[current.length - 1].idMovedFrom).status = 3;
+        }
+        else if (undone[undone.length - 1].created == 'erase') {
+          current.find(el => el.idStroke == current[current.length - 1].idStroke).status = 2;
+        }
+        else if(current.length == 0){
+          current = undone;
+          undone = [];
+        }
       }
     }
     else if (e == 'point') {
