@@ -9,7 +9,7 @@ function synchronize(sketch) {
   primSket.loadSketch(sketch);
   primSket.displayLoadedSketch(false);
 }
-
+var tet = false;
 // Listens always for updates to the svg canvas
 firebaseRef.child('svg').on('value', function (snapshot) {
   // if (snapshot.val()) {
@@ -18,6 +18,9 @@ firebaseRef.child('svg').on('value', function (snapshot) {
   if (!snapshot.val()) ServerSketch = [];
   if (!currentlyEditing) {
     synchronize(ServerSketch);
+  }
+  else {
+    tet = true;
   }
   // }
   // editor = false;
@@ -75,8 +78,6 @@ function sketchEdit(e) {
     else if (e == 'point') {
       var thisPath = current.find(el => el.idStroke == primSket.currentPath.idStroke);
       if (thisPath && userId == primSket.currentPath.idCreator) {
-        console.log(primSket.currentPath.idStroke);
-        console.log(primSket.currentPath.idCreator);
         current[current.indexOf(thisPath)] = primSket.currentPath.serialize();
       }
       else {
@@ -87,6 +88,7 @@ function sketchEdit(e) {
       }
     }
     console.log(current);
+    if(tet) console.log('it worked');
     return current;
 
   })
