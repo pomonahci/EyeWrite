@@ -302,7 +302,7 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   margin-bottom: 5px;
 }
 
-#slider-container {
+.slider-container {
   position: relative;
   left: 15px;
   width: 145px;

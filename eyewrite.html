@@ -335,33 +335,35 @@
       </div>
 
       <!-- Highlight Size Component -->
-      <div id="slider-container">
-        <p class="slider-text">
-          Highlight Size: <span id="numSentences"></span>
-        </p>
-        <input
-          type="range"
-          min="1"
-          max="48"
-          value="12"
-          class="sentenceSlider"
-          id="sentenceSlider"
-        />
-      </div>
+      <div id="gradient-options" style="display: block">
+        <div id="highlight-size" class="slider-container">
+          <p class="slider-text">
+            Highlight Size: <span id="numSentences"></span>
+          </p>
+          <input
+            type="range"
+            min="1"
+            max="48"
+            value="12"
+            class="sentenceSlider"
+            id="sentenceSlider"
+          />
+        </div>
 
-      <!-- Highlight Gradient Ratio Component -->
-      <div id="slider-container" style="height: auto">
-        <p class="slider-text3">
-          Gradient Ratio: <span id="numSentences2"></span>
-        </p>
-        <input
-          type="range"
-          min="0"
-          max="66"
-          value="66"
-          class="sentenceSlider"
-          id="sentenceSlider2"
-        />
+        <!-- Highlight Gradient Ratio Component -->
+        <div id="gradient-ratio" style="height: auto" class="slider-container">
+          <p class="slider-text3">
+            Gradient Ratio: <span id="numSentences2"></span>
+          </p>
+          <input
+            type="range"
+            min="0"
+            max="66"
+            value="66"
+            class="sentenceSlider"
+            id="sentenceSlider2"
+          />
+        </div>
       </div>
 
       <!-- Voice/Video Chat Component -->
