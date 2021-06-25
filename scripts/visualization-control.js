@@ -1058,7 +1058,7 @@ function updateHeatmapStyle(new_config) {
   let new_heatmap = h337.create(new_config);
   new_heatmap.setData({ data: heatmapDataPoints });
 
-  // heatmapDataPoints = [];
+  heatmapDataPoints = [];
   heatmapInstance.setData({ max: 100, min: 100, data: [] });
   heatmapInstance = new_heatmap;
 
@@ -1069,3 +1069,10 @@ function clearHeatmap() {
   heatmapDataPoints = [];
   heatmapInstance.setData({ max: 60, min: 0, data: [] });
 }
+
+window.onresize = function () {
+  heatmapInstance._renderer.setDimensions(
+    document.body.clientWidth,
+    document.body.clientHeight
+  );
+};
