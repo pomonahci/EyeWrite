@@ -27,7 +27,7 @@ firebaseRef.child('svg').on('value', function (snapshot) {
     lastServer = ServerSketch;
     if (!snapshot.val()['canvas']) ServerSketch = [];
     if (!currentlyEditing) {
-      synchronize(ServerSketch.slice(1,ServerSketch.length));
+      synchronize(ServerSketch.slice(ServerSketch[1], ServerSketch.length));
     }
   }
 });
@@ -51,17 +51,17 @@ function sketchEdit(e) {
     // var save_url = "http://hci.pomona.edu/Drawing?" + "x=" + x + ";y=" + y;
     // var temp_image = new Image();
     // temp_image.src = save_url;
-    if (!current) current = [0];
+    if (!current) current = [0, 2];//index 0 is the undo counter, index 1 is the clear counter
     if (e == 'draw') {
-      current[0]=0;
+      current[0] = 0;
       primSket.currentPath.created = e;
       var thisPath = current.find(el => el.idStroke == primSket.currentPath.idStroke);
       current[current.indexOf(thisPath)] = primSket.currentPath.serialize();
     }
     else if (e == 'move') {
-      while(current[current.length-1].undone)current.pop();
-      current[0]=0;
-      primSket.currentPath.idStroke = current.length;// + 1;
+      while (current[current.length - 1].undone) current.pop();
+      current[0] = 0;
+      primSket.currentPath.idStroke = current.length-1;// + 1;
       primSket.currentPath.created = e;
       current.find(el => el.idStroke == primSket.currentPath.idMovedFrom).status = 3;
       current.push(primSket.currentPath.serialize());
@@ -71,18 +71,28 @@ function sketchEdit(e) {
       o.status = 2;
       var copy = JSON.parse(JSON.stringify(o));
       copy.created = 'erase';
-      while(current[current.length-1].undone)current.pop();
-      current[0]=0;
+      while (current[current.length - 1].undone) current.pop();
+      current[0] = 0;
       current.push(copy);
     }
     else if (e == 'clear') {
-      current = [0];
+      if (current.length > 2) {
+        var toAdd = JSON.parse(JSON.stringify(current[2]));
+        toAdd.status = 2;
+        toAdd.created = e;
+        toAdd.idCreator = userId;
+        toAdd.idStroke = null;
+        toAdd.coords = [];
+        toAdd.idMovedFrom = 0;
+        current[1] = current.length;
+        current.push(toAdd);
+      }
     }
     else if (e == 'color') {
       current.find(el => el.idStroke == ecThis.idStroke).color = color;
     }
     else if (e == 'undo') {
-      if (current[0] < current.length-1) {
+      if (current[0] < current.length - 2) {
         var todo = current[current.length - current[0] - 1]
         todo.undone = 1;
         //undo erase
@@ -93,6 +103,10 @@ function sketchEdit(e) {
         else if (todo.created == 'move') {
           current.find(el => el.idStroke == todo.idMovedFrom).status = 1;
           todo.status = 3;
+        }
+        //undo clear
+        else if (todo.created == 'clear') {
+          current[1] = 2;
         }
         //undo draw
         else {
@@ -106,17 +120,21 @@ function sketchEdit(e) {
         var todo = current[current.length - current[0]];
         todo.undone = 0;
         //redo erase
-        if (todo.created == 'erase'){
+        if (todo.created == 'erase') {
           current.find(el => el.idStroke == todo.idStroke).status = 2;
         }
         //redo move
-        else if (todo.created == 'move'){
+        else if (todo.created == 'move') {
           current.find(el => el.idStroke == todo.idMovedFrom).status = 3;
           todo.status = 1;
         }
+        //redo clear
+        else if (todo.created == 'clear') {
+          current[1] = current.indexOf(todo);
+        }
         //redo draw
         else {
-          todo.status=1;
+          todo.status = 1;
         }
         current[0]--;
       }
@@ -127,8 +145,8 @@ function sketchEdit(e) {
         current[current.indexOf(thisPath)] = primSket.currentPath.serialize();
       }
       else {
-        if(current.length>0)while(current[current.length-1].undone)current.pop();
-        primSket.currentPath.idStroke = current.length;// + 1;
+        if (current.length > 2) while (current[current.length - 1].undone) current.pop();
+        primSket.currentPath.idStroke = current.length-1;// + 1;
         primSket.currentPath.idCreator = userId;
         primSket.currentPath.created = e;
         current.push(primSket.currentPath.serialize());
