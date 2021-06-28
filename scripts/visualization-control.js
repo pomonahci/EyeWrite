@@ -7,14 +7,15 @@
 
 let default_config = {
   container: document.querySelector("#heatmap"),
-  maxOpacity: 0.725,
-  // radius: document.getElementById("hm-radius-slider").value,
+  maxOpacity: document.getElementById("hm-opacity-slider").value / 100,
+  radius: document.getElementById("hm-radius-slider").value,
 };
 
 let heatmapDataPoints = [];
 let intervalID;
 let removalType = document.getElementById("heatmap-type-selector").value;
-let removalRate = document.getElementById("hm-removal-rate-slider").value;
+// let removalRate = document.getElementById("hm-removal-rate-slider").value;
+let removalRate = 50;
 let capacity = document.getElementById("hm-capacity-slider").value;
 
 let heatmapInstance = h337.create(default_config);
@@ -59,9 +60,6 @@ var visualizationControl = (function () {
       hmParamsContainer.style.display = "none";
       gradientParamsContainer.style.display = "block";
     }
-
-    // const gradientRatio = document.getElementById("gradient-ratio");
-    // const highlightSize = document.getElementById("highlight-size");
 
     clearHeatmap();
 
@@ -844,6 +842,7 @@ var visualizationControl = (function () {
 
       // get rid of clearing heatmap interval and clear heatmap data from screen
       clearInterval(intervalID);
+      intervalID = null;
       heatmapInstance.setData({ data: [] });
     } else if (window.visShape == "gradient") {
       circle.style = createGradientCircleHighlightStyle(
@@ -862,7 +861,7 @@ var visualizationControl = (function () {
       circle.style.visibility = "hidden";
 
       if (removalType == "temporal") {
-        if (intervalID == null) {
+        if (intervalID == null || intervalID == undefined) {
           intervalID = window.setInterval(() => {
             heatmapDataPoints.shift();
             heatmapInstance.setData({
@@ -870,6 +869,11 @@ var visualizationControl = (function () {
               min: 0,
               data: heatmapDataPoints,
             });
+            // console.log(heatmapDataPoints.length);
+            // if (heatmapDataPoints.length == 0) {
+            //   clearInterval(intervalID);
+            //   intervalID = null;
+            // }
           }, removalRate);
         }
 
@@ -896,6 +900,7 @@ var visualizationControl = (function () {
       } else if (removalType == "none") {
         if (intervalID != null) {
           clearInterval(intervalID);
+          intervalID = null;
         }
         heatmapDataPoints.push({ x: hPos.x, y: hPos.y, value: 20 });
         heatmapInstance.setData({ max: 60, min: 0, data: heatmapDataPoints });
@@ -1066,8 +1071,13 @@ function updateHeatmapStyle(new_config) {
   // heatmapInstance = h337.create(default_config);
   /////
   default_config = new_config;
-  heatmapInstance.setData({ data: [] });
-  heatmapInstance = h337.create(default_config);
+  let d = heatmapInstance.getData();
+  heatmapInstance.setData({ max: 60, min: 0, data: [] });
+
+  let new_heatmap = h337.create(new_config);
+  heatmapInstance.setData({ max: 60, min: 0, data: d });
+  heatmapInstance = new_heatmap;
+  heatmapInstance.setData({ max: 60, min: 0, data: heatmapDataPoints });
 }
 
 function clearHeatmap() {

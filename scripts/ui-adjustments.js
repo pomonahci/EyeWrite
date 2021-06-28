@@ -124,38 +124,68 @@ var UIAdjustments = (function () {
     updateHeatmapStyle({
       container: document.querySelector("#heatmap"),
       radius: document.getElementById("hm-radius-slider").value,
-      maxOpacity: 0.725,
-      // opacity: document.getElementById("hm-opacity-slider").value / 100,
+      maxOpacity: document.getElementById("hm-opacity-slider").value / 100,
+      blur: document.getElementById("hm-blur-slider").value / 100,
     });
   };
 
-  // var slider4 = document.getElementById("hm-opacity-slider");
-  // var output4 = document.getElementById("hm-opacity");
-  // output4.innerHTML = slider4.value + "%";
+  var slider4 = document.getElementById("hm-opacity-slider");
+  var output4 = document.getElementById("hm-opacity");
+  output4.innerHTML = slider4.value + "%";
 
-  // slider4.oninput = function () {
-  //   output4.innerHTML = this.value + "%";
-  //   updateHeatmapStyle({
-  //     container: document.querySelector('#heatmap'),
-  //     radius: document.getElementById("hm-radius-slider").value,
-  //     // opacity: document.getElementById("hm-opacity-slider").value / 100,
-  //     // blur: document.getElementById("hm-blur-slider").value / 100,
-  //   })
-  // }
+  slider4.oninput = function () {
+    output4.innerHTML = this.value + "%";
+    updateHeatmapStyle({
+      container: document.querySelector("#heatmap"),
+      radius: document.getElementById("hm-radius-slider").value,
+      maxOpacity: document.getElementById("hm-opacity-slider").value / 100,
+      blur: document.getElementById("hm-blur-slider").value / 100,
+    });
+  };
 
-  // var slider5 = document.getElementById("hm-blur-slider");
-  // var output5 = document.getElementById("hm-blur");
-  // output5.innerHTML = slider5.value;
+  var slider5 = document.getElementById("hm-blur-slider");
+  var output5 = document.getElementById("hm-blur");
+  output5.innerHTML = slider5.value;
 
-  // slider5.oninput = function () {
-  //   output5.innerHTML = this.value;
-  //   updateHeatmapStyle({
-  //     container: document.querySelector('#heatmap'),
-  //     radius: document.getElementById("hm-radius-slider").value,
-  //     // opacity: document.getElementById("hm-opacity-slider").value / 100,
-  //     blur: document.getElementById("hm-blur-slider").value / 100,
-  //   })
-  // }
+  slider5.oninput = function () {
+    output5.innerHTML = this.value;
+    updateHeatmapStyle({
+      container: document.querySelector("#heatmap"),
+      radius: document.getElementById("hm-radius-slider").value,
+      maxOpacity: document.getElementById("hm-opacity-slider").value / 100,
+      blur: document.getElementById("hm-blur-slider").value / 100,
+    });
+  };
+
+  var removalRateSlider = document.getElementById("hm-removal-rate-slider");
+  var removalRateText = document.getElementById("hm-removal-rate");
+  removalRateText.innerHTML = removalRateSlider.value;
+
+  // removalRateSlider.oninput = function () {
+  //   removalRateText.innerHTML = removalRateSlider.value;
+  //   removalRate = parseInt(removalRateSlider.value);
+  // };
+
+  // removalRateSlider.onchange = function () {
+  //   clearInterval(intervalID);
+  //   if (removalType == "temporal") {
+  //     if (intervalID == null || intervalID == undefined) {
+  //       intervalID = window.setInterval(() => {
+  //         heatmapDataPoints.shift();
+  //         heatmapInstance.setData({
+  //           max: 60,
+  //           min: 0,
+  //           data: heatmapDataPoints,
+  //         });
+  //         // console.log(heatmapDataPoints.length);
+  //         // if (heatmapDataPoints.length == 0) {
+  //         //   clearInterval(intervalID);
+  //         //   intervalID = null;
+  //         // }
+  //       }, removalRate);
+  //     }
+  //   }
+  // };
 
   const hmSwitch = document.getElementById("heatmap-type-selector");
 
