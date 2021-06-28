@@ -7,8 +7,8 @@
 
 let default_config = {
   container: document.querySelector("#heatmap"),
-  // radius: document.getElementById("hm-radius-slider").value,
   maxOpacity: 0.725,
+  // radius: document.getElementById("hm-radius-slider").value,
 };
 
 let heatmapDataPoints = [];
@@ -58,7 +58,6 @@ var visualizationControl = (function () {
     } else if (visShapeSelector.value == "gradient") {
       hmParamsContainer.style.display = "none";
       gradientParamsContainer.style.display = "block";
-      console.log("jey");
     }
 
     // const gradientRatio = document.getElementById("gradient-ratio");
@@ -887,7 +886,7 @@ var visualizationControl = (function () {
         }
 
         if (heatmapDataPoints.length > capacity) {
-          for (let i = 0; i < heatmapDataPoints.length - capacity; i++) {
+          for (let i = 0; i < heatmapDataPoints.length - capacity + 2; i++) {
             heatmapDataPoints.shift();
           }
         }
@@ -1053,16 +1052,22 @@ var visualizationControl = (function () {
 })();
 
 function updateHeatmapStyle(new_config) {
+  // default_config = new_config;
+  // let new_heatmap = h337.create(new_config);
+  // new_heatmap.setData({ data: heatmapDataPoints });
+  // heatmapDataPoints = [];
+  // heatmapInstance.setData({ max: 100, min: 100, data: [] });
+  // heatmapInstance = new_heatmap;
+  // heatmapInstance = h337.create(new_config);
+  /////
+  // heatmapDataPoints = [];
+  // heatmapInstance.setData({ data: [] });
+  // default_config = new_config;
+  // heatmapInstance = h337.create(default_config);
+  /////
   default_config = new_config;
-
-  let new_heatmap = h337.create(new_config);
-  new_heatmap.setData({ data: heatmapDataPoints });
-
-  heatmapDataPoints = [];
-  heatmapInstance.setData({ max: 100, min: 100, data: [] });
-  heatmapInstance = new_heatmap;
-
-  heatmapInstance = h337.create(new_config);
+  heatmapInstance.setData({ data: [] });
+  heatmapInstance = h337.create(default_config);
 }
 
 function clearHeatmap() {
