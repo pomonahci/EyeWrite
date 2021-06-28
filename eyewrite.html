@@ -181,7 +181,7 @@
     <div>
       <div class="radio-buttons">
         <div>
-          <p style='text-align: center;'>Video Call</p>
+          <p id="mediaCallTxt" style='text-align: center;'>Video Call</p>
           <button id="videoCallJoin"
             style="margin: 0;position: absolute;top: 35%;left: 50%;-ms-transform: translate(-50%, -50%);transform: translate(-50%, -50%); background-color: #ffbf86; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;  font-size: 14px;">
             JOIN
@@ -196,7 +196,7 @@
             <button id="aud" disabled=True
               style="font-family: Trebuchet, Arial, sans-serif; font-weight: bold;  font-size: 14px;">Muted</button>
           </div>
-          <div class="inline-toggle-container">
+          <div id="videoButton" class="inline-toggle-container">
             <p>Video</p>
             <button id="cam" disabled=True
               style="font-family: Trebuchet, Arial, sans-serif; font-weight: bold;  font-size: 14px;">Hidden</button>
@@ -320,7 +320,7 @@
 <!-- Visualization Control -->
 <script src='./scripts/visualization-control.js'></script>
 <!-- Voice Chat -->
-<script src="./scripts/media-call.js"></script>
+<script src="./scripts/voice-call.js"></script>
 <!-- Sketchy Server interactions-->
 <script src='./scripts/draw-syncing.js'></script>
 
