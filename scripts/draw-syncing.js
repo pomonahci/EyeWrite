@@ -61,7 +61,7 @@ function sketchEdit(e) {
     else if (e == 'move') {
       while (current[current.length - 1].undone) current.pop();
       current[0] = 0;
-      primSket.currentPath.idStroke = current.length-1;// + 1;
+      primSket.currentPath.idStroke = current.length - 1;// + 1;
       primSket.currentPath.created = e;
       current.find(el => el.idStroke == primSket.currentPath.idMovedFrom).status = 3;
       current.push(primSket.currentPath.serialize());
@@ -84,6 +84,7 @@ function sketchEdit(e) {
         toAdd.idStroke = null;
         toAdd.coords = [];
         toAdd.idMovedFrom = 0;
+        toAdd.color = current.length;
         current[1] = current.length;
         current.push(toAdd);
       }
@@ -106,7 +107,11 @@ function sketchEdit(e) {
         }
         //undo clear
         else if (todo.created == 'clear') {
-          current[1] = 2;
+          var nextClear = current.slice(0,todo.color-1).reverse().find(el => el.created == todo.created);
+          if (nextClear) {
+            current[1] = current.indexOf(nextClear);
+          }
+          else{current[1]=2;}
         }
         //undo draw
         else {
@@ -145,8 +150,9 @@ function sketchEdit(e) {
         current[current.indexOf(thisPath)] = primSket.currentPath.serialize();
       }
       else {
+        current[0] = 0;
         if (current.length > 2) while (current[current.length - 1].undone) current.pop();
-        primSket.currentPath.idStroke = current.length-1;// + 1;
+        primSket.currentPath.idStroke = current.length - 1;// + 1;
         primSket.currentPath.idCreator = userId;
         primSket.currentPath.created = e;
         current.push(primSket.currentPath.serialize());

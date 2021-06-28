@@ -611,6 +611,11 @@ var visualizationControl = function () {
       encodedLoc = encodeLocation(event.clientX, event.clientY);
       mousePosRef.child(userId).update(encodedLoc);
     }
+    if(ui && event.clientX < window.innerWidth-(.13*window.innerWidth)){//190
+      ui=false;
+      document.getElementById("userlist").style.visibility = 'hidden';
+      document.getElementById("controlContainer").style.visibility = 'hidden';
+    }
   }
 
   /**

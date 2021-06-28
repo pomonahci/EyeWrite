@@ -2,317 +2,331 @@
 
 <html>
 
-  <head>
-    <meta charset="utf-8" />
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
+<head>
+  <meta charset="utf-8" />
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
 
-    <!-- CodeMirror -->
-    <script src="./node_modules/codemirror/lib/codemirror.js"></script>
-    <link rel="stylesheet" href="./node_modules/codemirror/lib/codemirror.css" />
+  <!-- CodeMirror -->
+  <script src="./node_modules/codemirror/lib/codemirror.js"></script>
+  <link rel="stylesheet" href="./node_modules/codemirror/lib/codemirror.css" />
 
-    <!-- Firepad -->
-    <link rel="stylesheet" href="https://firepad.io/releases/v1.5.10/firepad.css" />
-    <script src="https://firepad.io/releases/v1.5.10/firepad.js"></script>
+  <!-- Firepad -->
+  <link rel="stylesheet" href="https://firepad.io/releases/v1.5.10/firepad.css" />
+  <script src="https://firepad.io/releases/v1.5.10/firepad.js"></script>
 
-    <!-- Firepad (for visualizations) -->
-    <!-- <link rel='stylesheet' href='lib/firepad.css' />
+  <!-- Firepad (for visualizations) -->
+  <!-- <link rel='stylesheet' href='lib/firepad.css' />
     <script src='lib/firepad-full-custom-vis.js'></script> -->
 
-    <!-- Firepad Userlist -->
-    <script src="./scripts/firepad-userlist.js"></script>
-    <link rel="stylesheet" href="./css/firepad-userlist.css" />
+  <!-- Firepad Userlist -->
+  <script src="./scripts/firepad-userlist.js"></script>
+  <link rel="stylesheet" href="./css/firepad-userlist.css" />
 
-    <!-- WebGazer -->
-    <!-- <script type='text/javascript' src='./WebGazer/www/simple-wg/webgazer.js'></script> -->
-    <script type="text/javascript" src="./WebGazer/simple-wg/webgazer.js"></script>
+  <!-- WebGazer -->
+  <!-- <script type='text/javascript' src='./WebGazer/www/simple-wg/webgazer.js'></script> -->
+  <script type="text/javascript" src="./WebGazer/simple-wg/webgazer.js"></script>
 
-    <!-- Peer.JS -->
-    <script src="./node_modules/peerjs/dist/peerjs.js"></script>
+  <!-- Peer.JS -->
+  <script src="./node_modules/peerjs/dist/peerjs.js"></script>
 
-    <!-- Bootstrap and jQuery -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
-      integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous" />
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-      crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
-      crossorigin="anonymous"></script>
+  <!-- Bootstrap and jQuery -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+    integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous" />
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+    crossorigin="anonymous"></script>
 
-    <!-- Include the plugin's CSS and JS: -->
-    <script type="text/javascript" src="./node_modules/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"></script>
-    <link rel="stylesheet" href="./node_modules/bootstrap-multiselect/dist/css/bootstrap-multiselect.css"
-      type="text/css" />
+  <!-- Include the plugin's CSS and JS: -->
+  <script type="text/javascript" src="./node_modules/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"></script>
+  <link rel="stylesheet" href="./node_modules/bootstrap-multiselect/dist/css/bootstrap-multiselect.css"
+    type="text/css" />
 
-    <!-- 'nano' theme -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css" />
+  <!-- 'nano' theme -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css" />
 
-    <!-- Modern or es5 bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+  <!-- Modern or es5 bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
 
-    <!-- Chroma JS -->
-    <script type="text/javascript" src="./node_modules/chroma-js/chroma.js"></script>
+  <!-- Chroma JS -->
+  <script type="text/javascript" src="./node_modules/chroma-js/chroma.js"></script>
 
-    <link rel="stylesheet" href="./css/eyewrite.css" />
-    <!-- Firechat -->
-    <link rel="stylesheet" href="https://cdn.firebase.com/libs/firechat/3.0.1/firechat.min.css" />
-    <script src="https://cdn.firebase.com/libs/firechat/3.0.1/firechat.min.js"></script>
-
-
+  <link rel="stylesheet" href="./css/eyewrite.css" />
+  <!-- Firechat -->
+  <link rel="stylesheet" href="https://cdn.firebase.com/libs/firechat/3.0.1/firechat.min.css" />
+  <script src="https://cdn.firebase.com/libs/firechat/3.0.1/firechat.min.js"></script>
 
 
-  </head>
-
-  <body onload="updateUI()">
-    <div id="userlist"></div>
-
-    <div id="firepad" style="visibility:hidden"></div>
 
 
-    <div id="video-streams">
+</head>
+
+<body onload="updateUI()">
+  <div id="userlist" style="visibility:hidden;left:87%;z-index:1"></div>
+
+  <div id="firepad" style="visibility:hidden"></div>
+
+
+  <div id="video-streams">
+  </div>
+
+  <div id="colorpicker"></div>
+
+  <div id="controlContainer" style="visibility:hidden;left:87%;z-index:1">
+
+    <div id="user-checkboxes-container"></div>
+    <select id="user-checkboxes" multiple="multiple"></select>
+
+    <!-- Send Data Component -->
+    <div class="radio-buttons">
+      <p>Send My Data:</p>
+      <div class="inline-toggle-container">
+        <p class="inline">Gaze</p>
+        <div class="onoffswitch">
+          <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="gazeSendSwitch" tabindex="0" />
+          <label class="onoffswitch-label" for="gazeSendSwitch">
+            <span class="onoffswitch-inner"></span>
+            <span class="onoffswitch-switch"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="inline-toggle-container">
+        <p>Mouse</p>
+        <!-- <input type="radio" id="blockButton" name="dataChoice">
+          <label for="blockButton" type="radio">Block</label> -->
+        <div>
+          <div class="onoffswitch">
+            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="mouseSendSwitch" tabindex="0" />
+            <label class="onoffswitch-label" for="mouseSendSwitch">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div id="colorpicker"></div>
+    <!-- Visualize Data Component -->
+    <div class="radio-buttons">
+      <p>Visualize Data:</p>
 
-    <div id="controlContainer">
+      <div class="inline-toggle-container">
+        <p style="margin-bottom: 0">Gaze</p>
+        <div class="onoffswitch">
+          <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="gazeVisSwitch" tabindex="0" />
+          <label class="onoffswitch-label" for="gazeVisSwitch">
+            <span class="onoffswitch-inner"></span>
+            <span class="onoffswitch-switch"></span>
+          </label>
+        </div>
+      </div>
 
-      <div id="user-checkboxes-container"></div>
-      <select id="user-checkboxes" multiple="multiple"></select>
-
-      <!-- Send Data Component -->
-      <div class="radio-buttons">
-        <p>Send My Data:</p>
-        <div class="inline-toggle-container">
-          <p class="inline">Gaze</p>
+      <div class="inline-toggle-container">
+        <p>Mouse</p>
+        <div>
           <div class="onoffswitch">
-            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="gazeSendSwitch" tabindex="0" />
-            <label class="onoffswitch-label" for="gazeSendSwitch">
+            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="mouseVisSwitch" tabindex="0" />
+            <label class="onoffswitch-label" for="mouseVisSwitch">
               <span class="onoffswitch-inner"></span>
               <span class="onoffswitch-switch"></span>
             </label>
           </div>
         </div>
-
-        <div class="inline-toggle-container">
-          <p>Mouse</p>
-          <!-- <input type="radio" id="blockButton" name="dataChoice">
-          <label for="blockButton" type="radio">Block</label> -->
-          <div>
-            <div class="onoffswitch">
-              <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="mouseSendSwitch" tabindex="0" />
-              <label class="onoffswitch-label" for="mouseSendSwitch">
-                <span class="onoffswitch-inner"></span>
-                <span class="onoffswitch-switch"></span>
-              </label>
-            </div>
-          </div>
-        </div>
       </div>
+    </div>
 
-      <!-- Visualize Data Component -->
-      <div class="radio-buttons">
-        <p>Visualize Data:</p>
+    <script type="text/javascript">
+      $("#vis-shape").multiselect();
+    </script>
 
-        <div class="inline-toggle-container">
-          <p style="margin-bottom: 0">Gaze</p>
-          <div class="onoffswitch">
-            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="gazeVisSwitch" tabindex="0" />
-            <label class="onoffswitch-label" for="gazeVisSwitch">
-              <span class="onoffswitch-inner"></span>
-              <span class="onoffswitch-switch"></span>
-            </label>
-          </div>
-        </div>
-
-        <div class="inline-toggle-container">
-          <p>Mouse</p>
-          <div>
-            <div class="onoffswitch">
-              <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="mouseVisSwitch" tabindex="0" />
-              <label class="onoffswitch-label" for="mouseVisSwitch">
-                <span class="onoffswitch-inner"></span>
-                <span class="onoffswitch-switch"></span>
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <script type="text/javascript">
-        $("#vis-shape").multiselect();
-      </script>
-
-      <!-- Highlight Pattern Component -->
-      <div class="radio-buttons" style="display: flex; flex-direction: column" visibility='hidden'>
-        <p>Highlight Pattern</p>
-        <div style="margin: auto">
-          <select id="vis-shape" style="
+    <!-- Highlight Pattern Component -->
+    <div class="radio-buttons" style="display: flex; flex-direction: column" visibility='hidden'>
+      <p>Highlight Pattern</p>
+      <div style="margin: auto">
+        <select id="vis-shape" style="
                 width: 120px;
                 margin: 0 auto;
                 margin-bottom: 10px;
                 margin-top: 0px;
               ">
-            <!-- <option value="solid">Solid</option> -->
-            <option value="gradient">Gradient</option>
-          </select>
-        </div>
+          <!-- <option value="solid">Solid</option> -->
+          <option value="gradient">Gradient</option>
+        </select>
       </div>
-
-      <!-- Highlight Size Component -->
-      <div id="slider-container">
-        <p class="slider-text">
-          Highlight Size: <span id="numSentences"></span>
-        </p>
-        <input type="range" min="1" max="48" value="12" id="sentenceSlider" />
-      </div>
-
-      <!-- Highlight Gradient Ratio Component -->
-      <div id="slider-container">
-        <p class="slider-text2">
-          Gradient Ratio: <span id="numSentences2"></span>
-        </p>
-        <input type="range" min="0" max="66" value="66" id="sentenceSlider2" />
-      </div>
-
-      <!-- Voice/Video Chat Component -->
-      <div>
-        <div class="radio-buttons">
-          <div>
-            <p style='text-align: center;'>Video Call</p>
-            <button id="videoCallJoin"
-              style="margin: 0;position: absolute;top: 35%;left: 50%;-ms-transform: translate(-50%, -50%);transform: translate(-50%, -50%); background-color: #ffbf86; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;  font-size: 14px;">
-              JOIN
-            </button>
-
-          </div>
-          <div>
-            <br><br>
-            <div class="inline-toggle-container">
-              <p>Audio</p>
-
-              <button id="aud" disabled=True
-                style="font-family: Trebuchet, Arial, sans-serif; font-weight: bold;  font-size: 14px;">Muted</button>
-            </div>
-            <div class="inline-toggle-container">
-              <p>Video</p>
-              <button id="cam" disabled=True
-                style="font-family: Trebuchet, Arial, sans-serif; font-weight: bold;  font-size: 14px;">Hidden</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-      <!-- WebGazer Calibration Component -->
-      <A href="./WebGazer/simple-wg/index.html" id="calibrationLink">
-        <input type="button" id="calibrationButton" value="Calibrate Gaze">
-      </A>
-
     </div>
 
-    <div id="audio-streams"></div>
+    <!-- Highlight Size Component -->
+    <div id="slider-container">
+      <p class="slider-text">
+        Highlight Size: <span id="numSentences"></span>
+      </p>
+      <input type="range" min="1" max="48" value="12" id="sentenceSlider" />
+    </div>
 
-    <div id="root" style="position:relative;left:180px;bottom:63%;width: 72%;height: 97%;border-style:solid"></div>
+    <!-- Highlight Gradient Ratio Component -->
+    <div id="slider-container">
+      <p class="slider-text2">
+        Gradient Ratio: <span id="numSentences2"></span>
+      </p>
+      <input type="range" min="0" max="66" value="66" id="sentenceSlider2" />
+    </div>
 
-  </body>
+    <!-- Voice/Video Chat Component -->
+    <div>
+      <div class="radio-buttons">
+        <div>
+          <p style='text-align: center;'>Video Call</p>
+          <button id="videoCallJoin"
+            style="margin: 0;position: absolute;top: 35%;left: 50%;-ms-transform: translate(-50%, -50%);transform: translate(-50%, -50%); background-color: #ffbf86; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;  font-size: 14px;">
+            JOIN
+          </button>
 
+        </div>
+        <div>
+          <br><br>
+          <div class="inline-toggle-container">
+            <p>Audio</p>
 
-    <script>
-      window.debug = false;  // turn off to remove debug statements
-
-      var firebaseConfig = {
-        apiKey: "AIzaSyAmD2D9XCpVDQcJF08chqCbkCpL-_Jfu_Y",
-        authDomain: "eyewrite-62d75.firebaseapp.com",
-        databaseURL: "https://eyewrite-62d75.firebaseio.com",
-        projectId: "eyewrite-62d75",
-        storageBucket: "eyewrite-62d75.appspot.com",
-        messagingSenderId: "998123311342",
-        appId: "1:998123311342:web:abed435afee503a2eb63ff",
-        measurementId: "G-8EGTMW2Q4G"
-      };
-
-      // REPLACE WITH DEVELOPMENT SERVER
-      // var firebaseConfig = {
-      //   apiKey: "AIzaSyAkIIeqpNNzGp98UHRI21GOvp6CmH_hdZU",
-      //   authDomain: "eyewrite2-642f5.firebaseapp.com",
-      //   databaseURL: "https://eyewrite2-642f5-default-rtdb.firebaseio.com",
-      //   projectId: "eyewrite2-642f5",
-      //   storageBucket: "eyewrite2-642f5.appspot.com",
-      //   messagingSenderId: "360420484918",
-      //   appId: "1:360420484918:web:df36b1d345145448f7b597"
-      // };
-
-
-      // Initialize Firebase
-      firebase.initializeApp(firebaseConfig);
-
-      //// Get Firebase Database reference.
-      var firebaseRef = getRef();
-
-      //// Create CodeMirror (with lineWrapping on).
-      var codeMirror = CodeMirror(document.getElementById('firepad'), {
-        lineWrapping: true, inputStyle: 'contenteditable', historyEventDelay: 2500,
-        autofocus: true, workTime: 5, workDelay: 5, pollInterval: 5, viewportMargin: 2
-      });
-
-      // Create a random ID to use as our user ID (we must give this to firepad and FirepadUserList).
-      var userId = Math.floor(Math.random() * 9999999999).toString();
-
-      //// Create Firepad (with rich text features and our desired userId).
-      var firepad = Firepad.fromCodeMirror(firebaseRef, codeMirror,
-        { richTextToolbar: true, richTextShortcuts: true, userId: userId });
-
-      //// Create FirepadUserList (with our desired userId).
-      var firepadUserList = FirepadUserList.fromDiv(firebaseRef.child('users'),
-        document.getElementById('userlist'), userId);
+            <button id="aud" disabled=True
+              style="font-family: Trebuchet, Arial, sans-serif; font-weight: bold;  font-size: 14px;">Muted</button>
+          </div>
+          <div class="inline-toggle-container">
+            <p>Video</p>
+            <button id="cam" disabled=True
+              style="font-family: Trebuchet, Arial, sans-serif; font-weight: bold;  font-size: 14px;">Hidden</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
 
-      // Helper to get hash from end of URL or generate a random one.
-      function getRef() {
-        var ref = firebase.database().ref();
-        var hash = window.location.hash.replace(/#/g, '');
-        if (hash) {
-          ref = ref.child(hash);
-        } else {
-          ref = ref.push(); // generate unique location.
-          window.location = window.location + '#' + ref.key; // add it as a hash to the URL.
-        }
-        return ref;
-      }
+    <!-- WebGazer Calibration Component -->
+    <A href="./WebGazer/simple-wg/index.html" id="calibrationLink">
+      <input type="button" id="calibrationButton" value="Calibrate Gaze">
+    </A>
 
-      function updateUI() {
-        //Update Gradient Ratio label to match slider value
-        var grad = document.getElementById("numSentences2");
-        var gradval = document.getElementById("sentenceSlider2");
-        grad.innerHTML = Math.floor((gradval.value / 66) * 100) + "%";
-        //turn all switches off when page is loaded (class is onoffswitch-label)
-        document.getElementById("gazeSendSwitch").checked = false;
-        document.getElementById("mouseSendSwitch").checked = false;
-        document.getElementById("mouseVisSwitch").checked = false;
-        document.getElementById("gazeVisSwitch").checked = false;
-      }
+  </div>
+
+  <div id="audio-streams"></div>
+
+  <div id="root" style="position:relative;bottom:65%;height: 97%"></div>
+  <button class="btn btn-primary" style="position: relative;bottom:159%;left:90%;" onclick="toggleUI()">EyeWrite
+    UI</button>
+
+</body>
 
 
-    </script>
+<script>
+  window.debug = false;  // turn off to remove debug statements
 
-  </body>
+  var firebaseConfig = {
+    apiKey: "AIzaSyAmD2D9XCpVDQcJF08chqCbkCpL-_Jfu_Y",
+    authDomain: "eyewrite-62d75.firebaseapp.com",
+    databaseURL: "https://eyewrite-62d75.firebaseio.com",
+    projectId: "eyewrite-62d75",
+    storageBucket: "eyewrite-62d75.appspot.com",
+    messagingSenderId: "998123311342",
+    appId: "1:998123311342:web:abed435afee503a2eb63ff",
+    measurementId: "G-8EGTMW2Q4G"
+  };
 
-  <!-- UI Adjustments -->
-  <script src='./scripts/ui-adjustments.js'></script>
-  <!-- Highlight Style -->
-  <script src="./scripts/highlight-styles.js"></script>
-  <!-- Visualization Control -->
-  <script src='./scripts/visualization-control.js'></script>
-  <!-- Voice Chat -->
-  <script src="./scripts/media-call.js"></script>
-  <!-- Sketchy Server interactions-->
-  <script src='./scripts/draw-syncing.js'></script>
+  // REPLACE WITH DEVELOPMENT SERVER
+  // var firebaseConfig = {
+  //   apiKey: "AIzaSyAkIIeqpNNzGp98UHRI21GOvp6CmH_hdZU",
+  //   authDomain: "eyewrite2-642f5.firebaseapp.com",
+  //   databaseURL: "https://eyewrite2-642f5-default-rtdb.firebaseio.com",
+  //   projectId: "eyewrite2-642f5",
+  //   storageBucket: "eyewrite2-642f5.appspot.com",
+  //   messagingSenderId: "360420484918",
+  //   appId: "1:360420484918:web:df36b1d345145448f7b597"
+  // };
 
 
-  <script>!function (e) { function r(r) { for (var n, u, i = r[0], c = r[1], l = r[2], s = 0, p = []; s < i.length; s++)u = i[s], Object.prototype.hasOwnProperty.call(o, u) && o[u] && p.push(o[u][0]), o[u] = 0; for (n in c) Object.prototype.hasOwnProperty.call(c, n) && (e[n] = c[n]); for (f && f(r); p.length;)p.shift()(); return a.push.apply(a, l || []), t() } function t() { for (var e, r = 0; r < a.length; r++) { for (var t = a[r], n = !0, i = 1; i < t.length; i++) { var c = t[i]; 0 !== o[c] && (n = !1) } n && (a.splice(r--, 1), e = u(u.s = t[0])) } return e } var n = {}, o = { 1: 0 }, a = []; function u(r) { if (n[r]) return n[r].exports; var t = n[r] = { i: r, l: !1, exports: {} }; return e[r].call(t.exports, t, t.exports, u), t.l = !0, t.exports } u.e = function (e) { var r = [], t = o[e]; if (0 !== t) if (t) r.push(t[2]); else { var n = new Promise((function (r, n) { t = o[e] = [r, n] })); r.push(t[2] = n); var a, i = document.createElement("script"); i.charset = "utf-8", i.timeout = 120, u.nc && i.setAttribute("nonce", u.nc), i.src = function (e) { return u.p + "static/js/" + ({}[e] || e) + "." + { 3: "84eacff1" }[e] + ".chunk.js" }(e); var c = new Error; a = function (r) { i.onerror = i.onload = null, clearTimeout(l); var t = o[e]; if (0 !== t) { if (t) { var n = r && ("load" === r.type ? "missing" : r.type), a = r && r.target && r.target.src; c.message = "Loading chunk " + e + " failed.\n(" + n + ": " + a + ")", c.name = "ChunkLoadError", c.type = n, c.request = a, t[1](c) } o[e] = void 0 } }; var l = setTimeout((function () { a({ type: "timeout", target: i }) }), 12e4); i.onerror = i.onload = a, document.head.appendChild(i) } return Promise.all(r) }, u.m = e, u.c = n, u.d = function (e, r, t) { u.o(e, r) || Object.defineProperty(e, r, { enumerable: !0, get: t }) }, u.r = function (e) { "undefined" != typeof Symbol && Symbol.toStringTag && Object.defineProperty(e, Symbol.toStringTag, { value: "Module" }), Object.defineProperty(e, "__esModule", { value: !0 }) }, u.t = function (e, r) { if (1 & r && (e = u(e)), 8 & r) return e; if (4 & r && "object" == typeof e && e && e.__esModule) return e; var t = Object.create(null); if (u.r(t), Object.defineProperty(t, "default", { enumerable: !0, value: e }), 2 & r && "string" != typeof e) for (var n in e) u.d(t, n, function (r) { return e[r] }.bind(null, n)); return t }, u.n = function (e) { var r = e && e.__esModule ? function () { return e.default } : function () { return e }; return u.d(r, "a", r), r }, u.o = function (e, r) { return Object.prototype.hasOwnProperty.call(e, r) }, u.p = "/", u.oe = function (e) { throw console.error(e), e }; var i = this["webpackJsonpcollaborative-drawing"] = this["webpackJsonpcollaborative-drawing"] || [], c = i.push.bind(i); i.push = r, i = i.slice(); for (var l = 0; l < i.length; l++)r(i[l]); var f = c; t() }([])</script>
-  <script src="./draw/2.2497767d.chunk.js"></script>
-  <script src="./draw/main.5fec712d.chunk.js"></script>
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+
+  //// Get Firebase Database reference.
+  var firebaseRef = getRef();
+
+  //// Create CodeMirror (with lineWrapping on).
+  var codeMirror = CodeMirror(document.getElementById('firepad'), {
+    lineWrapping: true, inputStyle: 'contenteditable', historyEventDelay: 2500,
+    autofocus: true, workTime: 5, workDelay: 5, pollInterval: 5, viewportMargin: 2
+  });
+
+  // Create a random ID to use as our user ID (we must give this to firepad and FirepadUserList).
+  var userId = Math.floor(Math.random() * 9999999999).toString();
+
+  //// Create Firepad (with rich text features and our desired userId).
+  var firepad = Firepad.fromCodeMirror(firebaseRef, codeMirror,
+    { richTextToolbar: true, richTextShortcuts: true, userId: userId });
+
+  //// Create FirepadUserList (with our desired userId).
+  var firepadUserList = FirepadUserList.fromDiv(firebaseRef.child('users'),
+    document.getElementById('userlist'), userId);
+
+
+  // Helper to get hash from end of URL or generate a random one.
+  function getRef() {
+    var ref = firebase.database().ref();
+    var hash = window.location.hash.replace(/#/g, '');
+    if (hash) {
+      ref = ref.child(hash);
+    } else {
+      ref = ref.push(); // generate unique location.
+      window.location = window.location + '#' + ref.key; // add it as a hash to the URL.
+    }
+    return ref;
+  }
+
+  function updateUI() {
+    //Update Gradient Ratio label to match slider value
+    var grad = document.getElementById("numSentences2");
+    var gradval = document.getElementById("sentenceSlider2");
+    grad.innerHTML = Math.floor((gradval.value / 66) * 100) + "%";
+    //turn all switches off when page is loaded (class is onoffswitch-label)
+    document.getElementById("gazeSendSwitch").checked = false;
+    document.getElementById("mouseSendSwitch").checked = false;
+    document.getElementById("mouseVisSwitch").checked = false;
+    document.getElementById("gazeVisSwitch").checked = false;
+  }
+  var ui = false;
+  function toggleUI() {
+    if (!ui) {
+      document.getElementById("userlist").style.visibility = 'visible';
+      document.getElementById("controlContainer").style.visibility = 'visible';
+      ui=true;
+    }
+    else{
+      ui=false;
+    }
+  }
+
+
+</script>
+
+</body>
+
+<!-- UI Adjustments -->
+<script src='./scripts/ui-adjustments.js'></script>
+<!-- Highlight Style -->
+<script src="./scripts/highlight-styles.js"></script>
+<!-- Visualization Control -->
+<script src='./scripts/visualization-control.js'></script>
+<!-- Voice Chat -->
+<script src="./scripts/media-call.js"></script>
+<!-- Sketchy Server interactions-->
+<script src='./scripts/draw-syncing.js'></script>
+
+
+<script>!function (e) { function r(r) { for (var n, u, i = r[0], c = r[1], l = r[2], s = 0, p = []; s < i.length; s++)u = i[s], Object.prototype.hasOwnProperty.call(o, u) && o[u] && p.push(o[u][0]), o[u] = 0; for (n in c) Object.prototype.hasOwnProperty.call(c, n) && (e[n] = c[n]); for (f && f(r); p.length;)p.shift()(); return a.push.apply(a, l || []), t() } function t() { for (var e, r = 0; r < a.length; r++) { for (var t = a[r], n = !0, i = 1; i < t.length; i++) { var c = t[i]; 0 !== o[c] && (n = !1) } n && (a.splice(r--, 1), e = u(u.s = t[0])) } return e } var n = {}, o = { 1: 0 }, a = []; function u(r) { if (n[r]) return n[r].exports; var t = n[r] = { i: r, l: !1, exports: {} }; return e[r].call(t.exports, t, t.exports, u), t.l = !0, t.exports } u.e = function (e) { var r = [], t = o[e]; if (0 !== t) if (t) r.push(t[2]); else { var n = new Promise((function (r, n) { t = o[e] = [r, n] })); r.push(t[2] = n); var a, i = document.createElement("script"); i.charset = "utf-8", i.timeout = 120, u.nc && i.setAttribute("nonce", u.nc), i.src = function (e) { return u.p + "static/js/" + ({}[e] || e) + "." + { 3: "84eacff1" }[e] + ".chunk.js" }(e); var c = new Error; a = function (r) { i.onerror = i.onload = null, clearTimeout(l); var t = o[e]; if (0 !== t) { if (t) { var n = r && ("load" === r.type ? "missing" : r.type), a = r && r.target && r.target.src; c.message = "Loading chunk " + e + " failed.\n(" + n + ": " + a + ")", c.name = "ChunkLoadError", c.type = n, c.request = a, t[1](c) } o[e] = void 0 } }; var l = setTimeout((function () { a({ type: "timeout", target: i }) }), 12e4); i.onerror = i.onload = a, document.head.appendChild(i) } return Promise.all(r) }, u.m = e, u.c = n, u.d = function (e, r, t) { u.o(e, r) || Object.defineProperty(e, r, { enumerable: !0, get: t }) }, u.r = function (e) { "undefined" != typeof Symbol && Symbol.toStringTag && Object.defineProperty(e, Symbol.toStringTag, { value: "Module" }), Object.defineProperty(e, "__esModule", { value: !0 }) }, u.t = function (e, r) { if (1 & r && (e = u(e)), 8 & r) return e; if (4 & r && "object" == typeof e && e && e.__esModule) return e; var t = Object.create(null); if (u.r(t), Object.defineProperty(t, "default", { enumerable: !0, value: e }), 2 & r && "string" != typeof e) for (var n in e) u.d(t, n, function (r) { return e[r] }.bind(null, n)); return t }, u.n = function (e) { var r = e && e.__esModule ? function () { return e.default } : function () { return e }; return u.d(r, "a", r), r }, u.o = function (e, r) { return Object.prototype.hasOwnProperty.call(e, r) }, u.p = "/", u.oe = function (e) { throw console.error(e), e }; var i = this["webpackJsonpcollaborative-drawing"] = this["webpackJsonpcollaborative-drawing"] || [], c = i.push.bind(i); i.push = r, i = i.slice(); for (var l = 0; l < i.length; l++)r(i[l]); var f = c; t() }([])</script>
+<script src="./draw/2.2497767d.chunk.js"></script>
+<script src="./draw/main.5fec712d.chunk.js"></script>
+
 </html>
