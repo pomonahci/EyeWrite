@@ -1,7 +1,7 @@
 /**
  * ui-adjustments.js handles some UI customization
  * 
- * Name: davecarroll, chanhakim
+ * Name: davecarroll, chanhakim, aidangarton
  * Date: Summer 2020
  */
 
@@ -87,7 +87,7 @@ var UIAdjustments = function () {
 
   var slider2 = document.getElementById("sentenceSlider2");
   var output2 = document.getElementById("numSentences2");
-  output2.innerHTML = slider2.value;
+  output2.innerHTML = slider2.value + "  ";
 
   slider2.oninput = function () {
     var val = Math.floor((this.value/66) * 100);
@@ -98,6 +98,54 @@ var UIAdjustments = function () {
     var val = Math.floor((this.value/66) * 100);
     output2.innerHTML = (val + "%");
   }
+
+  // var slider3 = document.getElementById("hm-radius-slider");
+  // var output3 = document.getElementById("hm-radius");
+  // output3.innerHTML = slider3.value;
+
+  // slider3.oninput = function () {
+  //   output3.innerHTML = this.value;
+  //   updateHeatmapStyle({
+  //     container: document.querySelector('#heatmap'),
+  //     radius: document.getElementById("hm-radius-slider").value,
+  //     // opacity: document.getElementById("hm-opacity-slider").value / 100,
+  //   })
+  // }
+
+  // var slider4 = document.getElementById("hm-opacity-slider");
+  // var output4 = document.getElementById("hm-opacity");
+  // output4.innerHTML = slider4.value + "%";
+
+  // slider4.oninput = function () {
+  //   output4.innerHTML = this.value + "%";
+  //   updateHeatmapStyle({
+  //     container: document.querySelector('#heatmap'),
+  //     radius: document.getElementById("hm-radius-slider").value,
+  //     // opacity: document.getElementById("hm-opacity-slider").value / 100,
+  //     // blur: document.getElementById("hm-blur-slider").value / 100,
+  //   })
+  // }
+
+  // var slider5 = document.getElementById("hm-blur-slider");
+  // var output5 = document.getElementById("hm-blur");
+  // output5.innerHTML = slider5.value;
+
+  // slider5.oninput = function () {
+  //   output5.innerHTML = this.value;
+  //   updateHeatmapStyle({
+  //     container: document.querySelector('#heatmap'),
+  //     radius: document.getElementById("hm-radius-slider").value,
+  //     // opacity: document.getElementById("hm-opacity-slider").value / 100,
+  //     blur: document.getElementById("hm-blur-slider").value / 100,
+  //   })
+  // }
+
+  const hmSwitch = document.getElementById("heatmap-type-selector");
+
+  hmSwitch.onchange = function(){
+    removalType = hmSwitch.value
+  }
+
   var controlContainer = document.getElementById('controlContainer');
   controlContainer.style.top = (userlistBox.offsetTop + userlistBox.offsetHeight + 10) + "px";
 

@@ -1,9 +1,22 @@
 /**
  * visualization.js
  * 
- * Name: davecarroll, chanhakim
+ * Name: davecarroll, chanhakim, aidangarton
  * Date: Summer 2020 - Spring 2021
  */
+
+let default_config = {
+  container: document.querySelector('#heatmap'),
+  // radius: document.getElementById("hm-radius-slider").value,
+  // opacity: document.getElementById("hm-opacity-slider").value / 100,
+}
+
+let heatmapDataPoints = [];
+let intervalID;
+let removalType = "temporal";
+
+let heatmapInstance = h337.create(default_config);
+
 var visualizationControl = function () {
 
   var FirepadCM;            // reference for our firepad's codemirror instance
@@ -31,6 +44,18 @@ var visualizationControl = function () {
 
   visShapeSelector.onchange = function () {
     window.visShape = visShapeSelector.value;
+    console.log(`vis shape changed to ${window.visShape}`);
+
+    const x = document.getElementById("heatmap-params-container");
+
+    if(visShapeSelector.value == "heatmap"){
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+
+    clearHeatmap();
+
     if (window.debug) console.log(window.visShape);
   };
 
@@ -691,15 +716,58 @@ var visualizationControl = function () {
     }
 
     var hColor = hex2rgb(userColors[uID], 1.0);
-    var hSize = { coeff: document.getElementById("sentenceSlider").value };
+    var hSize = {coeff: document.getElementById("sentenceSlider").value};
     var hrate = {coeff: document.getElementById("sentenceSlider2").value};
-
 
     // var visShape, visSize;
     if (window.visShape == "solid") {
       circle.style = createSolidCircleHighlightStyle(hPos, hSize, hColor);
+      
+      // get rid of clearing heatmap interval and clear heatmap data from screen
+      clearInterval(intervalID);
+      heatmapInstance.setData({data: []});
     } else if (window.visShape == "gradient") {
       circle.style = createGradientCircleHighlightStyle(hPos, hSize, hColor, hrate);
+
+      // get rid of clearing heatmap interval and clear heatmap data from screen
+      clearInterval(intervalID);
+      intervalID = null;
+
+      heatmapInstance.setData({data: []});
+    }else if(window.visShape == "heatmap"){
+        circle.style.visibility = "hidden";
+
+        if(removalType == "temporal"){
+          if(intervalID == null){
+            intervalID = window.setInterval(() => {
+              heatmapDataPoints.shift();
+              heatmapInstance.setData({max: 60, min: 0, data: heatmapDataPoints});
+            }, 100);
+          }
+
+          heatmapDataPoints.push({x: hPos.x, y: hPos.y, value: 20});
+          heatmapInstance.setData({max: 60, min: 0, data: heatmapDataPoints});
+
+        } else if(removalType == "capacity"){
+          if(intervalID != null){
+            clearInterval(intervalID);
+            intervalID = null;
+          }
+
+          if(heatmapDataPoints.length >= 300){
+            heatmapDataPoints.shift();
+          }
+  
+          heatmapDataPoints.push({x: hPos.x, y: hPos.y, value: 20});
+          heatmapInstance.setData({max: 60, min: 0, data: heatmapDataPoints});
+        } else if (removalType == "none"){
+          if(intervalID != null){
+            clearInterval(intervalID);
+          }
+          heatmapDataPoints.push({x: hPos.x, y: hPos.y, value: 20});
+          heatmapInstance.setData({max: 60, min: 0, data: heatmapDataPoints});
+        }
+        
     } else {
       if (window.debug) console.log("invalid shape!");
     }
@@ -844,3 +912,20 @@ var visualizationControl = function () {
 
 }();
 
+function updateHeatmapStyle(new_config){
+  default_config = new_config;
+
+  let new_heatmap = h337.create(new_config);
+  new_heatmap.setData({data: heatmapDataPoints});
+
+  // heatmapDataPoints = [];
+  heatmapInstance.setData({max: 100, min:100, data:[]});
+  heatmapInstance = new_heatmap;
+
+  heatmapInstance = h337.create(new_config);
+}
+
+function clearHeatmap(){
+  heatmapDataPoints = [];
+  heatmapInstance.setData({max: 60, min:0, data:[]});
+}

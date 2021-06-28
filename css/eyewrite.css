@@ -145,12 +145,13 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
 #controlContainer {
   background-color: #ebebeb;
   width: 175px;
-  position: relative;
+  position: absolute;
   border-radius: 4px;
   padding-bottom: 12px;
   height: auto;
   max-height: 65vh;
   overflow-y: scroll;
+  /* z-index: -1; */
 }
 
 #user-checkboxes-container {
@@ -280,7 +281,8 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
 }
 
 /* Mute Button Style */
-.radio-buttons .inline-toggle-container #aud, #cam {
+.radio-buttons .inline-toggle-container #aud,
+#cam {
   width: 60px;
   height: 26px;
   margin: auto 0;
@@ -288,10 +290,10 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   color: black;
   font-size: 14px;
   margin-bottom: 5px;
-
 }
 
-.radio-buttons .inline-toggle-container #aud:disabled, #cam:disabled {
+.radio-buttons .inline-toggle-container #aud:disabled,
+#cam:disabled {
   width: 60px;
   height: 26px;
   margin: auto 0;
@@ -311,6 +313,20 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   border: 1px solid var(--outer-border);
   border-radius: 4px;
   padding-bottom: 20px;
+}
+
+.slider-container2 {
+  position: relative;
+  left: 15px;
+  width: 145px;
+  /* height: 70px; */
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: var(--sub-box-padding);
+  border: 1px solid var(--outer-border);
+  border-radius: 4px;
+  padding-bottom: 20px;
+  display: none;
 }
 
 .slider-text {
@@ -333,22 +349,46 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   margin-top: 5px;
   padding-bottom: 0px;
   margin-bottom: 0px;
+  align-self: center;
 }
 
+.slider-text3 {
+  position: relative;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  /* margin-left: 10px; */
+  margin-top: 5px;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+  text-align: center;
+}
 
-#sentenceSlider {
+.hm-ui-options-text {
+  position: relative;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  /* margin-left: 10px; */
+  margin-top: 5px;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+  text-align: center;
+}
+
+.sentenceSlider {
   position: relative;
   width: 125px;
   margin-left: 10px;
   margin-top: 10px;
 }
-
+/* 
 #sentenceSlider2 {
   position: relative;
   width: 125px;
   margin-left: 10px;
   margin-top: 10px;
-}
+} */
 
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   input[type="range"] {
@@ -412,6 +452,7 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+  user-select: none;
 }
 .onoffswitch-checkbox {
   position: absolute;
@@ -480,11 +521,15 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   right: 0px;
   background-color: #ffbf86;
 }
-.vvSwitch{
+.vvSwitch {
   left: 32px;
   margin-bottom: 5px;
 }
 
+.hmSwitch {
+  display: flex;
+  justify-content: space-around;
+}
 
 /* Video Container Style */
 #video-streams {
@@ -496,3 +541,9 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   right: 0px;
 }
 
+#heatmap {
+  height: 100vh;
+  width: 100vw;
+  pointer-events: none;
+  z-index: 1;
+}

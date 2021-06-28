@@ -27,6 +27,6 @@
 *.pdf
 *.mp4
 *.cpuprofile
-node_modules/
 misc/
 # WebGazer/
+node_modules
