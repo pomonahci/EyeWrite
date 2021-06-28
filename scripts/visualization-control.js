@@ -8,7 +8,7 @@
 let default_config = {
   container: document.querySelector("#heatmap"),
   // radius: document.getElementById("hm-radius-slider").value,
-  // opacity: document.getElementById("hm-opacity-slider").value / 100,
+  maxOpacity: 0.725,
 };
 
 let heatmapDataPoints = [];
@@ -1075,4 +1075,5 @@ window.onresize = function () {
     document.body.clientWidth,
     document.body.clientHeight
   );
+  heatmapInstance.repaint();
 };

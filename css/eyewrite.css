@@ -154,9 +154,19 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   /* z-index: -1; */
 }
 
+/* For heatmap layering */
+/* #controlContainer > * {
+  z-index: 1;
+}
+
+#controlContainer > * > * {
+  z-index: 1;
+} */
+
 #user-checkboxes-container {
   position: relative;
   margin-left: 15px;
+  /* z-index: 3; */
 }
 
 .user-checkboxes {
