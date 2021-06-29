@@ -25,7 +25,7 @@
           <script src="./js/targets.js"></script>
           <div class="inst" id="instructions">
             <h1>How To Calibrate</h1>
-              <p>First make sure your face is positioned within the box in the top left. <br><br> Once "Calibrate" has been pressed, a target will appear in the top left corner. With your eyes, follow the target as it stops in 9 different positions and pulses, capturing images of your eyes to pass into our regression model. <br><br>You can "Calibrate" as many times as you like, adding more calibration images to the model, or you can "Recalibrate" and restart the calibration process, clearing all prior data and starting anew. <br><br>Once you are done calibrating, just click on "Back" to be returned from whence you came.</p>
+              <p>First make sure your face is positioned within the box in the top left. <br><br> Once "Calibrate" has been pressed, a target will appear in the top left corner. With your eyes, follow the target as it stops in 9 different positions and pulses, capturing images of your eyes to pass into our regression model. <br><br>You can "Calibrate" as many times as you like, adding more calibration images to the model, or you can "Recalibrate" and restart the calibration process, clearing all prior data and starting anew. <br><br>Once you are done calibrating, just click on "Back" to be returned to your previous page.</p>
         </div>
           <!-- </br></br></br></br></br></br></br></br> -->
           <div>
@@ -40,7 +40,7 @@
             <button class = "right tooltip" id="recal" onclick="hideButtons();if(!document.getElementById('dot')){webgazer.clearData(); ts = new Targets(calibrationPoints, 'calibration', 5); ts.start();}">Recalibrate<span class="tooltiptext">Clear current calibration images and calibrate again from scratch.</span></button>
             <!-- <button class="right" onclick="webgazer.trainModel()">Train Model</button> -->
             <!-- <button class="right" href="control.html">To Control</button> -->
-            <button class="right" id="error" onclick="hideButtons();var ts = new Targets(calibrationPoints, 'error', 5);ts.start();">Test Error</button>
+            <button class="right tooltip" id="error" onclick="hideButtons();var ts = new Targets(calibrationPoints, 'error', 5);ts.start();">Test Error<span class = tooltiptext>Test your current calibration accuracy without recalibrating.</span></button>
             <button class="right" id="clear" onclick="webgazer.clearData()">Clear Data</button>
             <button class='right' id="back" onclick="history.go(-1)">Back</button>
           </div> 

@@ -244,6 +244,7 @@
         </div>
       </div>
 
+
       <!-- Heatmap parameters container (set to visible when "heatmap" value is selected) -->
       <div class="slider-container2" id="heatmap-params-container">
         <p class="slider-text3">Heatmap Customization</p>
@@ -366,11 +367,13 @@
         </div>
       </div>
 
+
+
       <!-- Voice/Video Chat Component -->
       <div>
         <div class="radio-buttons">
           <div>
-            <p style="text-align: center">Video Call</p>
+            <p id="mediaCallTxt" style="text-align: center">Video Call</p>
             <button
               id="videoCallJoin"
               style="
@@ -389,6 +392,10 @@
               JOIN
             </button>
           </div>
+          <div id="videoButton" class="inline-toggle-container">
+            <p>Video</p>
+            <button id="cam" disabled=True
+              style="font-family: Trebuchet, Arial, sans-serif; font-weight: bold;  font-size: 14px;">Hidden</button>
           <div>
             <br /><br />
             <div class="inline-toggle-container">
@@ -526,6 +533,6 @@
   <!-- UI Adjustments -->
   <script src="./scripts/ui-adjustments.js"></script>
   <!-- Voice Chat -->
-  <!-- <script src="./scripts/voice-chat.js"></script> -->
+  <!-- <script src="./scripts/voice-call.js"></script> -->
   <script src="./scripts/media-call.js"></script>
 </html>
