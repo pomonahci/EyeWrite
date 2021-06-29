@@ -103,7 +103,7 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
 }
 
 div.firepad-toolbar-wrapper {
-  z-index: 2;
+  z-index: 4;
 }
 
 /* Arrow Style (styles relative position arrows in User List) */
