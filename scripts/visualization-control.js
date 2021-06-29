@@ -851,7 +851,6 @@ var visualizationControl = (function () {
         hColor,
         hrate
       );
-
       // get rid of clearing heatmap interval and clear heatmap data from screen
       clearInterval(intervalID);
       intervalID = null;
@@ -877,7 +876,11 @@ var visualizationControl = (function () {
           }, removalRate);
         }
 
-        heatmapDataPoints.push({ x: hPos.x, y: hPos.y, value: 20 });
+        heatmapDataPoints.push({
+          x: Math.round(hPos.x),
+          y: Math.round(hPos.y),
+          value: 20,
+        });
         heatmapInstance.setData({ max: 60, min: 0, data: heatmapDataPoints });
       } else if (removalType == "capacity") {
         if (intervalID != null) {
@@ -895,14 +898,22 @@ var visualizationControl = (function () {
           }
         }
 
-        heatmapDataPoints.push({ x: hPos.x, y: hPos.y, value: 20 });
+        heatmapDataPoints.push({
+          x: Math.round(hPos.x),
+          y: Math.round(hPos.y),
+          value: 20,
+        });
         heatmapInstance.setData({ max: 60, min: 0, data: heatmapDataPoints });
       } else if (removalType == "none") {
         if (intervalID != null) {
           clearInterval(intervalID);
           intervalID = null;
         }
-        heatmapDataPoints.push({ x: hPos.x, y: hPos.y, value: 20 });
+        heatmapDataPoints.push({
+          x: Math.round(hPos.x),
+          y: Math.round(hPos.y),
+          value: 20,
+        });
         heatmapInstance.setData({ max: 60, min: 0, data: heatmapDataPoints });
       }
     } else {
