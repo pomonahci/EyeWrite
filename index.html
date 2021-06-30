@@ -6,6 +6,23 @@
   <title>Welcome to EyeWrite!</title>
 
   <link rel='stylesheet' href='./node_modules/bootstrap/dist/css/bootstrap.css' />
+  <style>
+    /* .github{
+      float: right; 
+      padding: 5px; 
+      background-color: #8eccff; 
+      text-decoration: none; 
+      color: black; 
+      border-radius: 10px; 
+      font-size: 20px;
+      box-shadow: 0 0 0 1pt rgb(0, 0, 0);
+    }
+    .github:hover{
+      background-color: #6591b6;
+      color:black;
+      text-decoration: none
+    } */
+  </style>
 </head>
 
 <body>
@@ -28,14 +45,19 @@
         discretion.
       </p>
     </div>
-
+    <hr class='featurette-divider'>
+    <h3>Additional EyeWrite Features</h3>
+    <p class = "text-justify"> EyeWrite documents have a variety of UI controls and features at your disposal. All document viewers are given a random guest id and color that can be changed at your own discretion for easier collaboration. In addition to sharing gaze among collaborators, users' mouse positions can also be shared and viewed. Whose mouse or gaze you see can be selected in the "All Users" dropdown menu, and how that display appears can be adjusted via the highlight pattern option. In addition to the pattern, the size and gradient ratio can also be adjusted to your choice. </p>
+    <p class="text-justify">When it comes to sharing your gaze and/or mouse, you can choose to share either one or both at the same time. However, you can only choose to visualize one or the other to avoid an overload of visualized information. In addition to the sharing of gaze of mice, voice and video calling are also supported on the EyeWrite documents via a peer-to-peer connection. You can join the video call and then choose whether to share your audio or video with others in the call at anytime. </p>
+    <p class="text-justify"><i>NOTE: When joining the video call, your browser may ask for permission to access your camera and microphone. When this permission is granted you'll notice your camera indicator turning on for some machines (such as Apple Macs), no input will be given to the camera unless you choose to show your video, the indicator is indicating that the website has access to the webcam only, not that it is currently sharing your video.</i></p>
+    <p class='text-justify'>Finally, you are able to access the calibration page directly from the document itself if you forget to do so here or just want to recalibrate WebGazer.</p>
     <hr class='featurette-divider'>
     <h3>Calibrate WebGazer.js</h3>
     <p class="text-justify">
-      For best eye tracking accuracy, we recomend you visit our calibration page before using EyeWrite. When finished
+      For best eye tracking accuracy, we recomend you visit our calibration page before using EyeWrite. Further calibration instructions can be found there. When finished
       calibrating, press the back button to revisit this page and create or join a collaborative EyeWrite document.
     </p>
-    <input class="btn btn-primary" type="button" onclick="location.href='./WebGazer/www/calibration.html';"
+    <input class="btn btn-primary" type="button" onclick="location.href='./WebGazer/simple-wg/index.html';"
       value="Visit Calibration Page">
 
     <hr class='featurette-divider'>
@@ -44,6 +66,8 @@
       Create a new EyeWrite collaborative document. To share your document with a collaborator, simply send them the URL
       of your document and they will be able to join bellow.
     </p>
+   
+
     <input class="btn btn-primary" type="button" onclick="location.href='./eyewrite.html';" value="Create New Document">
 
     <hr class='featurette-divider'>
@@ -54,7 +78,18 @@
 
     <input type="text" id="textInput" placeholder="Document Link">
     <button class="btn btn-primary" id="joinBtn" onclick="send()" disabled>Join Document</button>
-
+    <hr class='featurette-divider'>
+    <h3>Contributors</h3>
+    <hr class='featurette-divider'>
+    <h3>Papers</h3>
+    <hr class='featurette-divider'>
+    <h3>Acknowledgements</h3>
+    <p class='text-justify'>   
+    </p>
+    <hr class='featurette-divider'>
+    <h3>GitHub</h3>
+    <a href="https://github.com/pomonahci/EyeWrite" class="btn btn-primary" style="margin-right: 15px;">EyeWrite</a> 
+    <a href="https://github.com/pomonahci/WebGazer" class="btn btn-primary"> WebGazer</a>
     <br>
     <br>
     <br>

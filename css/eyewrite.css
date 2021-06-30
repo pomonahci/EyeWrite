@@ -1,43 +1,43 @@
 /* global style */
 :root {
-  --outer-border: #BBB;
-  --sub-box-padding: #FCFCFC;
+  --outer-border: #bbb;
+  --sub-box-padding: #fcfcfc;
   --title-text: #444;
   --button-border: #999999;
-  --button-hover: #FFBF86;
-  --button-hover-border: #E6A165;
-  --button-text: #FFFFFF;
-  --arrow-color: #FFFFFF;
+  --button-hover: #ffbf86;
+  --button-hover-border: #e6a165;
+  --button-text: #ffffff;
+  --arrow-color: #ffffff;
 }
 
 html {
-	height: 100%;
-	width: 100%;
-	overflow-x: auto;
-	overflow-y: hidden;
+  height: 100%;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 body {
-	margin: 0;
-	height: 100vh;
-	width: 100%;
-	overflow-y: hidden;
-	overflow-x: hidden;
+  margin: 0;
+  height: 100vh;
+  width: 100%;
+  overflow-y: hidden;
+  overflow-x: hidden;
 }
 
 /* Firepad/CodeMirror Style */
 #firepad {
-	position: absolute;
-	top: 0;
-	left: 200px;
-	right: 100px;
-	height: 100vh;
-	min-width: 916px;
-	overflow: hidden;
-	border-style: solid;
-	border-width: 1px;
-	border-color: lightgray;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  position: absolute;
+  top: 0;
+  left: 200px;
+  right: 14%;
+  height: 100vh;
+  /* min-width: 916px; */
+  overflow: hidden;
+  border-style: solid;
+  border-width: 1px;
+  border-color: lightgray;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .CodeMirror {
@@ -45,42 +45,42 @@ body {
 }
 
 a.powered-by-firepad {
-	display: none;
+  display: none;
 }
 
 div.firepad-richtext.firepad-with-toolbar {
-	height: 100%;
+  height: 100%;
 }
 
 div.CodeMirror-vscrollbar {
-	width: 16px;
+  width: 16px;
 }
 
 div.firepad-toolbar {
-	display: flex;
-	align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 div.firepad-toolbar-wrapper {
-	margin: 0 auto;
-	min-width: 816px;
-	width: 816px;
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	padding: 0px 20px;
+  margin: 0 auto;
+  min-width: 816px;
+  width: 816px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 0px 20px;
 }
 
 div.CodeMirror-lines {
-	margin: 0 auto;
-	width: 816px;
-	min-height: 1000px;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-	padding: 20px;
+  margin: 0 auto;
+  width: 816px;
+  min-height: 1000px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  padding: 20px;
 }
 
 div.CodeMirror.cm-s-default.CodeMirror-wrap {
-	min-width: 816px;
+  min-width: 816px;
 }
 
 /* User List Style */
@@ -96,6 +96,14 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
 .userlist-box {
   height: 200px;
   border-radius: 4px;
+}
+
+.userlist-box > * {
+  z-index: 2;
+}
+
+div.firepad-toolbar-wrapper {
+  z-index: 4;
 }
 
 /* Arrow Style (styles relative position arrows in User List) */
@@ -143,16 +151,30 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
 
 /* Control Container Style */
 #controlContainer {
-  background-color: #EBEBEB;
+  background-color: #ebebeb;
   width: 175px;
-  position: relative;
+  position: absolute;
   border-radius: 4px;
   padding-bottom: 12px;
+  height: auto;
+  max-height: 65vh;
+  overflow-y: scroll;
+  /* z-index: -1; */
+}
+
+/* For heatmap layering */
+#controlContainer > * {
+  z-index: 1;
+}
+
+#controlContainer > * > * {
+  z-index: 1;
 }
 
 #user-checkboxes-container {
   position: relative;
   margin-left: 15px;
+  z-index: 3;
 }
 
 .user-checkboxes {
@@ -243,7 +265,7 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   color: var(--button-text);
   border: 1px solid var(--button-border);
   border-radius: 6px;
-  background-color: #C9C9C9;
+  background-color: #c9c9c9;
   border-bottom-width: 4px;
   padding: 4px 6px 2px 6px;
   margin-left: 5px;
@@ -254,7 +276,7 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   border-color: var(--button-hover-border);
 }
 
-.radio-buttons input[type="radio"]:checked+label {
+.radio-buttons input[type="radio"]:checked + label {
   background-color: var(--button-border);
   border-color: var(--title-text);
 }
@@ -277,24 +299,28 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
 }
 
 /* Mute Button Style */
-.radio-buttons .inline-toggle-container #mute {
+.radio-buttons .inline-toggle-container #aud,
+#cam {
   width: 60px;
   height: 26px;
   margin: auto 0;
   text-align: center;
   color: black;
   font-size: 14px;
+  margin-bottom: 5px;
 }
 
-.radio-buttons .inline-toggle-container #mute:disabled {
+.radio-buttons .inline-toggle-container #aud:disabled,
+#cam:disabled {
   width: 60px;
   height: 26px;
   margin: auto 0;
   text-align: center;
   color: lightgray;
+  margin-bottom: 5px;
 }
 
-#slider-container {
+.slider-container {
   position: relative;
   left: 15px;
   width: 145px;
@@ -305,6 +331,20 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   border: 1px solid var(--outer-border);
   border-radius: 4px;
   padding-bottom: 20px;
+}
+
+.slider-container2 {
+  position: relative;
+  left: 15px;
+  width: 145px;
+  /* height: 70px; */
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: var(--sub-box-padding);
+  border: 1px solid var(--outer-border);
+  border-radius: 4px;
+  padding-bottom: 20px;
+  display: none;
 }
 
 .slider-text {
@@ -318,15 +358,58 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   margin-bottom: 0px;
 }
 
-#sentenceSlider {
+.slider-text2 {
+  position: relative;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  margin-left: 10px;
+  margin-top: 5px;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+  align-self: center;
+}
+
+.slider-text3 {
+  position: relative;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  /* margin-left: 10px; */
+  margin-top: 5px;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+  text-align: center;
+}
+
+.hm-ui-options-text {
+  position: relative;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  /* margin-left: 10px; */
+  margin-top: 5px;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+  text-align: center;
+}
+
+.sentenceSlider {
   position: relative;
   width: 125px;
   margin-left: 10px;
   margin-top: 10px;
 }
+/* 
+#sentenceSlider2 {
+  position: relative;
+  width: 125px;
+  margin-left: 10px;
+  margin-top: 10px;
+} */
 
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-  input[type='range'] {
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  input[type="range"] {
     display: inline;
     overflow: hidden;
     border: 1px solid var(--title-text);
@@ -336,20 +419,20 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
     border-radius: 13px;
   }
 
-  input[type='range']::-webkit-slider-runnable-track {
+  input[type="range"]::-webkit-slider-runnable-track {
     height: 13px;
     -webkit-appearance: none;
     color: var(--button-hover-border);
   }
 
-  input[type='range']::-webkit-slider-thumb {
+  input[type="range"]::-webkit-slider-thumb {
     border-radius: 13px;
     width: 13px;
     -webkit-appearance: none;
     height: 13px;
     cursor: ew-resize;
     background: var(--button-hover-border);
-    box-shadow: -80px 0 0 75px #C9C9C9;
+    box-shadow: -80px 0 0 75px #c9c9c9;
   }
 }
 
@@ -371,7 +454,7 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   position: relative;
   top: 2px;
   width: 145px;
-  margin-top:8px;
+  margin-top: 8px;
 }
 
 #calibrationButton:hover {
@@ -382,8 +465,12 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
 
 /* On/Off Switch Style */
 .onoffswitch {
-  position: relative; width: 64px;
-  -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+  position: relative;
+  width: 64px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .onoffswitch-checkbox {
   position: absolute;
@@ -391,42 +478,90 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   pointer-events: none;
 }
 .onoffswitch-label {
-  display: block; overflow: hidden; cursor: pointer;
-  border: 2px solid #FFFFFF; border-radius: 0px;
+  display: block;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid #ffffff;
+  border-radius: 0px;
   margin-bottom: 0;
 }
 .onoffswitch-inner {
-  display: block; width: 200%; margin-left: -100%;
+  display: block;
+  width: 200%;
+  margin-left: -100%;
   transition: margin 0.2s ease-in 0s;
 }
-.onoffswitch-inner:before, .onoffswitch-inner:after {
-  display: block; float: left; width: 50%; height: 22px; padding: 0; line-height: 22px;
-  font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+.onoffswitch-inner:before,
+.onoffswitch-inner:after {
+  display: block;
+  float: left;
+  width: 50%;
+  height: 22px;
+  padding: 0;
+  line-height: 22px;
+  font-size: 14px;
+  color: white;
+  font-family: Trebuchet, Arial, sans-serif;
+  font-weight: bold;
   box-sizing: border-box;
 }
 .onoffswitch-inner:before {
   content: "ON";
   padding-left: 10px;
-  background-color: #EEEEEE; color: #444;
+  background-color: #eeeeee;
+  color: #444;
 }
 .onoffswitch-inner:after {
   content: "OFF";
   padding-right: 10px;
-  background-color: #EEEEEE; color: #999999;
+  background-color: #eeeeee;
+  color: #999999;
   text-align: right;
 }
 .onoffswitch-switch {
-  display: block; width: 20px; height: 20px; margin: 3px;
-  background: #A1A1A1;
-  position: absolute; top: 0; bottom: 0;
+  display: block;
+  width: 20px;
+  height: 20px;
+  margin: 3px;
+  background: #a1a1a1;
+  position: absolute;
+  top: 0;
+  bottom: 0;
   right: 38px;
-  border: 2px solid #FFFFFF; border-radius: 0px;
-  transition: all 0.2s ease-in 0s; 
+  border: 2px solid #ffffff;
+  border-radius: 0px;
+  transition: all 0.2s ease-in 0s;
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
   margin-left: 0;
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
-  right: 0px; 
-  background-color: #FFBF86; 
+  right: 0px;
+  background-color: #ffbf86;
+}
+.vvSwitch {
+  left: 32px;
+  margin-bottom: 5px;
+}
+
+.hmSwitch {
+  display: flex;
+  justify-content: space-around;
+}
+
+/* Video Container Style */
+#video-streams {
+  /* background-color: lightblue; */
+  width: 200px;
+  position: absolute;
+  height: 100%;
+  overflow: scroll;
+  right: 0px;
+}
+
+#heatmap {
+  height: 100vh;
+  width: 100vw;
+  pointer-events: none;
+  z-index: 1;
 }

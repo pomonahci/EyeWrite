@@ -33,9 +33,11 @@ Note: you may need to import WebGazer module from hci.pomona server
 
 ## Running EyeWrite locally
 
-    # Make sure that port 3000 on localhost is open.
+    # Make sure you installed browser-sync globally
+    npm i -g browser-sync
     # Then, run the following script.
-    `npm start`
+    npm start
 
 * Visit (http://localhost:3000) on your browser
 * Follow the instructions on the welcome page to create or join a collaborative document.
+
