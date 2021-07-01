@@ -33,18 +33,7 @@ firebaseRef.child('svg').on('value', function (snapshot) {
 });
 
 function sketchEdit(e) {
-  // if (e == 'undo' || e == 'redo') {
-  //   firepad.firebaseAdapter_.ref_.child('svg').child("undoIndex").transaction(function (index) {
-  //     if(index == null)index=0;
-  //     undo_index = index;
-  //     if(e=='undo') return index++;
-  //     else {
-  //       index--;
-  //       if (index<0)index=0;
-  //       return index;
-  //     }
-  //   })
-  // }
+
 
   firepad.firebaseAdapter_.ref_.child('svg').child('canvas').transaction(function (current) {
     //create a log to apache server
