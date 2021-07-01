@@ -1,3 +1,11 @@
+/**
+ * draw-syncing.js controls server interaction of SVG canvas
+ * Uses firebase as the server
+ * 
+ * Name: nickmarsano
+ * Date: 06/22/2021
+ */
+
 
 var primSket;//refernce to svg sketchpage
 var currentlyEditing = false;
