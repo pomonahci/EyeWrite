@@ -1,7 +1,7 @@
 /**
  * visualization.js
  * 
- * Name: davecarroll, chanhakim
+ * Name: davecarroll, chanhakim, nickmarsano
  * Date: Summer 2020 - Spring 2021
  */
 var visualizationControl = function () {

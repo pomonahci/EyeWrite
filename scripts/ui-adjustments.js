@@ -1,7 +1,7 @@
 /**
  * ui-adjustments.js handles some UI customization
  * 
- * Name: davecarroll, chanhakim
+ * Name: davecarroll, chanhakim, nickmarsano
  * Date: Summer 2020
  */
 
