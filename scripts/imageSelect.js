@@ -25,9 +25,9 @@ var targetHit = false; // boolean value to determine if a bounding box should be
 var numTargets = 3; // number of targets to find per image
 var task = 0; // index of target, will incremenent
 var numPpl; // number of participants in this experiement (gotten from URL)
-var taskComplete = false;
-var skipVotes = 0;
 var url; //apache url
+var found = []; //found and skipped are arrays to make sure the server only gets pinged by one user when target is complete
+var skipped = [];
 
 function getImage() {
     var URL = window.location.href;
@@ -76,8 +76,7 @@ function onClick(event) {
             document.querySelector("#imageContainer").append(box);
         }
         targetHit = true;
-        url = "https://hci.pomona.edu;targetFoundBy" + userId
-        new Image().src = url;
+        new Image().src = "https://hci.pomona.edu;TargetFoundBy" + userId;
         firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('targetClicked').transaction(function (current) {
             if (!current) current = [];
             var users = []
@@ -85,33 +84,34 @@ function onClick(event) {
                 users.push(item[0]);
             }
             if (!users.includes(userId)) current.push([userId, misclicks]);
+            found.push(userId);
             return current
         })
-
-        // if (taskComplete) {
-        //     taskComplete = false;
-        //     nextTarget();
-        // }
     }
     else {
-        url = "https://hci.pomona.edu;/targetMissedBy" + userId
-        new Image().src = url;
+        new Image().src = "https://hci.pomona.edu;/TargetMissedBy" + userId;
         // apache.src = url;
         misclicks++;
     }
 }
 
-
+var action = '';
 function checkTaskComplete(snapshot) {
     if (snapshot.val().length == numPpl) {
-        url = "https://hci.pomona.edu;targetFoundByAll"
-        new Image().src = url;
-        // apache.src = url;
-        nextTarget();
+        if (snapshot.key == "skipVotes") {
+            action = 'skip';
+            if (skipped[0] == userId) new Image().src = "https://hci.pomona.edu;TargetSkipped";
+        }
+        else {
+            action = 'found'
+            if (found[0] == userId) new Image().src = "https://hci.pomona.edu;TargetFoundByAll";
+        }
+
+        nextTarget(action);
     }
 }
 
-function nextTarget() {
+function nextTarget(action) {
     clearBoxes();
     firebaseRef.child('tasks').child(task).off('child_added', checkTaskComplete);//useless in experiments with more than 1 person
     firebaseRef.child('tasks').child(task).off('child_changed', checkTaskComplete);
@@ -119,30 +119,30 @@ function nextTarget() {
     task++;
     targetHit = false;
     if (numTargets == task) {
-        console.log('All Tasks Complete');
-        alert("all targets found");
+        console.log('Task Complete');
+        if (action == 'skip' && skipped[0] == userId) new Image().src = "https://hci.pomona.edu;All" + index2Label[imageLabel] + "TargetsComplete";
+        else if (action == 'found' && found[0] == userId) new Image().src = "https://hci.pomona.edu;All" + index2Label[imageLabel] + "TargetsComplete";
         document.getElementById("imageSearch").removeEventListener("click", onClick);
         return;
     }
+    action = '';
+    skipped = [];
+    found = [];
     getTarget();
 }
 
 function clearBoxes() {
-    if(document.getElementById('foundTarget'))document.getElementById('foundTarget').remove();
+    if (document.getElementById('foundTarget')) document.getElementById('foundTarget').remove();
 }
 
 function voteSkipTarget() {
-    console.log('voted to skip');
+    new Image().src = "https://hci.pomona.edu;" + userID + "VotedToSkip";
     firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('skipVotes').transaction(function (current) {
         if (!current) current = [];
         if (!current.includes(userId)) current.push(userId);
-        skipVotes = current.length;
+        skipped.push(userId);
         return current
     })
-    // if (skipVotes == numPpl) {
-    //     console.log('skipping');
-    //     nextTarget();
-    // }
 }
 
 

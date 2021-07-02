@@ -41,10 +41,8 @@ function parseURLForVisAud() {
     var i2l = { '-1': '', '0': ';image=kitten' };
     var v2l = { '0': ';vis=none', '1': ';vis=hollow', '2': ';vis=heatmap' };
     var a2l = { '0': ';aud=off', '1': ';aud=on' };
-    var imageName = i2l[imageLabel];
-    var url = "https://hci.pomona.edu/" + experiment + i2l[imageLabel] + "par=" + numPpl + v2l[visualization] + a2l[audio] + ";ExperimentStarting";
-    // apache.src = url;
-    new Image().src = url;
+
+    new Image().src = "https://hci.pomona.edu/" + experiment + i2l[imageLabel] + "par=" + numPpl + v2l[visualization] + a2l[audio] + ";ExperimentStarting";
 }
 
 function triggerVis(vis) {
