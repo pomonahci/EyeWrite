@@ -51,10 +51,7 @@ function getTarget() {
     if(!bounding)return;
     var keys = Object.keys(bounding);
     numTargets = keys.length;
-    if(task==numTargets){
-        alert('all targets found');
-        return;
-    }
+
     target = bounding[keys[task]];
     console.log(keys[task]);
 }
@@ -118,7 +115,8 @@ function nextTarget() {
     targetHit = false;
     if (numTargets == task) {
         console.log('All Tasks Complete');
-        document.removeEventListener("click", onClick);
+        alert("all targets found");
+        document.getElementById("imageSearch").removeEventListener("click", onClick);
         return;
     }
     getTarget();
