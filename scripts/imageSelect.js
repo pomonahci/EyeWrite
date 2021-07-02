@@ -108,6 +108,7 @@ function checkTaskComplete(snapshot) {
 }
 
 function nextTarget() {
+    clearBoxes();
     task++;
     targetHit = false;
     if (numTargets == task) {
