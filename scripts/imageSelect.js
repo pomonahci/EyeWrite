@@ -34,7 +34,7 @@ function getImage() {
     var URL = window.location.href;
     imageLabel = URL.search("img");
     imageLabel = URL.substring(imageLabel + 4, imageLabel + 5);
-    if(imageLabel==-1)return;
+    if (imageLabel == -1) return;
     numPpl = URL.search('par');
     if (numPpl == -1) {
         numPpl = 2;
@@ -48,7 +48,9 @@ function getImage() {
 }
 
 function getTarget() {
-    if(!bounding)return;
+    firebaseRef.child('tasks').child(task).on('child_added', checkTaskComplete);//useless in experiments with more than 1 person
+    firebaseRef.child('tasks').child(task).on('child_changed', checkTaskComplete);
+    if (!bounding) return;
     var keys = Object.keys(bounding);
     numTargets = keys.length;
 
@@ -74,7 +76,7 @@ function onClick(event) {
             document.querySelector("#imageContainer").append(box);
         }
         targetHit = true;
-        var url = "https://hci.pomona.edu/" + experiment + "targetFoundBy"+userId;
+        var url = "https://hci.pomona.edu/" + experiment + "targetFoundBy" + userId;
         apache.src = url;
         firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('targetClicked').transaction(function (current) {
             if (!current) current = [];
@@ -86,20 +88,19 @@ function onClick(event) {
             completed = current.length;
             return current
         })
- 
+
         // if (taskComplete) {
         //     taskComplete = false;
         //     nextTarget();
         // }
     }
     else {
-        url = "https://hci.pomona.edu/" + experiment + "targetMissedBy"+userId;
+        url = "https://hci.pomona.edu/" + experiment + "targetMissedBy" + userId;
         apache.src = url;
         misclicks++;
     }
 }
-firebaseRef.child('tasks').child(task).on('child_added', checkTaskComplete);//useless in experiments with more than 1 person
-firebaseRef.child('tasks').child(task).on('child_changed', checkTaskComplete);
+
 
 function checkTaskComplete(snapshot) {
     if (snapshot.val().length == numPpl) {
@@ -111,6 +112,8 @@ function checkTaskComplete(snapshot) {
 
 function nextTarget() {
     clearBoxes();
+    firebaseRef.child('tasks').child(task).off('child_added', checkTaskComplete);//useless in experiments with more than 1 person
+    firebaseRef.child('tasks').child(task).off('child_changed', checkTaskComplete);
     task++;
     targetHit = false;
     if (numTargets == task) {
@@ -126,16 +129,17 @@ function clearBoxes() {
     document.getElementById('foundTarget').remove();
 }
 
-function voteSkipTarget(){
+function voteSkipTarget() {
     firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('skipVotes').transaction(function (current) {
         if (!current) current = [];
         if (!current.includes(userId)) current.push(userId);
         skipVotes = current.length;
         return current
-    })}
-    if(skipVotes == numPpl){
-        nextTarget();
-    }
+    })
+}
+if (skipVotes == numPpl) {
+    nextTarget();
+}
 
 function startExp() {
     getImage();
