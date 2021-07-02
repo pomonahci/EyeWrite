@@ -47,10 +47,9 @@ function getImage() {
 }
 
 function getTarget() {
-    firebaseRef.child('tasks').child(task).child('targetClicked').on('child_added', checkTaskComplete);//useless in experiments with more than 1 person
-    firebaseRef.child('tasks').child(task).child('targetClicked').on('child_changed', checkTaskComplete);
-    firebaseRef.child('tasks').child(task).child('skipVotes').on('child_added', checkTaskComplete);//useless in experiments with more than 1 person
-    firebaseRef.child('tasks').child(task).child('skipVotes').on('child_changed', checkTaskComplete);
+    firebaseRef.child('tasks').child(task).on('child_added', checkTaskComplete);//useless in experiments with more than 1 person
+    firebaseRef.child('tasks').child(task).on('child_changed', checkTaskComplete);
+
     if (!bounding) return;
     var keys = Object.keys(bounding);
     numTargets = keys.length;
@@ -114,10 +113,9 @@ function checkTaskComplete(snapshot) {
 
 function nextTarget() {
     clearBoxes();
-    firebaseRef.child('tasks').child(task).child('targetClicked').off('child_added', checkTaskComplete);//useless in experiments with more than 1 person
-    firebaseRef.child('tasks').child(task).child('targetClicked').off('child_changed', checkTaskComplete);
-    firebaseRef.child('tasks').child(task).child('skipVotes').off('child_added', checkTaskComplete);//useless in experiments with more than 1 person
-    firebaseRef.child('tasks').child(task).child('skipVotes').off('child_changed', checkTaskComplete);
+    firebaseRef.child('tasks').child(task).off('child_added', checkTaskComplete);//useless in experiments with more than 1 person
+    firebaseRef.child('tasks').child(task).off('child_changed', checkTaskComplete);
+
     task++;
     targetHit = false;
     if (numTargets == task) {
