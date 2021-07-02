@@ -76,7 +76,7 @@ function onClick(event) {
             document.querySelector("#imageContainer").append(box);
         }
         targetHit = true;
-        var url = "https://hci.pomona.edu/" + experiment + "targetFoundBy" + userId;
+        url = "https://hci.pomona.edu/" + experiment + "targetFoundBy" + userId;
         apache.src = url;
         firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('targetClicked').transaction(function (current) {
             if (!current) current = [];
