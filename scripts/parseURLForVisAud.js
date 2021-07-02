@@ -30,7 +30,6 @@ function parseURLForVisAud() {
     triggerAud(audio);
 
     var url = "https://hci.pomona.edu/" + experiment + "BOOGYExperimentStarting@" + Date();
-    var apache = new Image();
     apache.src = url;
 }
 

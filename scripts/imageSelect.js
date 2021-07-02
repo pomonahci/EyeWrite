@@ -59,6 +59,8 @@ function onClick(event) {
     var y = event.clientY;
 
     if (target[0] <= x && target[1] <= y && x <= target[0] + target[2] && y <= target[1] + target[3]) {
+        var url = "https://hci.pomona.edu/" + experiment + "targetFoundBy"+userId;
+        apache.src = url;
         firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('targetClicked').transaction(function (current) {
             if (!current) current = [];
             var users = []
