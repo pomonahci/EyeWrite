@@ -51,16 +51,32 @@ function getTarget() {
     if(!bounding)return;
     var keys = Object.keys(bounding);
     numTargets = keys.length;
+    if(task==numTargets){
+        alert('all targets found');
+        return;
+    }
     target = bounding[keys[task]];
     console.log(keys[task]);
 }
 
-document.addEventListener("click", onClick);
+document.getElementById("imageSearch").addEventListener("click", onClick);
 function onClick(event) {
     var x = event.clientX;
     var y = event.clientY;
 
     if (target[0] <= x && target[1] <= y && x <= target[0] + target[2] && y <= target[1] + target[3]) {
+        if (!targetHit) {
+            var box = document.createElement('div');
+            var left = target[0] - container.left;
+            var top = target[1] - container.top;
+            var width = target[2];
+            var height = target[3];
+            var styleInput = 'position:absolute;border: 2px solid green;left:' + left + 'px;top:' + top + 'px;width:' + width + 'px;height:' + height + 'px';
+            box.setAttribute('style', styleInput)
+            box.setAttribute('id', 'foundTarget');
+            document.querySelector("#imageContainer").append(box);
+        }
+        targetHit = true;
         var url = "https://hci.pomona.edu/" + experiment + "targetFoundBy"+userId;
         apache.src = url;
         firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('targetClicked').transaction(function (current) {
@@ -73,7 +89,7 @@ function onClick(event) {
             completed = current.length;
             return current
         })
-
+ 
         // if (taskComplete) {
         //     taskComplete = false;
         //     nextTarget();
@@ -89,18 +105,6 @@ firebaseRef.child('tasks').child(task).on('child_added', checkTaskComplete);//us
 firebaseRef.child('tasks').child(task).on('child_changed', checkTaskComplete);
 
 function checkTaskComplete(snapshot) {
-    if (!targetHit) {
-        var box = document.createElement('div');
-        var left = target[0] - container.left;
-        var top = target[1] - container.top;
-        var width = target[2];
-        var height = target[3];
-        var styleInput = 'position:absolute;border: 2px solid green;left:' + left + 'px;top:' + top + 'px;width:' + width + 'px;height:' + height + 'px';
-        box.setAttribute('style', styleInput)
-        box.setAttribute('id', 'foundTarget');
-        document.querySelector("#imageContainer").append(box);
-    }
-    targetHit = true;
     if (snapshot.val().length == numPpl) {
         url = "https://hci.pomona.edu/" + experiment + "targetFoundByAll";
         apache.src = url;
