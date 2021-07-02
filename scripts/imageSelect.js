@@ -72,18 +72,7 @@ function onClick(event) {
             completed = current.length;
             return current
         })
-        if (!targetHit) {
-            var box = document.createElement('div');
-            var left = target[0] - container.left;
-            var top = target[1] - container.top;
-            var width = target[2];
-            var height = target[3];
-            var styleInput = 'position:absolute;border: 2px solid green;left:' + left + 'px;top:' + top + 'px;width:' + width + 'px;height:' + height + 'px';
-            box.setAttribute('style', styleInput)
-            box.setAttribute('id', 'foundTarget');
-            document.querySelector("#imageContainer").append(box);
-        }
-        targetHit = true;
+
         // if (taskComplete) {
         //     taskComplete = false;
         //     nextTarget();
@@ -99,6 +88,18 @@ firebaseRef.child('tasks').child(task).on('child_added', checkTaskComplete);//us
 firebaseRef.child('tasks').child(task).on('child_changed', checkTaskComplete);
 
 function checkTaskComplete(snapshot) {
+    if (!targetHit) {
+        var box = document.createElement('div');
+        var left = target[0] - container.left;
+        var top = target[1] - container.top;
+        var width = target[2];
+        var height = target[3];
+        var styleInput = 'position:absolute;border: 2px solid green;left:' + left + 'px;top:' + top + 'px;width:' + width + 'px;height:' + height + 'px';
+        box.setAttribute('style', styleInput)
+        box.setAttribute('id', 'foundTarget');
+        document.querySelector("#imageContainer").append(box);
+    }
+    targetHit = true;
     if (snapshot.val().length == numPpl) {
         url = "https://hci.pomona.edu/" + experiment + "targetFoundByAll";
         apache.src = url;
@@ -107,7 +108,6 @@ function checkTaskComplete(snapshot) {
 }
 
 function nextTarget() {
-    clearBoxes();
     task++;
     targetHit = false;
     if (numTargets == task) {
