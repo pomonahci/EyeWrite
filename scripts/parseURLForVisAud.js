@@ -9,8 +9,8 @@ function parseURLForVisAud() {
     var URL = window.location.href;
 
     if (URL.search("EyeDraw") != -1) experiment = "EyeDraw";
-    if (URL.search("ImageSearch") != -1) experiment = "ImageSearch";
-    if (URL.search("EyeWrite") != -1) experiment = "EyeWrite";
+    else if (URL.search("ImageSearch") != -1) experiment = "ImageSearch";
+    else if (URL.search("EyeWrite") != -1) experiment = "EyeWrite";
 
     var visualization = URL.search("vis");
     visualization = URL.substring(visualization + 4, visualization + 5);
@@ -28,6 +28,10 @@ function parseURLForVisAud() {
 
     triggerVis(visualization);
     triggerAud(audio);
+
+    var url = "https://hci.pomona.edu/" + experiment + "BOOGYExperimentStarting@" + Date();
+    var apache = new Image();
+    apache.src = url;
 }
 
 function triggerVis(vis) {
