@@ -128,7 +128,7 @@ function nextTarget() {
 }
 
 function clearBoxes() {
-    document.getElementById('foundTarget').remove();
+    if(document.getElementById('foundTarget'))document.getElementById('foundTarget').remove();
 }
 
 function voteSkipTarget() {
