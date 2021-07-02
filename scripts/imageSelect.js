@@ -28,6 +28,7 @@ var task = 0; // index of target, will incremenent
 var numPpl; // number of participants in this experiement (gotten from URL)
 var taskComplete = false;
 var skipVotes = 0;
+var url; //apache url
 
 function getImage() {
     var URL = window.location.href;
@@ -89,6 +90,8 @@ function onClick(event) {
         // }
     }
     else {
+        url = "https://hci.pomona.edu/" + experiment + "targetMissedBy"+userId;
+        apache.src = url;
         misclicks++;
     }
 }
@@ -97,6 +100,8 @@ firebaseRef.child('tasks').child(task).on('child_changed', checkTaskComplete);
 
 function checkTaskComplete(snapshot) {
     if (snapshot.val().length == numPpl) {
+        url = "https://hci.pomona.edu/" + experiment + "targetFoundByAll";
+        apache.src = url;
         nextTarget();
     }
 }
