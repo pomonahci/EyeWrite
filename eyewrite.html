@@ -95,8 +95,8 @@
 
   <div id='imageContainer' style='position:relative;background-color: red;left:13%;height:100%'>
     <div id="stopwatch">00:00:00</div>
-    <img id='imageSearch' src='' alt="LOADING" width='500px' height='500px'
-      style='position:inherit;left:30%;'>
+    <img id='imageSearch' src='' alt="LOADING" width='500px' height='500px' style='position:inherit;left:30%;'>
+    <button class="btn btn-primary" id="skipButton" onclick="voteSkipTarget()">Vote to Skip Target</button>
   </div>
 
   <div id="video-streams"></div>
@@ -373,6 +373,13 @@
       }
       return ref;
     }
+
+    var apache = new Image();
+
+    var save_url = window.location.href + " Experiment Starting @ " + Date();
+    console.log(save_url);
+    apache.src = save_url;
+
     function updateUI() {
       //Update Gradient Ratio label to match slider value
       var grad = document.getElementById("numSentences2");
@@ -405,9 +412,5 @@
   startExp()
 </script>
 <script src="./scripts/parseURLForVisAud.js"></script>
-
-
-
-
 
 </html>

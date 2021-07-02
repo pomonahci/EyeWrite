@@ -7,7 +7,7 @@
 
 function parseURLForVisAud() {
     var URL = window.location.href;
-    
+
     if (URL.search("EyeDraw") != -1) experiment = "EyeDraw";
     if (URL.search("ImageSearch") != -1) experiment = "ImageSearch";
     if (URL.search("EyeWrite") != -1) experiment = "EyeWrite";
@@ -15,7 +15,16 @@ function parseURLForVisAud() {
     var visualization = URL.search("vis");
     visualization = URL.substring(visualization + 4, visualization + 5);
     var audio = URL.search("aud");
-    audio = URL.substring(audio + 4, audio + 5);
+    if (experiment == 'EyeDraw'){
+        audio =1;
+    }
+    else if (audio == -1) {
+        audio = 0
+    }
+    else {
+        audio = URL.substring(audio + 4, audio + 5);
+    }
+    if(visualization == -1)visualization=0;
 
     triggerVis(visualization);
     triggerAud(audio);

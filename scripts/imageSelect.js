@@ -32,9 +32,13 @@ function getImage() {
     var URL = window.location.href;
     imageLabel = URL.search("img");
     imageLabel = URL.substring(imageLabel + 4, imageLabel + 5);
-    // imageLabel = URL.substring(URL.length - numTargets - 1 - 6, URL.length - numTargets - 1);//6 is due to length of 'kitten'
     numPpl = URL.search('par');
-    numPpl = URL.substring(numPpl + 4, numPpl + 5);
+    if (numPpl == -1) {
+        numPpl = 2;
+    }
+    else {
+        numPpl = URL.substring(numPpl + 4, numPpl + 5);
+    }
     var imageName = index2Label[imageLabel];
     bounding = boundArray[imageName];
     document.getElementById("imageSearch").src = "./graphics/" + imageName + '.jpg';
