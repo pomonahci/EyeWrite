@@ -105,7 +105,7 @@ function onClick(event) {
 function checkTaskComplete(snapshot) {
     if (snapshot.val().length == numPpl) {
         url = "https://hci.pomona.edu/" + experiment + "/targetFoundByAll";
-        new Image().src
+        new Image().src = url;
         // apache.src = url;
         nextTarget();
     }
