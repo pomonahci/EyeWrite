@@ -27,6 +27,7 @@ var completed = 0; // number of users who found target
 var task = 0; // index of target, will incremenent
 var numPpl; // number of participants in this experiement (gotten from URL)
 var taskComplete = false;
+var skipVotes = 0;
 
 function getImage() {
     var URL = window.location.href;
@@ -80,9 +81,10 @@ function onClick(event) {
             document.querySelector("#imageContainer").append(box);
         }
         targetHit = true;
-        if (taskComplete) {
-            nextTarget();
-        }
+        // if (taskComplete) {
+        //     taskComplete = false;
+        //     nextTarget();
+        // }
     }
     else {
         misclicks++;
@@ -93,7 +95,7 @@ firebaseRef.child('tasks').child(task).on('child_changed', checkTaskComplete);
 
 function checkTaskComplete(snapshot) {
     if (snapshot.val().length == numPpl) {
-        taskComplete = true;
+        nextTarget();
     }
 }
 
@@ -112,6 +114,17 @@ function nextTarget() {
 function clearBoxes() {
     document.getElementById('foundTarget').remove();
 }
+
+function voteSkipTarget(){
+    firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('skipVotes').transaction(function (current) {
+        if (!current) current = [];
+        if (!current.includes(userId)) current.push(userId);
+        skipVotes = current.length;
+        return current
+    })}
+    if(skipVotes == numPpl){
+        nextTarget();
+    }
 
 function startExp() {
     getImage();
