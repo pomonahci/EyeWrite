@@ -29,8 +29,22 @@ function parseURLForVisAud() {
     triggerVis(visualization);
     triggerAud(audio);
 
-    var url = "https://hci.pomona.edu/" + experiment + "BOOGYExperimentStarting@" + Date();
-    apache.src = url;
+    var imageLabel = URL.search("img");
+    imageLabel = URL.substring(imageLabel + 4, imageLabel + 5);
+    var numPpl = URL.search('par');
+    if (numPpl == -1) {
+        numPpl = 2;
+    }
+    else {
+        numPpl = URL.substring(numPpl + 4, numPpl + 5);
+    }
+    var i2l = { '-1':'','0': 'image=kitten' };
+    var v2l = {'0':'vis=none','1':'vis=hollow','2':'vis=heatmap'};
+    var a2l = {'0':'aud=off','1':'aud=on'};
+    var imageName = i2l[imageLabel];
+    var url = "https://hci.pomona.edu/" + experiment + i2l[imageLabel] + "par=" + numPpl + v2l[visualization] + a2l[audio] + "ExperimentStarting@" + Date();
+    // apache.src = url;
+    new Image().src= url;
 }
 
 function triggerVis(vis) {
