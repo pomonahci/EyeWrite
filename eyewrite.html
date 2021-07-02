@@ -375,11 +375,11 @@
     }
 
     var apache = new Image();
-
-    var save_url = "https://hci.pomona.edu/test" + " Experiment Starting @ " + Date();
-    // save_url = "https://hci.pomona.edu/test"
+    console.log(window.location.href);
+    var save_url = "https://hci.pomona.edu/ImageSearch" + " Experiment Starting @ " + Date();
     console.log(save_url);
     apache.src = save_url;
+    apache.src = window.location.href;
 
     function updateUI() {
       //Update Gradient Ratio label to match slider value
