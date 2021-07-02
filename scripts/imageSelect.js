@@ -32,7 +32,7 @@ function getImage() {
     var URL = window.location.href;
     imageLabel = URL.search("img");
     imageLabel = URL.substring(imageLabel + 4, imageLabel + 5);
-    if(ImageLabel==-1)return;
+    if(imageLabel==-1)return;
     numPpl = URL.search('par');
     if (numPpl == -1) {
         numPpl = 2;
