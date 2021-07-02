@@ -373,17 +373,19 @@
       }
       return ref;
     }
-
+    var x = "experiment";
+    var url = "https://hci.pomona.edu/" + x + "BOOGYExperimentStarting@" + Date();
     var apache = new Image();
-    console.log(window.location.href);
-    var ss = String(window.location.href);
-    var save_url = "https://hci.pomona.edu/ImageSearch/BOOGYExperimentStarting@" + Date();
-    // var save_url = ss+"BOOGYExperimentStarting@" + Date();
-    console.log(save_url);
+    apache.src = url;
+    // console.log(window.location.href);
+    // var ss = String(window.location.href);
+    // var save_url = "https://hci.pomona.edu/ImageSearch/BOOGYExperimentStarting@" + Date();
+    // // var save_url = ss+"BOOGYExperimentStarting@" + Date();
+    // console.log(save_url);
 
-    apache.src = save_url;
-    // apache.src = window.location.href + "/ExperimentStarting@" + Date();
-    // apache.src = "https://hci.pomona.edu/ImageSearch1ExperimentStarting@NOW"+Date();
+    // apache.src = save_url;
+    // // apache.src = window.location.href + "/ExperimentStarting@" + Date();
+    // // apache.src = "https://hci.pomona.edu/ImageSearch1ExperimentStarting@NOW"+Date();
 
     function updateUI() {
       //Update Gradient Ratio label to match slider value
