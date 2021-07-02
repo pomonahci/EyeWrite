@@ -50,6 +50,7 @@ function getImage() {
 function getTarget() {
     if(!bounding)return;
     var keys = Object.keys(bounding);
+    numTargets = keys.length;
     target = bounding[keys[task]];
     console.log(keys[task]);
 }
