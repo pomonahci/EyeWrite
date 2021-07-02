@@ -95,7 +95,7 @@
 
   <div id='imageContainer' style='position:relative;background-color: red;left:13%;height:100%'>
     <div id="stopwatch">00:00:00</div>
-    <img id='imageSearch' src='./graphics/kitten.jpg' alt="kitten" width='500px' height='500px'
+    <img id='imageSearch' src='' alt="LOADING" width='500px' height='500px'
       style='position:inherit;left:30%;'>
   </div>
 
@@ -185,6 +185,9 @@
           <!-- <option value="solid">Solid</option> -->
           <option value="gradient">Gradient</option>
           <option value="heatmap">Heatmap</option>
+          <option value="hollow">Hollow</option>
+
+
         </select>
       </div>
     </div>
@@ -376,12 +379,12 @@
       var gradval = document.getElementById("sentenceSlider2");
       grad.innerHTML = Math.floor((gradval.value / 66) * 100) + "%";
       //turn all switches off when page is loaded (class is onoffswitch-label)
-      document.getElementById("gazeSendSwitch").checked = false;
-      document.getElementById("mouseSendSwitch").checked = false;
-      document.getElementById("mouseVisSwitch").checked = false;
-      document.getElementById("gazeVisSwitch").checked = false;
+      // document.getElementById("gazeSendSwitch").checked = false;
+      // document.getElementById("mouseSendSwitch").checked = false;
+      // document.getElementById("mouseVisSwitch").checked = false;
+      // document.getElementById("gazeVisSwitch").checked = false;
     }
-
+    var experiment;
   </script>
 </body>
 
@@ -401,6 +404,9 @@
   startTimer()
   startExp()
 </script>
+<script src="./scripts/parseURLForVisAud.js"></script>
+
+
 
 
 

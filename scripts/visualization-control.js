@@ -1,7 +1,7 @@
 /**
- * visualization.js
+ * visualization-control.js
  *
- * Name: davecarroll, chanhakim, aidangarton
+ * Name: davecarroll, chanhakim, aidangarton, nickmarsano
  * Date: Summer 2020 - Spring 2021
  */
 
@@ -65,6 +65,7 @@ var visualizationControl = (function () {
 
     if (window.debug) console.log(window.visShape);
   };
+
 
   /**
    * Adds callback for unload event.
@@ -394,7 +395,7 @@ var visualizationControl = (function () {
     }
 
     // Listener for mouse send switch.
-    mouseSendSwitch.addEventListener("change", function () {
+    mouseSendSwitch.addEventListener("click", function () {
       if (mouseSendSwitch.checked) {
         // gazeSendSwitch.checked = false;
         if (gazeSendSwitch.checked) {
@@ -413,6 +414,7 @@ var visualizationControl = (function () {
       }
       console.log(`send data state: ${getDataState(window.sendDataState)}`);
     });
+    // document.getElementById("mouseSendSwitch").click();
 
     // Listener for gaze send switch.
     gazeSendSwitch.addEventListener("change", function () {
@@ -532,6 +534,9 @@ var visualizationControl = (function () {
         ticking = true;
       }
     });
+
+    parseURLForVisAud();
+
   });
 
   /**
@@ -839,6 +844,13 @@ var visualizationControl = (function () {
     // var visShape, visSize;
     if (window.visShape == "solid") {
       circle.style = createSolidCircleHighlightStyle(hPos, hSize, hColor);
+
+      // get rid of clearing heatmap interval and clear heatmap data from screen
+      clearInterval(intervalID);
+      intervalID = null;
+      heatmapInstance.setData({ data: [] });
+    } else if (window.visShape == "hollow") {
+      circle.style = createHollowCircleHighlightStyle(hPos, hSize, hColor);
 
       // get rid of clearing heatmap interval and clear heatmap data from screen
       clearInterval(intervalID);

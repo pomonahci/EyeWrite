@@ -1,8 +1,10 @@
-//choose image to show
-//that image will have certian bounding boxes associated with it
-//those bounding boxes will have left x and top y + width and height values associated with each all stored in an array
-//bounding boxes will be stored in a dictionary with a label of what they are bounding
-//those dictionaries will be the values of dictionaries and the keys will be the image labels
+/**
+ * imageSelect.js controls the image search task
+ * Interprets URL for image and targets, handles server interaction and target control
+ * 
+ * Name: nickmarsano
+ * Date: 06/30/2021
+ */
 
 var imageContainer = document.getElementById('imageContainer');
 var container = imageContainer.getBoundingClientRect();
@@ -10,34 +12,38 @@ var container = imageContainer.getBoundingClientRect();
 var imageSrc = document.getElementById('imageSearch');
 var rect = imageSrc.getBoundingClientRect();
 
-//example URL: hci.pomona.edu/EyeWrite/eyewrite.html#1kitten01234567
+//example URL: hci.pomona.edu/EyeWrite/eyewrite.html#1kitten012
 
-var imageLabel;
+var imageLabel; // number identify 0-9 for what image is being looked at
+// listings of bounding boxes for each image
+var index2Label = { '0': 'kitten' } //dictionary linking imageLabel number to literal string for ease of reading
 var boundArray = { 'kitten': { 'entireKitten': [rect.left, rect.top, 500, 500], 'topleft': [rect.left, rect.top, 100, 100] } };
-var bounding;
-var misclicks = 0;
-var target;
-var targetHit = false;
-var numTargets;
-var taskList;
-var completed = 0;
-var task = 0;
-var numPpl;
+var bounding; // list of targets for imageLabel taken from boundArray
+var misclicks = 0; // number of misclicks while searching for target (will be made global)
+var target; // current target that participatns are looking for
+var targetHit = false; // boolean value to determine if a bounding box should be drawn locally (only draw once)
+var numTargets = 3; // number of targets to find per image
+var completed = 0; // number of users who found target
+var task = 0; // index of target, will incremenent
+var numPpl; // number of participants in this experiement (gotten from URL)
 var taskComplete = false;
 
 function getImage() {
     var URL = window.location.href;
-    numTargets = URL[URL.length - 1];
-    taskList = URL.substring(URL.length - numTargets - 1, URL.length - 1);
-    imageLabel = URL.substring(URL.length - numTargets - 1 - 6, URL.length - numTargets - 1);//6 is due to length of 'kitten'
-    numPpl = URL.substring(URL.length - numTargets - 1 - 6 - 1, URL.length - numTargets - 1 - 6);
-    bounding = boundArray[imageLabel];
+    imageLabel = URL.search("img");
+    imageLabel = URL.substring(imageLabel + 4, imageLabel + 5);
+    // imageLabel = URL.substring(URL.length - numTargets - 1 - 6, URL.length - numTargets - 1);//6 is due to length of 'kitten'
+    numPpl = URL.search('par');
+    numPpl = URL.substring(numPpl + 4, numPpl + 5);
+    var imageName = index2Label[imageLabel];
+    bounding = boundArray[imageName];
+    document.getElementById("imageSearch").src = "./graphics/" + imageName + '.jpg';
 }
 
 function getTarget() {
     var keys = Object.keys(bounding);
-    target = bounding[keys[taskList[task]]];
-    console.log(keys[taskList[task]]);
+    target = bounding[keys[task]];
+    console.log(keys[task]);
 }
 
 document.addEventListener("click", onClick);
@@ -89,9 +95,9 @@ function nextTarget() {
     clearBoxes();
     task++;
     targetHit = false;
-    if(numTargets == task){
+    if (numTargets == task) {
         console.log('All Tasks Complete');
-        document.removeEventListener("click",onClick);
+        document.removeEventListener("click", onClick);
         return;
     }
     getTarget();
