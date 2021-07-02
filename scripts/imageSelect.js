@@ -136,7 +136,7 @@ function clearBoxes() {
 }
 
 function voteSkipTarget() {
-    new Image().src = "https://hci.pomona.edu;" + userID + "VotedToSkip";
+    new Image().src = "https://hci.pomona.edu;" + userId + "VotedToSkip";
     firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('skipVotes').transaction(function (current) {
         if (!current) current = [];
         if (!current.includes(userId)) current.push(userId);
