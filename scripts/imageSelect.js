@@ -76,7 +76,7 @@ function onClick(event) {
             document.querySelector("#imageContainer").append(box);
         }
         targetHit = true;
-        url = "https://hci.pomona.edu/" + experiment + "targetFoundBy" + userId;
+        url = "https://hci.pomona.edu/" + experiment + "/targetFoundBy" + userId;
         apache.src = url;
         firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('targetClicked').transaction(function (current) {
             if (!current) current = [];
@@ -95,7 +95,7 @@ function onClick(event) {
         // }
     }
     else {
-        url = "https://hci.pomona.edu/" + experiment + "targetMissedBy" + userId;
+        url = "https://hci.pomona.edu/" + experiment + "/targetMissedBy" + userId;
         apache.src = url;
         misclicks++;
     }
@@ -104,8 +104,9 @@ function onClick(event) {
 
 function checkTaskComplete(snapshot) {
     if (snapshot.val().length == numPpl) {
-        url = "https://hci.pomona.edu/" + experiment + "targetFoundByAll";
-        apache.src = url;
+        url = "https://hci.pomona.edu/" + experiment + "/targetFoundByAll";
+        new Image().src
+        // apache.src = url;
         nextTarget();
     }
 }
