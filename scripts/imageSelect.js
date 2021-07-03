@@ -76,7 +76,7 @@ function onClick(event) {
             document.querySelector("#imageContainer").append(box);
         }
         targetHit = true;
-        new Image().src = "https://hci.pomona.edu;TargetFoundBy" + userId;
+        new Image().src = "https://hci.pomona.edu/TargetFoundBy" + userId;
         firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('targetClicked').transaction(function (current) {
             if (!current) current = [];
             var users = []
@@ -89,7 +89,7 @@ function onClick(event) {
         })
     }
     else {
-        new Image().src = "https://hci.pomona.edu;/TargetMissedBy" + userId;
+        new Image().src = "https://hci.pomona.edu/TargetMissedBy" + userId;
         // apache.src = url;
         misclicks++;
     }
@@ -100,11 +100,11 @@ function checkTaskComplete(snapshot) {
     if (snapshot.val().length == numPpl) {
         if (snapshot.key == "skipVotes") {
             action = 'skip';
-            if (skipped[0] == userId) new Image().src = "https://hci.pomona.edu;TargetSkipped";
+            if (skipped[0] == userId) new Image().src = "https://hci.pomona.edu/TargetSkipped";
         }
         else {
             action = 'found'
-            if (found[0] == userId) new Image().src = "https://hci.pomona.edu;TargetFoundByAll";
+            if (found[0] == userId) new Image().src = "https://hci.pomona.edu/TargetFoundByAll";
         }
 
         nextTarget(action);
@@ -120,8 +120,8 @@ function nextTarget(action) {
     targetHit = false;
     if (numTargets == task) {
         console.log('Task Complete');
-        if (action == 'skip' && skipped[0] == userId) new Image().src = "https://hci.pomona.edu;All" + index2Label[imageLabel] + "TargetsComplete";
-        else if (action == 'found' && found[0] == userId) new Image().src = "https://hci.pomona.edu;All" + index2Label[imageLabel] + "TargetsComplete";
+        if (action == 'skip' && skipped[0] == userId) new Image().src = "https://hci.pomona.edu/All" + index2Label[imageLabel] + "TargetsComplete";
+        else if (action == 'found' && found[0] == userId) new Image().src = "https://hci.pomona.edu/All" + index2Label[imageLabel] + "TargetsComplete";
         document.getElementById("imageSearch").removeEventListener("click", onClick);
         return;
     }
@@ -136,7 +136,7 @@ function clearBoxes() {
 }
 
 function voteSkipTarget() {
-    new Image().src = "https://hci.pomona.edu;" + userId + "VotedToSkip";
+    new Image().src = "https://hci.pomona.edu/" + userId + "VotedToSkip";
     console.log("pinged");
     // firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('skipVotes').transaction(function (current) {
     //     if (!current) current = [];
