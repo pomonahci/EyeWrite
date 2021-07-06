@@ -61,6 +61,7 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       var moved = cereal.find(el => el.idStroke == snapshot.val().idMovedFrom)
       var ind = cereal.indexOf(moved);
       primSket.clearedSketches[0][ind].remove(3)
+      cereal = primSket.serialize();
     }
     snapshot.val().idStroke = primSket.currStrokeID;
     cereal.push(snapshot.val());
