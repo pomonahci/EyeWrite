@@ -52,18 +52,20 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
     }
   }
   else {//handle move and draw
+    var cereal = primSket.serialize();
+
     if (snapshot.val().created == 'move') {
-      primSket.startMove({'clientX':snapshot.val().timeStart,'clientY':snapshot.val().timeEnd})
-      primSket.continueLineWithEvent(null,'move',200,200);
-      console.log(primSket.endMove());
+      // primSket.startMove({'clientX':snapshot.val().timeStart,'clientY':snapshot.val().timeEnd})
+      // primSket.continueLineWithEvent(null,'move',200,200);
+      // console.log(primSket.endMove());
+      var moved = cereal.find(el => el.idStroke == snapshot.val().idMovedFrom)
+      var ind = cereal.indexOf(moved);
+      primSket.clearedSketches[0][ind].remove(3)
     }
-    else {
-      var cereal = primSket.serialize();
-      snapshot.val().idStroke = primSket.currStrokeID;
-      cereal.push(snapshot.val());
-      synchronize(cereal);
-      primSket.currStrokeID += 1;
-    }
+    snapshot.val().idStroke = primSket.currStrokeID;
+    cereal.push(snapshot.val());
+    synchronize(cereal);
+    primSket.currStrokeID += 1;
   }
 
 
