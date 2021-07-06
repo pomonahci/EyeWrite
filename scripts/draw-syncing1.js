@@ -52,20 +52,19 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
     }
   }
   else {//handle move and draw
-    if (snapshot.val().created == 'draw') {
-      // primSket.currentPath = snapshot.val()[Object.keys(snapshot.val())[0]].deserialize();
-      // primSket.currStrokeID +=1;
-      // primSket.finishPath();
-      var cereal = primSket.serialize();
-      snapshot.val().idStroke = primSket.currStrokeID;
-      cereal.push(snapshot.val());
-      synchronize(cereal);
-      primSket.currStrokeID +=1;
+    var cereal = primSket.serialize();
+    snapshot.val().idStroke = primSket.currStrokeID;
+    if (snapshot.val().created == 'move') {
+      //get stroke that is being moved and set status to 3
+      //push snapshot.val() onto cereal
+      // var moved = primSket.select(snapshot.val().timeStart,snapshot.val().timeEnd)[1];
+      // moved.status = 3;
     }
-    else {
-  
-    }
+    cereal.push(snapshot.val());
+    synchronize(cereal);
+    primSket.currStrokeID += 1;
   }
+
 
 });
 
@@ -83,19 +82,19 @@ function sketchEdit(e, x, y, c) {
       return primSket.currentPath.serialize();
     }
     else if (e == 'erase') {
-      return 'erase:' + x + ':' + y+':'+edit++;
+      return 'erase:' + x + ':' + y + ':' + edit++;
     }
     else if (e == 'clear') {
-      return 'clear'+':'+edit++;
+      return 'clear' + ':' + edit++;
     }
     else if (e == 'color') {
-      return 'color:' + x + ':' + y + ':' + c+':'+edit++;
+      return 'color:' + x + ':' + y + ':' + c + ':' + edit++;
     }
     else if (e == 'undo') {
-      return 'undo'+':'+edit++;
+      return 'undo' + ':' + edit++;
     }
     else if (e == 'redo') {
-      return 'redo'+':'+edit++;
+      return 'redo' + ':' + edit++;
     }
     // else if (e == 'point') {
     //   var thisPath = current.find(el => el.idStroke == primSket.currentPath.idStroke);
