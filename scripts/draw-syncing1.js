@@ -15,6 +15,7 @@ var color;
 var lastServer = [];
 var undo_index = 0;
 var clear_index = 0;
+var edit = 0;
 
 function synchronize(sketch) {
   primSket.loadSketch(sketch);
@@ -37,10 +38,10 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
     else if (splits[0] == 'clear') {
       if (primSket.clear()) primSket.updateDimensions();
     }
-    else if (splits[0] == 'undoo') {
+    else if (splits[0] == 'undo') {
       primSket.undo();
     }
-    else if (splits[0] == 'redoo') {
+    else if (splits[0] == 'redo') {
       primSket.redo();
     }
     else if (splits[0] == 'color') {
@@ -82,19 +83,19 @@ function sketchEdit(e, x, y, c) {
       return primSket.currentPath.serialize();
     }
     else if (e == 'erase') {
-      return 'erase:' + x + ':' + y;
+      return 'erase:' + x + ':' + y+':'+edit++;
     }
     else if (e == 'clear') {
-      return 'clear'
+      return 'clear'+':'+edit++;
     }
     else if (e == 'color') {
-      return 'color:' + x + ':' + y + ':' + c;
+      return 'color:' + x + ':' + y + ':' + c+':'+edit++;
     }
     else if (e == 'undo') {
-      return 'undoo'
+      return 'undo'+':'+edit++;
     }
     else if (e == 'redo') {
-      return 'redoo'
+      return 'redo'+':'+edit++;
     }
     // else if (e == 'point') {
     //   var thisPath = current.find(el => el.idStroke == primSket.currentPath.idStroke);
