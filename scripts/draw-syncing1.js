@@ -54,7 +54,8 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
   else {//handle move and draw
     if (snapshot.val().created == 'move') {
       primSket.startMove({'clientX':snapshot.val().timeStart,'clientY':snapshot.val().timeEnd})
-      primSket.endMove();
+      // primSket.endMove();
+      primSket.continueLineWithEvent(null,'move',200,200);
     }
     else {
       var cereal = primSket.serialize();
