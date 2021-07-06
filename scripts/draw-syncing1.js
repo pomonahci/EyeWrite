@@ -52,17 +52,18 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
     }
   }
   else {//handle move and draw
-    var cereal = primSket.serialize();
-    snapshot.val().idStroke = primSket.currStrokeID;
     if (snapshot.val().created == 'move') {
       //get stroke that is being moved and set status to 3
       //push snapshot.val() onto cereal
-      // var moved = primSket.select(snapshot.val().timeStart,snapshot.val().timeEnd)[1];
-      // moved.status = 3;
+      primSket.startMove({'clientX':snapshot.val().timeStart,'clientY':snapshot.val().timeEnd})
     }
-    cereal.push(snapshot.val());
-    synchronize(cereal);
-    primSket.currStrokeID += 1;
+    else {
+      var cereal = primSket.serialize();
+      snapshot.val().idStroke = primSket.currStrokeID;
+      cereal.push(snapshot.val());
+      synchronize(cereal);
+      primSket.currStrokeID += 1;
+    }
   }
 
 
