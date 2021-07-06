@@ -21,8 +21,13 @@ function synchronize(sketch) {
   primSket.displayLoadedSketch(false);
 }
 
+firebaseRef.child('svg').child(userId).set("");
+// ref.child(self.userId_).child('name');
+// nameRef.onDisconnect().remove();
+// nameRef.set(self.displayName_);
+
 // Listens always for updates to the svg canvas
-firebaseRef.child('svg').on('value', function (snapshot) {
+firebaseRef.child('svg').on('child_changed', function (snapshot) {
   if (!snapshot.val()) return;
   if (Object.keys(snapshot.val())[0] == userId) return;
   if (typeof (snapshot.val()[Object.keys(snapshot.val())[0]]) == 'string') {
