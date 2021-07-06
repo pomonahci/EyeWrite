@@ -22,16 +22,13 @@ function synchronize(sketch) {
 }
 
 firebaseRef.child('svg').child(userId).set("");
-// ref.child(self.userId_).child('name');
-// nameRef.onDisconnect().remove();
-// nameRef.set(self.displayName_);
 
 // Listens always for updates to the svg canvas
 firebaseRef.child('svg').on('child_changed', function (snapshot) {
   if (!snapshot.val()) return;
-  if (Object.keys(snapshot.val())[0] == userId) return;
-  if (typeof (snapshot.val()[Object.keys(snapshot.val())[0]]) == 'string') {
-    let splits = snapshot.val()[Object.keys(snapshot.val())[0]].split(':');
+  if (snapshot.key == userId) return;
+  if (typeof (snapshot.val()) == 'string') {
+    let splits = snapshot.val().split(':');
     if (splits[0] == 'erase') {
       let x = splits[1];
       let y = splits[2];
@@ -54,13 +51,13 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
     }
   }
   else {//handle move and draw
-    if (snapshot.val()[Object.keys(snapshot.val())[0]].created == 'draw') {
+    if (snapshot.val().created == 'draw') {
       // primSket.currentPath = snapshot.val()[Object.keys(snapshot.val())[0]].deserialize();
       // primSket.currStrokeID +=1;
       // primSket.finishPath();
       var cereal = primSket.serialize();
-      snapshot.val()[Object.keys(snapshot.val())[0]],idStroke = primSket.currStrokeID;
-      cereal.push(snapshot.val()[Object.keys(snapshot.val())[0]]);
+      snapshot.val().idStroke = primSket.currStrokeID;
+      cereal.push(snapshot.val());
       synchronize(cereal);
       primSket.currStrokeID +=1;
     }
