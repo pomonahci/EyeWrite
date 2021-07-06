@@ -177,6 +177,9 @@ var visualizationControl = (function () {
     webgazer.params.showPredictionPoints = false;
   };
 
+  FirepadCM = firepad.editorAdapter_.cm;
+  let topbefore = 0;
+
   /**
    * Instantiate the Firepad document.
    * Contains firebase callback functions.
@@ -203,6 +206,27 @@ var visualizationControl = (function () {
         },
         "local"
       );
+
+      //dead
+
+      heatmapDataPoints = heatmapDataPoints.map((dataPoint) => {
+        if (dataPoint.x >= cmsizerDim.left && dataPoint.x <= cmsizerDim.right) {
+          let newy = dataPoint.y + (topbefore - FirepadCM.getScrollInfo().top);
+          console.log("old y: " + dataPoint.y + " new y: " + newy);
+          return {
+            x: dataPoint.x,
+            y: newy,
+            value: dataPoint.value,
+          };
+        } else {
+          return dataPoint;
+        }
+      });
+
+      heatmapInstance.setData({ data: [] });
+      heatmapInstance.setData({ max: 60, min: 0, data: heatmapDataPoints });
+
+      topbefore = FirepadCM.getScrollInfo().top;
     });
 
     // Firebase listener for when users are added
@@ -558,6 +582,10 @@ var visualizationControl = (function () {
    * @param {Float} ypos
    * @returns
    */
+
+  var cmsizerDim = document
+    .querySelector(".CodeMirror-code")
+    .getBoundingClientRect();
   function encodeLocation(xpos, ypos) {
     var cmsizerDim = document
       .querySelector(".CodeMirror-code")
@@ -584,7 +612,7 @@ var visualizationControl = (function () {
         relY = ypos - cmsizerDim.top;
       }
     } else if (xpos >= cmsizerDim.left && xpos <= cmsizerDim.right) {
-      // if the location is within the Firepad document
+      // if the location is within the Firepad document died
       relX = xpos - cmsizerDim.left;
       if (ypos < 84) {
         region = 2;
