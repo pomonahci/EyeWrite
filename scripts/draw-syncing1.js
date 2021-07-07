@@ -79,10 +79,14 @@ function sketchEdit(e, x, y, c) {
   firepad.firebaseAdapter_.ref_.child('svg').child(userId).transaction(function (current) {
     if (e == 'draw') {
       primSket.currentPath.created = e;
+      primSket.currentPath.idCreator = userId;
+      primSket.currentPath.undone = 0;
       return primSket.currentPath.serialize();
     }
     else if (e == 'move') {
       primSket.currentPath.created = e;
+      primSket.currentPath.idCreator = userId;
+      primSket.currentPath.undone = 0;
       return primSket.currentPath.serialize();
     }
     else if (e == 'erase') {
