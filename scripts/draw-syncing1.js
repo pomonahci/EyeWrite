@@ -107,7 +107,7 @@ function sketchEdit(e, x, y, c) {
     else if (e == 'undo') {
       let targetPath = 0;
       for(let i=primSket.getPaths().length-1;i>-1;i--){
-        if(!primSket.getPaths()[i].undone && snapshot.key == primSket.getPaths()[i].idCreator){
+        if(!primSket.getPaths()[i].undone && userId == primSket.getPaths()[i].idCreator){
           targetPath = primSket.getPaths()[i];
           break;
         }
