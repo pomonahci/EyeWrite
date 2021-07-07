@@ -39,7 +39,15 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       if (primSket.clear()) primSket.updateDimensions();
     }
     else if (splits[0] == 'undo') {
-      primSket.undo();
+      let targetPath = 0;
+      for(let i=primSket.getPaths().length-1;i>-1;i--){
+        if(!primSket.getPaths()[i].undone && snapshot.key == primSket.getPaths()[i].idCreator){
+          targetPath = primSket.getPaths()[i];
+          break;
+        }
+      }
+      if(targetPath === 0)return false;
+      primSket.undo(targetPath);
     }
     else if (splits[0] == 'redo') {
       primSket.redo();
@@ -80,13 +88,11 @@ function sketchEdit(e, x, y, c) {
     if (e == 'draw') {
       primSket.currentPath.created = e;
       primSket.currentPath.idCreator = userId;
-      primSket.currentPath.undone = 0;
       return primSket.currentPath.serialize();
     }
     else if (e == 'move') {
       primSket.currentPath.created = e;
       primSket.currentPath.idCreator = userId;
-      primSket.currentPath.undone = 0;
       return primSket.currentPath.serialize();
     }
     else if (e == 'erase') {
@@ -99,6 +105,15 @@ function sketchEdit(e, x, y, c) {
       return 'color:' + x + ':' + y + ':' + c + ':' + edit++;
     }
     else if (e == 'undo') {
+      let targetPath = 0;
+      for(let i=primSket.getPaths().length-1;i>-1;i--){
+        if(!primSket.getPaths()[i].undone && snapshot.key == primSket.getPaths()[i].idCreator){
+          targetPath = primSket.getPaths()[i];
+          break;
+        }
+      }
+      if(targetPath === 0)return "";
+      primSket.undo(targetPath);
       return 'undo' + ':' + edit++;
     }
     else if (e == 'redo') {
