@@ -53,8 +53,16 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       primSket.undo(targetPath);
     }
     else if (splits[0] == 'redo') {
-      primSket.redo();
-    }
+      let targetPath = 0;
+      for(let i=0;i<primSket.getPaths().length;i++){
+        if(!primSket.getPaths()[i].undone && snapshot.key == primSket.getPaths()[i].idCreator){
+          targetPath = primSket.getPaths()[i];
+          targetPath.undone = false;
+          break;
+        }
+      }
+      if(targetPath === 0)return false;
+      primSket.redo(targetPath);    }
     else if (splits[0] == 'color') {
       let x = splits[1];
       let y = splits[2];
@@ -118,6 +126,16 @@ function sketchEdit(e, x, y, c) {
       return 'undo' + ':' + edit++;
     }
     else if (e == 'redo') {
+      let targetPath = 0;
+      for(let i=0;i<primSket.getPaths().length;i++){
+        if(!primSket.getPaths()[i].undone && userId == primSket.getPaths()[i].idCreator){
+          targetPath = primSket.getPaths()[i];
+          targetPath.undone = false;
+          break;
+        }
+      }
+      if(targetPath === 0)return "";
+      primSket.redo(targetPath);
       return 'redo' + ':' + edit++;
     }
     // else if (e == 'point') {
