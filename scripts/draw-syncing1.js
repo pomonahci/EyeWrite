@@ -18,6 +18,8 @@ var clear_index = 0;
 var edit = 0;
 
 function synchronize(sketch) {
+  primSket.undoIndex = 0;
+  primSket.clearUndoIndex = 0;
   primSket.loadSketch(sketch);
   primSket.displayLoadedSketch(false);
 }
@@ -43,6 +45,7 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       for(let i=primSket.getPaths().length-1;i>-1;i--){
         if(!primSket.getPaths()[i].undone && snapshot.key == primSket.getPaths()[i].idCreator){
           targetPath = primSket.getPaths()[i];
+          targetPath.undone = true;
           break;
         }
       }
@@ -63,9 +66,6 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
     var cereal = primSket.serialize();
 
     if (snapshot.val().created == 'move') {
-      // primSket.startMove({'clientX':snapshot.val().timeStart,'clientY':snapshot.val().timeEnd})
-      // primSket.continueLineWithEvent(null,'move',200,200);
-      // console.log(primSket.endMove());
       var moved = cereal.find(el => el.idStroke == snapshot.val().idMovedFrom)
       var ind = cereal.indexOf(moved);
       primSket.clearedSketches[0][ind].remove(3)
@@ -109,6 +109,7 @@ function sketchEdit(e, x, y, c) {
       for(let i=primSket.getPaths().length-1;i>-1;i--){
         if(!primSket.getPaths()[i].undone && userId == primSket.getPaths()[i].idCreator){
           targetPath = primSket.getPaths()[i];
+          targetPath.undone = true;
           break;
         }
       }
