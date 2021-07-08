@@ -140,7 +140,10 @@ function sketchEdit(e, x, y, c) {
           break;
         }
       }
-      if (targetPath === 0) return "";
+      if (targetPath === 0) {
+        if (primSket.clearUndoIndex > 0) primSket.redo();
+        else return;
+      }
       primSket.redo(targetPath);
       return 'redo' + ':' + edit++;
     }
