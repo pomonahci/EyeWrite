@@ -121,7 +121,10 @@ function sketchEdit(e, x, y, c) {
           break;
         }
       }
-      if(targetPath === 0)return "";
+      if(targetPath === 0){
+        if(primSket.clearUndoIndex<1)return "";
+        else primSket.undo();
+      }
       primSket.undo(targetPath);
       return 'undo' + ':' + edit++;
     }
