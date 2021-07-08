@@ -458,6 +458,8 @@ var visualizationControl = function () {
       }
     });
 
+    parseURLFor();
+
   });
 
   /**

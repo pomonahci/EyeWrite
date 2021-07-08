@@ -8,7 +8,7 @@
 var prompts = { 0: 'FLOWER' };
 
 
-function parseURLForVisAud() {
+function parseURLFor() {
     var URL = window.location.href;
 
     if (URL.search("EyeDraw") != -1) experiment = "EyeDraw";
