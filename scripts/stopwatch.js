@@ -1,23 +1,23 @@
-const timer = document.getElementById('stopwatch');
+const stopwatch = document.getElementById('stopwatch');
 
 var hr = 0;
 var min = 0;
 var sec = 0;
 var stoptime = true;
 
-function startTimer() {
+function startStopwatch() {
   if (stoptime == true) {
         stoptime = false;
-        timerCycle();
+        stopwatchCycle();
     }
 }
-function stopTimer() {
+function stopStopwatch() {
   if (stoptime == false) {
     stoptime = true;
   }
 }
 
-function timerCycle() {
+function stopwatchCycle() {
     if (stoptime == false) {
     sec = parseInt(sec);
     min = parseInt(min);
@@ -45,14 +45,14 @@ function timerCycle() {
       hr = '0' + hr;
     }
 
-    timer.innerHTML = hr + ':' + min + ':' + sec;
+    stopwatch.innerHTML = hr + ':' + min + ':' + sec;
 
-    setTimeout("timerCycle()", 1000);
+    setTimeout("stopwatchCycle()", 1000);
   }
 }
 
-function resetTimer() {
-    timer.innerHTML = '00:00:00';
+function resetStopwatch() {
+    stopwatch.innerHTML = '00:00:00';
     stoptime = true;
     hr = 0;
     sec = 0;
