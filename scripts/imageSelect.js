@@ -17,7 +17,7 @@ var rect = imageSrc.getBoundingClientRect();
 var imageLabel; // number identify 0-9 for what image is being looked at
 // listings of bounding boxes for each image
 var index2Label = { '0': 'kitten' } //dictionary linking imageLabel number to literal string for ease of reading
-var boundArray = { 'kitten': { 'entireKitten': [rect.left, rect.top, 500, 500], 'topleft': [rect.left, rect.top, 100, 100] } };
+var boundArray = { 'kitten': { 'face': [795, 206, 113, 63], 'rightear': [855, 107, 99, 77] } };
 var bounding; // list of targets for imageLabel taken from boundArray
 var misclicks = 0; // number of misclicks while searching for target (will be made global)
 var target; // current target that participatns are looking for
@@ -46,6 +46,7 @@ function getImage() {
     document.getElementById("imageSearch").src = "./graphics/" + imageName + '.jpg';
 }
 
+
 function getTarget() {
     firebaseRef.child('tasks').child(task).on('child_added', checkTaskComplete);//useless in experiments with more than 1 person
     firebaseRef.child('tasks').child(task).on('child_changed', checkTaskComplete);
@@ -55,6 +56,7 @@ function getTarget() {
     numTargets = keys.length;
 
     target = bounding[keys[task]];
+    document.getElementById("targetSearch").src = "./graphics/" + keys[task] + '.png';
     console.log(keys[task]);
 }
 
@@ -123,6 +125,8 @@ function nextTarget(action) {
         // if (action == 'skip' && skipped[0] == userId) new Image().src = "https://hci.pomona.edu/All" + index2Label[imageLabel] + "TargetsComplete";
         // else if (action == 'found' && found[0] == userId) new Image().src = "https://hci.pomona.edu/All" + index2Label[imageLabel] + "TargetsComplete";
         document.getElementById("imageSearch").removeEventListener("click", onClick);
+        document.getElementById('targetSearch').src = './graphics/targetbase.png';
+        stopStopwatch();
         return;
     }
     action = '';
@@ -145,8 +149,20 @@ function voteSkipTarget() {
     })
 }
 
-
 function startExp() {
     getImage();
     getTarget();
+}
+
+//Used to get bounding box parameters manually and then inputting into "boundArray" dictionary above
+var c1=true;
+var x1;
+var y1;
+document.getElementById("imageSearch").addEventListener("click", whereAmI);
+function whereAmI(event){
+    if(c1)console.log("X: "+event.clientX+", Y: "+event.clientY);
+    else console.log("Width: "+(event.clientX-x1)+", Height: "+(event.clientY-y1));
+    x1 = event.clientX;
+    y1 = event.clientY;
+    c1=!c1;
 }
