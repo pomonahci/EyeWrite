@@ -122,7 +122,7 @@ function sketchEdit(e, x, y, c) {
         }
       }
       if(targetPath === 0)return "";
-      primSket.undo(targetPath);
+      if(primSket.clearUndoIndex==0)primSket.undo(targetPath);
       return 'undo' + ':' + edit++;
     }
     else if (e == 'redo') {
