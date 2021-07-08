@@ -8,9 +8,11 @@
 
 
 var primSket;//refernce to svg sketchpage
-var currentlyEditing = false;
-var ServerSketch;//json format of primSket kept on the firebase
+var currentlyEditing = false;//used in original draw-syncing
+var ServerSketch;//json format of primSket kept on the firebase//used in original draw-syncing
 var edit = 0;
+var ecThis; //used in original draw-syncing
+
 
 function synchronize(sketch) {
   primSket.undoIndex = 0;
