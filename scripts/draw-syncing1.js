@@ -3,18 +3,13 @@
  * Uses firebase as the server
  * 
  * Name: nickmarsano
- * Date: 06/22/2021
+ * Date: 07/6/2021
  */
 
 
 var primSket;//refernce to svg sketchpage
 var currentlyEditing = false;
 var ServerSketch;//json format of primSket kept on the firebase
-var ecThis;
-var color;
-var lastServer = [];
-var undo_index = 0;
-var clear_index = 0;
 var edit = 0;
 
 function synchronize(sketch) {
@@ -42,27 +37,34 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
     }
     else if (splits[0] == 'undo') {
       let targetPath = 0;
-      for(let i=primSket.getPaths().length-1;i>-1;i--){
-        if(!primSket.getPaths()[i].undone && snapshot.key == primSket.getPaths()[i].idCreator){
+      for (let i = primSket.getPaths().length - 1; i > -1; i--) {
+        if (!primSket.getPaths()[i].undone && snapshot.key == primSket.getPaths()[i].idCreator) {
           targetPath = primSket.getPaths()[i];
           targetPath.undone = true;
           break;
         }
       }
-      if(targetPath === 0)return false;
+      if (targetPath === 0) {
+        if (primSket.clearedSketches.length < 2) return;
+        else primSket.undo();
+      }
       primSket.undo(targetPath);
     }
     else if (splits[0] == 'redo') {
       let targetPath = 0;
-      for(let i=0;i<primSket.getPaths().length;i++){
-        if(primSket.getPaths()[i].undone && snapshot.key == primSket.getPaths()[i].idCreator){
+      for (let i = 0; i < primSket.getPaths().length; i++) {
+        if (primSket.getPaths()[i].undone && snapshot.key == primSket.getPaths()[i].idCreator) {
           targetPath = primSket.getPaths()[i];
           targetPath.undone = false;
           break;
         }
       }
-      if(targetPath === 0)return false;
-      primSket.redo(targetPath);    }
+      if (targetPath === 0) {
+        if (primSket.clearUndoIndex > 0) primSket.redo();
+        else return;
+      }
+      primSket.redo(targetPath);
+    }
     else if (splits[0] == 'color') {
       let x = splits[1];
       let y = splits[2];
@@ -72,7 +74,6 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
   }
   else {//handle move and draw
     var cereal = primSket.serialize();
-
     if (snapshot.val().created == 'move') {
       var moved = cereal.find(el => el.idStroke == snapshot.val().idMovedFrom)
       var ind = cereal.indexOf(moved);
@@ -114,15 +115,15 @@ function sketchEdit(e, x, y, c) {
     }
     else if (e == 'undo') {
       let targetPath = 0;
-      for(let i=primSket.getPaths().length-1;i>-1;i--){
-        if(!primSket.getPaths()[i].undone && userId == primSket.getPaths()[i].idCreator){
+      for (let i = primSket.getPaths().length - 1; i > -1; i--) {
+        if (!primSket.getPaths()[i].undone && userId == primSket.getPaths()[i].idCreator) {
           targetPath = primSket.getPaths()[i];
           targetPath.undone = true;
           break;
         }
       }
-      if(targetPath === 0){
-        if(primSket.clearedSketches.length<2)return "";
+      if (targetPath === 0) {
+        if (primSket.clearedSketches.length < 2) return "";
         else primSket.undo();
       }
       primSket.undo(targetPath);
@@ -130,31 +131,17 @@ function sketchEdit(e, x, y, c) {
     }
     else if (e == 'redo') {
       let targetPath = 0;
-      for(let i=0;i<primSket.getPaths().length;i++){
-        if(primSket.getPaths()[i].undone && userId == primSket.getPaths()[i].idCreator){
+      for (let i = 0; i < primSket.getPaths().length; i++) {
+        if (primSket.getPaths()[i].undone && userId == primSket.getPaths()[i].idCreator) {
           targetPath = primSket.getPaths()[i];
           targetPath.undone = false;
           break;
         }
       }
-      if(targetPath === 0)return "";
+      if (targetPath === 0) return "";
       primSket.redo(targetPath);
       return 'redo' + ':' + edit++;
     }
-    // else if (e == 'point') {
-    //   var thisPath = current.find(el => el.idStroke == primSket.currentPath.idStroke);
-    //   if (thisPath && userId == primSket.currentPath.idCreator) {
-    //     current[current.indexOf(thisPath)] = primSket.currentPath.serialize();
-    //   }
-    //   else {
-    //     current[0] = 0;
-    //     if (current.length > 2) while (current[current.length - 1].undone) current.pop();
-    //     primSket.currentPath.idStroke = current.length - 1;// + 1;
-    //     primSket.currentPath.idCreator = userId;
-    //     primSket.currentPath.created = e;
-    //     current.push(primSket.currentPath.serialize());
-    //   }
-    // }
     return "";
   })
 }
