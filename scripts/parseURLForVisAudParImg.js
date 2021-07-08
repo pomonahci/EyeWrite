@@ -5,7 +5,7 @@
  * Date: 07/01/2021
  */
 
-function parseURLForVisAud() {
+function parseURLFor() {
     var URL = window.location.href;
 
     if (URL.search("EyeDraw") != -1) experiment = "EyeDraw";
@@ -42,7 +42,7 @@ function parseURLForVisAud() {
     var v2l = { '0': ';vis=none', '1': ';vis=hollow', '2': ';vis=heatmap' };
     var a2l = { '0': ';aud=off', '1': ';aud=on' };
 
-    new Image().src = "https://hci.pomona.edu/" + experiment + i2l[imageLabel] + "par=" + numPpl + v2l[visualization] + a2l[audio] + ";ExperimentStarting";
+    // new Image().src = "https://hci.pomona.edu/" + experiment + i2l[imageLabel] + "par=" + numPpl + v2l[visualization] + a2l[audio] + ";ExperimentStarting";
 }
 
 function triggerVis(vis) {

@@ -535,7 +535,7 @@ var visualizationControl = (function () {
       }
     });
 
-    parseURLForVisAud();
+    parseURLFor();
 
   });
 
