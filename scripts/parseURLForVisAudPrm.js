@@ -18,7 +18,7 @@ function parseURLFor() {
     var visualization = URL.search("vis");
     visualization = URL.substring(visualization + 4, visualization + 5);
     var audio = URL.search("aud");
-    if (experiment == 'EyeDraw') {
+    if (audio == -1 && experiment == 'EyeDraw') {
         audio = 1;
     }
     else if (audio == -1) {
