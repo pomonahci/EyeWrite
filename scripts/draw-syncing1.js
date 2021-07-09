@@ -29,6 +29,7 @@ function completeTodos() {
     cereal.push(x);
     synchronize(cereal);
   }
+  todos = [];
 }
 
 firebaseRef.child('svg').child(userId).set("");
@@ -92,7 +93,7 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       primSket.clearedSketches[0][ind].remove(3)
       cereal = primSket.serialize();
     }
-    snapshot.val().idStroke = primSket.currStrokeID;
+    snapshot.val().idStroke = primSket.currStrokeID;//may not be doing anything whoops
     if (currentlyEditing) {
       todos.push(snapshot.val());
     }
