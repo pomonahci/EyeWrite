@@ -6,7 +6,7 @@
  * Date: 06/11/2021
  */
 
-var mediaCall = function () {
+// var mediaCall = function () {
 	var mediaRef = firebaseRef.child("media");
 
 	// references to join call button and cam/aud buttons.
@@ -456,4 +456,4 @@ var mediaCall = function () {
 		mediaRef.child(userId).remove();
 	});
 
-}();
+// }();
