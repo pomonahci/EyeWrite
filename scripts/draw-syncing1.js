@@ -92,7 +92,7 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
 });
 
 function sketchEdit(e, x, y, c) {
-
+  primSket.updateOrigin();
   if (e == 'point') return;
 
   firepad.firebaseAdapter_.ref_.child('svg').child(userId).transaction(function (current) {
