@@ -92,7 +92,7 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       primSket.clearedSketches[0][ind].remove(3)
       cereal = primSket.serialize();
     }
-    snapshot.val().idStroke = primSket.currStrokeID + snapshot.key;
+    snapshot.val().idStroke = primSket.currStrokeID;
     if (currentlyEditing) {
       todos.push(snapshot.val());
     }
