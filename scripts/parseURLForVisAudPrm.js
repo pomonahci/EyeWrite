@@ -18,10 +18,11 @@ function parseURLFor() {
     var visualization = URL.search("vis");
     visualization = URL.substring(visualization + 4, visualization + 5);
     var audio = URL.search("aud");
-    if (experiment == 'EyeDraw') {
-        audio = 1;
-    }
-    else if (audio == -1) {
+    // if (experiment == 'EyeDraw') {
+    //     audio = 1;
+    // }
+    // else
+    if (audio == -1) {
         audio = 0
     }
     else {
@@ -37,20 +38,6 @@ function parseURLFor() {
     prompt = prompts[prompt];
     document.getElementById('drawingPrompt').innerHTML = prompt;
 
-    // var imageLabel = URL.search("img");
-    // imageLabel = URL.substring(imageLabel + 4, imageLabel + 5);
-    // var numPpl = URL.search('par');
-    // if (numPpl == -1) {
-    //     numPpl = 2;
-    // }
-    // else {
-    //     numPpl = URL.substring(numPpl + 4, numPpl + 5);
-    // }
-    // var i2l = { '-1': '', '0': ';image=kitten' };
-    // var v2l = { '0': ';vis=none', '1': ';vis=hollow', '2': ';vis=heatmap' };
-    // var a2l = { '0': ';aud=off', '1': ';aud=on' };
-
-    // new Image().src = "https://hci.pomona.edu/" + experiment + i2l[imageLabel] + "par=" + numPpl + v2l[visualization] + a2l[audio] + ";ExperimentStarting";
 }
 
 function triggerVis(vis) {
@@ -72,7 +59,7 @@ function triggerAud(aud) {
     if (aud == 1) {
         var mediaRef = firebaseRef.child("media");
         joinButStat = true;
-        mediaRef.child(userId).update({ audio: false, camera: false, is_ready: true, peer_id: "-1", stream_id: "-1" })
+        mediaRef.child(userId).update({ audio: true, camera: false, is_ready: true, peer_id: "-1", stream_id: "-1" })
         onJoin();
         joinButton.innerHTML = "LEAVE";
         mediaRef.child(userId).update({ audio: true });
