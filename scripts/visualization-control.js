@@ -209,8 +209,20 @@ var visualizationControl = (function () {
 
       //dead
 
+      const pad = document.getElementsByClassName("CodeMirror-lines")[0];
+      const tb = document.getElementsByClassName("firepad-toolbar")[0];
+
+      const { left, right } = pad.getBoundingClientRect();
+      const { bottom } = tb.getBoundingClientRect();
+
+      console.log(bottom);
+
       heatmapDataPoints = heatmapDataPoints.map((dataPoint) => {
-        if (dataPoint.x >= cmsizerDim.left && dataPoint.x <= cmsizerDim.right) {
+        if (
+          dataPoint.x >= left &&
+          dataPoint.x <= right
+          // dataPoint.y >= bottom
+        ) {
           let newy = dataPoint.y + (topbefore - FirepadCM.getScrollInfo().top);
           console.log("old y: " + dataPoint.y + " new y: " + newy);
           return {
