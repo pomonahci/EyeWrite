@@ -16,8 +16,16 @@ var rect = imageSrc.getBoundingClientRect();
 
 var imageLabel; // number identify 0-9 for what image is being looked at
 // listings of bounding boxes for each image
-var index2Label = { '0': 'kitten' } //dictionary linking imageLabel number to literal string for ease of reading
-var boundArray = { 'kitten': { 'face': [795, 206, 113, 63], 'rightear': [855, 107, 99, 77] } };
+var index2Label = { '0': 'fday.jpg', '1':'christ.png', '2':'horse.jpg'} //dictionary linking imageLabel number to literal string for ease of reading
+
+var christBoxes = {'candle.png': [924, 101, 32, 86], 'fish.png':[671, 68, 58, 93], 'sock.png': [1043, 308, 106, 110], 'cone.png':[845, 578, 109, 46], 'bell.png':[1033, 46, 59, 45], 'shoe.png':[1209, 303, 78, 35]};
+
+var fdayBoxes = {'football.png': [657, 307, 41, 77], 'candle2.png': [1238, 563, 50, 133], 'cone2.png': [1153, 102, 82, 93], 'shovel.png': [1067, 507, 161, 58], 'rabbit.png': [643, 19, 69, 104], 'bone.png': [773, 88, 94, 82]};
+
+var horseBoxes = {'tulip.png': [1080, 68, 102, 152], 'tack.png': [657, 389, 47, 46], 'ladder.png': [1230, 248, 48, 23], 'brush.png': [1268, 348, 22, 143], 'rug.png': [1143, 457, 65, 82], 'carrot.png': [894, 614, 45, 82]};
+
+var boundArray = { 'fday.jpg':  fdayBoxes, 'christ.png':  christBoxes, 'horse.jpg':  horseBoxes};
+
 var bounding; // list of targets for imageLabel taken from boundArray
 var misclicks = 0; // number of misclicks while searching for target (will be made global)
 var target; // current target that participatns are looking for
@@ -43,7 +51,7 @@ function getImage() {
     }
     var imageName = index2Label[imageLabel];
     bounding = boundArray[imageName];
-    document.getElementById("imageSearch").src = "./graphics/" + imageName + '.jpg';
+    document.getElementById("imageSearch").src = "./graphics/" + imageName;
 }
 
 
@@ -56,7 +64,7 @@ function getTarget() {
     numTargets = keys.length;
 
     target = bounding[keys[task]];
-    document.getElementById("targetSearch").src = "./graphics/" + keys[task] + '.png';
+    document.getElementById("targetSearch").src = "./graphics/" + keys[task];
     console.log(keys[task]);
 }
 
