@@ -12,6 +12,7 @@ var currentlyEditing = false;//used in original draw-syncing
 // var ServerSketch;//json format of primSket kept on the firebase//used in original draw-syncing
 var edit = 0;
 // var ecThis; //used in original draw-syncing
+var todos = [];
 
 
 function synchronize(sketch) {
@@ -19,6 +20,15 @@ function synchronize(sketch) {
   primSket.clearUndoIndex = 0;
   primSket.loadSketch(sketch);
   primSket.displayLoadedSketch(false);
+
+}
+
+function completeTodos() {
+  var cereal = primSket.serialize();
+  for (const x of todos) {
+    cereal.push(x);
+    synchronize(cereal);
+  }
 }
 
 firebaseRef.child('svg').child(userId).set("");
@@ -83,8 +93,13 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       cereal = primSket.serialize();
     }
     snapshot.val().idStroke = primSket.currStrokeID + snapshot.key;
-    cereal.push(snapshot.val());
-    synchronize(cereal);
+    if (currentlyEditting) {
+      todos.push(snapshot.val());
+    }
+    else {
+      cereal.push(snapshot.val());
+      synchronize(cereal);
+    }
     primSket.currStrokeID += 1;
   }
 
@@ -149,4 +164,6 @@ function sketchEdit(e, x, y, c) {
     }
     return "";
   })
+  completeTodos();
+  currentlyEditing = false;
 }
