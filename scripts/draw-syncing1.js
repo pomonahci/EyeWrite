@@ -82,7 +82,7 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       primSket.clearedSketches[0][ind].remove(3)
       cereal = primSket.serialize();
     }
-    snapshot.val().idStroke = primSket.currStrokeID;
+    snapshot.val().idStroke = primSket.currStrokeID + snapshot.key;
     cereal.push(snapshot.val());
     synchronize(cereal);
     primSket.currStrokeID += 1;
@@ -97,6 +97,7 @@ function sketchEdit(e, x, y, c) {
   firepad.firebaseAdapter_.ref_.child('svg').child(userId).transaction(function (current) {
     if (e == 'draw') {
       primSket.currentPath.created = e;
+      primSket.currentPath.idStroke = primSket.currentPath.idStroke + userId
       primSket.currentPath.idCreator = userId;
       return primSket.currentPath.serialize();
     }
