@@ -59,7 +59,10 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       }
       if (targetPath === 0) {
         if (primSket.clearedSketches.length < 2) return;
-        else primSket.undo();
+        else {
+          primSket.undo();
+          primSket.clearedSketches.pop();
+        }
       }
       primSket.undo(targetPath);
     }
@@ -142,7 +145,10 @@ function sketchEdit(e, x, y, c) {
       }
       if (targetPath === 0) {
         if (primSket.clearedSketches.length < 2) return "";
-        else primSket.undo();
+        else {
+          primSket.undo();
+          primSket.clearedSketches.pop();
+        }
       }
       primSket.undo(targetPath);
       return 'undo' + ':' + edit++;
