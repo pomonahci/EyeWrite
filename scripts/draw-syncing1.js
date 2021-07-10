@@ -62,6 +62,7 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
         else {
           primSket.undo();
           primSket.clearedSketches.pop();
+          primtSket.clearUndoIndex--;
         }
       }
       primSket.undo(targetPath);
@@ -148,6 +149,7 @@ function sketchEdit(e, x, y, c) {
         else {
           primSket.undo();
           primSket.clearedSketches.pop();
+          primtSket.clearUndoIndex--;
         }
       }
       primSket.undo(targetPath);
