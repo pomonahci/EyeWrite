@@ -102,20 +102,17 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
 
     if (snapshot.val().created == 'draw') {//draw
       var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
-      if (true) {//!currentlyEditing) {
-        // primSket.currentPath = stroke;
-        // primSket.finishPath();
-        let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex)
-        primSket.updatePaths(paths, stroke)
-        stroke.addToGroupSmoothed(primSket.sketchGroup)
-        primSket.currStrokeID += 1;
-      }
-      else {
-        todos.push(snapshot.val());
-      }
+
+      let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex)
+      primSket.updatePaths(paths, stroke)
+      stroke.addToGroupSmoothed(primSket.sketchGroup)
+      primSket.currStrokeID += 1;
 
     }
     else {//move
+      primSket.startMove({clientX:snapshot.val().xcof,clientY:snapshot.val().ycof,type:'move'});
+      primSket.continueLineWithEvent(null,'move',snapshot.val().xcot,snapshot.val().ycot);
+      return;
 
 
 
@@ -147,6 +144,13 @@ function sketchEdit(e, x, y, c) {
     console.log('point');
     return;
   }
+  var xcof;
+  var ycof;
+  if (e=='store'){
+    xcof = x.clientX;
+    ycof = x.clientY;
+    return
+  }
 
   firepad.firebaseAdapter_.ref_.child('svg').child(userId).transaction(function (current) {
     if (e == 'draw') {
@@ -162,7 +166,12 @@ function sketchEdit(e, x, y, c) {
     else if (e == 'move') {
       primSket.currentPath.created = e;
       primSket.currentPath.idCreator = userId;
-      return primSket.currentPath.serialize();
+      var toBeRet = primSket.currentPath.serialize();
+      toBeRet.xcof = xcof;
+      toBeRet.ycof = ycof;
+      toBeRet.xcot = x;
+      toBeRet.ycot = y;
+      return toBeRet;
     }
     else if (e == 'erase') {
       return 'erase:' + x + ':' + y + ':' + edit++;
