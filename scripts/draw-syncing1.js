@@ -142,9 +142,9 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       newTargetPath.moveBy(x - primSket.currMouseLocation[0], y - primSket.currMouseLocation[1])
       primSket.currMouseLocation = [x, y]
 
-      var paths = primSket.getPaths();
-      paths[paths.length - 1].opacity = 1;
-      paths[paths.length - 1].highlight()
+      var p = primSket.getPaths();
+      p[p.length - 1].opacity = 1;
+      p[p.length - 1].highlight()
 
       return;
 
