@@ -138,14 +138,14 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
 
 
 });
-
+var xcof;
+var ycof;
 function sketchEdit(e, x, y, c) {
   if (e == 'point') {
     console.log('point');
     return;
   }
-  var xcof;
-  var ycof;
+
   if (e=='store'){
     xcof = x.clientX;
     ycof = x.clientY;
