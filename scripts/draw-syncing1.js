@@ -103,9 +103,9 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
     if (snapshot.val().created == 'draw') {//draw
       var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
 
-      let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex)
-      primSket.updatePaths(paths, stroke)
-      stroke.addToGroupSmoothed(primSket.sketchGroup)
+      let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex);
+      primSket.updatePaths(paths, stroke);
+      stroke.addToGroupSmoothed(primSket.sketchGroup);
       primSket.currStrokeID += 1;
 
     }
@@ -113,39 +113,29 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       // primSket.startMove({clientX:snapshot.val().xcof,clientY:snapshot.val().ycof,type:'move'});
       // primSket.continueLineWithEvent(null,'move',snapshot.val().xcot,snapshot.val().ycot);
 
-      let selected = primSket.select(snapshot.val().xcof, snapshot.val().ycof)
+      let selected = primSket.select(snapshot.val().xcof, snapshot.val().ycof);
       // makes (unrendered) copy of target path for future undo and adds to stack 
-      let paths = selected[0]
-      let targetPath = selected[1]
-      let newTargetPath
-      newTargetPath = pathEX.deserialize(targetPath.serialize(), primSket.draw, primSket.pencilTexture)
-      newTargetPath.addToGroupSmoothed(primSket.sketchGroup) // necessary, otherwise copied path off position
-      newTargetPath.timeStart = primSket.getTime()
-      newTargetPath.idStroke = primSket.currStrokeID
-      newTargetPath.pencilTextureToggle = targetPath.pencilTextureToggle
-      newTargetPath.created = 2
-      newTargetPath.idMovedFrom = targetPath.idStroke
-      newTargetPath.movedFrom = targetPath
-      targetPath.remove(3)
-      primSket.currStrokeID += 1
-      newTargetPath.opacity = 0.1
-      newTargetPath.highlight()
-      primSket.updatePaths(paths, newTargetPath)
-      // this.currentPath = newTargetPath
-      let rect = primSket.svg.getBoundingClientRect()
-      let x
-      let y
-      let transform = primSket.sketchGroup.transform()
-      // Transform coordinates on svg div to center origin coordinates of sketchGroup
-      x = ((snapshot.val().xcot - rect.left) - transform.x) / transform.scaleX
-      y = ((snapshot.val().xcoy - rect.top) - transform.y) / transform.scaleY
-      // newTargetPath.moveBy(x - snapshot.val().pscx, y - snapshot.val().pscy)
-      newTargetPath.moveBy(x - snapshot.val().xcof, y - snapshot.val().ycof)
-      // // primSket.currMouseLocation = [x, y]
+      let paths = selected[0];
+      let targetPath = selected[1];
+      let newTargetPath;
+      newTargetPath = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
+      newTargetPath.addToGroupSmoothed(primSket.sketchGroup); // necessary, otherwise copied path off position
+      // newTargetPath.timeStart = primSket.getTime()
+      // newTargetPath.idStroke = primSket.currStrokeID
+      // newTargetPath.pencilTextureToggle = targetPath.pencilTextureToggle
+      // newTargetPath.created = 'move'
+      // newTargetPath.idMovedFrom = targetPath.idStroke
+      // newTargetPath.movedFrom = targetPath
+      targetPath.remove(3);
+      primSket.currStrokeID += 1;
+      // newTargetPath.opacity = 0.1
+      // newTargetPath.highlight()
+      primSket.updatePaths(paths, newTargetPath);
+      
 
-      var p = primSket.getPaths();
-      p[p.length - 1].opacity = 1;
-      p[p.length - 1].highlight()
+      // var p = primSket.getPaths();
+      // p[p.length - 1].opacity = 1;
+      // p[p.length - 1].highlight()
 
       return;
 
@@ -204,10 +194,10 @@ function sketchEdit(e, x, y, c) {
       var toBeRet = primSket.currentPath.serialize();
       toBeRet.xcof = xcof;
       toBeRet.ycof = ycof;
-      toBeRet.xcot = x;
-      toBeRet.ycot = y;
-      toBeRet.pscx = primSket.currMouseLocation[0]
-      toBeRet.pscy = primSket.currMouseLocation[1]
+      // toBeRet.xcot = x;
+      // toBeRet.ycot = y;
+      // toBeRet.pscx = primSket.currMouseLocation[0]
+      // toBeRet.pscy = primSket.currMouseLocation[1]
       return toBeRet;
     }
     else if (e == 'erase') {
