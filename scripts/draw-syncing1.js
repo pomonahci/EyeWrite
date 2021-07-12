@@ -139,8 +139,9 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       // Transform coordinates on svg div to center origin coordinates of sketchGroup
       x = ((snapshot.val().xcot - rect.left) - transform.x) / transform.scaleX
       y = ((snapshot.val().xcoy - rect.top) - transform.y) / transform.scaleY
-      newTargetPath.moveBy(x - snapshot.val().pscx, y - snapshot.val().pscy)
-      // primSket.currMouseLocation = [x, y]
+      // newTargetPath.moveBy(x - snapshot.val().pscx, y - snapshot.val().pscy)
+      newTargetPath.moveBy(x - snapshot.val().xcof, y - snapshot.val().ycof)
+      // // primSket.currMouseLocation = [x, y]
 
       var p = primSket.getPaths();
       p[p.length - 1].opacity = 1;
