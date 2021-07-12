@@ -99,20 +99,14 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
     }
   }
   else {//handle move and draw
-
     if (snapshot.val().created == 'draw') {//draw
       var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
-
       let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex);
       primSket.updatePaths(paths, stroke);
       stroke.addToGroupSmoothed(primSket.sketchGroup);
       primSket.currStrokeID += 1;
-
     }
     else {//move
-      // primSket.startMove({clientX:snapshot.val().xcof,clientY:snapshot.val().ycof,type:'move'});
-      // primSket.continueLineWithEvent(null,'move',snapshot.val().xcot,snapshot.val().ycot);
-
       let selected = primSket.select(snapshot.val().xcof, snapshot.val().ycof);
       // makes (unrendered) copy of target path for future undo and adds to stack 
       let paths = selected[0];
@@ -120,44 +114,27 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       let newTargetPath;
       newTargetPath = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
       newTargetPath.addToGroupSmoothed(primSket.sketchGroup); // necessary, otherwise copied path off position
-      // newTargetPath.timeStart = primSket.getTime()
-      // newTargetPath.idStroke = primSket.currStrokeID
-      // newTargetPath.pencilTextureToggle = targetPath.pencilTextureToggle
-      // newTargetPath.created = 'move'
-      // newTargetPath.idMovedFrom = targetPath.idStroke
-      // newTargetPath.movedFrom = targetPath
       targetPath.remove(3);
       primSket.currStrokeID += 1;
-      // newTargetPath.opacity = 0.1
-      // newTargetPath.highlight()
       primSket.updatePaths(paths, newTargetPath);
-      
-
-      // var p = primSket.getPaths();
-      // p[p.length - 1].opacity = 1;
-      // p[p.length - 1].highlight()
-
-      return;
 
 
-
-
-      var cereal = primSket.serialize();
-      if (snapshot.val().created == 'move') {
-        var moved = cereal.find(el => el.idStroke == snapshot.val().idMovedFrom)
-        var ind = cereal.indexOf(moved);
-        primSket.clearedSketches[0][ind].remove(3)
-        cereal = primSket.serialize();
-      }
-      snapshot.val().idStroke = primSket.currStrokeID;//may not be doing anything whoops
-      if (currentlyEditing) {
-        todos.push(snapshot.val());
-      }
-      else {
-        cereal.push(snapshot.val());
-        synchronize(cereal);
-      }
-      primSket.currStrokeID += 1;
+      //   var cereal = primSket.serialize();
+      //   if (snapshot.val().created == 'move') {
+      //     var moved = cereal.find(el => el.idStroke == snapshot.val().idMovedFrom)
+      //     var ind = cereal.indexOf(moved);
+      //     primSket.clearedSketches[0][ind].remove(3)
+      //     cereal = primSket.serialize();
+      //   }
+      //   snapshot.val().idStroke = primSket.currStrokeID;//may not be doing anything whoops
+      //   if (currentlyEditing) {
+      //     todos.push(snapshot.val());
+      //   }
+      //   else {
+      //     cereal.push(snapshot.val());
+      //     synchronize(cereal);
+      //   }
+      //   primSket.currStrokeID += 1;
     }
   }
 
@@ -190,14 +167,11 @@ function sketchEdit(e, x, y, c) {
     }
     else if (e == 'move') {
       primSket.currentPath.created = e;
+      primSket.currentPath.idStroke = primSket.currentPath.idStroke + userId
       primSket.currentPath.idCreator = userId;
       var toBeRet = primSket.currentPath.serialize();
       toBeRet.xcof = xcof;
       toBeRet.ycof = ycof;
-      // toBeRet.xcot = x;
-      // toBeRet.ycot = y;
-      // toBeRet.pscx = primSket.currMouseLocation[0]
-      // toBeRet.pscy = primSket.currMouseLocation[1]
       return toBeRet;
     }
     else if (e == 'erase') {
