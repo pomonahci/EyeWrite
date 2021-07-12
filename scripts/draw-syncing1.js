@@ -99,7 +99,7 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
         primSket.finishPath();
         primSket.currStrokeID += 1;
       }
-      
+
       
       return
     }
@@ -129,6 +129,7 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
 function sketchEdit(e, x, y, c) {
   if (e == 'point') {
     console.log('point');
+    return;
   }
 
   firepad.firebaseAdapter_.ref_.child('svg').child(userId).transaction(function (current) {
