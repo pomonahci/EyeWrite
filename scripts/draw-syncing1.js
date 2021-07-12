@@ -37,7 +37,7 @@ firebaseRef.child('svg').child(userId).set("");
 // Listens always for updates to the svg canvas
 firebaseRef.child('svg').on('child_changed', function (snapshot) {
   if (!snapshot.val()) return;
-  if (snapshot.key == userId) return;
+  if (snapshot.key == userId || snapshot.val()=="") return;
   if (typeof (snapshot.val()) == 'string') {
     let splits = snapshot.val().split(':');
     if (splits[0] == 'erase') {
@@ -112,7 +112,7 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
 });
 
 function sketchEdit(e, x, y, c) {
-  if (e == 'point') return;
+  if (e == 'point') console.log('point');
 
   firepad.firebaseAdapter_.ref_.child('svg').child(userId).transaction(function (current) {
     if (e == 'draw') {

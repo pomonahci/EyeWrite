@@ -27,7 +27,7 @@ function parseURLFor() {
     else {
         audio = URL.substring(audio + 4, audio + 5);
     }
-    if (visualization == -1) visualization = 0;
+    if (visualization == -1) visualization = 1;
 
     triggerVis(visualization);
     triggerAud(audio);
