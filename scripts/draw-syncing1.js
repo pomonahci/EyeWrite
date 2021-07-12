@@ -37,7 +37,7 @@ firebaseRef.child('svg').child(userId).set("");
 // Listens always for updates to the svg canvas
 firebaseRef.child('svg').on('child_changed', function (snapshot) {
   if (!snapshot.val()) return;
-  if (snapshot.key == userId || snapshot.val()=="") return;
+  if (snapshot.key == userId || snapshot.val() == "") return;
   if (typeof (snapshot.val()) == 'string') {
     let splits = snapshot.val().split(':');
     if (splits[0] == 'erase') {
@@ -89,10 +89,13 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       primSket.color(x, y, c);
     }
   }
-  else if(splits[0]=='draw'){
-    var stroke = snapshot.val().deserialize();
-  }
   else {//handle move and draw
+
+    if (snapshot.val().created == 'draw') {
+      var stroke = snapshot.val().deserialize();
+    }
+
+
     var cereal = primSket.serialize();
     if (snapshot.val().created == 'move') {
       var moved = cereal.find(el => el.idStroke == snapshot.val().idMovedFrom)
