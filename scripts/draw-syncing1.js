@@ -27,8 +27,15 @@ function synchronize(sketch) {
 function completeTodos() {
   var cereal = primSket.serialize();
   for (const x of todos) {
-    cereal.push(x);
-    synchronize(cereal);
+    if (x.created == 'draw') {
+      primSket.currentPath = pathEX.deserialize(x, primSket.draw, primSket.pencilTexture);;
+      primSket.finishPath();
+      primSket.currStrokeID += 1;
+    }
+    else {
+      cereal.push(x);
+      synchronize(cereal);
+    }
   }
   todos = [];
 }
@@ -92,14 +99,20 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
   }
   else {//handle move and draw
 
-    if (snapshot.val().created == 'draw') {
+    if (snapshot.val().created == 'draw') {//draw
       var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
-      if(!currentlyEditing){
+      if (true){//!currentlyEditing) {
         primSket.currentPath = stroke;
         primSket.finishPath();
         primSket.currStrokeID += 1;
       }
-      return
+      else {
+        todos.push(snapshot.val());
+      }
+      
+    }
+    else{//move
+
     }
 
 
