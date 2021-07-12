@@ -101,7 +101,7 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
 
     if (snapshot.val().created == 'draw') {//draw
       var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
-      if (true){//!currentlyEditing) {
+      if (true) {//!currentlyEditing) {
         primSket.currentPath = stroke;
         primSket.finishPath();
         primSket.currStrokeID += 1;
@@ -109,29 +109,30 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       else {
         todos.push(snapshot.val());
       }
-      
-    }
-    else{//move
 
     }
+    else {//move
 
 
-    var cereal = primSket.serialize();
-    if (snapshot.val().created == 'move') {
-      var moved = cereal.find(el => el.idStroke == snapshot.val().idMovedFrom)
-      var ind = cereal.indexOf(moved);
-      primSket.clearedSketches[0][ind].remove(3)
-      cereal = primSket.serialize();
+
+
+      var cereal = primSket.serialize();
+      if (snapshot.val().created == 'move') {
+        var moved = cereal.find(el => el.idStroke == snapshot.val().idMovedFrom)
+        var ind = cereal.indexOf(moved);
+        primSket.clearedSketches[0][ind].remove(3)
+        cereal = primSket.serialize();
+      }
+      snapshot.val().idStroke = primSket.currStrokeID;//may not be doing anything whoops
+      if (currentlyEditing) {
+        todos.push(snapshot.val());
+      }
+      else {
+        cereal.push(snapshot.val());
+        synchronize(cereal);
+      }
+      primSket.currStrokeID += 1;
     }
-    snapshot.val().idStroke = primSket.currStrokeID;//may not be doing anything whoops
-    if (currentlyEditing) {
-      todos.push(snapshot.val());
-    }
-    else {
-      cereal.push(snapshot.val());
-      synchronize(cereal);
-    }
-    primSket.currStrokeID += 1;
   }
 
 
