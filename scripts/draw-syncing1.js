@@ -13,6 +13,7 @@ var currentlyEditing = false;//used in original draw-syncing
 var edit = 0;
 // var ecThis; //used in original draw-syncing
 var todos = [];
+var pathEX;
 
 
 function synchronize(sketch) {
@@ -92,7 +93,15 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
   else {//handle move and draw
 
     if (snapshot.val().created == 'draw') {
-      var stroke = snapshot.val().deserialize();
+      var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
+      if(!currentlyEditing){
+        primSket.currentPath = stroke;
+        primSket.finishPath();
+        primSket.currStrokeID += 1;
+      }
+      
+      
+      return
     }
 
 
@@ -118,13 +127,19 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
 });
 
 function sketchEdit(e, x, y, c) {
-  if (e == 'point') console.log('point');
+  if (e == 'point') {
+    console.log('point');
+  }
 
   firepad.firebaseAdapter_.ref_.child('svg').child(userId).transaction(function (current) {
     if (e == 'draw') {
       primSket.currentPath.created = e;
       primSket.currentPath.idStroke = primSket.currentPath.idStroke + userId
       primSket.currentPath.idCreator = userId;
+
+      // var test = primSket.currentPath.serialize();
+      // var test2 = pathEX.deserialize(test, primSket.draw, primSket.pencilTexture);
+
       return primSket.currentPath.serialize();
     }
     else if (e == 'move') {
