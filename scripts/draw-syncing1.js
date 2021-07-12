@@ -14,6 +14,7 @@ var edit = 0;
 // var ecThis; //used in original draw-syncing
 var todos = [];
 var pathEX;
+// var collaborators;
 
 
 function synchronize(sketch) {
@@ -102,8 +103,11 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
     if (snapshot.val().created == 'draw') {//draw
       var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
       if (true) {//!currentlyEditing) {
-        primSket.currentPath = stroke;
-        primSket.finishPath();
+        // primSket.currentPath = stroke;
+        // primSket.finishPath();
+        let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex)
+        primSket.updatePaths(paths, stroke)
+        stroke.addToGroupSmoothed(primSket.sketchGroup)
         primSket.currStrokeID += 1;
       }
       else {

@@ -37,6 +37,9 @@ function parseURLFor() {
     prompt = prompts[prompt];
     document.getElementById('drawingPrompt').innerHTML = prompt;
 
+    // collaborators = URL.search("par");
+    // collaborators = URL.substring(collaborators+4,collaborators+5);
+
 }
 
 function triggerVis(vis) {
