@@ -118,7 +118,7 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       let paths = selected[0]
       let targetPath = selected[1]
       let newTargetPath
-      newTargetPath = Path.deserialize(targetPath.serialize(), primSket.draw, primSket.pencilTexture)
+      newTargetPath = pathEX.deserialize(targetPath.serialize(), primSket.draw, primSket.pencilTexture)
       newTargetPath.addToGroupSmoothed(primSket.sketchGroup) // necessary, otherwise copied path off position
       newTargetPath.timeStart = primSket.getTime()
       newTargetPath.idStroke = primSket.currStrokeID
