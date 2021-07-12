@@ -114,6 +114,7 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       let newTargetPath;
       newTargetPath = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
       newTargetPath.addToGroupSmoothed(primSket.sketchGroup); // necessary, otherwise copied path off position
+      newTargetPath.movedFrom = targetPath
       targetPath.remove(3);
       primSket.currStrokeID += 1;
       primSket.updatePaths(paths, newTargetPath);
