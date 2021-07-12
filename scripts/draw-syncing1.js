@@ -112,6 +112,8 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
     else {//move
       primSket.startMove({clientX:snapshot.val().xcof,clientY:snapshot.val().ycof,type:'move'});
       primSket.continueLineWithEvent(null,'move',snapshot.val().xcot,snapshot.val().ycot);
+      var paths = primSket.getPaths();
+      paths[paths.length-1].opacity = 1;
       return;
 
 
