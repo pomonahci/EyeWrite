@@ -89,6 +89,9 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       primSket.color(x, y, c);
     }
   }
+  else if(splits[0]=='draw'){
+    var stroke = snapshot.val().deserialize();
+  }
   else {//handle move and draw
     var cereal = primSket.serialize();
     if (snapshot.val().created == 'move') {
