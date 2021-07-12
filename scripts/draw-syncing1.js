@@ -205,8 +205,8 @@ function sketchEdit(e, x, y, c) {
       toBeRet.ycof = ycof;
       toBeRet.xcot = x;
       toBeRet.ycot = y;
-      toBeRet.pscx = currMouseLocation[0]
-      toBeRet.pscy = currMouseLocation[1]
+      toBeRet.pscx = primSket.currMouseLocation[0]
+      toBeRet.pscy = primSket.currMouseLocation[1]
       return toBeRet;
     }
     else if (e == 'erase') {
