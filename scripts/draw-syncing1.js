@@ -139,8 +139,8 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       // Transform coordinates on svg div to center origin coordinates of sketchGroup
       x = ((snapshot.val().xcot - rect.left) - transform.x) / transform.scaleX
       y = ((snapshot.val().xcoy - rect.top) - transform.y) / transform.scaleY
-      newTargetPath.moveBy(x - primSket.currMouseLocation[0], y - primSket.currMouseLocation[1])
-      primSket.currMouseLocation = [x, y]
+      newTargetPath.moveBy(x - snapshot.val().pscx, y - snapshot.val().pscy)
+      // primSket.currMouseLocation = [x, y]
 
       var p = primSket.getPaths();
       p[p.length - 1].opacity = 1;
@@ -205,6 +205,8 @@ function sketchEdit(e, x, y, c) {
       toBeRet.ycof = ycof;
       toBeRet.xcot = x;
       toBeRet.ycot = y;
+      toBeRet.pscx = currMouseLocation[0]
+      toBeRet.pscy = currMouseLocation[1]
       return toBeRet;
     }
     else if (e == 'erase') {
