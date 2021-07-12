@@ -110,11 +110,41 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
 
     }
     else {//move
-      primSket.startMove({clientX:snapshot.val().xcof,clientY:snapshot.val().ycof,type:'move'});
-      primSket.continueLineWithEvent(null,'move',snapshot.val().xcot,snapshot.val().ycot);
+      // primSket.startMove({clientX:snapshot.val().xcof,clientY:snapshot.val().ycof,type:'move'});
+      // primSket.continueLineWithEvent(null,'move',snapshot.val().xcot,snapshot.val().ycot);
+
+      let selected = primSket.select(snapshot.val().xcof, snapshot.val().ycof)
+      // makes (unrendered) copy of target path for future undo and adds to stack 
+      let paths = selected[0]
+      let targetPath = selected[1]
+      let newTargetPath
+      newTargetPath = Path.deserialize(targetPath.serialize(), primSket.draw, primSket.pencilTexture)
+      newTargetPath.addToGroupSmoothed(primSket.sketchGroup) // necessary, otherwise copied path off position
+      newTargetPath.timeStart = primSket.getTime()
+      newTargetPath.idStroke = primSket.currStrokeID
+      newTargetPath.pencilTextureToggle = targetPath.pencilTextureToggle
+      newTargetPath.created = 2
+      newTargetPath.idMovedFrom = targetPath.idStroke
+      newTargetPath.movedFrom = targetPath
+      targetPath.remove(3)
+      primSket.currStrokeID += 1
+      newTargetPath.opacity = 0.1
+      newTargetPath.highlight()
+      primSket.updatePaths(paths, newTargetPath)
+      // this.currentPath = newTargetPath
+      let rect = primSket.svg.getBoundingClientRect()
+      let x
+      let y
+      let transform = primSket.sketchGroup.transform()
+      // Transform coordinates on svg div to center origin coordinates of sketchGroup
+      x = ((snapshot.val().xcot - rect.left) - transform.x) / transform.scaleX
+      y = ((snapshot.val().xcoy - rect.top) - transform.y) / transform.scaleY
+      newTargetPath.moveBy(x - primSket.currMouseLocation[0], y - primSket.currMouseLocation[1])
+      primSket.currMouseLocation = [x, y]
+
       var paths = primSket.getPaths();
-      paths[paths.length-1].opacity = 1;
-      paths[paths.length-1].highlight()
+      paths[paths.length - 1].opacity = 1;
+      paths[paths.length - 1].highlight()
 
       return;
 
@@ -150,7 +180,7 @@ function sketchEdit(e, x, y, c) {
     return;
   }
 
-  if (e=='store'){
+  if (e == 'store') {
     xcof = x.clientX;
     ycof = x.clientY;
     return
