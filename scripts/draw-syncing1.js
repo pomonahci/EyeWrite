@@ -99,8 +99,6 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
         primSket.finishPath();
         primSket.currStrokeID += 1;
       }
-
-      
       return
     }
 
