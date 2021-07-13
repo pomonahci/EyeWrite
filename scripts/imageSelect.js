@@ -144,7 +144,7 @@ function nextTarget(action) {
     clearBoxes();
     firebaseRef.child('tasks').child(task).child('targetClicked').off('child_added', checkTaskComplete);//useless in experiments with more than 1 person
     firebaseRef.child('tasks').child(task).child('targetClicked').off('child_changed', checkTaskComplete);
-    firebaseRef.child('tasks').child(task).child('incorrectClicks').off('child_changed', function(snapshot){document.getElementById('badclicks').innerHTML = snapshot.val()})
+    firebaseRef.child('tasks').child(task).child('incorrectClicks').off('child_changed', updateIncorrectClicks)
     
 
     task++;
