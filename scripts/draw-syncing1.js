@@ -111,24 +111,6 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       targetPath.remove(3);
       primSket.currStrokeID += 1;
       primSket.updatePaths(paths, newTargetPath);
-
-
-      //   var cereal = primSket.serialize();
-      //   if (snapshot.val().created == 'move') {
-      //     var moved = cereal.find(el => el.idStroke == snapshot.val().idMovedFrom)
-      //     var ind = cereal.indexOf(moved);
-      //     primSket.clearedSketches[0][ind].remove(3)
-      //     cereal = primSket.serialize();
-      //   }
-      //   snapshot.val().idStroke = primSket.currStrokeID;//may not be doing anything whoops
-      //   if (currentlyEditing) {
-      //     todos.push(snapshot.val());
-      //   }
-      //   else {
-      //     cereal.push(snapshot.val());
-      //     synchronize(cereal);
-      //   }
-      //   primSket.currStrokeID += 1;
     }
     else {//middraw point and draw
       //start path if not already started
@@ -137,7 +119,7 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       var preexist = cereal.find(el => el.idStroke == snapshot.val().idStroke)
       var ind = cereal.indexOf(preexist);
       if (ind == -1) {
-        primSket.startPath(primSket.state.currColor, primSket.state.currStrokeSize, primSket.state.paperTextureSwitch);
+        primSket.startPath(snapshot.val().color, snapshot.val().width, false);
       }
       else {
         var toRep = primSket.getPaths()[ind];
