@@ -186,7 +186,7 @@ function voteSkipTarget() {
 }
 
 function firelist(snapshot){
-    console.log(snapshot.val());
+    console.log(snapshot.key);
 }
 
 function startExp() {
