@@ -99,6 +99,14 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
     }
   }
   else {//handle move and draw
+    // if (snapshot.val().created == 'draw') {//draw
+    //   var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
+    //   let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex);
+    //   primSket.updatePaths(paths, stroke);
+    //   stroke.addToGroupSmoothed(primSket.sketchGroup);
+    //   primSket.currStrokeID += 1;
+    // }
+    // else 
     if (snapshot.val().created == 'move') {//move
       let selected = primSket.select(snapshot.val().xcof, snapshot.val().ycof);
       // makes (unrendered) copy of target path for future undo and adds to stack 
@@ -213,7 +221,7 @@ function sketchEdit(e, x, y, c) {
     }
     else if (e == 'point') {
       primSket.currentPath.created = e;
-      if(primSket.currentPath.idStroke.length < 11)primSket.currentPath.idStroke = primSket.currentPath.idStroke + userId
+      if (primSket.currentPath.idStroke.length < 11) primSket.currentPath.idStroke = primSket.currentPath.idStroke + userId
       primSket.currentPath.idCreator = userId;
       var toRet = primSket.currentPath.serialize();
       toRet.x = x;
