@@ -107,7 +107,7 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
     //   primSket.currStrokeID += 1;
     // }
     // else
-     if (snapshot.val().created == 'move') {//move
+    if (snapshot.val().created == 'move') {//move
       let selected = primSket.select(snapshot.val().xcof, snapshot.val().ycof);
       // makes (unrendered) copy of target path for future undo and adds to stack 
       let paths = selected[0];
@@ -125,30 +125,21 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       var cereal = primSket.serialize();
       var preexist = cereal.find(el => el.idStroke == snapshot.val().idStroke)
       var ind = cereal.indexOf(preexist);
-      console.log(ind)
       if (ind == -1) {
         var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
         let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex);
         primSket.updatePaths(paths, stroke);
         stroke.addToGroupSmoothed(primSket.sketchGroup);
         primSket.currStrokeID += 1;
-        console.log('new path')
-        console.log(primSket.getPaths())
+
 
       }
       else {
-        console.log(primSket.getPaths())
-        removeItemOnce(primSket.clearedSketches[primSket.clearedSketches.length-1],ind)
-        primSket.clearedSketches[primSket.clearedSketches.length-1] = primSket.clearedSketches[primSket.clearedSketches.length-1].splice(ind,1);
-        console.log(primSket.getPaths())
-
+        primSket.clearedSketches[primSket.clearedSketches.length - primSket.clearUndoIndex - 1] = primSket.clearedSketches[primSket.clearedSketches.length - primSket.clearUndoIndex - 1].splice(ind, 1);
         var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
         let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex);
         primSket.updatePaths(paths, stroke);
         stroke.addToGroupSmoothed(primSket.sketchGroup);
-        console.log('old path')
-        console.log(primSket.getPaths())
-        
       }
     }
   }
@@ -158,7 +149,7 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
 var xcof;
 var ycof;
 function sketchEdit(e, x, y, c) {
-  if (e == 'store'){// || e=='point') {
+  if (e == 'store') {// || e=='point') {
     xcof = x.clientX;
     ycof = x.clientY;
     return
