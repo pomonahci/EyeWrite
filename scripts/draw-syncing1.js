@@ -139,11 +139,11 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
         // newPath.timeStart = primSket.getTime()
       }
       else {
-        primSket.getPaths().remove(ind);
-        var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
+        // primSket.getPaths().remove(ind);
+        // var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
         let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex);
-        primSket.updatePaths(paths, stroke);
-        stroke.addToGroupSmoothed(primSket.sketchGroup);
+        primSket.updatePaths(paths, primSket.getPaths()[ind]);
+        primSket.getPaths()[ind].addToGroupSmoothed(primSket.sketchGroup);
         // var toRep = primSket.getPaths()[ind];
         // // if (snapshot.val().created = 'point') toRep.addPoint(snapshot.val().x, snapshot.val().y);
         // else {//draw
