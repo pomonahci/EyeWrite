@@ -16,15 +16,15 @@ var rect = imageSrc.getBoundingClientRect();
 
 var imageLabel; // number identify 0-9 for what image is being looked at
 // listings of bounding boxes for each image
-var index2Label = { '0': 'fday.jpg', '1':'christ.png', '2':'horse.jpg'} //dictionary linking imageLabel number to literal string for ease of reading
+var index2Label = { '0': 'fday.jpg', '1': 'christ.png', '2': 'horse.jpg' } //dictionary linking imageLabel number to literal string for ease of reading
 
-var christBoxes = {'candle.png': [924, 101, 32, 86], 'fish.png':[671, 68, 58, 93], 'sock.png': [1043, 308, 106, 110], 'cone.png':[845, 578, 109, 46], 'bell.png':[1033, 46, 59, 45], 'shoe.png':[1209, 303, 78, 35]};
+var christBoxes = { 'candle.png': [924, 101, 32, 86], 'fish.png': [671, 68, 58, 93], 'sock.png': [1043, 308, 106, 110], 'cone.png': [845, 578, 109, 46], 'bell.png': [1033, 46, 59, 45], 'shoe.png': [1209, 303, 78, 35] };
 
-var fdayBoxes = {'football.png': [657, 307, 41, 77], 'candle2.png': [1238, 563, 50, 133], 'cone2.png': [1153, 102, 82, 93], 'shovel.png': [1067, 507, 161, 58], 'rabbit.png': [643, 19, 69, 104], 'bone.png': [773, 88, 94, 82]};
+var fdayBoxes = { 'football.png': [657, 307, 41, 77], 'candle2.png': [1238, 563, 50, 133], 'cone2.png': [1153, 102, 82, 93], 'shovel.png': [1067, 507, 161, 58], 'rabbit.png': [643, 19, 69, 104], 'bone.png': [773, 88, 94, 82] };
 
-var horseBoxes = {'tulip.png': [1080, 68, 102, 152], 'tack.png': [657, 389, 47, 46], 'ladder.png': [1230, 248, 48, 23], 'brush.png': [1268, 348, 22, 143], 'rug.png': [1143, 457, 65, 82], 'carrot.png': [894, 614, 45, 82]};
+var horseBoxes = { 'tulip.png': [1080, 68, 102, 152], 'tack.png': [657, 389, 47, 46], 'ladder.png': [1230, 248, 48, 23], 'brush.png': [1268, 348, 22, 143], 'rug.png': [1143, 457, 65, 82], 'carrot.png': [894, 614, 45, 82] };
 
-var boundArray = { 'fday.jpg':  fdayBoxes, 'christ.png':  christBoxes, 'horse.jpg':  horseBoxes};
+var boundArray = { 'fday.jpg': fdayBoxes, 'christ.png': christBoxes, 'horse.jpg': horseBoxes };
 
 var bounding; // list of targets for imageLabel taken from boundArray
 var misclicks = 0; // number of misclicks while searching for target (will be made global)
@@ -58,6 +58,7 @@ function getImage() {
 function getTarget() {
     firebaseRef.child('tasks').child(task).on('child_added', checkTaskComplete);//useless in experiments with more than 1 person
     firebaseRef.child('tasks').child(task).on('child_changed', checkTaskComplete);
+    firebaseRef.child('tasks').child(task).child('incorrectClicks').on('child_changed', updateIncorrectClicks)
 
     if (!bounding) return;
     var keys = Object.keys(bounding);
@@ -101,18 +102,24 @@ function onClick(event) {
     else {
         // new Image().src = "https://hci.pomona.edu/TargetMissedBy" + userId;
         // apache.src = url;
-        var badclicks;
-        firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('incorrectClicks').transaction(function (current) {
-            if(!current)current=0;
-            current++;
-            badclicks = current;
-            document.getElementById('badclicks').innerHTML = current;
-            return current;
-        })
-        document.getElementById('badclicks').innerHTML = badclicks;
-        misclicks++;
+        if (!targetHit) {
+            var badclicks;
+            firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('incorrectClicks').transaction(function (current) {
+                if (!current) current = 0;
+                current++;
+                badclicks = current;
+                updateIncorrectClicks(current);
+                return current;
+            })
+            misclicks++;
+        }
     }
 }
+
+function updateIncorrectClicks(snapshot){
+    document.getElementById('badclicks').innerHTML = snapshot.val();
+}
+
 
 var action = '';
 function checkTaskComplete(snapshot) {
@@ -134,8 +141,11 @@ function nextTarget(action) {
     clearBoxes();
     firebaseRef.child('tasks').child(task).off('child_added', checkTaskComplete);//useless in experiments with more than 1 person
     firebaseRef.child('tasks').child(task).off('child_changed', checkTaskComplete);
+    firebaseRef.child('tasks').child(task).child('incorrectClicks').off('child_changed', updateIncorrectClicks);
+    
 
     task++;
+    misclicks = 0;
     targetHit = false;
     if (numTargets == task) {
         console.log('Task Complete');
@@ -172,14 +182,14 @@ function startExp() {
 }
 
 //Used to get bounding box parameters manually and then inputting into "boundArray" dictionary above
-var c1=true;
+var c1 = true;
 var x1;
 var y1;
 document.getElementById("imageSearch").addEventListener("click", whereAmI);
-function whereAmI(event){
-    if(c1)console.log("X: "+event.clientX+", Y: "+event.clientY);
-    else console.log("Width: "+(event.clientX-x1)+", Height: "+(event.clientY-y1));
+function whereAmI(event) {
+    if (c1) console.log("X: " + event.clientX + ", Y: " + event.clientY);
+    else console.log("Width: " + (event.clientX - x1) + ", Height: " + (event.clientY - y1));
     x1 = event.clientX;
     y1 = event.clientY;
-    c1=!c1;
+    c1 = !c1;
 }
