@@ -155,6 +155,7 @@ function nextTarget(action) {
 
     task++;
     misclicks = 0;
+    document.getElementById('badclicks').innerHTML = 0;
     targetHit = false;
     if (numTargets == task) {
         console.log('Task Complete');
