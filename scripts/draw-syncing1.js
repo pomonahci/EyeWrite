@@ -139,8 +139,9 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       else {
         console.log(primSket.getPaths())
         removeItemOnce(primSket.clearedSketches[primSket.clearedSketches.length-1],ind)
+        primSket.clearedSketches[primSket.clearedSketches.length-1] = primSket.clearedSketches[primSket.clearedSketches.length-1].splice(ind,1);
         console.log(primSket.getPaths())
-        
+
         var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
         let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex);
         primSket.updatePaths(paths, stroke);
@@ -239,8 +240,7 @@ function sketchEdit(e, x, y, c) {
   currentlyEditing = false;
 }
 
-function removeItemOnce(arr, value) {
-  var index = arr.indexOf(value);
+function removeItemOnce(arr, index) {
   if (index > -1) {
     arr.splice(index, 1);
   }
