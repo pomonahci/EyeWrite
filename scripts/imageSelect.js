@@ -102,7 +102,7 @@ function onClick(event) {
             for (const item of current) {
                 users.push(item[0]);
             }
-            if (!users.includes(userId)) current.push([userId, misclicks]);
+            if (!users.includes(userId)) current.push(userId);
             // found.push(userId);
             return current
         })
