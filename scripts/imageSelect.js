@@ -61,7 +61,7 @@ function getTarget() {
 
     firebaseRef.child('tasks').child(task).on('child_added', checkTaskComplete);//useless in experiments with more than 1 person
     firebaseRef.child('tasks').child(task).on('child_changed', checkTaskComplete);
-    firebaseRef.child('tasks').child(task).child('incorrectClicks').on('child_changed', updateIncorrectClicks)
+    firebaseRef.child('tasks').child(task).child('incorrectClicks').on('child_changed', function(snapshot){document.getElementById('badclicks').innerHTML = snapshot.val()})
 
     if (!bounding) return;
     var keys = Object.keys(bounding);
@@ -144,7 +144,7 @@ function nextTarget(action) {
     clearBoxes();
     firebaseRef.child('tasks').child(task).off('child_added', checkTaskComplete);//useless in experiments with more than 1 person
     firebaseRef.child('tasks').child(task).off('child_changed', checkTaskComplete);
-    firebaseRef.child('tasks').child(task).child('incorrectClicks').off('child_changed', updateIncorrectClicks);
+    firebaseRef.child('tasks').child(task).child('incorrectClicks').off('child_changed', function(snapshot){document.getElementById('badclicks').innerHTML = snapshot.val()})
     
 
     task++;
