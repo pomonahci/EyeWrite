@@ -133,18 +133,18 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
         stroke.addToGroupSmoothed(primSket.sketchGroup);
         primSket.currStrokeID += 1;
         console.log('new path')
-        console.log(primSket.getPaths())
+        console.log(primSket.clearedSketches[primSket.clearedSketches.length - primSket.clearUndoIndex - 1])
 
       }
       else {
-        // primSket.clearedSketches[primSket.clearedSketches.length - primSket.clearUndoIndex - 1] = primSket.clearedSketches[primSket.clearedSketches.length - primSket.clearUndoIndex - 1].splice(ind, 1);
-        primSket.getPaths() = primsket.getPaths().splice(ind,1)
+        primSket.clearedSketches[primSket.clearedSketches.length - primSket.clearUndoIndex - 1] = primSket.clearedSketches[primSket.clearedSketches.length - primSket.clearUndoIndex - 1].splice(ind, 1);
+        // primSket.getPaths() = primsket.getPaths().splice(ind,1)
         var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
         let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex);
         primSket.updatePaths(paths, stroke);
         stroke.addToGroupSmoothed(primSket.sketchGroup);
         console.log('old path')
-        console.log(primSket.getPaths())
+        console.log(primSket.clearedSketches[primSket.clearedSketches.length - primSket.clearUndoIndex - 1])
 
       }
     }
