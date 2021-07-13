@@ -126,12 +126,15 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       var cereal = primSket.serialize();
       var preexist = cereal.find(el => el.idStroke == snapshot.val().idStroke)
       var ind = cereal.indexOf(preexist);
+      console.log(ind)
       if (ind == -1) {
         var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
         let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex);
         primSket.updatePaths(paths, stroke);
         stroke.addToGroupSmoothed(primSket.sketchGroup);
         primSket.currStrokeID += 1;
+        console.log('new path')
+        console.log(primSket.getPaths())
         // primSket.startPath(snapshot.val().color, snapshot.val().width, false);
         // newPath = new pathEX(snapshot.val().color, snapshot.val().width, [], primSket.draw, primSket.userID, primSket.currStrokeID, 1, 0, 1, "", "", false, false, primSket.pencilTexture)
         // primSket.currStrokeID += 1
@@ -145,6 +148,8 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
         let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex);
         primSket.updatePaths(paths, stroke);
         stroke.addToGroupSmoothed(primSket.sketchGroup);
+        console.log('old path')
+        console.log(primSket.getPaths())
         // var toRep = primSket.getPaths()[ind];
         // // if (snapshot.val().created = 'point') toRep.addPoint(snapshot.val().x, snapshot.val().y);
         // else {//draw
