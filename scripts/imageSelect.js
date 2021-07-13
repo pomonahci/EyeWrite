@@ -59,6 +59,7 @@ function getImage() {
 function getTarget() {
     firebaseRef.child('tasks').child(task).child('targetClicked').set("");
     firebaseRef.child('tasks').child(task).child('incorrectClicks').set("");
+    firebaseRef.child('tasks').child(task).child('skipVotes').set("");
 
     // firebaseRef.child('tasks').child(task).child('targetClicked').on('child_added', checkTaskComplete);//useless in experiments with more than 1 person
     // firebaseRef.child('tasks').child(task).child('targetClicked').on('child_changed', checkTaskComplete);
