@@ -36,6 +36,7 @@ var numPpl; // number of participants in this experiement (gotten from URL)
 var url; //apache url
 var found = []; //found and skipped are arrays to make sure the server only gets pinged by one user when target is complete
 var skipped = [];
+var mySkipVote = false;
 
 function getImage() {
     var URL = window.location.href;
@@ -63,7 +64,7 @@ function getTarget() {
     // firebaseRef.child('tasks').child(task).child('targetClicked').on('child_changed', checkTaskComplete);
     // firebaseRef.child('tasks').child(task).child('incorrectClicks').on('child_changed', updateIncorrectClicks);
 
-    firebaseRef.child('tasks').child(task).on('child_changed',firelist);
+    firebaseRef.child('tasks').child(task).on('child_changed', firelist);
 
     if (!bounding) return;
     var keys = Object.keys(bounding);
@@ -76,6 +77,7 @@ function getTarget() {
 
 document.getElementById("imageSearch").addEventListener("click", onClick);
 function onClick(event) {
+    if(mySkipVote)return;
     var x = event.clientX;
     var y = event.clientY;
 
@@ -103,6 +105,7 @@ function onClick(event) {
             found.push(userId);
             return current
         })
+        document.getElementById("skipButton").disabled = true;
     }
     else {
         // new Image().src = "https://hci.pomona.edu/TargetMissedBy" + userId;
@@ -121,42 +124,29 @@ function onClick(event) {
     }
 }
 
-function updateIncorrectClicks(snapshot){
+function updateIncorrectClicks(snapshot) {
     document.getElementById('badclicks').innerHTML = snapshot.val();
 }
 
 
 var action = '';
 function checkTaskComplete(snapshot) {
-    if (snapshot.val().length == numPpl) {
-        if (snapshot.key == "skipVotes") {
-            action = 'skip';
-            // if (skipped[0] == userId) new Image().src = "https://hci.pomona.edu/TargetSkipped";
-        }
-        else {
-            action = 'found'
-            // if (found[0] == userId) new Image().src = "https://hci.pomona.edu/TargetFoundByAll";
-        }
-
-        nextTarget(action);
+    if (snapshot.key == "skipVotes") skipped.push(snapshot.val());
+    else found.push(snapshot.val());
+    if (found.length + skipped.length == numPpl) {
+        nextTarget();
     }
 }
 
-function nextTarget(action) {
+function nextTarget() {
     clearBoxes();
-    // firebaseRef.child('tasks').child(task).child('targetClicked').off('child_added', checkTaskComplete);//useless in experiments with more than 1 person
-    // firebaseRef.child('tasks').child(task).child('targetClicked').off('child_changed', checkTaskComplete);
-    // firebaseRef.child('tasks').child(task).child('incorrectClicks').off('child_changed', updateIncorrectClicks);
-
     firebaseRef.child('tasks').child(task).off();
-
-
-    
-
     task++;
     misclicks = 0;
     document.getElementById('badclicks').innerHTML = 0;
     targetHit = false;
+    mySkipVote = false;
+    document.getElementById("skipButton").disabled = false;
     if (numTargets == task) {
         console.log('Task Complete');
         // if (action == 'skip' && skipped[0] == userId) new Image().src = "https://hci.pomona.edu/All" + index2Label[imageLabel] + "TargetsComplete";
@@ -178,6 +168,8 @@ function clearBoxes() {
 
 function voteSkipTarget() {
     // new Image().src = "https://hci.pomona.edu/" + userId + "VotedToSkip";
+    document.getElementById("skipButton").disabled = true;
+    mySkipVote = true;
     firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('skipVotes').transaction(function (current) {
         if (!current) current = [];
         if (!current.includes(userId)) current.push(userId);
@@ -186,13 +178,14 @@ function voteSkipTarget() {
     })
 }
 
-function firelist(snapshot){
+function firelist(snapshot) {
     console.log(snapshot.key);
-    if(snapshot.key == 'incorrectClicks'){
+    if (snapshot.key == 'incorrectClicks') {
         updateIncorrectClicks(snapshot);
-    } else{
+    } else if (snapshot.key == 'targetClicked' || snapshot.key == 'skipVotes') {
         checkTaskComplete(snapshot);
     }
+
 }
 
 function startExp() {
