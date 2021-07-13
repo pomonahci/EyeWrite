@@ -99,14 +99,15 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
     }
   }
   else {//handle move and draw
-    if (snapshot.val().created == 'draw') {//draw
-      var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
-      let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex);
-      primSket.updatePaths(paths, stroke);
-      stroke.addToGroupSmoothed(primSket.sketchGroup);
-      primSket.currStrokeID += 1;
-    }
-    else if (snapshot.val().created == 'move') {//move
+    // if (snapshot.val().created == 'draw') {//draw
+    //   var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
+    //   let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex);
+    //   primSket.updatePaths(paths, stroke);
+    //   stroke.addToGroupSmoothed(primSket.sketchGroup);
+    //   primSket.currStrokeID += 1;
+    // }
+    // else
+     if (snapshot.val().created == 'move') {//move
       let selected = primSket.select(snapshot.val().xcof, snapshot.val().ycof);
       // makes (unrendered) copy of target path for future undo and adds to stack 
       let paths = selected[0];
@@ -119,33 +120,33 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       primSket.currStrokeID += 1;
       primSket.updatePaths(paths, newTargetPath);
     }
-    // else {//middraw point and draw
+    else {//middraw point and draw
 
-    //   var cereal = primSket.serialize();
-    //   var preexist = cereal.find(el => el.idStroke == snapshot.val().idStroke)
-    //   var ind = cereal.indexOf(preexist);
-    //   console.log(ind)
-    //   if (ind == -1) {
-    //     var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
-    //     let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex);
-    //     primSket.updatePaths(paths, stroke);
-    //     stroke.addToGroupSmoothed(primSket.sketchGroup);
-    //     primSket.currStrokeID += 1;
-    //     console.log('new path')
-    //     console.log(primSket.getPaths())
+      var cereal = primSket.serialize();
+      var preexist = cereal.find(el => el.idStroke == snapshot.val().idStroke)
+      var ind = cereal.indexOf(preexist);
+      console.log(ind)
+      if (ind == -1) {
+        var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
+        let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex);
+        primSket.updatePaths(paths, stroke);
+        stroke.addToGroupSmoothed(primSket.sketchGroup);
+        primSket.currStrokeID += 1;
+        console.log('new path')
+        console.log(primSket.getPaths())
 
-    //   }
-    //   else {
-    //     removeItemOnce(primSket.getPaths(),ind)
-    //     var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
-    //     let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex);
-    //     primSket.updatePaths(paths, stroke);
-    //     stroke.addToGroupSmoothed(primSket.sketchGroup);
-    //     console.log('old path')
-    //     console.log(primSket.getPaths())
+      }
+      else {
+        removeItemOnce(primSket.getPaths(),ind)
+        var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
+        let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex);
+        primSket.updatePaths(paths, stroke);
+        stroke.addToGroupSmoothed(primSket.sketchGroup);
+        console.log('old path')
+        console.log(primSket.getPaths())
         
-    //   }
-    // }
+      }
+    }
   }
 
 
@@ -153,7 +154,7 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
 var xcof;
 var ycof;
 function sketchEdit(e, x, y, c) {
-  if (e == 'store' || e=='point') {
+  if (e == 'store'){// || e=='point') {
     xcof = x.clientX;
     ycof = x.clientY;
     return
@@ -162,7 +163,7 @@ function sketchEdit(e, x, y, c) {
   firepad.firebaseAdapter_.ref_.child('svg').child(userId).transaction(function (current) {
     if (e == 'draw') {
       primSket.currentPath.created = e;
-      primSket.currentPath.idStroke = primSket.currentPath.idStroke + userId
+      // primSket.currentPath.idStroke = primSket.currentPath.idStroke + userId
       primSket.currentPath.idCreator = userId;
       return primSket.currentPath.serialize();
     }
