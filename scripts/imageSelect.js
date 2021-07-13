@@ -122,7 +122,7 @@ function onClick(event) {
 }
 
 function updateIncorrectClicks(snapshot){
-    document.getElementById('badclicks').innerHTML = snapshot;
+    document.getElementById('badclicks').innerHTML = snapshot.val();
 }
 
 
@@ -187,6 +187,11 @@ function voteSkipTarget() {
 
 function firelist(snapshot){
     console.log(snapshot.key);
+    if(snapshot.key == 'incorrectClicks'){
+        updateIncorrectClicks(snapshot);
+    } else{
+        checkTaskComplete(snapshot);
+    }
 }
 
 function startExp() {
