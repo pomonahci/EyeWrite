@@ -102,7 +102,7 @@ function onClick(event) {
                 users.push(item[0]);
             }
             if (!users.includes(userId)) current.push([userId, misclicks]);
-            found.push(userId);
+            // found.push(userId);
             return current
         })
         document.getElementById("skipButton").disabled = true;
@@ -173,7 +173,7 @@ function voteSkipTarget() {
     firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('skipVotes').transaction(function (current) {
         if (!current) current = [];
         if (!current.includes(userId)) current.push(userId);
-        skipped.push(userId);
+        // skipped.push(userId);
         return current
     })
 }
