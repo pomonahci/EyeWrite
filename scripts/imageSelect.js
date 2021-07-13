@@ -101,6 +101,11 @@ function onClick(event) {
     else {
         // new Image().src = "https://hci.pomona.edu/TargetMissedBy" + userId;
         // apache.src = url;
+        firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('incorrectClicks').transaction(function (current) {
+            if(!current)current=0;
+            current++;
+            return current;
+        })
         misclicks++;
     }
 }
