@@ -137,7 +137,7 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
 
       }
       else {
-        removeItemOnce(primSket.getPaths(),ind)
+        removeItemOnce(primSket.clearedSketches[primSket.clearedSketches.length-1],ind)
         var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
         let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex);
         primSket.updatePaths(paths, stroke);
