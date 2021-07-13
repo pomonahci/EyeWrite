@@ -61,7 +61,7 @@ function getTarget() {
 
     // firebaseRef.child('tasks').child(task).child('targetClicked').on('child_added', checkTaskComplete);//useless in experiments with more than 1 person
     // firebaseRef.child('tasks').child(task).child('targetClicked').on('child_changed', checkTaskComplete);
-    firebaseRef.child('tasks').child(task).child('incorrectClicks').on('child_changed', console.log('fuck'));
+    firebaseRef.child('tasks').child(task).child('incorrectClicks').on('child_changed', updateIncorrectClicks);
 
     if (!bounding) return;
     var keys = Object.keys(bounding);
