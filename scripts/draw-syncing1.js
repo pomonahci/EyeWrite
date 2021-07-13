@@ -140,10 +140,11 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       }
       else {
         // primSket.getPaths().remove(ind);
-        // var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
+        removeItemOnce(primSket.getPaths(),ind)
+        var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
         let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex);
-        primSket.updatePaths(paths, primSket.getPaths()[ind]);
-        primSket.getPaths()[ind].addToGroupSmoothed(primSket.sketchGroup);
+        primSket.updatePaths(paths, stroke);
+        stroke.addToGroupSmoothed(primSket.sketchGroup);
         // var toRep = primSket.getPaths()[ind];
         // // if (snapshot.val().created = 'point') toRep.addPoint(snapshot.val().x, snapshot.val().y);
         // else {//draw
@@ -242,4 +243,12 @@ function sketchEdit(e, x, y, c) {
   })
   completeTodos();
   currentlyEditing = false;
+}
+
+function removeItemOnce(arr, value) {
+  var index = arr.indexOf(value);
+  if (index > -1) {
+    arr.splice(index, 1);
+  }
+  return arr;
 }
