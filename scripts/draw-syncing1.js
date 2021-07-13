@@ -210,7 +210,7 @@ function sketchEdit(e, x, y, c) {
     }
     else if (e == 'point') {
       primSket.currentPath.created = e;
-      primSket.currentPath.idStroke = primSket.currentPath.idStroke + userId
+      if(primSket.currentPath.idStroke.length < 11)primSket.currentPath.idStroke = primSket.currentPath.idStroke + userId
       primSket.currentPath.idCreator = userId;
       var toRet = primSket.currentPath.serialize();
       toRet.x = x;
