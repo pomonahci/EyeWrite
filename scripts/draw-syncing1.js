@@ -137,8 +137,8 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
 
       }
       else {
-        primSket.clearedSketches[primSket.clearedSketches.length - primSket.clearUndoIndex - 1] = primSket.clearedSketches[primSket.clearedSketches.length - primSket.clearUndoIndex - 1].splice(ind, 1);
-
+        // primSket.clearedSketches[primSket.clearedSketches.length - primSket.clearUndoIndex - 1] = primSket.clearedSketches[primSket.clearedSketches.length - primSket.clearUndoIndex - 1].splice(ind, 1);
+        primSket.getPaths() = primsket.getPaths().splice(ind,1)
         var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
         let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex);
         primSket.updatePaths(paths, stroke);
