@@ -56,6 +56,9 @@ function getImage() {
 
 
 function getTarget() {
+    firebaseRef.child('tasks').child(task).set("");
+    firebaseRef.child('tasks').child(task).child('incorrectClicks').set("");
+
     firebaseRef.child('tasks').child(task).on('child_added', checkTaskComplete);//useless in experiments with more than 1 person
     firebaseRef.child('tasks').child(task).on('child_changed', checkTaskComplete);
     firebaseRef.child('tasks').child(task).child('incorrectClicks').on('child_changed', updateIncorrectClicks)
