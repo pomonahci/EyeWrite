@@ -171,7 +171,7 @@ function sketchEdit(e, x, y, c) {
   firepad.firebaseAdapter_.ref_.child('svg').child(userId).transaction(function (current) {
     if (e == 'draw') {
       primSket.currentPath.created = e;
-      primSket.currentPath.idStroke = primSket.currentPath.idStroke + userId
+      // primSket.currentPath.idStroke = primSket.currentPath.idStroke + userId
       primSket.currentPath.idCreator = userId;
       return primSket.currentPath.serialize();
     }
