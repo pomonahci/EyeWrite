@@ -117,7 +117,7 @@ function onClick(event) {
 }
 
 function updateIncorrectClicks(snapshot){
-    document.getElementById('badclicks').innerHTML = snapshot.val();
+    document.getElementById('badclicks').innerHTML = snapshot;
 }
 
 
