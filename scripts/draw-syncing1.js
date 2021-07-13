@@ -127,22 +127,32 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
       var preexist = cereal.find(el => el.idStroke == snapshot.val().idStroke)
       var ind = cereal.indexOf(preexist);
       if (ind == -1) {
+        var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
+        let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex);
+        primSket.updatePaths(paths, stroke);
+        stroke.addToGroupSmoothed(primSket.sketchGroup);
+        primSket.currStrokeID += 1;
         // primSket.startPath(snapshot.val().color, snapshot.val().width, false);
-        newPath = new pathEX(snapshot.val().color, snapshot.val().width, [], primSket.draw, primSket.userID, primSket.currStrokeID, 1, 0, 1, "", "", false, false, primSket.pencilTexture)
-        primSket.currStrokeID += 1
-        newPath.addToGroup(primSket.sketchGroup)
-        newPath.timeStart = primSket.getTime()
+        // newPath = new pathEX(snapshot.val().color, snapshot.val().width, [], primSket.draw, primSket.userID, primSket.currStrokeID, 1, 0, 1, "", "", false, false, primSket.pencilTexture)
+        // primSket.currStrokeID += 1
+        // newPath.addToGroup(primSket.sketchGroup)
+        // newPath.timeStart = primSket.getTime()
       }
       else {
-        var toRep = primSket.getPaths()[ind];
-        if (snapshot.val().created = 'point') toRep.addPoint(snapshot.val().x, snapshot.val().y);
-        else {//draw
-          // var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
-          toRep.created = 'draw';
-          let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex);
-          primSket.updatePaths(paths, toRep);
-          toRep.addToGroupSmoothed(primSket.sketchGroup);
-        }
+        primSket.getPaths().remove(ind);
+        var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
+        let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex);
+        primSket.updatePaths(paths, stroke);
+        stroke.addToGroupSmoothed(primSket.sketchGroup);
+        // var toRep = primSket.getPaths()[ind];
+        // // if (snapshot.val().created = 'point') toRep.addPoint(snapshot.val().x, snapshot.val().y);
+        // else {//draw
+        //   // var stroke = pathEX.deserialize(snapshot.val(), primSket.draw, primSket.pencilTexture);
+        //   toRep.created = 'draw';
+        //   let paths = primSket.getPaths().slice(0, primSket.getPaths().length - primSket.undoIndex);
+        //   primSket.updatePaths(paths, toRep);
+        //   toRep.addToGroupSmoothed(primSket.sketchGroup);
+        // }
       }
     }
   }
