@@ -111,7 +111,7 @@ function onClick(event) {
                 if (!current) current = 0;
                 current++;
                 badclicks = current;
-                updateIncorrectClicks(current);
+                document.getElementById('badclicks').innerHTML = current;
                 return current;
             })
             misclicks++;
