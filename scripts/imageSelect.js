@@ -83,7 +83,6 @@ function onClick(event) {
     var y = event.clientY;
 
     if (target[0] <= x && target[1] <= y && x <= target[0] + target[2] && y <= target[1] + target[3]) {
-        alert("Good Job! Now help your fellow participants find the target in order to move on to the next one! (Or they can vote to skip).")
         if (!targetHit) {
             var box = document.createElement('div');
             var left = target[0] - container.left;
@@ -108,6 +107,7 @@ function onClick(event) {
             return current
         })
         document.getElementById("skipButton").disabled = true;
+        document.getElementById("skipButton").innerHTML = "Help Others Find It!"
     }
     else {
         // new Image().src = "https://hci.pomona.edu/TargetMissedBy" + userId;
@@ -149,6 +149,7 @@ function nextTarget() {
     targetHit = false;
     mySkipVote = false;
     document.getElementById("skipButton").disabled = false;
+    document.getElementById("skipButton").innerHTML = "Vote to Skip Target";
     if (numTargets == task) {
         console.log('Task Complete');
         // if (action == 'skip' && skipped[0] == userId) new Image().src = "https://hci.pomona.edu/All" + index2Label[imageLabel] + "TargetsComplete";
