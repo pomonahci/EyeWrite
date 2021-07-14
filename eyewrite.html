@@ -93,7 +93,7 @@
   <div id="firepad" style='visibility:hidden'></div>
 
   <div id='imageContainer' style='position:relative;background-color: grey;left:13%;height:100%'>
-    <img id='imageSearch' src='' alt="IMAGE" width='50%' height='100%' style='position:absolute;left:30%;top:0%'>
+    <img id='imageSearch' src='' alt="IMAGE" width='50%' height='100%' style='position:absolute;left:20%;'>
   </div>
 
   <div id="video-streams"></div>
@@ -104,21 +104,19 @@
 
   <div id="imageSearchUI" style="background-color: #ebebeb;
   width: 175px;
+  top:230px;
   position: absolute;
   border-radius: 4px;
   padding-bottom: 12px;
-  height: auto;
+  height: 250px;
   max-height: 65vh;
   overflow-y: scroll;">
-    <div id="stopwatch">00:00:00</div>
-    <div id='incorrectCounter'>Incorrect Clicks: <span id='badclicks'></span></div>
-    <div style='position: relative;top:50%;height:200px'>
-      <img id='targetSearch' src='./graphics/targetbase.png' alt='TARGET' width='100px' height='100px'
-        style='position:absolute;left:12%'>
-      <button class="btn btn-primary" id="skipButton" onclick="voteSkipTarget()"
-        style="position:absolute;top:60%;left:10%">Vote
-        to Skip Target</button>
-    </div>
+    <div id="stopwatch" style='position: relative;left:30%'>00:00:00</div>
+    <div id='incorrectCounter' style='position: relative;left:12%'>Incorrect Clicks: <span id='badclicks'>0</span></div>
+    <img id='targetSearch' src='./graphics/targetbase.png' alt='TARGET' width='100px' height='100px'
+      style='position:absolute;left:20%;bottom:35%'>
+    <button class="btn btn-primary" id="skipButton" onclick="voteSkipTarget()" style="position:absolute;bottom:5%;">Vote
+      to Skip Target</button>
   </div>
 
   <div id="controlContainer" style="visibility: hidden;">

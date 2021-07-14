@@ -42,17 +42,19 @@ Note: you may need to import WebGazer module from hci.pomona server
 * Follow the instructions on the welcome page to create or join a collaborative document.
 
 ## Running Experiments through the URL
+When creating the URL, just make sure these tags are included anywhere in the URL verbatim as you see here:
 Visualization Triggers:
-- vis = 0 no visualization
-- vis = 1 hollow circle
-- vis = 2 heatmap
+- vis=0 no visualization
+- vis=1 hollow circle
+- vis=2 heatmap
 Audio Triggers
-- aud = 0 no audio call
-- aud = 1 audio call on (always on for imageSearch)
+- aud=0 no audio call
+- aud=1 audio call on
 Image Triggers
-- TBD depending on image names
-- img = 0 kitten
+- img=0 father's day
+- img=1 christmas
+- img=2 horse
 Number of Participants Trigger (default is 2 if none is passed)
-- par = 1 
-- par = 2
+- par=1 
+- par=2
 - etc
