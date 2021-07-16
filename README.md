@@ -54,6 +54,7 @@ Image Triggers
 - img=0 father's day
 - img=1 christmas
 - img=2 horse
+- img=3 warmup
 Number of Participants Trigger (default is 2 if none is passed)
 - par=1 
 - par=2
