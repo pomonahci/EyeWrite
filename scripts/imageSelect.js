@@ -61,14 +61,14 @@ function getImage() {
 
 
 function getTarget() {
-    firebaseRef.child('tasks').child(task).child('targetClicked').set("");
-    firebaseRef.child('tasks').child(task).child('incorrectClicks').set("");
-    firebaseRef.child('tasks').child(task).child('skipVotes').set("");
+    // firebaseRef.child('tasks').child(task).child('targetClicked').set("");
+    // firebaseRef.child('tasks').child(task).child('incorrectClicks').set("");
+    // firebaseRef.child('tasks').child(task).child('skipVotes').set("");
 
     // firebaseRef.child('tasks').child(task).child('targetClicked').on('child_added', checkTaskComplete);//useless in experiments with more than 1 person
     // firebaseRef.child('tasks').child(task).child('targetClicked').on('child_changed', checkTaskComplete);
     // firebaseRef.child('tasks').child(task).child('incorrectClicks').on('child_changed', updateIncorrectClicks);
-
+    firebaseRef.child('tasks').child(task).on('child_added', firelist);
     firebaseRef.child('tasks').child(task).on('child_changed', firelist);
 
     if (!bounding) return;
@@ -203,6 +203,10 @@ function firelist(snapshot) {
 getImage();
 function startExp() {
     startStopwatch();
+    firebaseRef.child('tasks').once('value', function(snap){
+        task = snap.val().length - 1;
+    });
+
     getTarget();
 }
 
