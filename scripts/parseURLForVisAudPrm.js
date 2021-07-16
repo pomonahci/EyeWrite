@@ -5,7 +5,6 @@
  * Name: nickmarsano
  * Date: 07/01/2021
  */
-var prompts = { 0: 'FLOWER' };
 
 
 function parseURLFor() {
@@ -33,8 +32,7 @@ function parseURLFor() {
     triggerAud(audio);
 
     var prompt = URL.search("prm");
-    prompt = URL.substring(prompt + 4, prompt + 5);
-    prompt = prompts[prompt];
+    prompt = URL.substring(prompt + 4, URL.length);
     document.getElementById('drawingPrompt').innerHTML = prompt;
 
     // collaborators = URL.search("par");

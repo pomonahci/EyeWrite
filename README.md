@@ -41,3 +41,18 @@ Note: you may need to import WebGazer module from hci.pomona server
 * Visit (http://localhost:3000) on your browser
 * Follow the instructions on the welcome page to create or join a collaborative document.
 
+## Running Experiments through the URL
+When creating the URL, just make sure these tags are included anywhere (except for prm) in the URL verbatim as you see here:
+Visualization Triggers:
+- vis=0 no visualization
+- vis=1 hollow circle
+- vis=2 heatmap
+Audio Triggers
+- aud=0 no audio call
+- aud=1 audio call on
+Prompt Triggers (THIS MUST BE THE LAST TAG IN THE URL)
+- prm="stringOfYourChoiceHere"
+Number of Participants Trigger (default is 2 if none is passed)
+- par=1 
+- par=2
+- etc

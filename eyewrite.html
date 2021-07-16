@@ -67,7 +67,7 @@
 </head>
 
 <body onload="updateUI()">
-  <div id="userlist" style="visibility:hidden;left:87%;z-index:1"></div>
+  <div id="userlist" style="visibility:hidden;left:87%;z-index:2"></div>
 
   <div id="firepad" style="visibility:hidden"></div>
 
@@ -216,11 +216,11 @@
   <div id="audio-streams"></div>
 
   <div id="root" style="position:relative;bottom:65%;height:100%"></div>
-  <button id='uibutton' class="btn btn-primary" style="position: relative;bottom:164%;left:90%;z-index: 5;"
+  <button id='uibutton' class="btn btn-primary" style="position: relative;bottom:164%;left:90%;z-index: 1;"
     onclick="toggleUI()">Users</button>
-  <div id='promptLabel' style='position: relative;bottom:169%;left:35%;'>Draw This: <span
+  <div id='promptLabel' style='position: relative;bottom:169%;left:35%;'>Draw: <span
       style='color:red;font-size:20px;font-weight: bold;' id=drawingPrompt></span></div>
-  <div id="timer" style='position: relative;bottom:173%;left:50%;'></div>
+  <div id='timeholder' style='position: relative;bottom:173%;left:50%;'>Time Left: <span id='timer'></span></div>
 
 </body>
 

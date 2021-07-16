@@ -237,10 +237,3 @@ function sketchEdit(e, x, y, c) {
   completeTodos();
   currentlyEditing = false;
 }
-
-function removeItemOnce(arr, index) {
-  if (index > -1) {
-    arr.splice(index, 1);
-  }
-  return arr;
-}
