@@ -56,3 +56,5 @@ Number of Participants Trigger (default is 2 if none is passed)
 - par=1 
 - par=2
 - etc
+Radius of Visualization
+- rad=x (radius of x)

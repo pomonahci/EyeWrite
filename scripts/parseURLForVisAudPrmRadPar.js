@@ -35,9 +35,12 @@ function parseURLFor() {
     prompt = URL.substring(prompt + 4, URL.length);
     document.getElementById('drawingPrompt').innerHTML = prompt;
 
-    // collaborators = URL.search("par");
-    // collaborators = URL.substring(collaborators+4,collaborators+5);
+    collaborators = URL.search("par");
+    collaborators = URL.substring(collaborators+4,collaborators+5);
 
+    var radius = URL.search("rad");
+    radius = URL.substring(radius + 4, radius + 5);
+    document.getElementById("sentenceSlider").value = radius;
 }
 
 function triggerVis(vis) {

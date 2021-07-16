@@ -14,7 +14,7 @@ var edit = 0;
 // var ecThis; //used in original draw-syncing
 var todos = [];
 var pathEX;
-// var collaborators;
+var collaborators;
 
 
 function synchronize(sketch) {
@@ -237,3 +237,12 @@ function sketchEdit(e, x, y, c) {
   completeTodos();
   currentlyEditing = false;
 }
+
+document.getElementById("root").style.pointerEvents = "none";
+firebaseRef.child('users').on('value', function (snapshot) {
+  if (Object.keys(snapshot.val()).length == collaborators) {
+      startTimer();
+      document.getElementById("root").style.pointerEvents = "auto";
+      firebaseRef.child('users').off('value');
+  }
+})
