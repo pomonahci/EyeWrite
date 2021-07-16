@@ -40,7 +40,7 @@ function parseURLFor() {
     }
 
     var radius = URL.search("rad");
-    radius = URL.substring(radius + 4, radius + 6);
+    radius = URL.substring(radius + 4, radius + 5);
     document.getElementById("sentenceSlider").value = radius;
 
 
