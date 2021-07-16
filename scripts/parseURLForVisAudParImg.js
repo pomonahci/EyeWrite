@@ -38,11 +38,8 @@ function parseURLFor() {
     else {
         numPpl = URL.substring(numPpl + 4, numPpl + 5);
     }
-    var i2l = { '-1': '', '0': ';image=kitten' };
-    var v2l = { '0': ';vis=none', '1': ';vis=hollow', '2': ';vis=heatmap' };
-    var a2l = { '0': ';aud=off', '1': ';aud=on' };
 
-    // new Image().src = "https://hci.pomona.edu/" + experiment + i2l[imageLabel] + "par=" + numPpl + v2l[visualization] + a2l[audio] + ";ExperimentStarting";
+
 }
 
 function triggerVis(vis) {

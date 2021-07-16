@@ -104,19 +104,17 @@
 
   <div id="imageSearchUI" style="background-color: #ebebeb;
   width: 175px;
-  top:230px;
+  top:330px;
   position: absolute;
   border-radius: 4px;
   padding-bottom: 12px;
   height: 250px;
-  max-height: 65vh;
-  overflow-y: scroll;">
-    <div id="stopwatch" style='position: relative;left:30%'>00:00:00</div>
+  max-height: 65vh;">
+    <div style='position: relative;left:18%'>Time: <span id='stopwatch'>00:00:00</span></div>
     <div id='incorrectCounter' style='position: relative;left:12%'>Incorrect Clicks: <span id='badclicks'>0</span></div>
-    <img id='targetSearch' src='./graphics/targetbase.png' alt='TARGET' width='100px' height='100px'
+    <img id='targetSearch' src='' alt='TARGET' width='100px' height='100px'
       style='position:absolute;left:20%;bottom:35%'>
-    <button class="btn btn-primary" id="skipButton" onclick="voteSkipTarget()" style="position:absolute;bottom:5%;">Vote
-      to Skip Target</button>
+    <button class="btn btn-primary" id="skipButton" onclick="voteSkipTarget()" style="position:absolute;bottom:5%;left:15%">Skip Target</button>
   </div>
 
   <div id="controlContainer" style="visibility: hidden;">
@@ -428,10 +426,6 @@
 
 <script src="./scripts/stopwatch.js"></script>
 <script src="./scripts/imageSelect.js"></script>
-<script>
-  startStopwatch()
-  startExp()
-</script>
 <script src="./scripts/parseURLForVisAudParImg.js"></script>
 
 </html>

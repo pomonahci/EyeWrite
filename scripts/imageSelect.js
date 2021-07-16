@@ -20,11 +20,11 @@ var index2Label = { '0': 'fday.jpg', '1': 'christ.png', '2': 'horse.jpg' } //dic
 // var index2Label = { '0': 'fdayboxes.jpg', '1': 'christboxes.png', '2': 'horseboxes.jpg' }
 
 
-var fdayBoxes = { 'football.png': [516/1440, 311/704, 41/1440, 77/704], 'candle2.png': [1098/1440, 565/704, 50/1440, 133/704], 'cone2.png': [1014/1440, 104/704, 82/1440, 93/704], 'shovel.png': [927/1440, 511/704, 161/1440, 58/704], 'rabbit.png': [503/1440, 26/704, 69/1440, 104/704], 'bone.png': [627/1440, 98/704, 94/1440, 82/704] };
+var fdayBoxes = { 'football.png': [516 / 1440, 311 / 704, 41 / 1440, 77 / 704], 'candle2.png': [1098 / 1440, 565 / 704, 50 / 1440, 133 / 704], 'cone2.png': [1014 / 1440, 104 / 704, 82 / 1440, 93 / 704], 'shovel.png': [927 / 1440, 511 / 704, 161 / 1440, 58 / 704], 'rabbit.png': [503 / 1440, 26 / 704, 69 / 1440, 104 / 704], 'bone.png': [627 / 1440, 98 / 704, 94 / 1440, 82 / 704] };
 
-var christBoxes = { 'candle.png': [778/1440, 104/704, 32/1440, 86/704], 'fish.png': [526/1440, 72/704, 58/1440, 93/704], 'sock.png': [894/1440, 320/704, 106/1440, 110/704], 'cone.png': [708/1440, 584/704, 109/1440, 46/704], 'bell.png': [895/1440, 43/704, 59/1440, 45/704], 'shoe.png': [1062/1440, 308/704, 78/1440, 35/704] };
+var christBoxes = { 'candle.png': [778 / 1440, 104 / 704, 32 / 1440, 86 / 704], 'fish.png': [526 / 1440, 72 / 704, 58 / 1440, 93 / 704], 'sock.png': [894 / 1440, 320 / 704, 106 / 1440, 110 / 704], 'cone.png': [708 / 1440, 584 / 704, 109 / 1440, 46 / 704], 'bell.png': [895 / 1440, 43 / 704, 59 / 1440, 45 / 704], 'shoe.png': [1062 / 1440, 308 / 704, 78 / 1440, 35 / 704] };
 
-var horseBoxes = { 'tulip.png': [941/1440, 76/704, 102/1440, 152/704], 'tack.png': [507/1440, 388/704, 47/1440, 46/704], 'ladder.png': [1082/1440, 247/704, 48/1440, 23/704], 'brush.png': [1116/1440, 354/704, 22/1440, 143/704], 'rug.png': [990/1440, 458/704, 65/1440, 82/704], 'carrot.png': [748/1440, 616/704, 45/1440, 82/704] };
+var horseBoxes = { 'tulip.png': [941 / 1440, 76 / 704, 102 / 1440, 152 / 704], 'tack.png': [507 / 1440, 388 / 704, 47 / 1440, 46 / 704], 'ladder.png': [1082 / 1440, 247 / 704, 48 / 1440, 23 / 704], 'brush.png': [1116 / 1440, 354 / 704, 22 / 1440, 143 / 704], 'rug.png': [990 / 1440, 458 / 704, 65 / 1440, 82 / 704], 'carrot.png': [748 / 1440, 616 / 704, 45 / 1440, 82 / 704] };
 
 var boundArray = { 'fday.jpg': fdayBoxes, 'christ.png': christBoxes, 'horse.jpg': horseBoxes };
 // var boundArray = { 'fdayboxes.jpg': fdayBoxes, 'christboxes.png': christBoxes, 'horseboxes.jpg': horseBoxes };
@@ -38,8 +38,8 @@ var numTargets = 3; // number of targets to find per image
 var task = 0; // index of target, will incremenent
 var numPpl; // number of participants in this experiement (gotten from URL)
 var url; //apache url
-var found = []; //found and skipped are arrays to make sure the server only gets pinged by one user when target is complete
-var skipped = [];
+var found = 0; 
+var skipped = 0;
 var mySkipVote = false;
 
 function getImage() {
@@ -83,19 +83,20 @@ function getTarget() {
 
 document.getElementById("imageSearch").addEventListener("click", onClick);
 function onClick(event) {
-    if(mySkipVote)return;
+    if (mySkipVote) return;
     var x = event.clientX;
     var y = event.clientY;
 
-    if (target[0]*window.innerWidth <= x && target[1]*window.innerHeight <= y && x <= target[0]*window.innerWidth + target[2]*window.innerWidth && y <= target[1]*window.innerHeight + target[3]*window.innerHeight) {
+    if (target[0] * window.innerWidth <= x && target[1] * window.innerHeight <= y && x <= target[0] * window.innerWidth + target[2] * window.innerWidth && y <= target[1] * window.innerHeight + target[3] * window.innerHeight) {
         document.getElementById("skipButton").disabled = true;
         document.getElementById("skipButton").innerHTML = "Help Others Find It!";
+        document.getElementById("skipButton").style.left = '0%';
         if (!targetHit) {
             var box = document.createElement('div');
-            var left = target[0]*window.innerWidth - container.left;
-            var top = target[1]*window.innerHeight - container.top;
-            var width = target[2]*window.innerWidth;
-            var height = target[3]*window.innerHeight;
+            var left = target[0] * window.innerWidth - container.left;
+            var top = target[1] * window.innerHeight - container.top;
+            var width = target[2] * window.innerWidth;
+            var height = target[3] * window.innerHeight;
             var styleInput = 'position:absolute;border: 2px solid green;left:' + left + 'px;top:' + top + 'px;width:' + width + 'px;height:' + height + 'px';
             box.setAttribute('style', styleInput)
             box.setAttribute('id', 'foundTarget');
@@ -110,7 +111,6 @@ function onClick(event) {
                 users.push(item[0]);
             }
             if (!users.includes(userId)) current.push(userId);
-            // found.push(userId);
             return current
         })
 
@@ -139,9 +139,9 @@ function updateIncorrectClicks(snapshot) {
 
 var action = '';
 function checkTaskComplete(snapshot) {
-    if (snapshot.key == "skipVotes") skipped.push(snapshot.val());
-    else found.push(snapshot.val());
-    if (found.length + skipped.length == numPpl) {
+    // if (snapshot.key == "skipVotes") skipped++;
+    // else found++;
+    if (found + skipped == numPpl) {
         nextTarget();
     }
 }
@@ -154,21 +154,21 @@ function nextTarget() {
     document.getElementById('badclicks').innerHTML = 0;
     targetHit = false;
     mySkipVote = false;
-    document.getElementById("skipButton").innerHTML = "Vote to Skip Target";
+    document.getElementById("skipButton").innerHTML = "Skip Target";
+    document.getElementById("skipButton").style.left = '15%';
+
     if (numTargets == task) {
-        // console.log('Task Complete');
-        // if (action == 'skip' && skipped[0] == userId) new Image().src = "https://hci.pomona.edu/All" + index2Label[imageLabel] + "TargetsComplete";
-        // else if (action == 'found' && found[0] == userId) new Image().src = "https://hci.pomona.edu/All" + index2Label[imageLabel] + "TargetsComplete";
         document.getElementById("imageSearch").removeEventListener("click", onClick);
-        document.getElementById('targetSearch').src = './graphics/targetbase.png';
+        document.getElementById('targetSearch').style.visibility = 'hidden';
         stopStopwatch();
         document.getElementById("skipButton").innerHTML = "All Targets Found!";
+        document.getElementById("skipButton").style.left = '5%';
         return;
     }
     document.getElementById("skipButton").disabled = false;
     action = '';
-    skipped = [];
-    found = [];
+    skipped = 0;
+    found = 0;
     getTarget();
 }
 
@@ -183,23 +183,26 @@ function voteSkipTarget() {
     firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('skipVotes').transaction(function (current) {
         if (!current) current = [];
         if (!current.includes(userId)) current.push(userId);
-        // skipped.push(userId);
         return current
     })
 }
 
 function firelist(snapshot) {
-    // console.log(snapshot.key);
     if (snapshot.key == 'incorrectClicks') {
         updateIncorrectClicks(snapshot);
-    } else if (snapshot.key == 'targetClicked' || snapshot.key == 'skipVotes') {
+    } else if (snapshot.key == 'targetClicked') {
+        found = Object.keys(snapshot.val()).length;
         checkTaskComplete(snapshot);
     }
-
+    else if(snapshot.key == 'skipVotes'){
+        skipped = Object.keys(snapshot.val()).length;
+        checkTaskComplete(snapshot);
+    }
 }
 
+getImage();
 function startExp() {
-    getImage();
+    startStopwatch();
     getTarget();
 }
 
@@ -216,3 +219,13 @@ function startExp() {
 //     y1 = event.clientY;
 //     c1 = !c1;
 // }
+document.getElementById("imageSearch").style.pointerEvents = "none";
+document.getElementById("skipButton").style.pointerEvents = "none";
+firebaseRef.child('users').on('value', function (snapshot) {
+    if (Object.keys(snapshot.val()).length == numPpl) {
+        startExp();
+        document.getElementById("imageSearch").style.pointerEvents = "auto";
+        document.getElementById("skipButton").style.pointerEvents = "auto";
+        firebaseRef.child('users').off('value');
+    }
+})

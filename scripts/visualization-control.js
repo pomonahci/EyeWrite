@@ -823,19 +823,20 @@ var visualizationControl = (function () {
     }
 
     var hPos = decodeLocation(userLocations[uID]);
-
-    if (uID != userId) {
-      if (isAboveView(hPos)) {
-        if (window.debug) console.log("above view!");
-        createUpArrow(uID, hPos);
-      } else if (isBelowView(hPos)) {
-        if (window.debug) console.log("below view!");
-        createDownArrow(uID, hPos);
-      } else {
-        if (window.debug) console.log("in view!");
-        clearArrow(uID);
-      }
-    }
+    
+    //commented out for ImageSearch
+    // if (uID != userId) {
+    //   if (isAboveView(hPos)) {
+    //     if (window.debug) console.log("above view!");
+    //     createUpArrow(uID, hPos);
+    //   } else if (isBelowView(hPos)) {
+    //     if (window.debug) console.log("below view!");
+    //     createDownArrow(uID, hPos);
+    //   } else {
+    //     if (window.debug) console.log("in view!");
+    //     clearArrow(uID);
+    //   }
+    // }
 
     var hColor = hex2rgb(userColors[uID], 1.0);
     var hSize = { coeff: document.getElementById("sentenceSlider").value };
