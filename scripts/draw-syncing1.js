@@ -14,32 +14,31 @@ var edit = 0;
 // var ecThis; //used in original draw-syncing
 var todos = [];
 var pathEX;
-var collaborators;
 
 
-function synchronize(sketch) {
-  primSket.undoIndex = 0;
-  primSket.clearUndoIndex = 0;
-  primSket.loadSketch(sketch);
-  primSket.displayLoadedSketch(false);
+// function synchronize(sketch) {
+//   primSket.undoIndex = 0;
+//   primSket.clearUndoIndex = 0;
+//   primSket.loadSketch(sketch);
+//   primSket.displayLoadedSketch(false);
 
-}
+// }
 
-function completeTodos() {
-  var cereal = primSket.serialize();
-  for (const x of todos) {
-    if (x.created == 'draw') {
-      primSket.currentPath = pathEX.deserialize(x, primSket.draw, primSket.pencilTexture);;
-      primSket.finishPath();
-      primSket.currStrokeID += 1;
-    }
-    else {
-      cereal.push(x);
-      synchronize(cereal);
-    }
-  }
-  todos = [];
-}
+// function completeTodos() {
+//   var cereal = primSket.serialize();
+//   for (const x of todos) {
+//     if (x.created == 'draw') {
+//       primSket.currentPath = pathEX.deserialize(x, primSket.draw, primSket.pencilTexture);;
+//       primSket.finishPath();
+//       primSket.currStrokeID += 1;
+//     }
+//     else {
+//       cereal.push(x);
+//       synchronize(cereal);
+//     }
+//   }
+//   todos = [];
+// }
 
 firebaseRef.child('svg').child(userId).set("");
 
@@ -167,6 +166,8 @@ function sketchEdit(e, x, y, c) {
       primSket.currentPath.created = e;
       // primSket.currentPath.idStroke = primSket.currentPath.idStroke + userId
       primSket.currentPath.idCreator = userId;
+      clickContent.push("Draw Stroke @ " + Date.now() + ":\n");
+      clickContent.push(JSON.stringify(primSket.currentPath.serialize()));
       return primSket.currentPath.serialize();
     }
     else if (e == 'move') {
@@ -176,15 +177,20 @@ function sketchEdit(e, x, y, c) {
       var toBeRet = primSket.currentPath.serialize();
       toBeRet.xcof = xcof;
       toBeRet.ycof = ycof;
+      clickContent.push("Move Stroke @ " + Date.now() + ":\n");
+      clickContent.push(JSON.stringify(toBeRet));
       return toBeRet;
     }
     else if (e == 'erase') {
+      clickContent.push("Erase Stroke located at " + "(" + x + "," + y + ") @ " + Date.now() + ",\n");
       return 'erase:' + x + ':' + y + ':' + edit++;
     }
     else if (e == 'clear') {
+      clickContent.push("Clear Canvas @ " + Date.now() + ",\n");
       return 'clear' + ':' + edit++;
     }
     else if (e == 'color') {
+      clickContent.push("Color Stroke located at " + "(" + x + "," + y + ") " + c + "@ " + Date.now() + ",\n");
       return 'color:' + x + ':' + y + ':' + c + ':' + edit++;
     }
     else if (e == 'undo') {
@@ -205,6 +211,7 @@ function sketchEdit(e, x, y, c) {
         }
       }
       primSket.undo(targetPath);
+      clickContent.push("Undo Stroke @ " + Date.now() + ",\n");
       return 'undo' + ':' + edit++;
     }
     else if (e == 'redo') {
@@ -221,6 +228,7 @@ function sketchEdit(e, x, y, c) {
         else return;
       }
       primSket.redo(targetPath);
+      clickContent.push("Redo Stroke @ " + Date.now() + ",\n");
       return 'redo' + ':' + edit++;
     }
     else if (e == 'point') {
@@ -234,15 +242,19 @@ function sketchEdit(e, x, y, c) {
     }
     return "";
   })
-  completeTodos();
+  // completeTodos();
   currentlyEditing = false;
 }
-
+var URL = window.location.href;
+var collaborators = URL.search("par");
+collaborators = URL.substring(collaborators + 4, collaborators + 5);
 document.getElementById("root").style.pointerEvents = "none";
 firebaseRef.child('users').on('value', function (snapshot) {
   if (Object.keys(snapshot.val()).length == collaborators) {
-      startTimer();
-      document.getElementById("root").style.pointerEvents = "auto";
-      firebaseRef.child('users').off('value');
+    startTimer();
+    serverContent[1].push("Experiment Started @ " + Date.now() + ",\n");
+    serverContent[0].push("Participants: " + collaborators + ",\n");
+    document.getElementById("root").style.pointerEvents = "auto";
+    firebaseRef.child('users').off('value');
   }
 })

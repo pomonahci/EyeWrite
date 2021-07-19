@@ -9,6 +9,10 @@
 
 function parseURLFor() {
     var URL = window.location.href;
+    var html = URL.search("eyewrite.html#")
+    var p1 = URL.substring(23,html);
+    var p2 = URL.substring(html+14,URL.length);
+    fileName = p1+p2;
 
     if (URL.search("EyeDraw") != -1) experiment = "EyeDraw";
     else if (URL.search("ImageSearch") != -1) experiment = "ImageSearch";
@@ -34,6 +38,7 @@ function parseURLFor() {
     var prompt = URL.search("prm");
     prompt = URL.substring(prompt + 4, URL.length);
     document.getElementById('drawingPrompt').innerHTML = prompt;
+    serverContent[0].push("Prompt: "+prompt+",\n");
 
     collaborators = URL.search("par");
     collaborators = URL.substring(collaborators+4,collaborators+5);
@@ -45,21 +50,27 @@ function parseURLFor() {
 
 function triggerVis(vis) {
     if (vis == 1) {//HollowMouse
+        serverContent[0].push("Visualization: Hollow Circle,\n");
         document.getElementById("vis-shape").value = 'hollow';
         document.getElementById("vis-shape").dispatchEvent(new Event('change'));
         document.getElementById("mouseSendSwitch").click();
         document.getElementById("mouseVisSwitch").click();
     }
     else if (vis == 2) {//HeatMapMouse
+        serverContent[0].push("Visualization: Heatmap,\n");
         document.getElementById("vis-shape").value = 'heatmap';
         document.getElementById("vis-shape").dispatchEvent(new Event('change'));
         document.getElementById("mouseSendSwitch").click();
         document.getElementById("mouseVisSwitch").click();
     }
+    else{
+        serverContent[0].push("Visualization: None,\n");
+    }
 }
 
 function triggerAud(aud) {
     if (aud == 1) {
+        serverContent[0].push("Audio: On,\n");
         var mediaRef = firebaseRef.child("media");
         joinButStat = true;
         mediaRef.child(userId).update({ audio: true, camera: false, is_ready: true, peer_id: "-1", stream_id: "-1" })
@@ -69,6 +80,7 @@ function triggerAud(aud) {
         voiceAudButton.innerText = "Unmuted";
     }
     else {
+        serverContent[0].push("Audio: Off,\n");
         console.log("No Audio Call.");
     }
 }

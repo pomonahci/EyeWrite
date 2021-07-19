@@ -1,8 +1,8 @@
 const timer = document.getElementById('timer');
 
 var hr = 0;
-var min = 0;
-var sec = 5;
+var min = 5;
+var sec = 0;
 var stoptime = true;
 var neg = false;
 

@@ -107,6 +107,7 @@ var visualizationControl = function () {
         // console.log(data);
         var encodedLoc = encodeLocation(data.x, data.y);
         gazePosRef.child(userId).update(encodedLoc);
+        gazeContent.push('('+encodedLoc.x+','+encodedLoc.y+';'+Date.now()+'),\n');
       }
     }).begin();
     
@@ -609,10 +610,11 @@ var visualizationControl = function () {
    * @param event 
    */
   function mouseMove(event) {
+    encodedLoc = encodeLocation(event.clientX, event.clientY);
     if (window.sendDataState == 1 || window.sendDataState == 3) {
-      encodedLoc = encodeLocation(event.clientX, event.clientY);
       mousePosRef.child(userId).update(encodedLoc);
     }
+    mouseContent.push('('+encodedLoc.x+','+encodedLoc.y+';'+Date.now()+'),\n');
     if(ui && event.clientX < window.innerWidth-(.13*window.innerWidth)){//190
       ui=false;
       document.getElementById("userlist").style.visibility = 'hidden';
