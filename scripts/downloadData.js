@@ -16,6 +16,7 @@ var mouseContent = [];
 var gazeContent = [];
 var serverContent = [[], []];
 function unloading() {
+    serverContent.push("Closing Page @ "+Date.now());
     var content0 = '';
     var content1 = '';
     var content2 = '';
