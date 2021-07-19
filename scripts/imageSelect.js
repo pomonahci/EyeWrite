@@ -26,7 +26,7 @@ var christBoxes = { 'candle.png': [778 / 1440, 104 / 704, 32 / 1440, 86 / 704], 
 
 var horseBoxes = { 'tulip.png': [941 / 1440, 76 / 704, 102 / 1440, 152 / 704], 'tack.png': [507 / 1440, 388 / 704, 47 / 1440, 46 / 704], 'ladder.png': [1082 / 1440, 247 / 704, 48 / 1440, 23 / 704], 'brush.png': [1116 / 1440, 354 / 704, 22 / 1440, 143 / 704], 'rug.png': [990 / 1440, 458 / 704, 65 / 1440, 82 / 704], 'carrot.png': [748 / 1440, 616 / 704, 45 / 1440, 82 / 704] };
 
-var warmupBoxes = { 'a1.png': [953/1420, 281/684, 60/1420, 57/684], 'a2.png': [893/1420, 314/684, 56/1420, 49/684], 'a3.png': [852/1420, 215/684, 64/1420, 55/684], 'a4.png': [828/1420, 95/684, 63/1420, 56/684], 'a5.png': [781/1420, 167/684, 61/1420, 51/684], 'a6.png': [704/1420, 208/684, 64/1420, 53/684], 'a7.png': [697/1420, 122/684, 66/1420, 57/684], 'a8.png': [576/1420, 244/684, 68/1420, 58/684] }
+var warmupBoxes = { 'a1.png': [953 / 1420, 281 / 684, 60 / 1420, 57 / 684], 'a2.png': [893 / 1420, 314 / 684, 56 / 1420, 49 / 684], 'a3.png': [852 / 1420, 215 / 684, 64 / 1420, 55 / 684], 'a4.png': [828 / 1420, 95 / 684, 63 / 1420, 56 / 684], 'a5.png': [781 / 1420, 167 / 684, 61 / 1420, 51 / 684], 'a6.png': [704 / 1420, 208 / 684, 64 / 1420, 53 / 684], 'a7.png': [697 / 1420, 122 / 684, 66 / 1420, 57 / 684], 'a8.png': [576 / 1420, 244 / 684, 68 / 1420, 58 / 684] }
 
 var boundArray = { 'fday.jpg': fdayBoxes, 'christ.png': christBoxes, 'horse.jpg': horseBoxes, 'warmup.png': warmupBoxes };
 // var boundArray = { 'fdayboxes.jpg': fdayBoxes, 'christboxes.png': christBoxes, 'horseboxes.jpg': horseBoxes };
@@ -59,6 +59,10 @@ function getImage() {
     var imageName = index2Label[imageLabel];
     bounding = boundArray[imageName];
     document.getElementById("imageSearch").src = "./graphics/" + imageName;
+
+    serverContent[0].push("Participants: "+numPpl+",\n");
+    serverContent[0].push("Image: "+imageName+",\n");
+
 }
 
 
@@ -79,13 +83,14 @@ function getTarget() {
 
     target = bounding[keys[task]];
     document.getElementById("targetSearch").src = "./graphics/" + keys[task];
-    // console.log(keys[task]);
+    serverContent[1].push("Target: "+keys[task]+" @ "+Date.now()+",\n");
 
 }
 
 document.getElementById("imageSearch").addEventListener("click", onClick);
 function onClick(event) {
     if (mySkipVote) return;
+    if (targetHit) return
     var x = event.clientX;
     var y = event.clientY;
 
@@ -93,19 +98,18 @@ function onClick(event) {
         document.getElementById("skipButton").disabled = true;
         document.getElementById("skipButton").innerHTML = "Help Others Find It!";
         document.getElementById("skipButton").style.left = '0%';
-        if (!targetHit) {
-            var box = document.createElement('div');
-            var left = target[0] * window.innerWidth - container.left;
-            var top = target[1] * window.innerHeight - container.top;
-            var width = target[2] * window.innerWidth;
-            var height = target[3] * window.innerHeight;
-            var styleInput = 'position:absolute;border: 2px solid green;left:' + left + 'px;top:' + top + 'px;width:' + width + 'px;height:' + height + 'px';
-            box.setAttribute('style', styleInput)
-            box.setAttribute('id', 'foundTarget');
-            document.querySelector("#imageContainer").append(box);
-        }
+        var box = document.createElement('div');
+        var left = target[0] * window.innerWidth - container.left;
+        var top = target[1] * window.innerHeight - container.top;
+        var width = target[2] * window.innerWidth;
+        var height = target[3] * window.innerHeight;
+        var styleInput = 'position:absolute;border: 2px solid green;left:' + left + 'px;top:' + top + 'px;width:' + width + 'px;height:' + height + 'px';
+        box.setAttribute('style', styleInput)
+        box.setAttribute('id', 'foundTarget');
+        document.querySelector("#imageContainer").append(box);
+
         targetHit = true;
-        // new Image().src = "https://hci.pomona.edu/TargetFoundBy" + userId;
+        clickContent.push("target "+task+" clicked @ ("+x+","+y+") @ "+Date.now()+",\n");
         firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('targetClicked').transaction(function (current) {
             if (!current) current = [];
             var users = []
@@ -118,19 +122,17 @@ function onClick(event) {
 
     }
     else {
-        // new Image().src = "https://hci.pomona.edu/TargetMissedBy" + userId;
-        // apache.src = url;
-        if (!targetHit) {
-            var badclicks;
-            firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('incorrectClicks').transaction(function (current) {
-                if (!current) current = 0;
-                current++;
-                badclicks = current;
-                document.getElementById('badclicks').innerHTML = current;
-                return current;
-            })
-            misclicks++;
-        }
+        clickContent.push("target "+task+" missed @ ("+x+","+y+") @ "+Date.now()+",\n");
+        var badclicks;
+        firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('incorrectClicks').transaction(function (current) {
+            if (!current) current = 0;
+            current++;
+            badclicks = current;
+            document.getElementById('badclicks').innerHTML = current;
+            return current;
+        })
+        misclicks++;
+
     }
 }
 
@@ -141,14 +143,17 @@ function updateIncorrectClicks(snapshot) {
 
 var action = '';
 function checkTaskComplete(snapshot) {
-    // if (snapshot.key == "skipVotes") skipped++;
-    // else found++;
     if (found + skipped == numPpl) {
         nextTarget();
     }
 }
 
 function nextTarget() {
+    serverContent[1].push("Task completed @ "+Date.now()+",\n");
+    serverContent[1].push("Clock Reads: "+document.getElementById('stopwatch').innerHTML+",\n");
+    // clickContent.push("Personal Incorrect Clicks:"+misclicks+",\n");
+
+
     clearBoxes();
     firebaseRef.child('tasks').child(task).off();
     task++;
@@ -179,7 +184,7 @@ function clearBoxes() {
 }
 
 function voteSkipTarget() {
-    // new Image().src = "https://hci.pomona.edu/" + userId + "VotedToSkip";
+    clickContent.push("target "+task+" skipped @ "+Date.now()+",\n");
     document.getElementById("skipButton").disabled = true;
     mySkipVote = true;
     firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('skipVotes').transaction(function (current) {
@@ -205,6 +210,8 @@ function firelist(snapshot) {
 getImage();
 function startExp() {
     startStopwatch();
+    serverContent[1].push("Experiment Started @ "+Date.now()+",\n");
+
     firebaseRef.child('tasks').once('value', function (snap) {
         task = snap.val().length - 1;
     });
