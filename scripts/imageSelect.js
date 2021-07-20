@@ -60,8 +60,8 @@ function getImage() {
     bounding = boundArray[imageName];
     document.getElementById("imageSearch").src = "./graphics/" + imageName;
 
-    serverContent[0].push("Participants: "+numPpl+",\n");
-    serverContent[0].push("Image: "+imageName+",\n");
+    serverContent.push(["Participants", numPpl]);
+    serverContent.push(["Image", imageName]);
 
 }
 
@@ -83,7 +83,7 @@ function getTarget() {
 
     target = bounding[keys[task]];
     document.getElementById("targetSearch").src = "./graphics/" + keys[task];
-    serverContent[1].push("Target: "+keys[task]+" @ "+Date.now()+",\n");
+    serverContent.push(["Target", keys[task],Date.now()]);
 
 }
 
@@ -109,7 +109,8 @@ function onClick(event) {
         document.querySelector("#imageContainer").append(box);
 
         targetHit = true;
-        clickContent.push("target "+task+" clicked @ ("+x+","+y+") @ "+Date.now()+",\n");
+        clickContent.push(["Correct Click", task, Date.now(), x,y]);
+
         firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('targetClicked').transaction(function (current) {
             if (!current) current = [];
             var users = []
@@ -122,7 +123,8 @@ function onClick(event) {
 
     }
     else {
-        clickContent.push("target "+task+" missed @ ("+x+","+y+") @ "+Date.now()+",\n");
+        clickContent.push(["Incorrect Click", task, Date.now(), x,y]);
+
         var badclicks;
         firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('incorrectClicks').transaction(function (current) {
             if (!current) current = 0;
@@ -149,8 +151,9 @@ function checkTaskComplete(snapshot) {
 }
 
 function nextTarget() {
-    serverContent[1].push("Task completed @ "+Date.now()+",\n");
-    serverContent[1].push("Clock Reads: "+document.getElementById('stopwatch').innerHTML+",\n");
+    serverContent.push(["Task Completed", "",Date.now()]);
+    serverContent.push(["Clock", document.getElementById('stopwatch').innerHTML]);
+
     // clickContent.push("Personal Incorrect Clicks:"+misclicks+",\n");
 
 
@@ -184,7 +187,8 @@ function clearBoxes() {
 }
 
 function voteSkipTarget() {
-    clickContent.push("target "+task+" skipped @ "+Date.now()+",\n");
+    clickContent.push(["Skip Vote", task, Date.now(), '','']);
+
     document.getElementById("skipButton").disabled = true;
     mySkipVote = true;
     firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('skipVotes').transaction(function (current) {
@@ -210,7 +214,7 @@ function firelist(snapshot) {
 getImage();
 function startExp() {
     startStopwatch();
-    serverContent[1].push("Experiment Started @ "+Date.now()+",\n");
+    serverContent.push(["Experiment Start",Date.now()]);
 
     firebaseRef.child('tasks').once('value', function (snap) {
         task = snap.val().length - 1;
