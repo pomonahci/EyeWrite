@@ -107,10 +107,11 @@ var visualizationControl = function () {
         // console.log(data);
         var encodedLoc = encodeLocation(data.x, data.y);
         gazePosRef.child(userId).update(encodedLoc);
-        gazeContent.push('('+encodedLoc.x+','+encodedLoc.y+';'+Date.now()+'),\n');
+        // gazeContent.push('(' + encodedLoc.x + ',' + encodedLoc.y + ';' + Date.now() + '),\n');
+        gazeContent.push([data.x/window.innerWidth,data.y/window.innerHeight,Date.now()]);
       }
     }).begin();
-    
+
     // webgazer.setRegression('ridge') /* currently must set regression and tracker */
     // .setGazeListener(function(data, clock) {
     //   if (data == null){
@@ -255,7 +256,7 @@ var visualizationControl = function () {
     //applying smoothing filter
     window.applyKalmanFilter = true;
     window.isWebGazerActive = false;
-    
+
 
     // Mouse Listeners
     document.addEventListener("mousemove", mouseMove);
@@ -614,9 +615,10 @@ var visualizationControl = function () {
     if (window.sendDataState == 1 || window.sendDataState == 3) {
       mousePosRef.child(userId).update(encodedLoc);
     }
-    mouseContent.push('('+encodedLoc.x+','+encodedLoc.y+';'+Date.now()+'),\n');
-    if(ui && event.clientX < window.innerWidth-(.13*window.innerWidth)){//190
-      ui=false;
+    // mouseContent.push('('+(event.clientX/window.innerWidth)+','+(event.clientY/window.innerHeight)+';'+Date.now()+'),\n');
+    mouseContent.push([event.clientX/window.innerWidth,event.clientY/window.innerHeight,Date.now()]);
+    if (ui && event.clientX < window.innerWidth - (.13 * window.innerWidth)) {//190
+      ui = false;
       document.getElementById("userlist").style.visibility = 'hidden';
       document.getElementById("controlContainer").style.visibility = 'hidden';
     }
@@ -701,7 +703,7 @@ var visualizationControl = function () {
 
     var hColor = hex2rgb(userColors[uID], 1.0);
     var hSize = { coeff: document.getElementById("sentenceSlider").value };
-    var hrate = {coeff: document.getElementById("sentenceSlider2").value};
+    var hrate = { coeff: document.getElementById("sentenceSlider2").value };
 
 
     // var visShape, visSize;

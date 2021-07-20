@@ -38,7 +38,7 @@ function parseURLFor() {
     var prompt = URL.search("prm");
     prompt = URL.substring(prompt + 4, URL.length);
     document.getElementById('drawingPrompt').innerHTML = prompt;
-    serverContent[0].push("Prompt: "+prompt+",\n");
+    serverContent.push(["Prompt",prompt]);
 
     collaborators = URL.search("par");
     collaborators = URL.substring(collaborators+4,collaborators+5);
@@ -50,27 +50,27 @@ function parseURLFor() {
 
 function triggerVis(vis) {
     if (vis == 1) {//HollowMouse
-        serverContent[0].push("Visualization: Hollow Circle,\n");
+        serverContent.push(["Visualization","Hollow Circle"]);
         document.getElementById("vis-shape").value = 'hollow';
         document.getElementById("vis-shape").dispatchEvent(new Event('change'));
         document.getElementById("mouseSendSwitch").click();
         document.getElementById("mouseVisSwitch").click();
     }
     else if (vis == 2) {//HeatMapMouse
-        serverContent[0].push("Visualization: Heatmap,\n");
+        serverContent.push(["Visualization","HeatMap"]);
         document.getElementById("vis-shape").value = 'heatmap';
         document.getElementById("vis-shape").dispatchEvent(new Event('change'));
         document.getElementById("mouseSendSwitch").click();
         document.getElementById("mouseVisSwitch").click();
     }
     else{
-        serverContent[0].push("Visualization: None,\n");
+        serverContent.push(["Visualization","None"]);
     }
 }
 
 function triggerAud(aud) {
     if (aud == 1) {
-        serverContent[0].push("Audio: On,\n");
+        serverContent.push(["Audio","On"]);
         var mediaRef = firebaseRef.child("media");
         joinButStat = true;
         mediaRef.child(userId).update({ audio: true, camera: false, is_ready: true, peer_id: "-1", stream_id: "-1" })
@@ -80,7 +80,7 @@ function triggerAud(aud) {
         voiceAudButton.innerText = "Unmuted";
     }
     else {
-        serverContent[0].push("Audio: Off,\n");
+        serverContent.push(["Audio","Off"]);
         console.log("No Audio Call.");
     }
 }

@@ -1,6 +1,6 @@
 function download(filename, text) {
     var element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(text));
     element.setAttribute('download', filename);
 
     element.style.display = 'none';
@@ -10,13 +10,30 @@ function download(filename, text) {
 
     document.body.removeChild(element);
 }
+
+function createCSV(filename, content) {
+    var csv = "";
+    content.forEach(function (row) {
+        csv += row.join(',');
+        csv += "\n";
+    });
+
+    var hiddenElement = document.createElement('a');
+    const encodedURI = encodeURI(csv);
+    const fixedEncodedURI = encodedURI.replaceAll('#', '%23');
+    hiddenElement.href = 'data:text/csv;charset=utf-8,' + fixedEncodedURI;
+    hiddenElement.target = '_blank';
+    hiddenElement.download = filename + '.csv';
+    hiddenElement.click();
+}
+
 var fileName = '';//file name as a string
-var clickContent = [];//array of different strings that will be added to the file
-var mouseContent = [];
-var gazeContent = [];
-var serverContent = [[], []];
+var clickContent = [['action', 'timestamp', 'x', 'y', 'color', 'width', 'coords']];
+var mouseContent = [['x/window.innerWidth', 'y/window.innerhHeight', 'timestamp']];
+var gazeContent = [['x/window.innerWidth', 'y/window.innerhHeight', 'timestamp']];
+var serverContent = [['Parameter', 'Value']];
 function unloading() {
-    serverContent.push("Closing Page @ "+Date.now());
+    serverContent.push("Closing Page @ " + Date.now());
     var content0 = '';
     var content1 = '';
     var content2 = '';
@@ -57,5 +74,27 @@ function unloading() {
     download(fileName + '_' + userId + '_mouse', content1);
     download(fileName + '_' + userId + '_gaze', content2);
 }
+function unloadingCSV() {
+    createCSV(fileName + "_" + userId + "_mouse", mouseContent);
+    createCSV(fileName + "_" + userId + "_action", clickContent);
+    var chosen = false;
+    firebaseRef.child('users').once('value', function (snap) {
+        for (const user of Object.keys(snap.val())) {
+            if (!chosen || chosen > user) {
+                chosen = user;
+            }
+        }
+        if (chosen = userId) {
+            chosen = true;
+        }
+        else {
+            chosen = false;
+        }
+    });
+    if (chosen) {
+        createCSV(fileName + "_server", serverContent);
+    }
 
-window.addEventListener('beforeunload', unloading);
+}
+// window.addEventListener('beforeunload', unloading);
+window.addEventListener('beforeunload', unloadingCSV);

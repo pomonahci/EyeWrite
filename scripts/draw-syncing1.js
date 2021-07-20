@@ -166,8 +166,7 @@ function sketchEdit(e, x, y, c) {
       primSket.currentPath.created = e;
       // primSket.currentPath.idStroke = primSket.currentPath.idStroke + userId
       primSket.currentPath.idCreator = userId;
-      clickContent.push("Draw Stroke @ " + Date.now() + ":\n");
-      clickContent.push(JSON.stringify(primSket.currentPath.serialize()));
+      clickContent.push(['Draw',Date.now(),"","",primSket.currentPath.color,primSket.currentPath.width,primSket.currentPath.pathCoords]);
       return primSket.currentPath.serialize();
     }
     else if (e == 'move') {
@@ -177,20 +176,19 @@ function sketchEdit(e, x, y, c) {
       var toBeRet = primSket.currentPath.serialize();
       toBeRet.xcof = xcof;
       toBeRet.ycof = ycof;
-      clickContent.push("Move Stroke @ " + Date.now() + ":\n");
-      clickContent.push(JSON.stringify(toBeRet));
+      clickContent.push(['Move',Date.now(),"","",toBeRet.color,toBeRet.width,toBeRet.coords]);
       return toBeRet;
     }
     else if (e == 'erase') {
-      clickContent.push("Erase Stroke located at " + "(" + x + "," + y + ") @ " + Date.now() + ",\n");
+      clickContent.push(['Erase',Date.now(),x,y,"","",""]);
       return 'erase:' + x + ':' + y + ':' + edit++;
     }
     else if (e == 'clear') {
-      clickContent.push("Clear Canvas @ " + Date.now() + ",\n");
+      clickContent.push(['Clear',Date.now(),"","","","",""]);
       return 'clear' + ':' + edit++;
     }
     else if (e == 'color') {
-      clickContent.push("Color Stroke located at " + "(" + x + "," + y + ") " + c + "@ " + Date.now() + ",\n");
+      clickContent.push(['Color',Date.now(),x,y,c,"",""]);
       return 'color:' + x + ':' + y + ':' + c + ':' + edit++;
     }
     else if (e == 'undo') {
@@ -211,7 +209,7 @@ function sketchEdit(e, x, y, c) {
         }
       }
       primSket.undo(targetPath);
-      clickContent.push("Undo Stroke @ " + Date.now() + ",\n");
+      clickContent.push(['Undo',Date.now(),"","","","",""]);
       return 'undo' + ':' + edit++;
     }
     else if (e == 'redo') {
@@ -228,7 +226,7 @@ function sketchEdit(e, x, y, c) {
         else return;
       }
       primSket.redo(targetPath);
-      clickContent.push("Redo Stroke @ " + Date.now() + ",\n");
+      clickContent.push(['Redo',Date.now(),"","","","",""]);
       return 'redo' + ':' + edit++;
     }
     else if (e == 'point') {
@@ -252,8 +250,8 @@ document.getElementById("root").style.pointerEvents = "none";
 firebaseRef.child('users').on('value', function (snapshot) {
   if (Object.keys(snapshot.val()).length == collaborators) {
     startTimer();
-    serverContent[1].push("Experiment Started @ " + Date.now() + ",\n");
-    serverContent[0].push("Participants: " + collaborators + ",\n");
+    serverContent.push(["Experiment Start",Date.now()]);
+    serverContent.push(["Participants", collaborators]);
     document.getElementById("root").style.pointerEvents = "auto";
     firebaseRef.child('users').off('value');
   }
