@@ -148,7 +148,8 @@ var visualizationControl = (function () {
         } else {
           // console.log('sending encoded loc!');
           // console.log(data);
-          var encodedLoc = encodeLocation(data.x, data.y);
+          // var encodedLoc = encodeLocation(data.x, data.y);
+          var encodedLoc = encodeLocation2(data.x, data.y);
           gazePosRef.child(userId).update(encodedLoc);
           // gazeContent.push('('+encodedLoc.x+','+encodedLoc.y+';'+Date.now()+'),\n');
           gazeContent.push([data.x / window.innerWidth, data.y / window.innerHeight, Date.now()]);
@@ -794,7 +795,8 @@ var visualizationControl = (function () {
    * @param event
    */
   function mouseMove(event) {
-    encodedLoc = encodeLocation(event.clientX, event.clientY);
+    // encodedLoc = encodeLocation(event.clientX, event.clientY);
+    encodedLoc = encodeLocation2(event.clientX, event.clientY);
     if (window.sendDataState == 1 || window.sendDataState == 3) {
       mousePosRef.child(userId).update(encodedLoc);
     }
@@ -867,6 +869,8 @@ var visualizationControl = (function () {
     }
 
     var hPos = decodeLocation(userLocations[uID]);
+    var hPos = decodeLocation2(userLocations[uID]);
+
     //commented out for ImageSearch
     // if (uID != userId) {
     //   if (isAboveView(hPos)) {
@@ -1122,6 +1126,15 @@ var visualizationControl = (function () {
       delete userArrows[uID];
     }
   }
+
+  function encodeLocation2(x,y){
+    return {'x':x/window.innerWidth, 'y':y/window.innerHeight};
+  }
+
+  function decodeLocation2(loc){
+    return {'x':loc.x*window.innerWidth, 'y':loc.y*window.innerHeight};
+  }
+
 })();
 
 function updateHeatmapStyle(new_config) {
@@ -1160,3 +1173,4 @@ window.onresize = function () {
   );
   heatmapInstance.repaint();
 };
+
