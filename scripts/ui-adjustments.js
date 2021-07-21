@@ -119,12 +119,21 @@ var UIAdjustments = (function () {
   var output3 = document.getElementById("hm-radius");
   output3.innerHTML = slider3.value;
 
+  // var URL = window.location.href;
+  // var participants = URL.search('par');
+  // if (participants == -1) {
+  //   participants = 2;
+  // }
+  // else {
+  //   participants = URL.substring(participants + 4, participants + 5);
+  // }
   slider3.oninput = function () {
     output3.innerHTML = this.value;
     updateHeatmapStyle({
       container: document.querySelector("#heatmap"),
+      gradient: { 0.25: "rgb(220,220,220)", 0.55: "rgb(169,169,169)", 0.85: "	rgb(128,128,128)", 1.0: "rgb(72,72,72)" },//monochromatic version
       radius: document.getElementById("hm-radius-slider").value,
-      maxOpacity: document.getElementById("hm-opacity-slider").value / 100,
+      maxOpacity: document.getElementById("hm-opacity-slider").value / 100,//(100 * participants),
       blur: document.getElementById("hm-blur-slider").value / 100,
     });
   };
@@ -137,8 +146,9 @@ var UIAdjustments = (function () {
     output4.innerHTML = this.value + "%";
     updateHeatmapStyle({
       container: document.querySelector("#heatmap"),
+      gradient: { 0.25: "rgb(220,220,220)", 0.55: "rgb(169,169,169)", 0.85: "	rgb(128,128,128)", 1.0: "rgb(72,72,72)" },//monochromatic version
       radius: document.getElementById("hm-radius-slider").value,
-      maxOpacity: document.getElementById("hm-opacity-slider").value / 100,
+      maxOpacity: document.getElementById("hm-opacity-slider").value / 100,//(100 * participants),
       blur: document.getElementById("hm-blur-slider").value / 100,
     });
   };
@@ -151,8 +161,9 @@ var UIAdjustments = (function () {
     output5.innerHTML = this.value;
     updateHeatmapStyle({
       container: document.querySelector("#heatmap"),
+      gradient: { 0.25: "rgb(220,220,220)", 0.55: "rgb(169,169,169)", 0.85: "	rgb(128,128,128)", 1.0: "rgb(72,72,72)" },//monochromatic version
       radius: document.getElementById("hm-radius-slider").value,
-      maxOpacity: document.getElementById("hm-opacity-slider").value / 100,
+      maxOpacity: document.getElementById("hm-opacity-slider").value / 100,//(100 * participants),
       blur: document.getElementById("hm-blur-slider").value / 100,
     });
   };

@@ -92,15 +92,17 @@
 
   <div id="firepad" style='visibility:hidden'></div>
 
+
   <div id='imageContainer' style='position:relative;background-color: grey;left:13%;height:100%'>
     <img id='imageSearch' src='' alt="IMAGE" width='50%' height='100%' style='position:absolute;left:20%;'>
   </div>
 
+  <div id="heatmap"></div>
+
+
   <div id="video-streams"></div>
 
   <div id="colorpicker"></div>
-
-  <div id="heatmap"></div>
 
   <div id="imageSearchUI" style="background-color: #ebebeb;
   width: 175px;
@@ -109,7 +111,8 @@
   border-radius: 4px;
   padding-bottom: 12px;
   height: 250px;
-  max-height: 65vh;">
+  max-height: 65vh;
+  visibility: visible;">
     <div style='position: relative;left:18%'>Time: <span id='stopwatch'>00:00:00</span></div>
     <div id='incorrectCounter' style='position: relative;left:12%'>Incorrect Clicks: <span id='badclicks'>0</span></div>
     <img id='targetSearch' src='' alt='TARGET' width='100px' height='100px'
@@ -119,7 +122,7 @@
 
   </div>
 
-  <div id="controlContainer" style="visibility: hidden;">
+  <div id="controlContainer" style="visibility: visible;">
     <div id="user-checkboxes-container"></div>
     <select id="user-checkboxes" multiple="multiple"></select>
 
@@ -415,6 +418,8 @@
   </script>
 </body>
 <script src="./scripts/downloadData.js"></script>
+<script src="./scripts/parseURLForVisAudParImgRad.js"></script>
+
 
 <!-- Highlight Style -->
 <script src="./scripts/highlight-styles.js"></script>
@@ -427,7 +432,6 @@
 <!-- <script src="./scripts/media-call.js"></script> -->
 
 <script src="./scripts/stopwatch.js"></script>
-<script src="./scripts/parseURLForVisAudParImgRad.js"></script>
 <script src="./scripts/imageSelect.js"></script>
 
 

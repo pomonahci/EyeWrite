@@ -97,4 +97,4 @@ function unloadingCSV() {
 
 }
 // window.addEventListener('beforeunload', unloading);
-window.addEventListener('beforeunload', unloadingCSV);
+// window.addEventListener('beforeunload', unloadingCSV);

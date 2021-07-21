@@ -59,6 +59,8 @@ div.CodeMirror-vscrollbar {
 div.firepad-toolbar {
   display: flex;
   align-items: center;
+  position: relative;
+  z-index: 4;
 }
 
 div.firepad-toolbar-wrapper {
@@ -69,6 +71,7 @@ div.firepad-toolbar-wrapper {
   flex-direction: row;
   justify-content: center;
   padding: 0px 20px;
+  z-index: 4;
 }
 
 div.CodeMirror-lines {
@@ -77,6 +80,7 @@ div.CodeMirror-lines {
   min-height: 1000px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   padding: 20px;
+  z-index: 2;
 }
 
 div.CodeMirror.cm-s-default.CodeMirror-wrap {
@@ -564,4 +568,7 @@ div.firepad-toolbar-wrapper {
   width: 100vw;
   pointer-events: none;
   z-index: 1;
+  position: relative;
+  top:-100vh;
+  left:0;
 }

@@ -5,9 +5,18 @@
  * Date: Summer 2020 - Spring 2021
  */
 
+// var URL = window.location.href;
+// var participants = URL.search('par');
+// if (participants == -1) {
+//   participants = 2;
+// }
+// else {
+//   participants = URL.substring(participants + 4, participants + 5);
+// }
 let default_config = {
   container: document.querySelector("#heatmap"),
-  maxOpacity: document.getElementById("hm-opacity-slider").value / 100,
+  gradient: { 0.25: "rgb(220,220,220)", 0.55: "rgb(169,169,169)", 0.85: "	rgb(128,128,128)", 1.0: "rgb(72,72,72)" },//monochromatic version
+  maxOpacity: document.getElementById("hm-opacity-slider").value / 100,//(100 * participants),
   radius: document.getElementById("hm-radius-slider").value,
 };
 
@@ -60,12 +69,9 @@ var visualizationControl = (function () {
       hmParamsContainer.style.display = "none";
       gradientParamsContainer.style.display = "block";
     }
-
     clearHeatmap();
-
     if (window.debug) console.log(window.visShape);
   };
-
 
   /**
    * Adds callback for unload event.
@@ -145,8 +151,7 @@ var visualizationControl = (function () {
           var encodedLoc = encodeLocation(data.x, data.y);
           gazePosRef.child(userId).update(encodedLoc);
           // gazeContent.push('('+encodedLoc.x+','+encodedLoc.y+';'+Date.now()+'),\n');
-          gazeContent.push([data.x/window.innerWidth,data.y/window.innerHeight,Date.now()]);
-
+          gazeContent.push([data.x / window.innerWidth, data.y / window.innerHeight, Date.now()]);
         }
       })
       .begin();
@@ -181,6 +186,9 @@ var visualizationControl = (function () {
     webgazer.params.showPredictionPoints = false;
   };
 
+  // FirepadCM = firepad.editorAdapter_.cm;
+  let topbefore = 0;
+
   /**
    * Instantiate the Firepad document.
    * Contains firebase callback functions.
@@ -207,6 +215,39 @@ var visualizationControl = (function () {
         },
         "local"
       );
+
+      //dead
+
+      const pad = document.getElementsByClassName("CodeMirror-lines")[0];
+      const tb = document.getElementsByClassName("firepad-toolbar")[0];
+
+      const { left, right } = pad.getBoundingClientRect();
+      const { bottom } = tb.getBoundingClientRect();
+
+      console.log(bottom);
+
+      heatmapDataPoints = heatmapDataPoints.map((dataPoint) => {
+        if (
+          dataPoint.x >= left &&
+          dataPoint.x <= right
+          // dataPoint.y >= bottom
+        ) {
+          let newy = dataPoint.y + (topbefore - FirepadCM.getScrollInfo().top);
+          console.log("old y: " + dataPoint.y + " new y: " + newy);
+          return {
+            x: dataPoint.x,
+            y: newy,
+            value: dataPoint.value,
+          };
+        } else {
+          return dataPoint;
+        }
+      });
+
+      heatmapInstance.setData({ data: [] });
+      heatmapInstance.setData({ max: 60, min: 0, data: heatmapDataPoints });
+
+      topbefore = FirepadCM.getScrollInfo().top;
     });
 
     // Firebase listener for when users are added
@@ -417,7 +458,6 @@ var visualizationControl = (function () {
       }
       console.log(`send data state: ${getDataState(window.sendDataState)}`);
     });
-    // document.getElementById("mouseSendSwitch").click();
 
     // Listener for gaze send switch.
     gazeSendSwitch.addEventListener("change", function () {
@@ -533,13 +573,10 @@ var visualizationControl = (function () {
           update();
           ticking = false;
         });
-
         ticking = true;
       }
     });
-
     parseURLFor();
-
   });
 
   /**
@@ -762,10 +799,10 @@ var visualizationControl = (function () {
       mousePosRef.child(userId).update(encodedLoc);
     }
     // mouseContent.push('('+(event.clientX/window.innerWidth)+','+(event.clientY/window.innerHeight)+';'+Date.now()+'),\n');
-    mouseContent.push([event.clientX/window.innerWidth,event.clientY/window.innerHeight,Date.now()]);
-
-
+    mouseContent.push([event.clientX / window.innerWidth, event.clientY / window.innerHeight, Date.now()]);
   }
+
+
 
   /**
    * mouseLeave is the callback function for when the mouse leaves the viewport.
@@ -830,7 +867,6 @@ var visualizationControl = (function () {
     }
 
     var hPos = decodeLocation(userLocations[uID]);
-    
     //commented out for ImageSearch
     // if (uID != userId) {
     //   if (isAboveView(hPos)) {
@@ -848,7 +884,6 @@ var visualizationControl = (function () {
     var hColor = hex2rgb(userColors[uID], 1.0);
     var hSize = { coeff: document.getElementById("sentenceSlider").value };
     var hrate = { coeff: document.getElementById("sentenceSlider2").value };
-
     // var visShape, visSize;
     if (window.visShape == "solid") {
       circle.style = createSolidCircleHighlightStyle(hPos, hSize, hColor);
@@ -923,7 +958,9 @@ var visualizationControl = (function () {
           y: Math.round(hPos.y),
           value: 20,
         });
+
         heatmapInstance.setData({ max: 60, min: 0, data: heatmapDataPoints });
+
       } else if (removalType == "none") {
         if (intervalID != null) {
           clearInterval(intervalID);
