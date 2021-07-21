@@ -868,7 +868,7 @@ var visualizationControl = (function () {
       document.body.append(circle);
     }
 
-    var hPos = decodeLocation(userLocations[uID]);
+    // var hPos = decodeLocation(userLocations[uID]);
     var hPos = decodeLocation2(userLocations[uID]);
 
     //commented out for ImageSearch
@@ -1128,11 +1128,11 @@ var visualizationControl = (function () {
   }
 
   function encodeLocation2(x,y){
-    return {'x':x/window.innerWidth, 'y':y/window.innerHeight};
+    return { region: 0, x: x/window.innerWidth, y: y/window.innerHeight }
   }
 
   function decodeLocation2(loc){
-    return {'x':loc.x*window.innerWidth, 'y':loc.y*window.innerHeight};
+    return {x:loc.x*window.innerWidth, y:loc.y*window.innerHeight};
   }
 
 })();
