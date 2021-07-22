@@ -122,7 +122,7 @@
 
   </div>
 
-  <div id="controlContainer" style="visibility: visible;">
+  <div id="controlContainer" style="visibility: hidden;">
     <div id="user-checkboxes-container"></div>
     <select id="user-checkboxes" multiple="multiple"></select>
 
@@ -406,7 +406,10 @@
     // new Image().src =window.location.href.substring(0,35)+window.location.href.substring(49,window.location.href.length);
 
 
-
+    firebaseRef.child("users").child(userId).child("dimensions").transaction(function(current){
+      return {w:window.innerWidth, h:window.innerHeight};
+    })
+    
 
 
 

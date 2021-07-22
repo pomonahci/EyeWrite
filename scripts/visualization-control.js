@@ -264,7 +264,7 @@ var visualizationControl = (function () {
         $("#user-checkboxes").multiselect("select", snapshot.key);
         usersChecked[snapshot.key] = true;
       } else {
-        usersChecked[snapshot.key] = false;
+        usersChecked[snapshot.key] = false;//CHANGED THIS TO FALSE PLZ
       }
 
       // listen for when the name attribute is ready

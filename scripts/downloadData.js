@@ -28,7 +28,7 @@ function createCSV(filename, content) {
 }
 
 var fileName = '';//file name as a string
-var clickContent = [['action', 'target', 'timestamp', 'x', 'y']];
+var clickContent = [['action', 'target', 'timestamp', 'x/window.innerWidth', 'y/window.innerHeight']];
 var mouseContent = [['x/window.innerWidth', 'y/window.innerhHeight', 'timestamp']];
 var gazeContent = [['x/window.innerWidth', 'y/window.innerhHeight', 'timestamp']];
 var serverContent = [['Parameter', 'Value', 'Timestamp']];
@@ -97,4 +97,4 @@ function unloadingCSV() {
 
 }
 // window.addEventListener('beforeunload', unloading);
-// window.addEventListener('beforeunload', unloadingCSV);
+window.addEventListener('beforeunload', unloadingCSV);

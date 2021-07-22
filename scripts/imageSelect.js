@@ -65,7 +65,7 @@ function getImage() {
 
 }
 
-
+var keys;
 function getTarget() {
     // firebaseRef.child('tasks').child(task).child('targetClicked').set("");
     // firebaseRef.child('tasks').child(task).child('incorrectClicks').set("");
@@ -78,12 +78,12 @@ function getTarget() {
     firebaseRef.child('tasks').child(task).on('child_changed', firelist);
 
     if (!bounding) return;
-    var keys = Object.keys(bounding);
+    keys = Object.keys(bounding);
     numTargets = keys.length;
 
     target = bounding[keys[task]];
     document.getElementById("targetSearch").src = "./graphics/" + keys[task];
-    serverContent.push(["Target", keys[task],Date.now()]);
+    serverContent.push(["Target", keys[task], Date.now()]);
 
 }
 
@@ -109,7 +109,7 @@ function onClick(event) {
         document.querySelector("#imageContainer").append(box);
 
         targetHit = true;
-        clickContent.push(["Correct Click", task, Date.now(), x,y]);
+        clickContent.push(["Correct Click", keys[task], Date.now(), x/window.innerWidth, y/window.innerHeight]);
 
         firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('targetClicked').transaction(function (current) {
             if (!current) current = [];
@@ -123,7 +123,7 @@ function onClick(event) {
 
     }
     else {
-        clickContent.push(["Incorrect Click", task, Date.now(), x,y]);
+        clickContent.push(["Incorrect Click", keys[task], Date.now(), x/window.innerWidth, y/window.innerHeight]);
 
         var badclicks;
         firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('incorrectClicks').transaction(function (current) {
@@ -151,7 +151,7 @@ function checkTaskComplete(snapshot) {
 }
 
 function nextTarget() {
-    serverContent.push(["Task Completed", "",Date.now()]);
+    serverContent.push(["Target Completed", "", Date.now()]);
     serverContent.push(["Clock", document.getElementById('stopwatch').innerHTML]);
 
     // clickContent.push("Personal Incorrect Clicks:"+misclicks+",\n");
@@ -187,7 +187,7 @@ function clearBoxes() {
 }
 
 function voteSkipTarget() {
-    clickContent.push(["Skip Vote", task, Date.now(), '','']);
+    clickContent.push(["Skip Vote", keys[task], Date.now(), '', '']);
 
     document.getElementById("skipButton").disabled = true;
     mySkipVote = true;
@@ -214,7 +214,7 @@ function firelist(snapshot) {
 getImage();
 function startExp() {
     startStopwatch();
-    serverContent.push(["Experiment Start",Date.now()]);
+    serverContent.push(["Experiment Start", Date.now()]);
 
     firebaseRef.child('tasks').once('value', function (snap) {
         task = snap.val().length - 1;
@@ -241,6 +241,12 @@ document.getElementById("skipButton").style.pointerEvents = "none";
 firebaseRef.child('users').on('value', function (snapshot) {
     if (Object.keys(snapshot.val()).length == numPpl) {
         startExp();
+        firebaseRef.child("users").transaction(function (current) {
+            for (const [key, value] of Object.entries(current)) {
+                var wh = "("+value.dimensions.w+","+value.dimensions.h+")";
+                serverContent.push([key,wh]);
+            }
+        })
         document.getElementById("imageSearch").style.pointerEvents = "auto";
         document.getElementById("skipButton").style.pointerEvents = "auto";
         firebaseRef.child('users').off('value');
