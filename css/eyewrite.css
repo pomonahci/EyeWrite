@@ -153,9 +153,19 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   overflow-y: scroll;
 }
 
+/* For heatmap layering */
+#controlContainer > * {
+  z-index: 1;
+}
+
+#controlContainer > * > * {
+  z-index: 1;
+}
+
 #user-checkboxes-container {
   position: relative;
   margin-left: 15px;
+  z-index: 3;
 }
 
 .user-checkboxes {
@@ -334,7 +344,29 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   padding-bottom: 0px;
   margin-bottom: 0px;
 }
+.slider-text3 {
+  position: relative;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  /* margin-left: 10px; */
+  margin-top: 5px;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+  text-align: center;
+}
 
+.hm-ui-options-text {
+  position: relative;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  /* margin-left: 10px; */
+  margin-top: 5px;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+  text-align: center;
+}
 
 #sentenceSlider {
   position: relative;
@@ -496,3 +528,12 @@ div.CodeMirror.cm-s-default.CodeMirror-wrap {
   right: 0px;
 }
 
+#heatmap {
+  height: 100vh;
+  width: 100vw;
+  pointer-events: none;
+  z-index: 1;
+  position: relative;
+  top:-178vh;
+  left:0;
+}

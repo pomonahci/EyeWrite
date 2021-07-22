@@ -90,14 +90,125 @@ var UIAdjustments = function () {
   output2.innerHTML = slider2.value;
 
   slider2.oninput = function () {
-    var val = Math.floor((this.value/66) * 100);
+    var val = Math.floor((this.value / 66) * 100);
     output2.innerHTML = (val + "%");
   }
 
   slider2.onload = function () {
-    var val = Math.floor((this.value/66) * 100);
+    var val = Math.floor((this.value / 66) * 100);
     output2.innerHTML = (val + "%");
   }
+
+  var slider3 = document.getElementById("hm-radius-slider");
+  var output3 = document.getElementById("hm-radius");
+  output3.innerHTML = slider3.value;
+
+  // var URL = window.location.href;
+  // var participants = URL.search('par');
+  // if (participants == -1) {
+  //   participants = 2;
+  // }
+  // else {
+  //   participants = URL.substring(participants + 4, participants + 5);
+  // }
+  slider3.oninput = function () {
+    output3.innerHTML = this.value;
+    updateHeatmapStyle({
+      container: document.querySelector("#heatmap"),
+      gradient: { 0.25: "rgb(220,220,220)", 0.55: "rgb(169,169,169)", 0.85: "	rgb(128,128,128)", 1.0: "rgb(72,72,72)" },//monochromatic version
+      radius: document.getElementById("hm-radius-slider").value,
+      maxOpacity: document.getElementById("hm-opacity-slider").value / 100,//(100 * participants),
+      blur: document.getElementById("hm-blur-slider").value / 100,
+    });
+  };
+
+  var slider4 = document.getElementById("hm-opacity-slider");
+  var output4 = document.getElementById("hm-opacity");
+  output4.innerHTML = slider4.value + "%";
+
+  slider4.oninput = function () {
+    output4.innerHTML = this.value + "%";
+    updateHeatmapStyle({
+      container: document.querySelector("#heatmap"),
+      gradient: { 0.25: "rgb(220,220,220)", 0.55: "rgb(169,169,169)", 0.85: "	rgb(128,128,128)", 1.0: "rgb(72,72,72)" },//monochromatic version
+      radius: document.getElementById("hm-radius-slider").value,
+      maxOpacity: document.getElementById("hm-opacity-slider").value / 100,//(100 * participants),
+      blur: document.getElementById("hm-blur-slider").value / 100,
+    });
+  };
+
+  var slider5 = document.getElementById("hm-blur-slider");
+  var output5 = document.getElementById("hm-blur");
+  output5.innerHTML = slider5.value;
+
+  slider5.oninput = function () {
+    output5.innerHTML = this.value;
+    updateHeatmapStyle({
+      container: document.querySelector("#heatmap"),
+      gradient: { 0.25: "rgb(220,220,220)", 0.55: "rgb(169,169,169)", 0.85: "	rgb(128,128,128)", 1.0: "rgb(72,72,72)" },//monochromatic version
+      radius: document.getElementById("hm-radius-slider").value,
+      maxOpacity: document.getElementById("hm-opacity-slider").value / 100,//(100 * participants),
+      blur: document.getElementById("hm-blur-slider").value / 100,
+    });
+  };
+
+  var removalRateSlider = document.getElementById("hm-removal-rate-slider");
+  var removalRateText = document.getElementById("hm-removal-rate");
+  removalRateText.innerHTML = removalRateSlider.value;
+
+  // removalRateSlider.oninput = function () {
+  //   removalRateText.innerHTML = removalRateSlider.value;
+  //   removalRate = parseInt(removalRateSlider.value);
+  // };
+
+  // removalRateSlider.onchange = function () {
+  //   clearInterval(intervalID);
+  //   if (removalType == "temporal") {
+  //     if (intervalID == null || intervalID == undefined) {
+  //       intervalID = window.setInterval(() => {
+  //         heatmapDataPoints.shift();
+  //         heatmapInstance.setData({
+  //           max: 60,
+  //           min: 0,
+  //           data: heatmapDataPoints,
+  //         });
+  //         // console.log(heatmapDataPoints.length);
+  //         // if (heatmapDataPoints.length == 0) {
+  //         //   clearInterval(intervalID);
+  //         //   intervalID = null;
+  //         // }
+  //       }, removalRate);
+  //     }
+  //   }
+  // };
+
+  const hmSwitch = document.getElementById("heatmap-type-selector");
+
+  hmSwitch.onchange = function () {
+    removalType = hmSwitch.value;
+
+    if (removalType == "temporal") {
+      document.getElementById("hm-capacity-div").style.display = "none";
+      document.getElementById("hm-removal-rate-div").style.display = "block";
+    } else if (removalType == "capacity") {
+      document.getElementById("hm-capacity-div").style.display = "block";
+      document.getElementById("hm-removal-rate-div").style.display = "none";
+    } else {
+      document.getElementById("hm-removal-rate-div").style.display = "none";
+      document.getElementById("hm-capacity-div").style.display = "none";
+    }
+  };
+
+  const capSlider = document.getElementById("hm-capacity-slider");
+  const capLabel = document.getElementById("hm-capacity");
+
+  capLabel.innerHTML = capSlider.value;
+
+  capSlider.oninput = function () {
+    capacity = capSlider.value;
+    capLabel.innerHTML = capSlider.value;
+  };
+
   var controlContainer = document.getElementById('controlContainer');
   controlContainer.style.top = (userlistBox.offsetTop + userlistBox.offsetHeight + 10) + "px";
 

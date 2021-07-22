@@ -166,29 +166,30 @@ function sketchEdit(e, x, y, c) {
       primSket.currentPath.created = e;
       // primSket.currentPath.idStroke = primSket.currentPath.idStroke + userId
       primSket.currentPath.idCreator = userId;
-      clickContent.push(['Draw',Date.now(),"","",primSket.currentPath.color,primSket.currentPath.width,primSket.currentPath.pathCoords]);
-      return primSket.currentPath.serialize();
+      var ret = primSket.currentPath.serialize();
+      clickContent.push(['Draw', Date.now(), ret.color, ret.width, ret.idCreator, ret.idStroke, ret.status, ret.idMovedFrom, ret.created, ret.timeStart, ret.timeEnd, ret.undone, ret.coords]);
+      return ret
     }
     else if (e == 'move') {
       primSket.currentPath.created = e;
       primSket.currentPath.idStroke = primSket.currentPath.idStroke + userId
       primSket.currentPath.idCreator = userId;
-      var toBeRet = primSket.currentPath.serialize();
-      toBeRet.xcof = xcof;
-      toBeRet.ycof = ycof;
-      clickContent.push(['Move',Date.now(),"","",toBeRet.color,toBeRet.width,toBeRet.coords]);
-      return toBeRet;
+      var ret = primSket.currentPath.serialize();
+      ret.xcof = xcof;
+      ret.ycof = ycof;
+      clickContent.push(['Move', Date.now(), ret.color, ret.width, ret.idCreator, ret.idStroke, ret.status, ret.idMovedFrom, ret.created, ret.timeStart, ret.timeEnd, ret.undone, ret.coords]);
+      return ret;
     }
     else if (e == 'erase') {
-      clickContent.push(['Erase',Date.now(),x,y,"","",""]);
+      clickContent.push(['Erase', Date.now(), "", "","", "","", "","", "","", "", x/window.innerWidth, y/window.innerHeight]);
       return 'erase:' + x + ':' + y + ':' + edit++;
     }
     else if (e == 'clear') {
-      clickContent.push(['Clear',Date.now(),"","","","",""]);
+      clickContent.push(['Clear', Date.now(), "", "", ""]);
       return 'clear' + ':' + edit++;
     }
     else if (e == 'color') {
-      clickContent.push(['Color',Date.now(),x,y,c,"",""]);
+      clickContent.push(['Color', Date.now(), c, "","", "","", "","", "","", "",x/window.innerWidth, y/window.innerHeight]);
       return 'color:' + x + ':' + y + ':' + c + ':' + edit++;
     }
     else if (e == 'undo') {
@@ -209,7 +210,7 @@ function sketchEdit(e, x, y, c) {
         }
       }
       primSket.undo(targetPath);
-      clickContent.push(['Undo',Date.now(),"","","","",""]);
+      clickContent.push(['Undo', Date.now(), "", "", ""]);
       return 'undo' + ':' + edit++;
     }
     else if (e == 'redo') {
@@ -226,12 +227,12 @@ function sketchEdit(e, x, y, c) {
         else return;
       }
       primSket.redo(targetPath);
-      clickContent.push(['Redo',Date.now(),"","","","",""]);
+      clickContent.push(['Redo', Date.now(), "", "", ""]);
       return 'redo' + ':' + edit++;
     }
     else if (e == 'point') {
       primSket.currentPath.created = e;
-      if (String(primSket.currentPath.idStroke).length < 11) primSket.currentPath.idStroke = primSket.currentPath.idStroke + userId
+      if (String(primSket.currentPath.idStroke).length < 9) primSket.currentPath.idStroke = primSket.currentPath.idStroke + userId
       primSket.currentPath.idCreator = userId;
       var toRet = primSket.currentPath.serialize();
       toRet.x = x;
@@ -250,7 +251,13 @@ document.getElementById("root").style.pointerEvents = "none";
 firebaseRef.child('users').on('value', function (snapshot) {
   if (Object.keys(snapshot.val()).length == collaborators) {
     startTimer();
-    serverContent.push(["Experiment Start",Date.now()]);
+    firebaseRef.child("users").transaction(function (current) {
+      for (const [key, value] of Object.entries(current)) {
+        var wh = "(" + value.dimensions.w + ":" + value.dimensions.h + ")";
+        serverContent.push([key, wh]);
+      }
+    })
+    serverContent.push(["Experiment Start", Date.now()]);
     serverContent.push(["Participants", collaborators]);
     document.getElementById("root").style.pointerEvents = "auto";
     firebaseRef.child('users').off('value');

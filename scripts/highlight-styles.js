@@ -43,3 +43,23 @@ function createGradientCircleHighlightStyle(pos, size, color, rate) {
 
 	return hStyle;
 }
+
+/**
+ *
+ * @param {*} pos : the (decoded) position of the highlight
+ * @param {*} size : the size of the highlight
+ * @param {*} color : the color of the highlight
+ * @returns a solid circle of pos, size, and color
+ */
+ function createHollowCircleHighlightStyle(pos, size, color) {
+	var hShape = `border-radius: 100%;`;
+	var hColor = `opacity: 0.5;border: 5px solid ${color};`;
+	var hSize = `width:${16 * size.coeff}px; height:${16 * size.coeff}px;`;
+	var hPosition = `left: ${pos.x - 8 * size.coeff}px; top: ${
+	  pos.y - 8 * size.coeff
+	}px;`;
+  
+	var hStyle = `position: absolute; pointer-events: none; ${hShape} ${hColor} ${hSize} ${hPosition}`;
+  
+	return hStyle;
+  }

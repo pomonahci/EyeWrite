@@ -13,6 +13,8 @@
   <script src="./node_modules/codemirror/lib/codemirror.js"></script>
   <link rel="stylesheet" href="./node_modules/codemirror/lib/codemirror.css" />
 
+  <script src="node_modules/heatmap.js/build/heatmap.js"></script>
+
   <!-- Firepad -->
   <link rel="stylesheet" href="https://firepad.io/releases/v1.5.10/firepad.css" />
   <script src="https://firepad.io/releases/v1.5.10/firepad.js"></script>
@@ -157,7 +159,60 @@
               ">
           <!-- <option value="solid">Solid</option> -->
           <option value="gradient">Gradient</option>
+          <option value="heatmap">Heatmap</option>
+          <option value="hollow">Hollow</option>
         </select>
+      </div>
+    </div>
+
+    <!-- Heatmap parameters container (set to visible when "heatmap" value is selected) -->
+    <div class="slider-container2" id="heatmap-params-container">
+      <p class="slider-text3">Heatmap Customization</p>
+
+      <p class="hm-ui-options-text">
+        Radius Size: <span id="hm-radius"></span>
+      </p>
+      <input type="range" min="20" max="65" value="35" class="sentenceSlider" id="hm-radius-slider" />
+
+      <p class="hm-ui-options-text">Opacity: <span id="hm-opacity"></span></p>
+      <input type="range" min="30" max="100" value="75" class="sentenceSlider" id="hm-opacity-slider" />
+
+      <p class="hm-ui-options-text">Blur: <span id="hm-blur"></span></p>
+      <input type="range" min="0" max="100" value="85" class="sentenceSlider" id="hm-blur-slider" />
+
+      <div style="text-align: center">
+        <p class="hm-ui-options-text">Data Removal</p>
+
+        <select id="heatmap-type-selector">
+          <option value="capacity">Capacity</option>
+          <!-- <option value="temporal">Temporal</option> -->
+          <option value="none">None</option>
+        </select>
+      </div>
+
+      <div id="hm-capacity-div" style="display: block">
+        <p class="hm-ui-options-text">
+          Capacity: <span id="hm-capacity"></span>
+        </p>
+        <input type="range" min="50" max="500" value="200" class="sentenceSlider" id="hm-capacity-slider" />
+      </div>
+
+      <div id="hm-removal-rate-div" style="display: none">
+        <p class="hm-ui-options-text">
+          Removal Rate: <span id="hm-removal-rate"></span>
+        </p>
+        <input type="range" min="1" max="100" value="50" class="sentenceSlider" id="hm-removal-rate-slider" />
+      </div>
+
+      <div class="text-center" style="margin: 10px 10px 0px 10px">
+        <button style="
+              background-color: #ffbf86;
+              font-family: Trebuchet, Arial, sans-serif;
+              font-weight: bold;
+              font-size: 14px;
+            " onclick="clearHeatmap()" type="button">
+          Clear
+        </button>
       </div>
     </div>
 
@@ -222,6 +277,7 @@
   <div id='promptLabel' style='position: relative;bottom:169%;left:35%;'>Draw: <span
       style='color:red;font-size:20px;font-weight: bold;' id=drawingPrompt></span></div>
   <div id='timeholder' style='position: relative;bottom:173%;left:50%;'>Time Left: <span id='timer'></span></div>
+  <div id="heatmap"></div>
 
 </body>
 
@@ -312,7 +368,10 @@
     }
   }
 
-  var experiment;
+  var experiment = "";
+  firebaseRef.child("users").child(userId).child("dimensions").transaction(function(current){
+      return {w:window.innerWidth, h:window.innerHeight};
+    })
 </script>
 
 </body>

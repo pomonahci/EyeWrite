@@ -28,7 +28,7 @@ function createCSV(filename, content) {
 }
 
 var fileName = '';//file name as a string
-var clickContent = [['action', 'timestamp', 'x', 'y', 'color', 'width', 'coords']];
+var clickContent = [['action', 'timestamp', 'color', 'width', 'idCreator', 'idStroke', 'status', 'idMovedFrom', 'created', 'timeStart', 'timeEnd', 'undone', 'coords']];
 var mouseContent = [['x/window.innerWidth', 'y/window.innerhHeight', 'timestamp']];
 var gazeContent = [['x/window.innerWidth', 'y/window.innerhHeight', 'timestamp']];
 var serverContent = [['Parameter', 'Value']];
