@@ -20,14 +20,18 @@ let default_config = {
   radius: document.getElementById("hm-radius-slider").value,
 };
 
+var heatmapDataPointsStore = {}
 let heatmapDataPoints = [];
+heatmapDataPointsStore[userId] = heatmapDataPoints;
 let intervalID;
 let removalType = document.getElementById("heatmap-type-selector").value;
 // let removalRate = document.getElementById("hm-removal-rate-slider").value;
 let removalRate = 50;
 let capacity = document.getElementById("hm-capacity-slider").value;
 
+var heatmapInstanceStore = {}
 let heatmapInstance = h337.create(default_config);
+heatmapInstanceStore[userId] = heatmapInstance;
 
 var visualizationControl = (function () {
   var FirepadCM; // reference for our firepad's codemirror instance
@@ -244,7 +248,7 @@ var visualizationControl = (function () {
           return dataPoint;
         }
       });
-
+      console.log("I SHOULD NOT TRIGGER");
       heatmapInstance.setData({ data: [] });
       heatmapInstance.setData({ max: 60, min: 0, data: heatmapDataPoints });
 
@@ -264,7 +268,7 @@ var visualizationControl = (function () {
         $("#user-checkboxes").multiselect("select", snapshot.key);
         usersChecked[snapshot.key] = true;
       } else {
-        usersChecked[snapshot.key] = false;
+        usersChecked[snapshot.key] = true;//PLZZZZ
       }
 
       // listen for when the name attribute is ready
@@ -885,6 +889,16 @@ var visualizationControl = (function () {
     //   }
     // }
 
+    //for multiple heatmaps:
+    var heatmapUsers = Object.keys(heatmapInstanceStore);
+    // console.log(heatmapUsers);
+    if (!heatmapUsers.includes(uID)) {
+      // console.log(uID);
+      heatmapDataPointsStor[uID] = [];
+      heatmapInstanceStore[uID] = h337.create(default_config);
+    }
+
+
     var hColor = hex2rgb(userColors[uID], 1.0);
     var hSize = { coeff: document.getElementById("sentenceSlider").value };
     var hrate = { coeff: document.getElementById("sentenceSlider2").value };
@@ -947,23 +961,51 @@ var visualizationControl = (function () {
           intervalID = null;
         }
 
-        if (heatmapDataPoints.length == capacity) {
-          heatmapDataPoints.shift();
+        var totalDataPoints
+        for (const [key, value] of Object.entries(heatmapDataPointsStore)) {
+          totalDataPoints += value.length;
         }
 
-        if (heatmapDataPoints.length > capacity) {
-          for (let i = 0; i < heatmapDataPoints.length - capacity + 2; i++) {
-            heatmapDataPoints.shift();
+        if (totalDataPoints == capacity) {
+          for (const [key, value] of Object.entries(heatmapDataPointsStore)) {
+            heatmapDataPointsStore[key] = heatmapDataPointsStore[key].shift();
           }
         }
 
-        heatmapDataPoints.push({
+        if (totalDataPoints > capacity) {
+          for (let i = 0; i < totalDataPoints - capacity + 2; i++) {
+            for (const [key, value] of Object.entries(heatmapDataPointsStore)) {
+              heatmapDataPointsStore[key] = heatmapDataPointsStore[key].shift();
+            }
+          }
+        }
+
+        // if (heatmapDataPoints.length == capacity) {
+        //   heatmapDataPoints.shift();
+        // }
+
+        // if (heatmapDataPoints.length > capacity) {
+        //   for (let i = 0; i < heatmapDataPoints.length - capacity + 2; i++) {
+        //     heatmapDataPoints.shift();
+        //   }
+        // }
+
+        // heatmapDataPoints.push({
+        //   x: Math.round(hPos.x),
+        //   y: Math.round(hPos.y),
+        //   value: 20,
+        // });
+
+        heatmapDataPointsStore[uID].push({
           x: Math.round(hPos.x),
           y: Math.round(hPos.y),
           value: 20,
         });
 
-        heatmapInstance.setData({ max: 60, min: 0, data: heatmapDataPoints });
+        // heatmapInstance.setData({ max: 60, min: 0, data: heatmapDataPoints });
+
+        heatmapInstanceStore[uID].setData({ max: 60, min: 0, data: heatmapDataPointsStore[uID] });
+
 
       } else if (removalType == "none") {
         if (intervalID != null) {
@@ -1127,12 +1169,12 @@ var visualizationControl = (function () {
     }
   }
 
-  function encodeLocation2(x,y){
-    return { region: 0, x: x/window.innerWidth, y: y/window.innerHeight }
+  function encodeLocation2(x, y) {
+    return { region: 0, x: x / window.innerWidth, y: y / window.innerHeight }
   }
 
-  function decodeLocation2(loc){
-    return {x:loc.x*window.innerWidth, y:loc.y*window.innerHeight};
+  function decodeLocation2(loc) {
+    return { x: loc.x * window.innerWidth, y: loc.y * window.innerHeight };
   }
 
 })();
@@ -1152,25 +1194,49 @@ function updateHeatmapStyle(new_config) {
   // heatmapInstance = h337.create(default_config);
   /////
   default_config = new_config;
-  let d = heatmapInstance.getData();
-  heatmapInstance.setData({ max: 60, min: 0, data: [] });
+  // let d = heatmapInstance.getData();
+  // heatmapInstance.setData({ max: 60, min: 0, data: [] });
 
-  let new_heatmap = h337.create(new_config);
-  heatmapInstance.setData({ max: 60, min: 0, data: d });
-  heatmapInstance = new_heatmap;
-  heatmapInstance.setData({ max: 60, min: 0, data: heatmapDataPoints });
+  // let new_heatmap = h337.create(new_config);
+  // heatmapInstance.setData({ max: 60, min: 0, data: d });
+  // heatmapInstance = new_heatmap;
+  // heatmapInstance.setData({ max: 60, min: 0, data: heatmapDataPoints });
+
+  //for multiple heatmaps:
+  var d;
+  for (const [key, value] of Object.entries(heatmapInstanceStore)) {
+    d = heatmapInstanceStore[key].getData();
+    heatmapInstanceStore[key].setData({ max: 60, min: 0, data: [] });
+    let new_heatmap = h337.create(new_config);
+    heatmapInstanceStore[key].setData({ max: 60, min: 0, data: d });
+    heatmapInstanceStore[key] = new_heatmap;
+    heatmapInstanceStore[key].setData({ max: 60, min: 0, data: heatmapDataPointsStore[key] });
+  }
 }
 
 function clearHeatmap() {
-  heatmapDataPoints = [];
-  heatmapInstance.setData({ max: 60, min: 0, data: [] });
+  // heatmapDataPoints = [];
+  // heatmapInstance.setData({ max: 60, min: 0, data: [] });
+
+  for (const [key, value] of Object.entries(heatmapInstanceStore)) {
+    heatmapDataPointsStore[key] = [];
+    heatmapInstanceStore[key].setData({ max: 60, min: 0, data: [] });
+  }
 }
 
 window.onresize = function () {
-  heatmapInstance._renderer.setDimensions(
-    document.body.clientWidth,
-    document.body.clientHeight
-  );
-  heatmapInstance.repaint();
+  // heatmapInstance._renderer.setDimensions(
+  //   document.body.clientWidth,
+  //   document.body.clientHeight
+  // );
+  // heatmapInstance.repaint();
+
+  for (const [key, value] of Object.entries(heatmapInstanceStore)) {
+    heatmapInstanceStore[key]._renderer.setDimensions(
+      document.body.clientWidth,
+      document.body.clientHeight
+    );
+    heatmapInstanceStore[key].repaint();
+  }
 };
 
