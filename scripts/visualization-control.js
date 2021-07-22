@@ -968,14 +968,14 @@ var visualizationControl = (function () {
 
         if (totalDataPoints == capacity) {
           for (const [key, value] of Object.entries(heatmapDataPointsStore)) {
-            heatmapDataPointsStore[key] = heatmapDataPointsStore[key].shift();
+            heatmapDataPointsStore[key] = value.shift();
           }
         }
 
         if (totalDataPoints > capacity) {
           for (let i = 0; i < totalDataPoints - capacity + 2; i++) {
             for (const [key, value] of Object.entries(heatmapDataPointsStore)) {
-              heatmapDataPointsStore[key] = heatmapDataPointsStore[key].shift();
+              heatmapDataPointsStore[key] = value.shift();
             }
           }
         }
