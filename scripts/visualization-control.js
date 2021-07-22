@@ -1006,6 +1006,10 @@ var visualizationControl = (function () {
 
         heatmapInstanceStore[uID].setData({ max: 60, min: 0, data: heatmapDataPointsStore[uID] });
 
+        for (const [key, value] of Object.entries(heatmapInstanceStore)) {
+          heatmapInstanceStore[key].setData({ max: 60, min: 0, data: heatmapDataPointsStore[key] });
+        }
+
 
       } else if (removalType == "none") {
         if (intervalID != null) {
