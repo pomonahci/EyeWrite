@@ -961,7 +961,7 @@ var visualizationControl = (function () {
           intervalID = null;
         }
 
-        var totalDataPoints
+        var totalDataPoints = 0;
         for (const [key, value] of Object.entries(heatmapDataPointsStore)) {
           totalDataPoints += value.length;
         }
