@@ -268,7 +268,7 @@ var visualizationControl = (function () {
         $("#user-checkboxes").multiselect("select", snapshot.key);
         usersChecked[snapshot.key] = true;
       } else {
-        usersChecked[snapshot.key] = true;//PLZZZZ
+        usersChecked[snapshot.key] = false;//PLZZZZ
       }
 
       // listen for when the name attribute is ready
@@ -894,7 +894,7 @@ var visualizationControl = (function () {
     // console.log(heatmapUsers);
     if (!heatmapUsers.includes(uID)) {
       // console.log(uID);
-      heatmapDataPointsStor[uID] = [];
+      heatmapDataPointsStore[uID] = [];
       heatmapInstanceStore[uID] = h337.create(default_config);
     }
 
