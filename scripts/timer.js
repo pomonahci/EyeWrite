@@ -1,3 +1,10 @@
+/**
+ * timer.js defines a timer feature to be placed in a div element
+ *
+ * Name: nickmarsano
+ * Date: 7/23/21
+ */
+
 const timer = document.getElementById('timer');
 
 var hr = 0;

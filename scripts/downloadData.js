@@ -1,3 +1,10 @@
+/**
+ * downloadData.js defines listener for downloading CSV files of experiment data
+ *
+ * Name: nickmarsano
+ * Date: 7/23/21
+ */
+
 function download(filename, text) {
     var element = document.createElement('a');
     element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(text));

@@ -1,7 +1,7 @@
 /**
  * highlight-style.js defines highlight style functions
  * .
- * Name: chanhakim
+ * Name: chanhakim, nickmarsano
  * Date: 05/04/2021
  */
 
