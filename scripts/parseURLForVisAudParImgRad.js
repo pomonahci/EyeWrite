@@ -1,5 +1,6 @@
 /**
- * parseURLForVisAud.js triggers when FirePad is ready and turns on visualizations and audio call as need be
+ * parseURLForVisAudParImgRad.js triggers when FirePad is ready and turns on visualizations and audio call as need be
+ * as well as setting some other parameters
  * 
  * Name: nickmarsano
  * Date: 07/01/2021

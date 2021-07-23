@@ -1,3 +1,10 @@
+/**
+ * stopwatch.js defines a stopwatch feature to be placed in a div element
+ *
+ * Name: nickmarsano
+ * Date: 7/23/21
+ */
+
 const stopwatch = document.getElementById('stopwatch');
 
 var hr = 0;

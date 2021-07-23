@@ -5,14 +5,6 @@
  * Date: Summer 2020 - Spring 2021
  */
 
-// var URL = window.location.href;
-// var participants = URL.search('par');
-// if (participants == -1) {
-//   participants = 2;
-// }
-// else {
-//   participants = URL.substring(participants + 4, participants + 5);
-// }
 let default_config = {
   container: document.querySelector("#heatmap"),
   gradient: { 0.25: "rgb(220,220,220)", 0.55: "rgb(169,169,169)", 0.85: "	rgb(128,128,128)", 1.0: "rgb(72,72,72)" },//monochromatic version
@@ -268,7 +260,7 @@ var visualizationControl = (function () {
         $("#user-checkboxes").multiselect("select", snapshot.key);
         usersChecked[snapshot.key] = true;
       } else {
-        usersChecked[snapshot.key] = true;//PLZZZZ
+        usersChecked[snapshot.key] = false;
       }
 
       // listen for when the name attribute is ready
@@ -1004,7 +996,7 @@ var visualizationControl = (function () {
 
         // heatmapInstance.setData({ max: 60, min: 0, data: heatmapDataPoints });
 
-        heatmapInstanceStore[uID].setData({ max: 60, min: 0, data: heatmapDataPointsStore[uID] });
+        // heatmapInstanceStore[uID].setData({ max: 60, min: 0, data: heatmapDataPointsStore[uID] });
 
         for (const [key, value] of Object.entries(heatmapInstanceStore)) {
           heatmapInstanceStore[key].setData({ max: 60, min: 0, data: heatmapDataPointsStore[key] });
