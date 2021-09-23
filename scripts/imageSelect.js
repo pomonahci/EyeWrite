@@ -145,6 +145,7 @@ function updateIncorrectClicks(snapshot) {
 
 var action = '';
 function checkTaskComplete(snapshot) {
+    // check if everyone has clicked on this task
     if (found + skipped == numPpl) {
         nextTarget();
     }
@@ -156,30 +157,36 @@ function nextTarget() {
 
     // clickContent.push("Personal Incorrect Clicks:"+misclicks+",\n");
 
-
     clearBoxes();
     firebaseRef.child('tasks').child(task).off();
-    task++;
-    misclicks = 0;
-    document.getElementById('badclicks').innerHTML = 0;
-    targetHit = false;
-    mySkipVote = false;
-    document.getElementById("skipButton").innerHTML = "Skip Target";
-    document.getElementById("skipButton").style.left = '15%';
+    
+    firebaseRef.child('tasks').once('value', function (snap) {
+        // snap.val() is the array of users who have correctly clicked on the target.
+        // so when we do task = snap.val().length, we're increasing the task by 1
+        task = snap.val().length;
+        
+        // the rest of the code is in here cause of javascript async handling
+        misclicks = 0;
+        document.getElementById('badclicks').innerHTML = 0;
+        targetHit = false;
+        mySkipVote = false;
+        document.getElementById("skipButton").innerHTML = "Skip Target";
+        document.getElementById("skipButton").style.left = '15%';
 
-    if (numTargets == task) {
-        document.getElementById("imageSearch").removeEventListener("click", onClick);
-        document.getElementById('targetSearch').style.visibility = 'hidden';
-        stopStopwatch();
-        document.getElementById("skipButton").innerHTML = "All Targets Found!";
-        document.getElementById("skipButton").style.left = '5%';
-        return;
-    }
-    document.getElementById("skipButton").disabled = false;
-    action = '';
-    skipped = 0;
-    found = 0;
-    getTarget();
+        if (numTargets == task) {
+            document.getElementById("imageSearch").removeEventListener("click", onClick);
+            document.getElementById('targetSearch').style.visibility = 'hidden';
+            stopStopwatch();
+            document.getElementById("skipButton").innerHTML = "All Targets Found!";
+            document.getElementById("skipButton").style.left = '5%';
+            return;
+        }
+        document.getElementById("skipButton").disabled = false;
+        action = '';
+        skipped = 0;
+        found = 0;
+        getTarget();
+    });
 }
 
 function clearBoxes() {
@@ -202,6 +209,9 @@ function firelist(snapshot) {
     if (snapshot.key == 'incorrectClicks') {
         updateIncorrectClicks(snapshot);
     } else if (snapshot.key == 'targetClicked') {
+        // in the correct one, this is called once for each time someone clicks
+        // on the target (so if par=4, then it's called 4 times). But in the incorrect
+        // ones, it's being called twice. 
         found = Object.keys(snapshot.val()).length;
         checkTaskComplete(snapshot);
     }
@@ -219,7 +229,6 @@ function startExp() {
     firebaseRef.child('tasks').once('value', function (snap) {
         task = snap.val().length - 1;
     });
-
     getTarget();
 }
 
