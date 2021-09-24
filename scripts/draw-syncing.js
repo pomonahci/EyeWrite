@@ -16,29 +16,6 @@ var todos = [];
 var pathEX;
 
 
-// function synchronize(sketch) {
-//   primSket.undoIndex = 0;
-//   primSket.clearUndoIndex = 0;
-//   primSket.loadSketch(sketch);
-//   primSket.displayLoadedSketch(false);
-
-// }
-
-// function completeTodos() {
-//   var cereal = primSket.serialize();
-//   for (const x of todos) {
-//     if (x.created == 'draw') {
-//       primSket.currentPath = pathEX.deserialize(x, primSket.draw, primSket.pencilTexture);;
-//       primSket.finishPath();
-//       primSket.currStrokeID += 1;
-//     }
-//     else {
-//       cereal.push(x);
-//       synchronize(cereal);
-//     }
-//   }
-//   todos = [];
-// }
 
 firebaseRef.child('svg').child(userId).set("");
 
