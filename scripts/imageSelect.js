@@ -125,21 +125,27 @@ function onClick(event) {
     else {
         clickContent.push(["Incorrect Click", keys[task], Date.now(), x/window.innerWidth, y/window.innerHeight]);
 
-        var badclicks;
-        firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('incorrectClicks').transaction(function (current) {
-            if (!current) current = 0;
-            current++;
-            badclicks = current;
-            document.getElementById('badclicks').innerHTML = current;
-            return current;
-        })
         misclicks++;
+        // update user's misclicks on server
+        firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('incorrectClicks').child(userId).transaction(function (current) {
+            if (!current) current = 0;
+            current = misclicks;
+            return current;
+        });
 
+        // update client-side display with computed total misclicks
+        firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('incorrectClicks').transaction(function (current) {
+            total = 0;
+            for (misclick of Object.values(current)) {
+                total += misclick;
+            }
+            document.getElementById('badclicks').innerHTML = total;
+        });
     }
 }
 
 function updateIncorrectClicks(snapshot) {
-    document.getElementById('badclicks').innerHTML = snapshot.val();
+    //document.getElementById('badclicks').innerHTML = snapshot.val();
 }
 
 
@@ -207,11 +213,8 @@ function voteSkipTarget() {
 
 function firelist(snapshot) {
     if (snapshot.key == 'incorrectClicks') {
-        updateIncorrectClicks(snapshot);
+        // updateIncorrectClicks(snapshot);
     } else if (snapshot.key == 'targetClicked') {
-        // in the correct one, this is called once for each time someone clicks
-        // on the target (so if par=4, then it's called 4 times). But in the incorrect
-        // ones, it's being called twice. 
         found = Object.keys(snapshot.val()).length;
         checkTaskComplete(snapshot);
     }
