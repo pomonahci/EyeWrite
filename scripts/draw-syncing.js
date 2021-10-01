@@ -132,7 +132,7 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
 var xcof;
 var ycof;
 function sketchEdit(e, x, y, c) {
-  if (e == 'store') {// || e=='point') {
+  if (e == 'store' || e=='point') {
     xcof = x.clientX;
     ycof = x.clientY;
     return
