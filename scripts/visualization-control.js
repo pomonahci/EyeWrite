@@ -11,17 +11,18 @@ let default_config = {
   radius: document.getElementById("hm-radius-slider").value,
 };
 
-var heatmapDataPointsStore = {}
+// var heatmapDataPointsStore = {}//for multiple
 let heatmapDataPoints = [];
-heatmapDataPointsStore[userId] = heatmapDataPoints; let intervalID;
+let intervalID;
+// heatmapDataPointsStore[userId] = heatmapDataPoints; //for multiple
 let removalType = document.getElementById("heatmap-type-selector").value;
 // let removalRate = document.getElementById("hm-removal-rate-slider").value;
 let removalRate = 50;
 let capacity = document.getElementById("hm-capacity-slider").value;
 
-var heatmapInstanceStore = {}
+// var heatmapInstanceStore = {}//for multiple
 let heatmapInstance = h337.create(default_config);
-heatmapInstanceStore[userId] = heatmapInstance;
+// heatmapInstanceStore[userId] = heatmapInstance;//for multiple
 
 var visualizationControl = function () {
 
@@ -762,12 +763,12 @@ var visualizationControl = function () {
     // }
 
     //for multiple heatmaps:
-    var heatmapUsers = Object.keys(heatmapInstanceStore);
+    // var heatmapUsers = Object.keys(heatmapInstanceStore);
     // console.log(heatmapUsers);
-    if (!heatmapUsers.includes(uID)) {
-      // console.log(uID);
-      heatmapDataPointsStore[uID] = [];
-      heatmapInstanceStore[uID] = h337.create(default_config);
+    // if (!heatmapUsers.includes(uID)) {
+    //   // console.log(uID);
+    //   heatmapDataPointsStore[uID] = [];
+    //   heatmapInstanceStore[uID] = h337.create(default_config);
     }
 
     var hColor = hex2rgb(userColors[uID], 1.0);
@@ -828,40 +829,60 @@ var visualizationControl = function () {
           value: 20,
         });
         heatmapInstance.setData({ max: 60, min: 0, data: heatmapDataPoints });
+
       } else if (removalType == "capacity") {
         if (intervalID != null) {
           clearInterval(intervalID);
           intervalID = null;
         }
-
-        var totalDataPoints = 0;
-        for (const [key, value] of Object.entries(heatmapDataPointsStore)) {
-          totalDataPoints += value.length;
+        //FOR SINGLE
+        if (heatmapDataPoints.length == capacity) {
+          heatmapDataPoints.shift();
         }
-
-        if (totalDataPoints == capacity) {
-          for (const [key, value] of Object.entries(heatmapDataPointsStore)) {
-            heatmapDataPointsStore[key].shift();
+  
+        if (heatmapDataPoints.length > capacity) {
+          for (let i = 0; i < heatmapDataPoints.length - capacity + 2; i++) {
+            heatmapDataPoints.shift();
           }
         }
-
-        if (totalDataPoints > capacity) {
-          for (let i = 0; i < totalDataPoints - capacity + 2; i++) {
-            for (const [key, value] of Object.entries(heatmapDataPointsStore)) {
-              heatmapDataPointsStore[key].shift();
-            }
-          }
-        }
-
-        heatmapDataPointsStore[uID].push({
+  
+        heatmapDataPoints.push({
           x: Math.round(hPos.x),
           y: Math.round(hPos.y),
           value: 20,
         });
+  
+        heatmapInstance.setData({ max: 60, min: 0, data: heatmapDataPoints });
+        //FOR MULTIPLE
+        // var totalDataPoints = 0;
+        // for (const [key, value] of Object.entries(heatmapDataPointsStore)) {
+        //   totalDataPoints += value.length;
+        // }
 
-        for (const [key, value] of Object.entries(heatmapInstanceStore)) {
-          heatmapInstanceStore[key].setData({ max: 60, min: 0, data: heatmapDataPointsStore[key] });
-        }
+        // if (totalDataPoints == capacity) {
+        //   for (const [key, value] of Object.entries(heatmapDataPointsStore)) {
+        //     heatmapDataPointsStore[key].shift();
+        //   }
+        // }
+
+        // if (totalDataPoints > capacity) {
+        //   for (let i = 0; i < totalDataPoints - capacity + 2; i++) {
+        //     for (const [key, value] of Object.entries(heatmapDataPointsStore)) {
+        //       heatmapDataPointsStore[key].shift();
+        //     }
+        //   }
+        // }
+
+        // heatmapDataPointsStore[uID].push({
+        //   x: Math.round(hPos.x),
+        //   y: Math.round(hPos.y),
+        //   value: 20,
+        // });
+
+        // for (const [key, value] of Object.entries(heatmapInstanceStore)) {
+        //   heatmapInstanceStore[key].setData({ max: 60, min: 0, data: heatmapDataPointsStore[key] });
+        // }
+        //
       } else if (removalType == "none") {
         if (intervalID != null) {
           clearInterval(intervalID);
@@ -877,7 +898,7 @@ var visualizationControl = function () {
     } else {
       if (window.debug) console.log("invalid shape!");
     }
-  }
+  
 
   /**
    * removeHighlight takes a user ID as input and removes the corresponding
@@ -1034,47 +1055,56 @@ function updateHeatmapStyle(new_config) {
   // heatmapInstance.setData({ max: 100, min: 100, data: [] });
   // heatmapInstance = new_heatmap;
   // heatmapInstance = h337.create(new_config);
-  /////
+  // ///
   // heatmapDataPoints = [];
   // heatmapInstance.setData({ data: [] });
   // default_config = new_config;
   // heatmapInstance = h337.create(default_config);
-  /////
+  //FOR SINGLE
   default_config = new_config;
-  //for multiple heatmaps:
-  var d;
-  for (const [key, value] of Object.entries(heatmapInstanceStore)) {
-    d = heatmapInstanceStore[key].getData();
-    heatmapInstanceStore[key].setData({ max: 60, min: 0, data: [] });
-    let new_heatmap = h337.create(new_config);
-    heatmapInstanceStore[key].setData({ max: 60, min: 0, data: d });
-    heatmapInstanceStore[key] = new_heatmap;
-    heatmapInstanceStore[key].setData({ max: 60, min: 0, data: heatmapDataPointsStore[key] });
-  }
+  let d = heatmapInstance.getData();
+  heatmapInstance.setData({ max: 60, min: 0, data: [] });
+
+  let new_heatmap = h337.create(new_config);
+  heatmapInstance.setData({ max: 60, min: 0, data: d });
+  heatmapInstance = new_heatmap;
+  heatmapInstance.setData({ max: 60, min: 0, data: heatmapDataPoints });
+  /////FOR MULTIPLE
+  // default_config = new_config;
+  // //for multiple heatmaps:
+  // var d;
+  // for (const [key, value] of Object.entries(heatmapInstanceStore)) {
+  //   d = heatmapInstanceStore[key].getData();
+  //   heatmapInstanceStore[key].setData({ max: 60, min: 0, data: [] });
+  //   let new_heatmap = h337.create(new_config);
+  //   heatmapInstanceStore[key].setData({ max: 60, min: 0, data: d });
+  //   heatmapInstanceStore[key] = new_heatmap;
+  //   heatmapInstanceStore[key].setData({ max: 60, min: 0, data: heatmapDataPointsStore[key] });
+  // }
 }
 
 function clearHeatmap() {
-  // heatmapDataPoints = [];
-  // heatmapInstance.setData({ max: 60, min: 0, data: [] });
+  heatmapDataPoints = [];
+  heatmapInstance.setData({ max: 60, min: 0, data: [] });
 
-  for (const [key, value] of Object.entries(heatmapInstanceStore)) {
-    heatmapDataPointsStore[key] = [];
-    heatmapInstanceStore[key].setData({ max: 60, min: 0, data: [] });
-  }
+  // for (const [key, value] of Object.entries(heatmapInstanceStore)) {
+  //   heatmapDataPointsStore[key] = [];
+  //   heatmapInstanceStore[key].setData({ max: 60, min: 0, data: [] });
+  // }
 }
 
 window.onresize = function () {
-  // heatmapInstance._renderer.setDimensions(
-  //   document.body.clientWidth,
-  //   document.body.clientHeight
-  // );
-  // heatmapInstance.repaint();
+  heatmapInstance._renderer.setDimensions(
+    document.body.clientWidth,
+    document.body.clientHeight
+  );
+  heatmapInstance.repaint();
 
-  for (const [key, value] of Object.entries(heatmapInstanceStore)) {
-    heatmapInstanceStore[key]._renderer.setDimensions(
-      document.body.clientWidth,
-      document.body.clientHeight
-    );
-    heatmapInstanceStore[key].repaint();
-  }
+  // for (const [key, value] of Object.entries(heatmapInstanceStore)) {
+  //   heatmapInstanceStore[key]._renderer.setDimensions(
+  //     document.body.clientWidth,
+  //     document.body.clientHeight
+  //   );
+  //   heatmapInstanceStore[key].repaint();
+  // }
 };
