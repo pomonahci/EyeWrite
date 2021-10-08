@@ -133,24 +133,23 @@ function onClick(event) {
             return current;
         });
 
-        // update client-side display with computed total misclicks
-        firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('incorrectClicks').transaction(function (current) {
-            total = 0;
-            for (misclick of Object.values(current)) {
-                total += misclick;
-            }
-            document.getElementById('badclicks').innerHTML = total;
-        });
+        updateIncorrectClicks();
     }
 }
 
-function updateIncorrectClicks(snapshot) {
-    //document.getElementById('badclicks').innerHTML = snapshot.val();
+function updateIncorrectClicks() {
+    // update client-side display with computed total misclicks
+    firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('incorrectClicks').transaction(function(current) {
+        total = 0;
+        for (misclick of Object.values(current)) {
+            total += misclick;
+        }
+        document.getElementById('badclicks').innerHTML = total;
+    });
 }
 
-
 var action = '';
-function checkTaskComplete(snapshot) {
+function checkTaskComplete() {
     // check if everyone has clicked on this task
     if (found + skipped == numPpl) {
         nextTarget();
@@ -213,7 +212,8 @@ function voteSkipTarget() {
 
 function firelist(snapshot) {
     if (snapshot.key == 'incorrectClicks') {
-        // updateIncorrectClicks(snapshot);
+        console.log("snapshot.key is incorrectClicks");
+        updateIncorrectClicks();
     } else if (snapshot.key == 'targetClicked') {
         found = Object.keys(snapshot.val()).length;
         checkTaskComplete(snapshot);
