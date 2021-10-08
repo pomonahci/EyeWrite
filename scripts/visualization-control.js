@@ -769,7 +769,7 @@ var visualizationControl = function () {
     //   // console.log(uID);
     //   heatmapDataPointsStore[uID] = [];
     //   heatmapInstanceStore[uID] = h337.create(default_config);
-    }
+    // }
 
     var hColor = hex2rgb(userColors[uID], 1.0);
     var hSize = { coeff: document.getElementById("sentenceSlider").value };
@@ -898,7 +898,7 @@ var visualizationControl = function () {
     } else {
       if (window.debug) console.log("invalid shape!");
     }
-  
+  }
 
   /**
    * removeHighlight takes a user ID as input and removes the corresponding
