@@ -125,26 +125,32 @@ function onClick(event) {
     else {
         clickContent.push(["Incorrect Click", keys[task], Date.now(), x/window.innerWidth, y/window.innerHeight]);
 
-        var badclicks;
-        firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('incorrectClicks').transaction(function (current) {
-            if (!current) current = 0;
-            current++;
-            badclicks = current;
-            document.getElementById('badclicks').innerHTML = current;
-            return current;
-        })
         misclicks++;
+        // update user's misclicks on server
+        firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('incorrectClicks').child(userId).transaction(function (current) {
+            if (!current) current = 0;
+            current = misclicks;
+            return current;
+        });
 
+        updateIncorrectClicks();
     }
 }
 
-function updateIncorrectClicks(snapshot) {
-    document.getElementById('badclicks').innerHTML = snapshot.val();
+function updateIncorrectClicks() {
+    // update client-side display with computed total misclicks
+    firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('incorrectClicks').transaction(function(current) {
+        total = 0;
+        for (misclick of Object.values(current)) {
+            total += misclick;
+        }
+        document.getElementById('badclicks').innerHTML = total;
+    });
 }
 
-
 var action = '';
-function checkTaskComplete(snapshot) {
+function checkTaskComplete() {
+    // check if everyone has clicked on this task
     if (found + skipped == numPpl) {
         nextTarget();
     }
@@ -156,30 +162,36 @@ function nextTarget() {
 
     // clickContent.push("Personal Incorrect Clicks:"+misclicks+",\n");
 
-
     clearBoxes();
     firebaseRef.child('tasks').child(task).off();
-    task++;
-    misclicks = 0;
-    document.getElementById('badclicks').innerHTML = 0;
-    targetHit = false;
-    mySkipVote = false;
-    document.getElementById("skipButton").innerHTML = "Skip Target";
-    document.getElementById("skipButton").style.left = '15%';
+    
+    firebaseRef.child('tasks').once('value', function (snap) {
+        // snap.val() is the array of users who have correctly clicked on the target.
+        // so when we do task = snap.val().length, we're increasing the task by 1
+        task = snap.val().length;
+        
+        // the rest of the code is in here cause of javascript async handling
+        misclicks = 0;
+        document.getElementById('badclicks').innerHTML = 0;
+        targetHit = false;
+        mySkipVote = false;
+        document.getElementById("skipButton").innerHTML = "Skip Target";
+        document.getElementById("skipButton").style.left = '15%';
 
-    if (numTargets == task) {
-        document.getElementById("imageSearch").removeEventListener("click", onClick);
-        document.getElementById('targetSearch').style.visibility = 'hidden';
-        stopStopwatch();
-        document.getElementById("skipButton").innerHTML = "All Targets Found!";
-        document.getElementById("skipButton").style.left = '5%';
-        return;
-    }
-    document.getElementById("skipButton").disabled = false;
-    action = '';
-    skipped = 0;
-    found = 0;
-    getTarget();
+        if (numTargets == task) {
+            document.getElementById("imageSearch").removeEventListener("click", onClick);
+            document.getElementById('targetSearch').style.visibility = 'hidden';
+            stopStopwatch();
+            document.getElementById("skipButton").innerHTML = "All Targets Found!";
+            document.getElementById("skipButton").style.left = '5%';
+            return;
+        }
+        document.getElementById("skipButton").disabled = false;
+        action = '';
+        skipped = 0;
+        found = 0;
+        getTarget();
+    });
 }
 
 function clearBoxes() {
@@ -200,7 +212,8 @@ function voteSkipTarget() {
 
 function firelist(snapshot) {
     if (snapshot.key == 'incorrectClicks') {
-        updateIncorrectClicks(snapshot);
+        console.log("snapshot.key is incorrectClicks");
+        updateIncorrectClicks();
     } else if (snapshot.key == 'targetClicked') {
         found = Object.keys(snapshot.val()).length;
         checkTaskComplete(snapshot);
@@ -219,7 +232,6 @@ function startExp() {
     firebaseRef.child('tasks').once('value', function (snap) {
         task = snap.val().length - 1;
     });
-
     getTarget();
 }
 
