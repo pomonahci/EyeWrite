@@ -4,6 +4,36 @@
  * Name: davecarroll, chanhakim, nickmarsano
  * Date: Summer 2020 - Spring 2021
  */
+class Queue {
+  constructor(){
+    this.elements={};
+    this.head=0;
+    this.tail=0;
+  }
+  get length(){
+    return this.tail-this.head;
+  }
+  enqueue(element){
+    this.elements[this.tail] = element;
+    this.tail++;
+  }
+  dequeue(){
+    if(this.length){
+      const element = this.elements[this.head];
+      delete this.elements[this.head];
+      this.head++;
+      return element;
+    }
+    return undefined;
+  }
+  peek(){
+    if(this.length){
+      return this.elements[this.head];
+    }
+    return undefined
+  }
+}
+
 let default_config = {
   container: document.querySelector("#heatmap"),
   gradient: { 0.25: "rgb(220,220,220)", 0.55: "rgb(169,169,169)", 0.85: "	rgb(128,128,128)", 1.0: "rgb(72,72,72)" },//monochromatic version
@@ -13,13 +43,14 @@ let default_config = {
 
 // var heatmapDataPointsStore = {}//for multiple
 let heatmapDataPoints = [];
+let heatmapDataPointsQueue = new Queue();
 let intervalID;
 // heatmapDataPointsStore[userId] = heatmapDataPoints; //for multiple
 let removalType = document.getElementById("heatmap-type-selector").value;
 // let removalRate = document.getElementById("hm-removal-rate-slider").value;
 let removalRate = 50;
-let capacity = document.getElementById("hm-capacity-slider").value;
-
+//let capacity = document.getElementById("hm-capacity-slider").value;
+let capacity = 50;
 // var heatmapInstanceStore = {}//for multiple
 let heatmapInstance = h337.create(default_config);
 // heatmapInstanceStore[userId] = heatmapInstance;//for multiple
