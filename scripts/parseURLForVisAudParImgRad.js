@@ -57,7 +57,9 @@ function parseURLFor() {
 function triggerVis(vis) {
     if (vis == 1) {//HollowMouse
         serverContent.splice(3,0,["Visualization","Hollow Circle"]);
-        document.getElementById("vis-shape").value = 'hollow';
+        document.getElementById("vis-shape").value = 'solid';
+
+        //document.getElementById("vis-shape").value = 'hollow';
         document.getElementById("vis-shape").dispatchEvent(new Event('change'));
         document.getElementById("mouseSendSwitch").click();
         document.getElementById("mouseVisSwitch").click();
