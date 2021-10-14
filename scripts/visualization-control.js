@@ -460,10 +460,10 @@ var visualizationControl = (function () {
     gazeSendSwitch.addEventListener("change", function () {
       if (gazeSendSwitch.checked) {
         // mouseSendSwitch.checked = false;
-        if (window.isWebGazerActive == false) {
-          window.isWebGazerActive = true;
-          startWebGazer();
-        }
+        // if (window.isWebGazerActive == false) {
+        //   window.isWebGazerActive = true;
+        //   startWebGazer();
+        // }
 
         if (mouseSendSwitch.checked) {
           window.sendDataState = 3;

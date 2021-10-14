@@ -51,7 +51,7 @@ function parseURLFor() {
     radius = URL.substring(radius + 4, radius + 5);
     document.getElementById("sentenceSlider").value = radius;
 
-
+    if (URL.search("gaze") != -1) document.getElementById("gazeSendSwitch").click();
 }
 
 function triggerVis(vis) {
