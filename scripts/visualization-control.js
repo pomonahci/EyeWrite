@@ -4,35 +4,8 @@
  * Name: davecarroll, chanhakim, nickmarsano
  * Date: Summer 2020 - Spring 2021
  */
-class Queue {
-  constructor(){
-    this.elements={};
-    this.head=0;
-    this.tail=0;
-  }
-  get length(){
-    return this.tail-this.head;
-  }
-  enqueue(element){
-    this.elements[this.tail] = element;
-    this.tail++;
-  }
-  dequeue(){
-    if(this.length){
-      const element = this.elements[this.head];
-      delete this.elements[this.head];
-      this.head++;
-      return element;
-    }
-    return undefined;
-  }
-  peek(){
-    if(this.length){
-      return this.elements[this.head];
-    }
-    return undefined
-  }
-}
+
+let overlap_colors = ["blue","red"];
 
 let default_config = {
   container: document.querySelector("#heatmap"),
@@ -803,12 +776,20 @@ var visualizationControl = function () {
     // }
 
     var hColor = hex2rgb(userColors[uID], 1.0);
-    var hSize = { coeff: document.getElementById("sentenceSlider").value };
+    var hSize = { coeff: document.getElementById("sentenceSlider").value };//radius
     var hrate = { coeff: document.getElementById("sentenceSlider2").value };
 
 
     // var visShape, visSize;
     if (window.visShape == "solid") {
+      var overlapAMT = 0;
+      firepad.firebaseAdapter_.ref_.child('users').child(userId).transaction(function (current) {
+        console.log(Object.keys(current.val()))
+      })
+      // firepad.firebaseAdapter_.ref_.child('mice').transaction(function (current) {
+        
+      // })
+
       circle.style = createSolidCircleHighlightStyle(hPos, hSize, hColor);
 
       // get rid of clearing heatmap interval and clear heatmap data from screen

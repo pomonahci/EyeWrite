@@ -57,8 +57,8 @@ function triggerVis(vis) {
         document.getElementById("mouseVisSwitch").click();
     }
     else if (vis == 2) {//HeatMapMouse
-        serverContent.push(["Visualization","HeatMap"]);
-        document.getElementById("vis-shape").value = 'heatmap';
+        serverContent.push(["Visualization","Solid"]);
+        document.getElementById("vis-shape").value = 'solid';
         document.getElementById("vis-shape").dispatchEvent(new Event('change'));
         document.getElementById("mouseSendSwitch").click();
         document.getElementById("mouseVisSwitch").click();
