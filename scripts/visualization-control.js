@@ -790,7 +790,7 @@ var visualizationControl = function () {
             //so we want to check all users but the one moving
             //how to get uid of the user moving
             let distSq = (decodeLocation2(value).x - hPos.x) * (decodeLocation2(value).x - hPos.x) + (decodeLocation2(value).y - hPos.y) * (decodeLocation2(value).y - hPos.y);
-            var rad = parseInt(hSize.coeff);
+            var rad = 16*parseInt(hSize.coeff);
             let radSumSq = (rad + rad) * (rad + rad);
 
             if (distSq < radSumSq) {
