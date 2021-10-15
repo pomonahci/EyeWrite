@@ -787,7 +787,7 @@ var visualizationControl = function () {
         for (const [key, value] of Object.entries(current)) {
 
           let distSq = (value[0] - hPos.x) * (value[0] - hPos.x) + (value[1] - hPos.y) * (value[1] - hPos.y);
-          let radSumSq = (hSize + hSize) * (hSize + hSize);
+          let radSumSq = (hSize.coeff + hSize.coeff) * (hSize.coeff + hSize.coeff);
 
           if (distSq < radSumSq) {
             overlapAMT++;
@@ -795,7 +795,7 @@ var visualizationControl = function () {
         }
       })
       if(overlapAMT>0){
-        hColor = "rgba(155, 102, 102,1)"
+        hColor = "rgba(0, 0, 250,1)"
       }
       circle.style = createSolidCircleHighlightStyle(hPos, hSize, hColor);
 
