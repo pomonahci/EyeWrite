@@ -16,7 +16,6 @@ let default_config = {
 
 // var heatmapDataPointsStore = {}//for multiple
 let heatmapDataPoints = [];
-let heatmapDataPointsQueue = new Queue();
 let intervalID;
 // heatmapDataPointsStore[userId] = heatmapDataPoints; //for multiple
 let removalType = document.getElementById("heatmap-type-selector").value;
