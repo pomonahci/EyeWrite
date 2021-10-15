@@ -786,7 +786,7 @@ var visualizationControl = function () {
       firepad.firebaseAdapter_.ref_.child('mice').transaction(function (current) {
         for (const [key, value] of Object.entries(current)) {
 
-          let distSq = (decodeLocation2(value.x) - hPos.x) * (decodeLocation2(value.x) - hPos.x) + (decodeLocation2(value.y) - hPos.y) * (decodeLocation2(value.y) - hPos.y);
+          let distSq = (decodeLocation2(value).x - hPos.x) * (decodeLocation2(value).x - hPos.x) + (decodeLocation2(value).y - hPos.y) * (decodeLocation2(value).y - hPos.y);
           var rad = parseInt(hSize.coeff);
           let radSumSq = (rad + rad) * (rad + rad);
 
