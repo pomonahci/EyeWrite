@@ -16,11 +16,9 @@ function createSolidCircleHighlightStyle(pos, size, color) {
 
 	var hShape = `border-radius: 100%;`;
 	var hColor = `background-color: ${color}; opacity: 0.5;`;
-	// var hSize = `width:${16 * size.coeff}px; height:${16 * size.coeff}px;`;
-	// var hPosition = `left: ${pos.x - 8 * size.coeff}px; top: ${pos.y - 8 * size.coeff}px;`
+	var hSize = `width:${16 * size.coeff}px; height:${16 * size.coeff}px;`;
+	var hPosition = `left: ${pos.x - 8 * size.coeff}px; top: ${pos.y - 8 * size.coeff}px;`
 
-	var hSize = `width:${size.coeff}px; height:${size.coeff}px;`;
-	var hPosition = `left: ${size.coeff}px; top: ${size.coeff}px;`
 
 	var hStyle = `position: absolute; pointer-events: none; ${hShape} ${hColor} ${hSize} ${hPosition}`;
 
