@@ -795,7 +795,7 @@ var visualizationControl = function () {
         }
       })
       if(overlapAMT>0){
-        hColor = "rgb(155, 102, 102)"
+        hColor = "rgba(155, 102, 102,1)"
       }
       circle.style = createSolidCircleHighlightStyle(hPos, hSize, hColor);
 
