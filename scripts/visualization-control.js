@@ -787,7 +787,8 @@ var visualizationControl = function () {
         for (const [key, value] of Object.entries(current)) {
 
           let distSq = (value.x - hPos.x) * (value.x - hPos.x) + (value.y - hPos.y) * (value.y - hPos.y);
-          let radSumSq = (hSize.coeff + hSize.coeff) * (hSize.coeff + hSize.coeff);
+          var rad = parseInt(hSize.coeff);
+          let radSumSq = (rad + rad) * (rad + rad);
 
           if (distSq < radSumSq) {
             overlapAMT++;
