@@ -52,7 +52,7 @@ let removalRate = 50;
 //let capacity = document.getElementById("hm-capacity-slider").value;
 let capacity = 50;
 // var heatmapInstanceStore = {}//for multiple
-let heatmapInstance = window.h337.create(default_config);
+let heatmapInstance = h337.create(default_config);
 // heatmapInstanceStore[userId] = heatmapInstance;//for multiple
 
 var visualizationControl = function () {
