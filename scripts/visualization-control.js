@@ -783,7 +783,7 @@ var visualizationControl = function () {
     if (window.visShape == "solid") {
       var overlapAMT = 0;
       firepad.firebaseAdapter_.ref_.child('users').child(userId).transaction(function (current) {
-        console.log(Object.keys(current.val()))
+        console.log(Object.keys(current))
       })
       // firepad.firebaseAdapter_.ref_.child('mice').transaction(function (current) {
         
