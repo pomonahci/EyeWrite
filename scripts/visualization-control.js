@@ -782,13 +782,21 @@ var visualizationControl = function () {
     // var visShape, visSize;
     if (window.visShape == "solid") {
       var overlapAMT = 0;
-      firepad.firebaseAdapter_.ref_.child('users').child(userId).transaction(function (current) {
-        console.log(Object.keys(current))
-      })
-      // firepad.firebaseAdapter_.ref_.child('mice').transaction(function (current) {
-        
-      // })
 
+      firepad.firebaseAdapter_.ref_.child('mice').transaction(function (current) {
+        for (const [key, value] of Object.entries(current)) {
+
+          let distSq = (value[0] - hPos.x) * (value[0] - hPos.x) + (value[1] - hPos.y) * (value[1] - hPos.y);
+          let radSumSq = (hSize + hSize) * (hSize + hSize);
+
+          if (distSq < radSumSq) {
+            overlapAMT++;
+          }
+        }
+      })
+      if(overlapAMT>0){
+        hColor = "rgb(155, 102, 102)"
+      }
       circle.style = createSolidCircleHighlightStyle(hPos, hSize, hColor);
 
       // get rid of clearing heatmap interval and clear heatmap data from screen
@@ -850,19 +858,19 @@ var visualizationControl = function () {
         if (heatmapDataPoints.length == capacity) {
           heatmapDataPoints.shift();
         }
-  
+
         if (heatmapDataPoints.length > capacity) {
           for (let i = 0; i < heatmapDataPoints.length - capacity + 2; i++) {
             heatmapDataPoints.shift();
           }
         }
-  
+
         heatmapDataPoints.push({
           x: Math.round(hPos.x),
           y: Math.round(hPos.y),
           value: 20,
         });
-  
+
         heatmapInstance.setData({ max: 60, min: 0, data: heatmapDataPoints });
         //FOR MULTIPLE
         // var totalDataPoints = 0;
