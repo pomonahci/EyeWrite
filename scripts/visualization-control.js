@@ -5,7 +5,7 @@
  * Date: Summer 2020 - Spring 2021
  */
 
-let overlap_colors = ["blue","red"];
+//let overlap_colors = ["blue","red"];
 
 let default_config = {
   container: document.querySelector("#heatmap"),
