@@ -785,24 +785,21 @@ var visualizationControl = function () {
 
       firepad.firebaseAdapter_.ref_.child('mice').transaction(function (current) {
         for (const [key, value] of Object.entries(current)) {
-          if(key == uID){
-            console.log("same")
-            console.log(uID)
-          }
-          else{
-            console.log("diff")
-            console.log(uID)
-          }
-          // let distSq = (decodeLocation2(value).x - hPos.x) * (decodeLocation2(value).x - hPos.x) + (decodeLocation2(value).y - hPos.y) * (decodeLocation2(value).y - hPos.y);
-          // var rad = parseInt(hSize.coeff);
-          // let radSumSq = (rad + rad) * (rad + rad);
+          if (key != uID) {//key is all users, uID is moving user
+            //hPos is mouse loc of moving user (others)
+            //so we want to check all users but the one moving
+            //how to get uid of the user moving
+            let distSq = (decodeLocation2(value).x - hPos.x) * (decodeLocation2(value).x - hPos.x) + (decodeLocation2(value).y - hPos.y) * (decodeLocation2(value).y - hPos.y);
+            var rad = parseInt(hSize.coeff);
+            let radSumSq = (rad + rad) * (rad + rad);
 
-          // if (distSq < radSumSq) {
-          //   overlapAMT++;
-          // }
+            if (distSq < radSumSq) {
+              overlapAMT++;
+            }
+          }
         }
       })
-      if(overlapAMT>0){
+      if (overlapAMT > 0) {
         hColor = "rgba(0, 0, 250,1)"
       }
       circle.style = createSolidCircleHighlightStyle(hPos, hSize, hColor);
