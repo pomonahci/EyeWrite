@@ -804,7 +804,7 @@ var visualizationControl = function () {
         if (visual == 1) {
           rgbs = hColor.substring(5,hColor.length-1).split(',');
           hColor = "rgba(";
-          for (const color of Object.entries(overlapping)) {
+          for (const color of overlapping) {
             rgbsTemp = hex2rgb(color,1.0).substring(5,hex2rgb(color,1.0).length-1).split(',');
             rgbs
           }
