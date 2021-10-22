@@ -802,7 +802,7 @@ var visualizationControl = function () {
       visual = 1;
       if (overlapping.length > 0) {
         if (visual == 1) {
-          rgbs = [hColor.substring(5,hColor[uID].length-1).split(',')];
+          rgbs = hColor.substring(5,hColor[uID].length-1).split(',');
           hColor = "rgba(";
           for (const color of Object.entries(overlapping)) {
             rgbsTemp = hex2rgb(color,1.0).substring(5,hex2rgb(color,1.0).length-1).split(',');
