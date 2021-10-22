@@ -794,7 +794,7 @@ var visualizationControl = function () {
             let radSumSq = (rad + rad) * (rad + rad);
 
             if (distSq < radSumSq) {
-              overlapping.append(userColors[key]);
+              overlapping.push(userColors[key]);
             }
           }
         }
