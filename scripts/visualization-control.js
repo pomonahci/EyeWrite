@@ -82,6 +82,15 @@ var visualizationControl = (function () {
     firebaseRef.child("users").child(userId).remove();
   });
 
+
+  // Set up gaze listener
+  document.addEventListener("gazeData", function(e) {
+    console.log("received gazeData", e);
+    data = e.detail;
+    encodedLoc = encodeLocation2(data.x, data.y);
+    gazePosRef.child(userId).update(encodedLoc);
+  });
+
   /**
    * Initialize the user checkboxes widget in the control panel.
    */
