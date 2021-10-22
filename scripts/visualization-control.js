@@ -799,14 +799,14 @@ var visualizationControl = function () {
           }
         }
       })
-      visual = 1;
+      visual = 2;
       if (overlapping.length > 0) {
         if (visual == 1) {
           rgbs = hColor.substring(5,hColor.length-1).split(',');
           hColor = "rgba(";
           for (const color of overlapping) {
             rgbsTemp = hex2rgb(color,1.0).substring(5,hex2rgb(color,1.0).length-1).split(',');
-            rgbs
+            for (const )
           }
           hColor += rgbs[0] + ','+rgbs[1]+','+rgbs[2]+','+rgbs[3]+')';
         }
