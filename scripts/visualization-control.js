@@ -85,10 +85,8 @@ var visualizationControl = (function () {
 
   // Set up gaze listener
   document.addEventListener("gazeData", function(e) {
-    console.log("received gazeData", e);
     data = e.detail;
     encodedLoc = encodeLocation2(data.X, data.Y);
-    console.log("encodedLoc", encodedLoc);
     gazePosRef.child(userId).update(encodedLoc);
   });
 
