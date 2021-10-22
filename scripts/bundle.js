@@ -1380,11 +1380,8 @@ window.connect = function(ref, id) {
   window.userID = id;
   socket = io.connect('http://localhost:3000/data'); //connect to /data
   socket.on('connect', function() {
-    console.log("in socket.on");
     ss(socket).on('gaze', function(stream) {
-      console.log("in ss socket.on");
       stream.on('data', function(data) {
-        console.log("in stream.on with data", data);
         //add list of ints to the data String
         dataString = '';
         dataString += data;

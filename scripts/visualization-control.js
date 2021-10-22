@@ -810,6 +810,12 @@ var visualizationControl = (function () {
     mousePosRef.child(userId).remove();
   }
 
+  // Listen for custom gaze events
+  document.addEventListener('gazeData', function (e) {
+    console.log("received gazeData with event", e);
+    gazePosRef.child(userId).update(e);
+  })
+
   /**
    * exists checks whether a value exists.
    *
