@@ -436,25 +436,25 @@ var visualizationControl = (function () {
     }
 
     // Listener for mouse send switch.
-    mouseSendSwitch.addEventListener("click", function () {
-      if (mouseSendSwitch.checked) {
-        // gazeSendSwitch.checked = false;
-        if (gazeSendSwitch.checked) {
-          window.sendDataState = 3;
-        } else {
-          window.sendDataState = 1;
-        }
-      } else {
-        if (gazeSendSwitch.checked) {
-          window.sendDataState = 2;
-          clearAllHighlights();
-        } else {
-          window.sendDataState = 0;
-          clearAllHighlights();
-        }
-      }
-      console.log(`send data state: ${getDataState(window.sendDataState)}`);
-    });
+    // mouseSendSwitch.addEventListener("click", function () {
+    //   if (mouseSendSwitch.checked) {
+    //     // gazeSendSwitch.checked = false;
+    //     if (gazeSendSwitch.checked) {
+    //       window.sendDataState = 3;
+    //     } else {
+    //       window.sendDataState = 1;
+    //     }
+    //   } else {
+    //     if (gazeSendSwitch.checked) {
+    //       window.sendDataState = 2;
+    //       clearAllHighlights();
+    //     } else {
+    //       window.sendDataState = 0;
+    //       clearAllHighlights();
+    //     }
+    //   }
+    //   console.log(`send data state: ${getDataState(window.sendDataState)}`);
+    // });
 
     // Listener for gaze send switch.
     gazeSendSwitch.addEventListener("change", function () {

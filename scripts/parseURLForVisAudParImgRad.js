@@ -51,7 +51,10 @@ function parseURLFor() {
     radius = URL.substring(radius + 4, radius + 5);
     document.getElementById("sentenceSlider").value = radius;
 
-    if (URL.search("gaze") != -1) document.getElementById("gazeSendSwitch").click();
+    // if (URL.search("gaze") != -1) {
+    //     console.log("gaze switch detected");
+    //     document.getElementById("gazeSendSwitch").click();  
+    // } 
 }
 
 function triggerVis(vis) {
@@ -59,15 +62,15 @@ function triggerVis(vis) {
         serverContent.splice(3,0,["Visualization","Hollow Circle"]);
         document.getElementById("vis-shape").value = 'hollow';
         document.getElementById("vis-shape").dispatchEvent(new Event('change'));
-        document.getElementById("mouseSendSwitch").click();
-        document.getElementById("mouseVisSwitch").click();
+        document.getElementById("gazeSendSwitch").click();
+        document.getElementById("gazeVisSwitch").click();
     }
     else if (vis == 2) {//HeatMapMouse
         serverContent.splice(3,0,["Visualization","HeatMap"]);
         document.getElementById("vis-shape").value = 'heatmap';
         document.getElementById("vis-shape").dispatchEvent(new Event('change'));
-        document.getElementById("mouseSendSwitch").click();
-        document.getElementById("mouseVisSwitch").click();
+        document.getElementById("gazeSendSwitch").click();
+        document.getElementById("gazeVisSwitch").click();
     }
     else{
         serverContent.splice(3,0,["Visualization","None"]);
