@@ -88,6 +88,7 @@ var visualizationControl = (function () {
     console.log("received gazeData", e);
     data = e.detail;
     encodedLoc = encodeLocation2(data.x, data.y);
+    console.log("encodedLoc", encodedLoc);
     gazePosRef.child(userId).update(encodedLoc);
   });
 
@@ -818,12 +819,6 @@ var visualizationControl = (function () {
   function mouseLeave(event) {
     mousePosRef.child(userId).remove();
   }
-
-  // Listen for custom gaze events
-  document.addEventListener('gazeData', function (e) {
-    console.log("received gazeData with event", e);
-    gazePosRef.child(userId).update(e);
-  })
 
   /**
    * exists checks whether a value exists.
