@@ -781,7 +781,7 @@ var visualizationControl = function () {
 
     // var visShape, visSize;
     if (window.visShape == "solid") {
-      var overlapAMT = 0;
+      var overlapping = [];
 
       firepad.firebaseAdapter_.ref_.child('mice').transaction(function (current) {
         for (const [key, value] of Object.entries(current)) {
@@ -790,17 +790,29 @@ var visualizationControl = function () {
             //so we want to check all users but the one moving
             //how to get uid of the user moving
             let distSq = (decodeLocation2(value).x - hPos.x) * (decodeLocation2(value).x - hPos.x) + (decodeLocation2(value).y - hPos.y) * (decodeLocation2(value).y - hPos.y);
-            var rad = 7*parseInt(hSize.coeff);
+            var rad = 7 * parseInt(hSize.coeff);
             let radSumSq = (rad + rad) * (rad + rad);
 
             if (distSq < radSumSq) {
-              overlapAMT++;
+              overlapping.append(userColors[key]);
             }
           }
         }
       })
-      if (overlapAMT > 0) {
-        hColor = "rgba(0, 0, 250,1)"
+      visual = 1;
+      if (overlapping.length > 0) {
+        if (visual == 1) {
+          rgbs = [userColors[uID].substring(5,userColors[uID].length-1).split(',')];
+          hColor = "rgba(";
+          for (const color of Object.entries(overlapping)) {
+            rgbsTemp = color.substring(5,color.length-1).split(',');
+            rgbs
+          }
+          hColor += rgbs[0] + ','+rgbs[1]+','+rgbs[2]+','+rgbs[3]+')';
+        }
+        else if (visual == 2) {
+          hColor = "rgba(0, 0, 250,1)"
+        }
       }
       circle.style = createSolidCircleHighlightStyle(hPos, hSize, hColor);
 
