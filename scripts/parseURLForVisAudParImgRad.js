@@ -62,15 +62,15 @@ function triggerVis(vis) {
         serverContent.splice(3,0,["Visualization","Hollow Circle"]);
         document.getElementById("vis-shape").value = 'hollow';
         document.getElementById("vis-shape").dispatchEvent(new Event('change'));
-        document.getElementById("gazeSendSwitch").checked = true;
-        document.getElementById("gazeVisSwitch").checked = true;
+        document.getElementById("gazeSendSwitch").click();
+        document.getElementById("gazeVisSwitch").click();
     }
     else if (vis == 2) {//HeatMapMouse
         serverContent.splice(3,0,["Visualization","HeatMap"]);
         document.getElementById("vis-shape").value = 'heatmap';
         document.getElementById("vis-shape").dispatchEvent(new Event('change'));
-        document.getElementById("gazeSendSwitch").checked = true;
-        document.getElementById("gazeVisSwitch").checked = true;
+        document.getElementById("gazeSendSwitch").click();
+        document.getElementById("gazeVisSwitch").click();
     }
     else{
         serverContent.splice(3,0,["Visualization","None"]);
