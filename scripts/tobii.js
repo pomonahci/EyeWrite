@@ -34,6 +34,13 @@ window.onunload = function() {
   socket.disconnect();
 }
 
+function writeGazeLog(data) {
+  const currentTime = (new Date).getTime();
+  data.user = window.userID;
+  data.epoch = currentTime;
+  socket.emit('gazeLog', data);
+}
+
 window.sendGaze = function(circle) {
   var gaze = new Gaze(circle, null, null)
   window.reference.child("users").child(window.userID).child("gaze").set(gaze);

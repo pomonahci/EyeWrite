@@ -31,6 +31,14 @@ If you want to build the source code from this repository, please follow these i
 
 Note: you may need to import WebGazer module from hci.pomona server
 
+For the Tobii integration, we need to browserify `tobii.js`, because it uses Node modules. To do this:
+
+    npm install -g browserify
+    cd EyeWrite
+    npm install  # we need all node packages installed
+    cd scripts
+    browserify tobii.js -o bundle.js
+
 ## Running EyeWrite locally
 
     # Make sure you installed browser-sync globally
