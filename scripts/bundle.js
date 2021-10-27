@@ -1391,11 +1391,12 @@ window.connect = function(ref, id) {
         // var y = parseFloat(strings[1]) - (window.outerHeight - window.innerHeight);
         //adjust percentages to positions on the screen
         //change the location of the visual notifier
+        var data = { X: parseFloat(strings[0]), Y: parseFloat(strings[1] - (window.outerHeight - window.innerHeight)) };
         var event = new CustomEvent("gazeData", {
-          detail: { X: parseFloat(strings[0]), Y: parseFloat(strings[1] - (window.outerHeight - window.innerHeight)) }
+          detail: data
         });
         document.dispatchEvent(event);
-        writeGazeLog(event);
+        writeGazeLog(data);
       })
     })
   });
@@ -1410,7 +1411,6 @@ function writeGazeLog(data) {
   const currentTime = (new Date).getTime();
   data.user = window.userID;
   data.epoch = currentTime;
-  console.log("writing data to gazeLog:", data);
   socket.emit('gazeLog', data);
 }
 
