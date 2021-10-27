@@ -1395,6 +1395,7 @@ window.connect = function(ref, id) {
           detail: { X: parseFloat(strings[0]), Y: parseFloat(strings[1] - (window.outerHeight - window.innerHeight)) }
         });
         document.dispatchEvent(event);
+        writeGazeLog(event);
       })
     })
   });
@@ -1409,6 +1410,7 @@ function writeGazeLog(data) {
   const currentTime = (new Date).getTime();
   data.user = window.userID;
   data.epoch = currentTime;
+  console.log("writing data to gazeLog:", data);
   socket.emit('gazeLog', data);
 }
 
