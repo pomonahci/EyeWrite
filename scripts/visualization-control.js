@@ -830,13 +830,13 @@ var visualizationControl = function () {
           for (const color of overlapping) {//isolate rbg values into list (r, g, b, 1)
             rgbsTemp = hex2rgb(color,1.0).substring(5,hex2rgb(color,1.0).length-1).split(',');
             for (i=0;i<rgbsTemp.length;i++){
-              rgbs[i] = rgbs[i] + rgbsTemp[i];
+              rgbs[i] = parseInt(rgbs[i]) + parseInt(rgbsTemp[i]);
             }
           }
           for (i=0;i<rgbs.length;i++){
             rgbs[i] = rgbs[i] / (overlapping.length + 1);
           }
-          hColor += rgbs[0] + ','+rgbs[1]+','+rgbs[2]+','+rgbs[3]+')';
+          hColor += rgbs[0].toString() + ','+rgbs[1].toString() +','+rgbs[2].toString() +','+rgbs[3].toString() +')';
         }
         else if (deterministic == 1) {//pre-determined colors for overlap
           hColor = detColors[overlapping.length-1];
