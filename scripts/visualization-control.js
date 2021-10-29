@@ -5,7 +5,7 @@
  * Date: Summer 2020 - Spring 2021
  */
 
-const { rgb } = require("chroma-js");
+// const { rgb } = require("chroma-js");
 
 //let overlap_colors = ["blue","red"];
 
