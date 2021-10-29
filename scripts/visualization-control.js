@@ -797,7 +797,7 @@ var visualizationControl = function () {
     }else if (participants == 6){
       detColors = ["rgb(0,0,255,1)","rgb(0,255,0,1)","rgb(0,255,255,1)","rgb(255,165,0,1)","rgb(255,0,0,1)"];
     }
-    if(!unique){
+    if(!parseInt(unique)){
       hColor = "rgb(0,0,0,1)";
     }
     var hSize = { coeff: document.getElementById("sentenceSlider").value };//radius
