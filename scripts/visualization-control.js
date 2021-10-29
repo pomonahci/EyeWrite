@@ -776,6 +776,7 @@ var visualizationControl = function () {
     //   heatmapInstanceStore[uID] = h337.create(default_config);
     // }
 
+    //Overlap Detection for visualization color changes
     var hColor = hex2rgb(userColors[uID], 1.0);
     var unique = 0;//put parser for URL here
     var URL = window.location.href;
@@ -841,7 +842,8 @@ var visualizationControl = function () {
         else if (deterministic == 1) {//pre-determined colors for overlap
           hColor = detColors[overlapping.length-1];
         }
-      }
+      }//End of Color Visualization (overlap detection)
+
       circle.style = createSolidCircleHighlightStyle(hPos, hSize, hColor);
 
       // get rid of clearing heatmap interval and clear heatmap data from screen
@@ -849,6 +851,45 @@ var visualizationControl = function () {
       intervalID = null;
       heatmapInstance.setData({ data: [] });
     } else if (window.visShape == "hollow") {
+      var overlapping = [];
+
+      firepad.firebaseAdapter_.ref_.child('mice').transaction(function (current) {
+        for (const [key, value] of Object.entries(current)) {
+          if (key != uID) {//key is all users, uID is moving user
+            //hPos is mouse loc of moving user (others)
+            //so we want to check all users but the one moving
+            //how to get uid of the user moving
+            let distSq = (decodeLocation2(value).x - hPos.x) * (decodeLocation2(value).x - hPos.x) + (decodeLocation2(value).y - hPos.y) * (decodeLocation2(value).y - hPos.y);
+            var rad = 7 * parseInt(hSize.coeff);
+            let radSumSq = (rad + rad) * (rad + rad);
+
+            if (distSq < radSumSq) {
+              overlapping.push(userColors[key]);
+            }
+          }
+        }
+      })
+      if (overlapping.length > 0) {//if overlap
+        if (deterministic == 0 && unique) {//color combinations for overlap
+          rgbs = hColor.substring(5,hColor.length-1).split(',');
+          hColor = "rgba(";
+          for (const color of overlapping) {//isolate rbg values into list (r, g, b, 1)
+            rgbsTemp = hex2rgb(color,1.0).substring(5,hex2rgb(color,1.0).length-1).split(',');
+            for (i=0;i<rgbsTemp.length;i++){
+              rgbs[i] = parseInt(rgbs[i]) + parseInt(rgbsTemp[i]);
+            }
+          }
+          for (i=0;i<rgbs.length;i++){
+            rgbs[i] = rgbs[i] / (overlapping.length + 1);
+          }
+          hColor += rgbs[0].toString() + ','+rgbs[1].toString() +','+rgbs[2].toString() +','+rgbs[3].toString() +')';
+        }
+        else if (deterministic == 1) {//pre-determined colors for overlap
+          hColor = detColors[overlapping.length-1];
+        }
+      }//End of Color Visualization (overlap detection)
+
+
       circle.style = createHollowCircleHighlightStyle(hPos, hSize, hColor);
 
       // get rid of clearing heatmap interval and clear heatmap data from screen
