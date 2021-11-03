@@ -53,15 +53,19 @@ function triggerVis(vis) {
         serverContent.push(["Visualization","Hollow Circle"]);
         document.getElementById("vis-shape").value = 'hollow';
         document.getElementById("vis-shape").dispatchEvent(new Event('change'));
-        document.getElementById("mouseSendSwitch").click();
-        document.getElementById("mouseVisSwitch").click();
+        // document.getElementById("mouseSendSwitch").click();
+        // document.getElementById("mouseVisSwitch").click();
+        document.getElementById("gazeSendSwitch").click();
+        document.getElementById("gazeSendSwitch").click();
     }
     else if (vis == 2) {//HeatMapMouse
         serverContent.push(["Visualization","HeatMap"]);
         document.getElementById("vis-shape").value = 'heatmap';
         document.getElementById("vis-shape").dispatchEvent(new Event('change'));
-        document.getElementById("mouseSendSwitch").click();
-        document.getElementById("mouseVisSwitch").click();
+        // document.getElementById("mouseSendSwitch").click();
+        // document.getElementById("mouseVisSwitch").click();
+        document.getElementById("gazeSendSwitch").click();
+        document.getElementById("gazeSendSwitch").click();
     }
     else{
         serverContent.push(["Visualization","None"]);

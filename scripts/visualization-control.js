@@ -383,35 +383,42 @@ var visualizationControl = function () {
       }
     }
 
-    // Listener for mouse send switch.
-    mouseSendSwitch.addEventListener("change", function () {
-      if (mouseSendSwitch.checked) {
-        // gazeSendSwitch.checked = false;
-        if (gazeSendSwitch.checked) {
-          window.sendDataState = 3;
-        } else {
-          window.sendDataState = 1;
-        }
-      } else {
-        if (gazeSendSwitch.checked) {
-          window.sendDataState = 2;
-          clearAllHighlights();
-        } else {
-          window.sendDataState = 0;
-          clearAllHighlights();
-        }
-      }
-      console.log(`send data state: ${getDataState(window.sendDataState)}`);
+    // Set up gaze listener
+    document.addEventListener("gazeData", function (e) {
+      data = e.detail;
+      encodedLoc = encodeLocation2(data.X, data.Y);
+      gazePosRef.child(userId).update(encodedLoc);
     });
+
+    // Listener for mouse send switch.
+    // mouseSendSwitch.addEventListener("change", function () {
+    //   if (mouseSendSwitch.checked) {
+    //     // gazeSendSwitch.checked = false;
+    //     if (gazeSendSwitch.checked) {
+    //       window.sendDataState = 3;
+    //     } else {
+    //       window.sendDataState = 1;
+    //     }
+    //   } else {
+    //     if (gazeSendSwitch.checked) {
+    //       window.sendDataState = 2;
+    //       clearAllHighlights();
+    //     } else {
+    //       window.sendDataState = 0;
+    //       clearAllHighlights();
+    //     }
+    //   }
+    //   console.log(`send data state: ${getDataState(window.sendDataState)}`);
+    // });
 
     // Listener for gaze send switch.
     gazeSendSwitch.addEventListener("change", function () {
       if (gazeSendSwitch.checked) {
         // mouseSendSwitch.checked = false;
-        if (window.isWebGazerActive == false) {
-          window.isWebGazerActive = true;
-          startWebGazer();
-        }
+        // if (window.isWebGazerActive == false) {
+        //   window.isWebGazerActive = true;
+        //   startWebGazer();
+        // }
 
         if (mouseSendSwitch.checked) {
           window.sendDataState = 3;
