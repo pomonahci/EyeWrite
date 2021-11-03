@@ -815,7 +815,7 @@ var visualizationControl = function () {
     if (window.visShape == "solid") {
       var overlapping = [];
 
-      firepad.firebaseAdapter_.ref_.child('mice').transaction(function (current) {
+      firepad.firebaseAdapter_.ref_.child('gaze').transaction(function (current) {
         for (const [key, value] of Object.entries(current)) {
           if (key != uID) {//key is all users, uID is moving user
             //hPos is mouse loc of moving user (others)
@@ -860,7 +860,7 @@ var visualizationControl = function () {
     } else if (window.visShape == "hollow") {
       var overlapping = [];
 
-      firepad.firebaseAdapter_.ref_.child('mice').transaction(function (current) {
+      firepad.firebaseAdapter_.ref_.child('gaze').transaction(function (current) {
         for (const [key, value] of Object.entries(current)) {
           if (key != uID) {//key is all users, uID is moving user
             //hPos is mouse loc of moving user (others)
