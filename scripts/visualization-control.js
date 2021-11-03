@@ -4,6 +4,11 @@
  * Name: davecarroll, chanhakim, nickmarsano
  * Date: Summer 2020 - Spring 2021
  */
+
+// const { rgb } = require("chroma-js");
+
+//let overlap_colors = ["blue","red"];
+
 let default_config = {
   container: document.querySelector("#heatmap"),
   gradient: { 0.25: "rgb(220,220,220)", 0.55: "rgb(169,169,169)", 0.85: "	rgb(128,128,128)", 1.0: "rgb(72,72,72)" },//monochromatic version
@@ -11,17 +16,18 @@ let default_config = {
   radius: document.getElementById("hm-radius-slider").value,
 };
 
-var heatmapDataPointsStore = {}
+// var heatmapDataPointsStore = {}//for multiple
 let heatmapDataPoints = [];
-heatmapDataPointsStore[userId] = heatmapDataPoints; let intervalID;
+let intervalID;
+// heatmapDataPointsStore[userId] = heatmapDataPoints; //for multiple
 let removalType = document.getElementById("heatmap-type-selector").value;
 // let removalRate = document.getElementById("hm-removal-rate-slider").value;
 let removalRate = 50;
-let capacity = document.getElementById("hm-capacity-slider").value;
-
-var heatmapInstanceStore = {}
+//let capacity = document.getElementById("hm-capacity-slider").value;
+let capacity = 50;
+// var heatmapInstanceStore = {}//for multiple
 let heatmapInstance = h337.create(default_config);
-heatmapInstanceStore[userId] = heatmapInstance;
+// heatmapInstanceStore[userId] = heatmapInstance;//for multiple
 
 var visualizationControl = function () {
 
@@ -769,21 +775,82 @@ var visualizationControl = function () {
     // }
 
     //for multiple heatmaps:
-    var heatmapUsers = Object.keys(heatmapInstanceStore);
+    // var heatmapUsers = Object.keys(heatmapInstanceStore);
     // console.log(heatmapUsers);
-    if (!heatmapUsers.includes(uID)) {
-      // console.log(uID);
-      heatmapDataPointsStore[uID] = [];
-      heatmapInstanceStore[uID] = h337.create(default_config);
-    }
+    // if (!heatmapUsers.includes(uID)) {
+    //   // console.log(uID);
+    //   heatmapDataPointsStore[uID] = [];
+    //   heatmapInstanceStore[uID] = h337.create(default_config);
+    // }
 
+    //Overlap Detection for visualization color changes
     var hColor = hex2rgb(userColors[uID], 1.0);
-    var hSize = { coeff: document.getElementById("sentenceSlider").value };
+    var unique = 0;//put parser for URL here
+    var URL = window.location.href;
+    unique = URL.search("uni");
+    unique = URL.substring(unique+4,unique+5);
+    var participants = URL.search("par");
+    participants = URL.substring(participants+4,participants+5);
+    var deterministic = URL.search("det");
+    deterministic = URL.substring(deterministic+4,deterministic+5);
+
+    var detColors = [];
+    // 2 = (red), 4 = (green, yellow, red), 6 = (blue, green, yellow, orange, red)
+    if(participants==2){
+      detColors = ["rgb(255,0,0,1)"];
+    }
+    else if (participants == 4){
+      detColors = ["rgb(0,255,0,1)","rgb(0,255,255,1)","rgb(255,0,0,1)"];
+    }else if (participants == 6){
+      detColors = ["rgb(0,0,255,1)","rgb(0,255,0,1)","rgb(0,255,255,1)","rgb(255,165,0,1)","rgb(255,0,0,1)"];
+    }
+    if(!parseInt(unique)){
+      hColor = "rgb(0,0,0,1)";
+    }
+    var hSize = { coeff: document.getElementById("sentenceSlider").value };//radius
     var hrate = { coeff: document.getElementById("sentenceSlider2").value };
 
 
     // var visShape, visSize;
     if (window.visShape == "solid") {
+      var overlapping = [];
+
+      firepad.firebaseAdapter_.ref_.child('mice').transaction(function (current) {
+        for (const [key, value] of Object.entries(current)) {
+          if (key != uID) {//key is all users, uID is moving user
+            //hPos is mouse loc of moving user (others)
+            //so we want to check all users but the one moving
+            //how to get uid of the user moving
+            let distSq = (decodeLocation2(value).x - hPos.x) * (decodeLocation2(value).x - hPos.x) + (decodeLocation2(value).y - hPos.y) * (decodeLocation2(value).y - hPos.y);
+            var rad = 7 * parseInt(hSize.coeff);
+            let radSumSq = (rad + rad) * (rad + rad);
+
+            if (distSq < radSumSq) {
+              overlapping.push(userColors[key]);
+            }
+          }
+        }
+      })
+      if (overlapping.length > 0) {//if overlap
+        if (deterministic == 0 && unique) {//color combinations for overlap
+          rgbs = hColor.substring(5,hColor.length-1).split(',');
+          hColor = "rgba(";
+          for (const color of overlapping) {//isolate rbg values into list (r, g, b, 1)
+            rgbsTemp = hex2rgb(color,1.0).substring(5,hex2rgb(color,1.0).length-1).split(',');
+            for (i=0;i<rgbsTemp.length;i++){
+              rgbs[i] = parseInt(rgbs[i]) + parseInt(rgbsTemp[i]);
+            }
+          }
+          for (i=0;i<rgbs.length;i++){
+            rgbs[i] = rgbs[i] / (overlapping.length + 1);
+          }
+          hColor += rgbs[0].toString() + ','+rgbs[1].toString() +','+rgbs[2].toString() +','+rgbs[3].toString() +')';
+        }
+        else if (deterministic == 1) {//pre-determined colors for overlap
+          hColor = detColors[overlapping.length-1];
+        }
+      }//End of Color Visualization (overlap detection)
+
       circle.style = createSolidCircleHighlightStyle(hPos, hSize, hColor);
 
       // get rid of clearing heatmap interval and clear heatmap data from screen
@@ -791,6 +858,45 @@ var visualizationControl = function () {
       intervalID = null;
       heatmapInstance.setData({ data: [] });
     } else if (window.visShape == "hollow") {
+      var overlapping = [];
+
+      firepad.firebaseAdapter_.ref_.child('mice').transaction(function (current) {
+        for (const [key, value] of Object.entries(current)) {
+          if (key != uID) {//key is all users, uID is moving user
+            //hPos is mouse loc of moving user (others)
+            //so we want to check all users but the one moving
+            //how to get uid of the user moving
+            let distSq = (decodeLocation2(value).x - hPos.x) * (decodeLocation2(value).x - hPos.x) + (decodeLocation2(value).y - hPos.y) * (decodeLocation2(value).y - hPos.y);
+            var rad = 7 * parseInt(hSize.coeff);
+            let radSumSq = (rad + rad) * (rad + rad);
+
+            if (distSq < radSumSq) {
+              overlapping.push(userColors[key]);
+            }
+          }
+        }
+      })
+      if (overlapping.length > 0) {//if overlap
+        if (deterministic == 0 && unique) {//color combinations for overlap
+          rgbs = hColor.substring(5,hColor.length-1).split(',');
+          hColor = "rgba(";
+          for (const color of overlapping) {//isolate rbg values into list (r, g, b, 1)
+            rgbsTemp = hex2rgb(color,1.0).substring(5,hex2rgb(color,1.0).length-1).split(',');
+            for (i=0;i<rgbsTemp.length;i++){
+              rgbs[i] = parseInt(rgbs[i]) + parseInt(rgbsTemp[i]);
+            }
+          }
+          for (i=0;i<rgbs.length;i++){
+            rgbs[i] = rgbs[i] / (overlapping.length + 1);
+          }
+          hColor += rgbs[0].toString() + ','+rgbs[1].toString() +','+rgbs[2].toString() +','+rgbs[3].toString() +')';
+        }
+        else if (deterministic == 1) {//pre-determined colors for overlap
+          hColor = detColors[overlapping.length-1];
+        }
+      }//End of Color Visualization (overlap detection)
+
+
       circle.style = createHollowCircleHighlightStyle(hPos, hSize, hColor);
 
       // get rid of clearing heatmap interval and clear heatmap data from screen
@@ -835,40 +941,60 @@ var visualizationControl = function () {
           value: 20,
         });
         heatmapInstance.setData({ max: 60, min: 0, data: heatmapDataPoints });
+
       } else if (removalType == "capacity") {
         if (intervalID != null) {
           clearInterval(intervalID);
           intervalID = null;
         }
-
-        var totalDataPoints = 0;
-        for (const [key, value] of Object.entries(heatmapDataPointsStore)) {
-          totalDataPoints += value.length;
+        //FOR SINGLE
+        if (heatmapDataPoints.length == capacity) {
+          heatmapDataPoints.shift();
         }
 
-        if (totalDataPoints == capacity) {
-          for (const [key, value] of Object.entries(heatmapDataPointsStore)) {
-            heatmapDataPointsStore[key].shift();
+        if (heatmapDataPoints.length > capacity) {
+          for (let i = 0; i < heatmapDataPoints.length - capacity + 2; i++) {
+            heatmapDataPoints.shift();
           }
         }
 
-        if (totalDataPoints > capacity) {
-          for (let i = 0; i < totalDataPoints - capacity + 2; i++) {
-            for (const [key, value] of Object.entries(heatmapDataPointsStore)) {
-              heatmapDataPointsStore[key].shift();
-            }
-          }
-        }
-
-        heatmapDataPointsStore[uID].push({
+        heatmapDataPoints.push({
           x: Math.round(hPos.x),
           y: Math.round(hPos.y),
           value: 20,
         });
 
-        for (const [key, value] of Object.entries(heatmapInstanceStore)) {
-          heatmapInstanceStore[key].setData({ max: 60, min: 0, data: heatmapDataPointsStore[key] });
-        }
+        heatmapInstance.setData({ max: 60, min: 0, data: heatmapDataPoints });
+        //FOR MULTIPLE
+        // var totalDataPoints = 0;
+        // for (const [key, value] of Object.entries(heatmapDataPointsStore)) {
+        //   totalDataPoints += value.length;
+        // }
+
+        // if (totalDataPoints == capacity) {
+        //   for (const [key, value] of Object.entries(heatmapDataPointsStore)) {
+        //     heatmapDataPointsStore[key].shift();
+        //   }
+        // }
+
+        // if (totalDataPoints > capacity) {
+        //   for (let i = 0; i < totalDataPoints - capacity + 2; i++) {
+        //     for (const [key, value] of Object.entries(heatmapDataPointsStore)) {
+        //       heatmapDataPointsStore[key].shift();
+        //     }
+        //   }
+        // }
+
+        // heatmapDataPointsStore[uID].push({
+        //   x: Math.round(hPos.x),
+        //   y: Math.round(hPos.y),
+        //   value: 20,
+        // });
+
+        // for (const [key, value] of Object.entries(heatmapInstanceStore)) {
+        //   heatmapInstanceStore[key].setData({ max: 60, min: 0, data: heatmapDataPointsStore[key] });
+        // }
+        //
       } else if (removalType == "none") {
         if (intervalID != null) {
           clearInterval(intervalID);
@@ -1041,47 +1167,57 @@ function updateHeatmapStyle(new_config) {
   // heatmapInstance.setData({ max: 100, min: 100, data: [] });
   // heatmapInstance = new_heatmap;
   // heatmapInstance = h337.create(new_config);
-  /////
+  // ///
   // heatmapDataPoints = [];
   // heatmapInstance.setData({ data: [] });
   // default_config = new_config;
   // heatmapInstance = h337.create(default_config);
-  /////
+  //FOR SINGLE
   default_config = new_config;
-  //for multiple heatmaps:
-  var d;
-  for (const [key, value] of Object.entries(heatmapInstanceStore)) {
-    d = heatmapInstanceStore[key].getData();
-    heatmapInstanceStore[key].setData({ max: 60, min: 0, data: [] });
-    let new_heatmap = h337.create(new_config);
-    heatmapInstanceStore[key].setData({ max: 60, min: 0, data: d });
-    heatmapInstanceStore[key] = new_heatmap;
-    heatmapInstanceStore[key].setData({ max: 60, min: 0, data: heatmapDataPointsStore[key] });
-  }
+  let d = heatmapInstance.getData();
+  heatmapInstance.setData({ max: 60, min: 0, data: [] });
+
+  let new_heatmap = h337.create(new_config);
+  heatmapInstance.setData({ max: 60, min: 0, data: d });
+  heatmapInstance = new_heatmap;
+  heatmapInstance.setData({ max: 60, min: 0, data: heatmapDataPoints });
+  /////FOR MULTIPLE
+  // default_config = new_config;
+  // //for multiple heatmaps:
+  // var d;
+  // for (const [key, value] of Object.entries(heatmapInstanceStore)) {
+  //   d = heatmapInstanceStore[key].getData();
+  //   heatmapInstanceStore[key].setData({ max: 60, min: 0, data: [] });
+  //   let new_heatmap = h337.create(new_config);
+  //   heatmapInstanceStore[key].setData({ max: 60, min: 0, data: d });
+  //   heatmapInstanceStore[key] = new_heatmap;
+  //   heatmapInstanceStore[key].setData({ max: 60, min: 0, data: heatmapDataPointsStore[key] });
+  // }
 }
 
 function clearHeatmap() {
-  // heatmapDataPoints = [];
-  // heatmapInstance.setData({ max: 60, min: 0, data: [] });
+  heatmapDataPoints = [];
+  heatmapInstance.setData({ max: 60, min: 0, data: [] });
 
-  for (const [key, value] of Object.entries(heatmapInstanceStore)) {
-    heatmapDataPointsStore[key] = [];
-    heatmapInstanceStore[key].setData({ max: 60, min: 0, data: [] });
-  }
+  // for (const [key, value] of Object.entries(heatmapInstanceStore)) {
+  //   heatmapDataPointsStore[key] = [];
+  //   heatmapInstanceStore[key].setData({ max: 60, min: 0, data: [] });
+  // }
 }
 
 window.onresize = function () {
-  // heatmapInstance._renderer.setDimensions(
-  //   document.body.clientWidth,
-  //   document.body.clientHeight
-  // );
-  // heatmapInstance.repaint();
 
-  for (const [key, value] of Object.entries(heatmapInstanceStore)) {
-    heatmapInstanceStore[key]._renderer.setDimensions(
-      document.body.clientWidth,
-      document.body.clientHeight
-    );
-    heatmapInstanceStore[key].repaint();
-  }
+  heatmapInstance._renderer.setDimensions(
+    document.body.clientWidth,
+    document.body.clientHeight
+  );
+  heatmapInstance.repaint();
+
+  // for (const [key, value] of Object.entries(heatmapInstanceStore)) {
+  //   heatmapInstanceStore[key]._renderer.setDimensions(
+  //     document.body.clientWidth,
+  //     document.body.clientHeight
+  //   );
+  //   heatmapInstanceStore[key].repaint();
+  // }
 };

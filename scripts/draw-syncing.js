@@ -16,29 +16,6 @@ var todos = [];
 var pathEX;
 
 
-// function synchronize(sketch) {
-//   primSket.undoIndex = 0;
-//   primSket.clearUndoIndex = 0;
-//   primSket.loadSketch(sketch);
-//   primSket.displayLoadedSketch(false);
-
-// }
-
-// function completeTodos() {
-//   var cereal = primSket.serialize();
-//   for (const x of todos) {
-//     if (x.created == 'draw') {
-//       primSket.currentPath = pathEX.deserialize(x, primSket.draw, primSket.pencilTexture);;
-//       primSket.finishPath();
-//       primSket.currStrokeID += 1;
-//     }
-//     else {
-//       cereal.push(x);
-//       synchronize(cereal);
-//     }
-//   }
-//   todos = [];
-// }
 
 firebaseRef.child('svg').child(userId).set("");
 
@@ -155,7 +132,7 @@ firebaseRef.child('svg').on('child_changed', function (snapshot) {
 var xcof;
 var ycof;
 function sketchEdit(e, x, y, c) {
-  if (e == 'store') {// || e=='point') {
+  if (e == 'store' || e=='point') {
     xcof = x.clientX;
     ycof = x.clientY;
     return
