@@ -56,7 +56,7 @@ function triggerVis(vis) {
         // document.getElementById("mouseSendSwitch").click();
         // document.getElementById("mouseVisSwitch").click();
         document.getElementById("gazeSendSwitch").click();
-        document.getElementById("gazeSendSwitch").click();
+        document.getElementById("gazeVisSwitch").click();
     }
     else if (vis == 2) {//HeatMapMouse
         serverContent.push(["Visualization","HeatMap"]);
@@ -65,7 +65,7 @@ function triggerVis(vis) {
         // document.getElementById("mouseSendSwitch").click();
         // document.getElementById("mouseVisSwitch").click();
         document.getElementById("gazeSendSwitch").click();
-        document.getElementById("gazeSendSwitch").click();
+        document.getElementById("gazeVisSwitch").click();
     }
     else{
         serverContent.push(["Visualization","None"]);
