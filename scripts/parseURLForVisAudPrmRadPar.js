@@ -53,7 +53,7 @@ function parseURLFor() {
 }
 
 function triggerVis(vis) {
-    if(vis[0]){//none
+    if(vis[0]==0){//none
         // document.getElementById("mouseSendSwitch").click();
         // document.getElementById("mouseVisSwitch").click();
         serverContent.push(["Visualization","None"]);
@@ -63,7 +63,7 @@ function triggerVis(vis) {
         document.getElementById("gazeVisSwitch").click();
     }
 
-    if(vis[1]){//hollow
+    if(vis[1]==0){//hollow
         serverContent.push(["Visualization","Hollow Circle"]);
         document.getElementById("vis-shape").value = 'hollow';
         document.getElementById("vis-shape").dispatchEvent(new Event('change'));
@@ -74,7 +74,7 @@ function triggerVis(vis) {
         document.getElementById("vis-shape").dispatchEvent(new Event('change'));
     }
 
-    if(vis[2]){//same colors
+    if(vis[2]==0){//same colors
         unique = 0;
     }
     else {//unique
