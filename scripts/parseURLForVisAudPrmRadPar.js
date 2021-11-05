@@ -8,6 +8,8 @@
 
 // const e = require("express");
 
+var unique = 0;
+var deterministic = 0;
 
 function parseURLFor() {
     var URL = window.location.href;
