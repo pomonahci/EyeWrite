@@ -6,6 +6,8 @@
  * Date: 07/01/2021
  */
 
+// const e = require("express");
+
 
 function parseURLFor() {
     var URL = window.location.href;
@@ -19,7 +21,7 @@ function parseURLFor() {
     else if (URL.search("EyeWrite") != -1) experiment = "EyeWrite";
 
     var visualization = URL.search("vis");
-    visualization = URL.substring(visualization + 4, visualization + 5);
+    visualization = URL.substring(visualization + 4, visualization + 8);
     var audio = URL.search("aud");
     if (audio == -1 && experiment == 'EyeDraw') {
         audio = 1;
@@ -49,23 +51,61 @@ function parseURLFor() {
 }
 
 function triggerVis(vis) {
-    if (vis == 1) {//HollowMouse
+    console.log("test parse");
+    if(vis[0]){//mouse
+        document.getElementById("mouseSendSwitch").click();
+        document.getElementById("mouseVisSwitch").click();
+    }
+    else {//gaze
+        document.getElementById("gazeSendSwitch").click();
+        document.getElementById("gazeVisSwitch").click();
+    }
+
+    if(vis[1]){//hollow
         serverContent.push(["Visualization","Hollow Circle"]);
         document.getElementById("vis-shape").value = 'hollow';
         document.getElementById("vis-shape").dispatchEvent(new Event('change'));
-        document.getElementById("mouseSendSwitch").click();
-        document.getElementById("mouseVisSwitch").click();
     }
-    else if (vis == 2) {//HeatMapMouse
+    else {//solid
         serverContent.push(["Visualization","Solid"]);
         document.getElementById("vis-shape").value = 'solid';
         document.getElementById("vis-shape").dispatchEvent(new Event('change'));
-        document.getElementById("mouseSendSwitch").click();
-        document.getElementById("mouseVisSwitch").click();
     }
-    else{
-        serverContent.push(["Visualization","None"]);
+
+    if(vis[2]){//same colors
+        unique = 0;
     }
+    else {//unique
+        unique = 1;
+    }
+
+    if(vis[3]==0){//no change in overlap
+        deterministic = 0;
+    }
+    else if(vis[3]==1){//deterministic change in overlap
+        deterministic = 1;
+    }
+    else{//color combo change in overlap
+        deterministic = 2;
+    }
+
+    // if (vis == 1) {//HollowMouse
+    //     serverContent.push(["Visualization","Hollow Circle"]);
+    //     document.getElementById("vis-shape").value = 'hollow';
+    //     document.getElementById("vis-shape").dispatchEvent(new Event('change'));
+    //     document.getElementById("mouseSendSwitch").click();
+    //     document.getElementById("mouseVisSwitch").click();
+    // }
+    // else if (vis == 2) {//Solid
+    //     serverContent.push(["Visualization","Solid"]);
+    //     document.getElementById("vis-shape").value = 'solid';
+    //     document.getElementById("vis-shape").dispatchEvent(new Event('change'));
+    //     document.getElementById("mouseSendSwitch").click();
+    //     document.getElementById("mouseVisSwitch").click();
+    // }
+    // else{
+    //     serverContent.push(["Visualization","None"]);
+    // }
 }
 
 function triggerAud(aud) {
