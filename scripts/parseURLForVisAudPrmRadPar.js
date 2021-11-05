@@ -23,7 +23,7 @@ function parseURLFor() {
     else if (URL.search("EyeWrite") != -1) experiment = "EyeWrite";
 
     var visualization = URL.search("vis");
-    visualization = URL.substring(visualization + 4, visualization + 8);
+    visualization = URL.substring(visualization + 4, visualization + 7);
     var audio = URL.search("aud");
     if (audio == -1 && experiment == 'EyeDraw') {
         audio = 1;
@@ -53,10 +53,10 @@ function parseURLFor() {
 }
 
 function triggerVis(vis) {
-    console.log("test parse");
-    if(vis[0]){//mouse
-        document.getElementById("mouseSendSwitch").click();
-        document.getElementById("mouseVisSwitch").click();
+    if(vis[0]){//none
+        // document.getElementById("mouseSendSwitch").click();
+        // document.getElementById("mouseVisSwitch").click();
+        serverContent.push(["Visualization","None"]);
     }
     else {//gaze
         document.getElementById("gazeSendSwitch").click();
@@ -90,24 +90,6 @@ function triggerVis(vis) {
     else{//color combo change in overlap
         deterministic = 2;
     }
-
-    // if (vis == 1) {//HollowMouse
-    //     serverContent.push(["Visualization","Hollow Circle"]);
-    //     document.getElementById("vis-shape").value = 'hollow';
-    //     document.getElementById("vis-shape").dispatchEvent(new Event('change'));
-    //     document.getElementById("mouseSendSwitch").click();
-    //     document.getElementById("mouseVisSwitch").click();
-    // }
-    // else if (vis == 2) {//Solid
-    //     serverContent.push(["Visualization","Solid"]);
-    //     document.getElementById("vis-shape").value = 'solid';
-    //     document.getElementById("vis-shape").dispatchEvent(new Event('change'));
-    //     document.getElementById("mouseSendSwitch").click();
-    //     document.getElementById("mouseVisSwitch").click();
-    // }
-    // else{
-    //     serverContent.push(["Visualization","None"]);
-    // }
 }
 
 function triggerAud(aud) {

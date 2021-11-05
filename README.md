@@ -45,7 +45,7 @@ Note: you may need to import WebGazer module from hci.pomona server
 When creating the URL, just make sure these tags are included anywhere (except for prm) in the URL verbatim as you see here:
 Visualization Triggers:
 - vis = 4 number string with indices as follows in order:
-    - mouse vs gaze: 0 v 1
+    - nothing vs gaze: 0 v 1
     - hollow vs solid: 0 v 1
     - all same color vs all unique: 0 v 1
     - no change vs deterministic change vs overlap color change : 0 1 2
