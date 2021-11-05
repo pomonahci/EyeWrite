@@ -57,6 +57,7 @@ function triggerVis(vis) {
         // document.getElementById("mouseSendSwitch").click();
         // document.getElementById("mouseVisSwitch").click();
         serverContent.push(["Visualization","None"]);
+        return;
     }
     else {//gaze
         document.getElementById("gazeSendSwitch").click();
@@ -75,19 +76,24 @@ function triggerVis(vis) {
     }
 
     if(vis[2]==0){//same colors
+        serverContent.push(["Colors","Identical"]);
         unique = 0;
     }
     else {//unique
+        serverContent.push(["Colors","Unique"]);
         unique = 1;
     }
 
     if(vis[3]==0){//no change in overlap
+        serverContent.push(["Overlap","None"]);
         deterministic = 0;
     }
     else if(vis[3]==1){//deterministic change in overlap
+        serverContent.push(["Overlap","Deterministic"]);
         deterministic = 1;
     }
     else{//color combo change in overlap
+        serverContent.push(["Overlap","Combination"]);
         deterministic = 2;
     }
 }
