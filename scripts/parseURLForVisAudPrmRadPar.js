@@ -6,6 +6,10 @@
  * Date: 07/01/2021
  */
 
+// const e = require("express");
+
+var unique = 0;
+var deterministic = 0;
 
 function parseURLFor() {
     var URL = window.location.href;
@@ -19,7 +23,7 @@ function parseURLFor() {
     else if (URL.search("EyeWrite") != -1) experiment = "EyeWrite";
 
     var visualization = URL.search("vis");
-    visualization = URL.substring(visualization + 4, visualization + 5);
+    visualization = URL.substring(visualization + 4, visualization + 7);
     var audio = URL.search("aud");
     if (audio == -1 && experiment == 'EyeDraw') {
         audio = 1;
@@ -49,26 +53,52 @@ function parseURLFor() {
 }
 
 function triggerVis(vis) {
-    if (vis == 1) {//HollowMouse
+    if(vis[0]==0){//none
+        // document.getElementById("mouseSendSwitch").click();
+        // document.getElementById("mouseVisSwitch").click();
+        serverContent.push(["Visualization","None"]);
+        return;
+    }
+    else {//gaze
+        document.getElementById("gazeSendSwitch").click();
+        document.getElementById("gazeVisSwitch").click();
+    }
+
+    if(vis[1]==0){//hollow
         serverContent.push(["Visualization","Hollow Circle"]);
         document.getElementById("vis-shape").value = 'hollow';
         document.getElementById("vis-shape").dispatchEvent(new Event('change'));
-        // document.getElementById("mouseSendSwitch").click();
-        // document.getElementById("mouseVisSwitch").click();
         document.getElementById("gazeSendSwitch").click();
         document.getElementById("gazeVisSwitch").click();
     }
-    else if (vis == 2) {//HeatMapMouse
+    else {//solid
         serverContent.push(["Visualization","Solid"]);
         document.getElementById("vis-shape").value = 'solid';
         document.getElementById("vis-shape").dispatchEvent(new Event('change'));
-        // document.getElementById("mouseSendSwitch").click();
-        // document.getElementById("mouseVisSwitch").click();
         document.getElementById("gazeSendSwitch").click();
         document.getElementById("gazeVisSwitch").click();
     }
-    else{
-        serverContent.push(["Visualization","None"]);
+
+    if(vis[2]==0){//same colors
+        serverContent.push(["Colors","Identical"]);
+        unique = 0;
+    }
+    else {//unique
+        serverContent.push(["Colors","Unique"]);
+        unique = 1;
+    }
+
+    if(vis[3]==0){//no change in overlap
+        serverContent.push(["Overlap","None"]);
+        deterministic = 0;
+    }
+    else if(vis[3]==1){//deterministic change in overlap
+        serverContent.push(["Overlap","Deterministic"]);
+        deterministic = 1;
+    }
+    else{//color combo change in overlap
+        serverContent.push(["Overlap","Combination"]);
+        deterministic = 2;
     }
 }
 

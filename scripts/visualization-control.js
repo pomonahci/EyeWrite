@@ -785,14 +785,10 @@ var visualizationControl = function () {
 
     //Overlap Detection for visualization color changes
     var hColor = hex2rgb(userColors[uID], 1.0);
-    var unique = 0;//put parser for URL here
-    var URL = window.location.href;
-    unique = URL.search("uni");
-    unique = URL.substring(unique+4,unique+5);
+    
     var participants = URL.search("par");
     participants = URL.substring(participants+4,participants+5);
-    var deterministic = URL.search("det");
-    deterministic = URL.substring(deterministic+4,deterministic+5);
+    
 
     var detColors = [];
     // 2 = (red), 4 = (green, yellow, red), 6 = (blue, green, yellow, orange, red)
@@ -832,7 +828,7 @@ var visualizationControl = function () {
         }
       })
       if (overlapping.length > 0) {//if overlap
-        if (deterministic == 0 && unique) {//color combinations for overlap
+        if (deterministic == 2 && unique) {//color combinations for overlap
           rgbs = hColor.substring(5,hColor.length-1).split(',');
           hColor = "rgba(";
           for (const color of overlapping) {//isolate rbg values into list (r, g, b, 1)

@@ -44,9 +44,11 @@ Note: you may need to import WebGazer module from hci.pomona server
 ## Running Experiments through the URL
 When creating the URL, just make sure these tags are included anywhere (except for prm) in the URL verbatim as you see here:
 Visualization Triggers:
-- vis=0 no visualization
-- vis=1 hollow circle
-- vis=2 heatmap
+- vis = 4 number string with indices as follows in order:
+    - nothing vs gaze: 0 v 1
+    - hollow vs solid: 0 v 1
+    - all same color vs all unique: 0 v 1
+    - no change vs deterministic change vs overlap color change : 0 1 2
 Audio Triggers
 - aud=0 no audio call
 - aud=1 audio call on

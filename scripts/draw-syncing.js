@@ -231,7 +231,7 @@ firebaseRef.child('users').on('value', function (snapshot) {
     firebaseRef.child("users").transaction(function (current) {
       for (const [key, value] of Object.entries(current)) {
         var wh = "(" + value.dimensions.w + ":" + value.dimensions.h + ")";
-        serverContent.push([key, wh]);
+        serverContent.push(["User: " + key, wh]);
       }
     })
     serverContent.push(["Experiment Start", Date.now()]);
