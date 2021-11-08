@@ -389,35 +389,42 @@ var visualizationControl = function () {
       }
     }
 
-    // Listener for mouse send switch.
-    mouseSendSwitch.addEventListener("change", function () {
-      if (mouseSendSwitch.checked) {
-        // gazeSendSwitch.checked = false;
-        if (gazeSendSwitch.checked) {
-          window.sendDataState = 3;
-        } else {
-          window.sendDataState = 1;
-        }
-      } else {
-        if (gazeSendSwitch.checked) {
-          window.sendDataState = 2;
-          clearAllHighlights();
-        } else {
-          window.sendDataState = 0;
-          clearAllHighlights();
-        }
-      }
-      console.log(`send data state: ${getDataState(window.sendDataState)}`);
+    // Set up gaze listener
+    document.addEventListener("gazeData", function (e) {
+      data = e.detail;
+      encodedLoc = encodeLocation2(data.X, data.Y);
+      gazePosRef.child(userId).update(encodedLoc);
     });
+
+    // Listener for mouse send switch.
+    // mouseSendSwitch.addEventListener("change", function () {
+    //   if (mouseSendSwitch.checked) {
+    //     // gazeSendSwitch.checked = false;
+    //     if (gazeSendSwitch.checked) {
+    //       window.sendDataState = 3;
+    //     } else {
+    //       window.sendDataState = 1;
+    //     }
+    //   } else {
+    //     if (gazeSendSwitch.checked) {
+    //       window.sendDataState = 2;
+    //       clearAllHighlights();
+    //     } else {
+    //       window.sendDataState = 0;
+    //       clearAllHighlights();
+    //     }
+    //   }
+    //   console.log(`send data state: ${getDataState(window.sendDataState)}`);
+    // });
 
     // Listener for gaze send switch.
     gazeSendSwitch.addEventListener("change", function () {
       if (gazeSendSwitch.checked) {
         // mouseSendSwitch.checked = false;
-        if (window.isWebGazerActive == false) {
-          window.isWebGazerActive = true;
-          startWebGazer();
-        }
+        // if (window.isWebGazerActive == false) {
+        //   window.isWebGazerActive = true;
+        //   startWebGazer();
+        // }
 
         if (mouseSendSwitch.checked) {
           window.sendDataState = 3;
@@ -804,7 +811,7 @@ var visualizationControl = function () {
     if (window.visShape == "solid") {
       var overlapping = [];
 
-      firepad.firebaseAdapter_.ref_.child('mice').transaction(function (current) {
+      firepad.firebaseAdapter_.ref_.child('gaze').transaction(function (current) {
         for (const [key, value] of Object.entries(current)) {
           if (key != uID) {//key is all users, uID is moving user
             //hPos is mouse loc of moving user (others)
@@ -849,7 +856,7 @@ var visualizationControl = function () {
     } else if (window.visShape == "hollow") {
       var overlapping = [];
 
-      firepad.firebaseAdapter_.ref_.child('mice').transaction(function (current) {
+      firepad.firebaseAdapter_.ref_.child('gaze').transaction(function (current) {
         for (const [key, value] of Object.entries(current)) {
           if (key != uID) {//key is all users, uID is moving user
             //hPos is mouse loc of moving user (others)
@@ -1195,6 +1202,7 @@ function clearHeatmap() {
 }
 
 window.onresize = function () {
+
   heatmapInstance._renderer.setDimensions(
     document.body.clientWidth,
     document.body.clientHeight
