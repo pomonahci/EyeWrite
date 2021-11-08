@@ -861,6 +861,7 @@ var visualizationControl = (function () {
    * @param {*} uID
    */
   function updateHighlight(uID) {
+    console.log("in updateHightlight with uID", uID);
     var circle;
 
     if (userHighlights[uID] != null) {
@@ -871,6 +872,7 @@ var visualizationControl = (function () {
       userHighlights[uID] = circle;
       document.body.append(circle);
     }
+    console.log("circle before big if is", circle);
 
     // var hPos = decodeLocation(userLocations[uID]);
     var hPos = decodeLocation2(userLocations[uID]);
@@ -890,13 +892,13 @@ var visualizationControl = (function () {
     // }
 
     //for multiple heatmaps:
-    var heatmapUsers = Object.keys(heatmapInstanceStore);
-    // console.log(heatmapUsers);
-    if (!heatmapUsers.includes(uID)) {
-      // console.log(uID);
-      heatmapDataPointsStore[uID] = [];
-      heatmapInstanceStore[uID] = h337.create(default_config);
-    }
+    // var heatmapUsers = Object.keys(heatmapInstanceStore);
+    // // console.log(heatmapUsers);
+    // if (!heatmapUsers.includes(uID)) {
+    //   // console.log(uID);
+    //   heatmapDataPointsStore[uID] = [];
+    //   heatmapInstanceStore[uID] = h337.create(default_config);
+    // }
 
 
     //Overlap Detection for visualization color changes
@@ -923,6 +925,7 @@ var visualizationControl = (function () {
     var hrate = { coeff: document.getElementById("sentenceSlider2").value };
 
     if (window.visShape == "solid") {
+      console.log("in solid");
       var overlapping = [];
 
       firepad.firebaseAdapter_.ref_.child('gaze').transaction(function(current) {
@@ -966,6 +969,7 @@ var visualizationControl = (function () {
       clearInterval(intervalID);
       intervalID = null;
       heatmapInstance.setData({ data: [] });
+      console.log("at end of solid, circle is", circle);
     } else if (window.visShape == "hollow") {
       var overlapping = [];
 
