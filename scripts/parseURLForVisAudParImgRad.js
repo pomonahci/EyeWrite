@@ -76,15 +76,11 @@ function triggerVis(vis) {
         serverContent.push(["Visualization","Hollow Circle"]);
         document.getElementById("vis-shape").value = 'hollow';
         document.getElementById("vis-shape").dispatchEvent(new Event('change'));
-        document.getElementById("gazeSendSwitch").click();
-        document.getElementById("gazeVisSwitch").click();
     }
     else {//solid
         serverContent.push(["Visualization","Solid"]);
         document.getElementById("vis-shape").value = 'solid';
         document.getElementById("vis-shape").dispatchEvent(new Event('change'));
-        document.getElementById("gazeSendSwitch").click();
-        document.getElementById("gazeVisSwitch").click();
     }
 
     if(vis[2]==0){//same colors
