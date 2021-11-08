@@ -6,6 +6,9 @@
  * Date: 07/01/2021
  */
 
+var unique = 0;
+var deterministic = 0;
+
 function parseURLFor() {
     var URL = window.location.href;
     var html = URL.search("eyewrite.html#")
@@ -19,7 +22,7 @@ function parseURLFor() {
     else if (URL.search("EyeWrite") != -1) experiment = "EyeWrite";
 
     var visualization = URL.search("vis");
-    visualization = URL.substring(visualization + 4, visualization + 5);
+    visualization = URL.substring(visualization + 4, visualization + 7);
     var audio = URL.search("aud");
     if (experiment == 'EyeDraw') {
         audio = 1;
@@ -30,7 +33,7 @@ function parseURLFor() {
     else {
         audio = URL.substring(audio + 4, audio + 5);
     }
-    if (visualization == -1) visualization = 0;
+    if (visualization == -1) visualization = 1;
 
     triggerVis(visualization);
     triggerAud(audio);
@@ -58,24 +61,53 @@ function parseURLFor() {
 }
 
 function triggerVis(vis) {
-    if (vis == 1) {//HollowMouse
-        serverContent.splice(3,0,["Visualization","Hollow Circle"]);
+    if(vis[0]==0){//none
+        // document.getElementById("mouseSendSwitch").click();
+        // document.getElementById("mouseVisSwitch").click();
+        serverContent.push(["Visualization","None"]);
+        return;
+    }
+    else {//gaze
+        document.getElementById("gazeSendSwitch").click();
+        document.getElementById("gazeVisSwitch").click();
+    }
+
+    if(vis[1]==0){//hollow
+        serverContent.push(["Visualization","Hollow Circle"]);
         document.getElementById("vis-shape").value = 'hollow';
         document.getElementById("vis-shape").dispatchEvent(new Event('change'));
         document.getElementById("gazeSendSwitch").click();
         document.getElementById("gazeVisSwitch").click();
     }
-    else if (vis == 2) {//HeatMapMouse
-        serverContent.splice(3,0,["Visualization","HeatMap"]);
-        document.getElementById("vis-shape").value = 'heatmap';
+    else {//solid
+        serverContent.push(["Visualization","Solid"]);
+        document.getElementById("vis-shape").value = 'solid';
         document.getElementById("vis-shape").dispatchEvent(new Event('change'));
         document.getElementById("gazeSendSwitch").click();
         document.getElementById("gazeVisSwitch").click();
     }
-    else{
-        serverContent.splice(3,0,["Visualization","None"]);
+
+    if(vis[2]==0){//same colors
+        serverContent.push(["Colors","Identical"]);
+        unique = 0;
     }
-}
+    else {//unique
+        serverContent.push(["Colors","Unique"]);
+        unique = 1;
+    }
+
+    if(vis[3]==0){//no change in overlap
+        serverContent.push(["Overlap","None"]);
+        deterministic = 0;
+    }
+    else if(vis[3]==1){//deterministic change in overlap
+        serverContent.push(["Overlap","Deterministic"]);
+        deterministic = 1;
+    }
+    else{//color combo change in overlap
+        serverContent.push(["Overlap","Combination"]);
+        deterministic = 2;
+    }}
 
 function triggerAud(aud) {
     if (aud == 1) {
