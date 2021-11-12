@@ -692,7 +692,7 @@ var visualizationControl = function () {
   function mouseMove(event) {
     // encodedLoc = encodeLocation(event.clientX, event.clientY);
     encodedLoc = encodeLocation2(event.clientX, event.clientY);
-    if (window.sendDataState == 1 || window.sendDataState == 3) {
+    if (window.sendDataState == 1 || window.sendDataState == 3 || vis[4]) {
       mousePosRef.child(userId).update(encodedLoc);
     }
     // mouseContent.push('('+(event.clientX/window.innerWidth)+','+(event.clientY/window.innerHeight)+';'+Date.now()+'),\n');
