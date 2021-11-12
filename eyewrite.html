@@ -29,14 +29,7 @@
 
   <!-- WebGazer -->
   <!-- <script type='text/javascript' src='./WebGazer/www/simple-wg/webgazer.js'></script> -->
-  <!-- <script type="text/javascript" src="./WebGazer/simple-wg/webgazer.js"></script> -->
-
-  <!--Socket.io stuff-->
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
-  <script type="text/javascript" src="/socket.io-stream.js"></script>
-
-  <!-- Tobii, bundled by browserify -->
-  <script type="text/javascript" src="scripts/bundle.js"></script>
+  <script type="text/javascript" src="./WebGazer/simple-wg/webgazer.js"></script>
 
   <!-- Peer.JS -->
   <script src="./node_modules/peerjs/dist/peerjs.js"></script>
@@ -269,9 +262,9 @@
 
 
     <!-- WebGazer Calibration Component -->
-    <!-- <A href="./WebGazer/simple-wg/index.html" id="calibrationLink">
-         <input type="button" id="calibrationButton" value="Calibrate Gaze">
-         </A> -->
+    <A href="./WebGazer/simple-wg/index.html" id="calibrationLink">
+      <input type="button" id="calibrationButton" value="Calibrate Gaze">
+    </A>
 
   </div>
 
@@ -329,9 +322,6 @@
 
   // Create a random ID to use as our user ID (we must give this to firepad and FirepadUserList).
   var userId = Math.floor(Math.random() * 9999999999).toString();
-
-  window.connect(firebaseRef, userId);
-  window.gazeSharing = true;
 
   //// Create Firepad (with rich text features and our desired userId).
   var firepad = Firepad.fromCodeMirror(firebaseRef, codeMirror,
