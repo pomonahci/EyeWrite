@@ -99,7 +99,11 @@ function triggerVis(vis) {
     }
     
     if(vis[4] == 1){
+        serverContent.push(["Mouse Vis","On"]);
         mousePointerOn = 1;
+    }
+    else{
+        serverContent.push(["Mouse Vis","On"]);
     }
 }
 
