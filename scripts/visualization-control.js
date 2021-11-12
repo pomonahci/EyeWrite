@@ -1034,7 +1034,7 @@ var visualizationControl = function () {
     var hPos = decodeLocation2(userMouseLocations[uID]);
     var hColor = hex2rgb(userColors[uID], 1.0);
     var hSize = { coeff: document.getElementById("sentenceSlider").value };//radius
-    hSize = {coeff: "5"};
+    hSize = {coeff: "1"};
     var hrate = { coeff: document.getElementById("sentenceSlider2").value };
 
 
