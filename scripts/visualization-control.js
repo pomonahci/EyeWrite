@@ -16,8 +16,9 @@ let default_config = {
   radius: document.getElementById("hm-radius-slider").value,
 };
 
-var vis = URL.search("vis");
-vis = URL.substring(vis + 4, vis + 9);
+var URL1 = window.location.href;
+var vis = URL1.search("vis");
+vis = URL1.substring(vis + 4, vis + 9);
 
 // var heatmapDataPointsStore = {}//for multiple
 let heatmapDataPoints = [];
