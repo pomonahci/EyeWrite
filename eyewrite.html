@@ -278,12 +278,14 @@
       style='color:red;font-size:20px;font-weight: bold;' id=drawingPrompt></span></div>
   <div id='timeholder' style='position: relative;bottom:173%;left:50%;'>Time Left: <span id='timer'></span></div>
   <div id="heatmap"></div>
+document.addEventListener('contextmenu', event => event.preventDefault());
 
 </body>
 
 
 <script>
   window.debug = false;  // turn off to remove debug statements
+  document.addEventListener('contextmenu', event => event.preventDefault()); //turn off right click ability?
 
   var firebaseConfig = {
     apiKey: "AIzaSyAmD2D9XCpVDQcJF08chqCbkCpL-_Jfu_Y",
