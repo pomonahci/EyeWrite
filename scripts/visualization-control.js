@@ -372,7 +372,9 @@ var visualizationControl = function () {
         if (window.debug) console.log("Invalid data type!");
       }
     }
-    if(mousePointerOn){//read in from parser
+    var vis = URL.search("vis");
+    vis = URL.substring(vis + 4, vis + 8);
+    if(vis[3]){//read in from parser
       startVisualization('mouse');
     }
     /**
