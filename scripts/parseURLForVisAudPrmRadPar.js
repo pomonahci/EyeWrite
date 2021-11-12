@@ -10,7 +10,6 @@
 
 var unique = 0;
 var deterministic = 0;
-var mousePointerOn = 0;
 
 function parseURLFor() {
     var URL = window.location.href;
@@ -24,7 +23,7 @@ function parseURLFor() {
     else if (URL.search("EyeWrite") != -1) experiment = "EyeWrite";
 
     var visualization = URL.search("vis");
-    visualization = URL.substring(visualization + 4, visualization + 8);
+    visualization = URL.substring(visualization + 4, visualization + 9);
     var audio = URL.search("aud");
     if (audio == -1 && experiment == 'EyeDraw') {
         audio = 1;
@@ -100,7 +99,6 @@ function triggerVis(vis) {
     
     if(vis[4] == 1){
         serverContent.push(["Mouse Vis","On"]);
-        mousePointerOn = 1;
     }
     else{
         serverContent.push(["Mouse Vis","On"]);
