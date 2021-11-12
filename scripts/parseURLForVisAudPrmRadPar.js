@@ -10,6 +10,7 @@
 
 var unique = 0;
 var deterministic = 0;
+var mousePointerOn = 0;
 
 function parseURLFor() {
     var URL = window.location.href;
@@ -23,7 +24,7 @@ function parseURLFor() {
     else if (URL.search("EyeWrite") != -1) experiment = "EyeWrite";
 
     var visualization = URL.search("vis");
-    visualization = URL.substring(visualization + 4, visualization + 7);
+    visualization = URL.substring(visualization + 4, visualization + 8);
     var audio = URL.search("aud");
     if (audio == -1 && experiment == 'EyeDraw') {
         audio = 1;
@@ -95,6 +96,10 @@ function triggerVis(vis) {
     else{//color combo change in overlap
         serverContent.push(["Overlap","Combination"]);
         deterministic = 2;
+    }
+    
+    if(vis[4] == 1){
+        mousePointerOn = 1;
     }
 }
 

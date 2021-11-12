@@ -39,6 +39,9 @@ var visualizationControl = function () {
   var usersChecked = {};    // object for visualization checkboxes
   var userArrows = {};      // object for user arrows
 
+  var userMouseLocations = {};
+  var userMouseHighlights = {};
+
   // references to firebase user mouse and gaze positions
   var mousePosRef = firebaseRef.child("mice");
   var gazePosRef = firebaseRef.child("gaze");
@@ -362,14 +365,16 @@ var visualizationControl = function () {
         gazePosRef.on("child_changed", visualize);
         gazePosRef.on("child_removed", removeHighlightWrapper);
       } else if (dataType == "mouse") {
-        mousePosRef.on("child_added", visualize);
-        mousePosRef.on("child_changed", visualize);
-        mousePosRef.on("child_removed", removeHighlightWrapper);
+        mousePosRef.on("child_added", visualizeMouse);
+        mousePosRef.on("child_changed", visualizeMouse);
+        mousePosRef.on("child_removed", removeHighlightWrapperMouse);
       } else {
         if (window.debug) console.log("Invalid data type!");
       }
     }
-
+    if(mousePointerOn){//read in from parser
+      startVisualization('mouse');
+    }
     /**
      * stopVisualization takes a data type as input
      * and toggles off the visualization for that data.
@@ -381,9 +386,9 @@ var visualizationControl = function () {
         gazePosRef.off("child_changed", visualize);
         gazePosRef.off("child_removed", removeHighlightWrapper);
       } else if (dataType == "mouse") {
-        mousePosRef.off("child_added", visualize);
-        mousePosRef.off("child_changed", visualize);
-        mousePosRef.off("child_removed", removeHighlightWrapper);
+        mousePosRef.off("child_added", visualizeMouse);
+        mousePosRef.off("child_changed", visualizeMouse);
+        mousePosRef.off("child_removed", removeHighlightWrapperMouse);
       } else {
         if (window.debug) console.log("Invalid data type!");
       }
@@ -539,6 +544,15 @@ var visualizationControl = function () {
       if (userColors[snapshot.key]) updateHighlight(snapshot.key);
     } else {
       if (userHighlights[snapshot.key]) removeHighlight(snapshot.key);
+    }
+  }
+
+  function visualizeMouse(snapshot) {
+    userMouseLocations[snapshot.key] = snapshot.val();
+    if (usersChecked[snapshot.key]) {
+      if (userColors[snapshot.key]) updateHighlightMouse(snapshot.key);
+    } else {
+      if (userMouseHighlights[snapshot.key]) removeHighlightMouse(snapshot.key);
     }
   }
 
@@ -1001,6 +1015,29 @@ var visualizationControl = function () {
     }
   }
 
+  function updateHighlightMouse(uID) {
+    var circle;
+    if (userMouseHighlights[uID] != null) {
+      circle = userMouseHighlights[uID];
+    } else {
+      circle = document.createElement("DIV");
+      circle.id = `${uID}M`;
+      userMouseHighlights[uID] = circle;
+      document.body.append(circle);
+    }
+    // var hPos = decodeLocation(userLocations[uID]);
+    var hPos = decodeLocation2(userMouseLocations[uID]);
+    var hColor = hex2rgb(userColors[uID], 1.0);
+    var hSize = { coeff: document.getElementById("sentenceSlider").value };//radius
+    console.log(hSize)//see the format and change it to a very small number
+    var hrate = { coeff: document.getElementById("sentenceSlider2").value };
+
+
+    // var visShape, visSize;
+      circle.style = createSolidCircleHighlightStyle(hPos, hSize, hColor);
+  }
+  
+
   /**
    * removeHighlight takes a user ID as input and removes the corresponding
    * user's highlight from the local user's display.
@@ -1010,6 +1047,11 @@ var visualizationControl = function () {
   function removeHighlight(uID) {
     document.body.removeChild(userHighlights[uID]);
     delete userHighlights[uID];
+  }
+
+  function removeHighlightMouse(uID) {
+    document.body.removeChild(userMouseHighlights[uID]);
+    delete userMouseHighlights[uID];
   }
 
   /**
@@ -1022,11 +1064,17 @@ var visualizationControl = function () {
     removeHighlight(snapshot.key);
   }
 
+  function removeHighlightWrapperMouse(snapshot) {
+    removeHighlightMouse(snapshot.key);
+  }
+
   /**
    * clearAllHighlights calls removeHighlight on all users.
    */
   function clearAllHighlights() {
     for (let uID in userHighlights) removeHighlight(uID);
+    for (let uID in userMouseHighlights) removeHighlightMouse(uID);
+
   }
 
   /**
