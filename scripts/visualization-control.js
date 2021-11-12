@@ -16,6 +16,9 @@ let default_config = {
   radius: document.getElementById("hm-radius-slider").value,
 };
 
+var vis = URL.search("vis");
+vis = URL.substring(vis + 4, vis + 9);
+
 // var heatmapDataPointsStore = {}//for multiple
 let heatmapDataPoints = [];
 let intervalID;
@@ -372,8 +375,7 @@ var visualizationControl = function () {
         if (window.debug) console.log("Invalid data type!");
       }
     }
-    var vis = URL.search("vis");
-    vis = URL.substring(vis + 4, vis + 9);
+    
     if(vis[4]){//read in from parser
       startVisualization('mouse');
     }
