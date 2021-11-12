@@ -23,7 +23,7 @@ function parseURLFor() {
     else if (URL.search("EyeWrite") != -1) experiment = "EyeWrite";
 
     var visualization = URL.search("vis");
-    visualization = URL.substring(visualization + 4, visualization + 7);
+    visualization = URL.substring(visualization + 4, visualization + 8);
     var audio = URL.search("aud");
     if (audio == -1 && experiment == 'EyeDraw') {
         audio = 1;
