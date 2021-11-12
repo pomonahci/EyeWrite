@@ -48,6 +48,7 @@ For the Tobii integration, we need to browserify `tobii.js`, because it uses Nod
 
 * Visit (http://localhost:3000) on your browser
 * Follow the instructions on the welcome page to create or join a collaborative document.
+* Make sure that, if you're in room 219, you set the resolution to be 2560 by 1440, and restart the computer.
 
 ## Running Experiments through the URL
 When creating the URL, just make sure these tags are included anywhere in the URL verbatim as you see here:
