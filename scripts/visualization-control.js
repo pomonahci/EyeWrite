@@ -904,6 +904,7 @@ var visualizationControl = (function () {
     //Overlap Detection for visualization color changes
     var hColor = hex2rgb(userColors[uID], 1.0);
     
+    const URL = window.location.href;
     var participants = URL.search("par");
     participants = URL.substring(participants+4,participants+5);
     
