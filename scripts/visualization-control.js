@@ -51,21 +51,6 @@ var visualizationControl = (function () {
 
   visShapeSelector.onchange = function () {
     window.visShape = visShapeSelector.value;
-    console.log(`vis shape changed to ${window.visShape}`);
-
-    const hmParamsContainer = document.getElementById(
-      "heatmap-params-container"
-    );
-    const gradientParamsContainer = document.getElementById("gradient-options");
-
-    if (visShapeSelector.value == "heatmap") {
-      hmParamsContainer.style.display = "block";
-      gradientParamsContainer.style.display = "none";
-    } else if (visShapeSelector.value == "gradient") {
-      hmParamsContainer.style.display = "none";
-      gradientParamsContainer.style.display = "block";
-    }
-    clearHeatmap();
     if (window.debug) console.log(window.visShape);
   };
 
@@ -872,7 +857,6 @@ var visualizationControl = (function () {
       userHighlights[uID] = circle;
       document.body.append(circle);
     }
-    console.log("circle before big if is", circle);
 
     // var hPos = decodeLocation(userLocations[uID]);
     var hPos = decodeLocation2(userLocations[uID]);

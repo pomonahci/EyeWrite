@@ -53,11 +53,6 @@ function parseURLFor() {
     var radius = URL.search("rad");
     radius = URL.substring(radius + 4, radius + 5);
     document.getElementById("sentenceSlider").value = radius;
-
-    // if (URL.search("gaze") != -1) {
-    //     console.log("gaze switch detected");
-    //     document.getElementById("gazeSendSwitch").click();  
-    // } 
 }
 
 function triggerVis(vis) {
