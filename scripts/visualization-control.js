@@ -376,8 +376,8 @@ var visualizationControl = function () {
         if (window.debug) console.log("Invalid data type!");
       }
     }
-    
-    if(vis[4]){//read in from parser
+
+    if (vis[4]) {//read in from parser
       startVisualization('mouse');
     }
     /**
@@ -797,22 +797,22 @@ var visualizationControl = function () {
 
     //Overlap Detection for visualization color changes
     var hColor = hex2rgb(userColors[uID], 1.0);
-    
+
     var participants = URL.search("par");
-    participants = URL.substring(participants+4,participants+5);
-    
+    participants = URL.substring(participants + 4, participants + 5);
+
 
     var detColors = [];
     // 2 = (red), 4 = (green, yellow, red), 6 = (blue, green, yellow, orange, red)
-    if(participants==2){
+    if (participants == 2) {
       detColors = ["rgb(255,0,0,1)"];
     }
-    else if (participants == 4){
-      detColors = ["rgb(0,255,0,1)","rgb(0,255,255,1)","rgb(255,0,0,1)"];
-    }else if (participants == 6){
-      detColors = ["rgb(0,0,255,1)","rgb(0,255,0,1)","rgb(0,255,255,1)","rgb(255,165,0,1)","rgb(255,0,0,1)"];
+    else if (participants == 4) {
+      detColors = ["rgb(0,255,0,1)", "rgb(0,255,255,1)", "rgb(255,0,0,1)"];
+    } else if (participants == 6) {
+      detColors = ["rgb(0,0,255,1)", "rgb(0,255,0,1)", "rgb(0,255,255,1)", "rgb(255,165,0,1)", "rgb(255,0,0,1)"];
     }
-    if(!parseInt(unique)){
+    if (!parseInt(unique)) {
       hColor = "rgb(0,0,0,1)";
     }
     var hSize = { coeff: document.getElementById("sentenceSlider").value };//radius
@@ -840,22 +840,27 @@ var visualizationControl = function () {
         }
       })
       if (overlapping.length > 0) {//if overlap
+        var laps = "";
+        for (const item of overlapping) {
+          laps = laps + ":" + item;
+        }
+        serverContent.push(["Overlapping", laps]);
         if (deterministic == 2 && unique) {//color combinations for overlap
-          rgbs = hColor.substring(5,hColor.length-1).split(',');
+          rgbs = hColor.substring(5, hColor.length - 1).split(',');
           hColor = "rgba(";
           for (const color of overlapping) {//isolate rbg values into list (r, g, b, 1)
-            rgbsTemp = hex2rgb(color,1.0).substring(5,hex2rgb(color,1.0).length-1).split(',');
-            for (i=0;i<rgbsTemp.length;i++){
+            rgbsTemp = hex2rgb(color, 1.0).substring(5, hex2rgb(color, 1.0).length - 1).split(',');
+            for (i = 0; i < rgbsTemp.length; i++) {
               rgbs[i] = parseInt(rgbs[i]) + parseInt(rgbsTemp[i]);
             }
           }
-          for (i=0;i<rgbs.length;i++){
+          for (i = 0; i < rgbs.length; i++) {
             rgbs[i] = rgbs[i] / (overlapping.length + 1);
           }
-          hColor += rgbs[0].toString() + ','+rgbs[1].toString() +','+rgbs[2].toString() +','+rgbs[3].toString() +')';
+          hColor += rgbs[0].toString() + ',' + rgbs[1].toString() + ',' + rgbs[2].toString() + ',' + rgbs[3].toString() + ')';
         }
         else if (deterministic == 1) {//pre-determined colors for overlap
-          hColor = detColors[overlapping.length-1];
+          hColor = detColors[overlapping.length - 1];
         }
       }//End of Color Visualization (overlap detection)
 
@@ -885,22 +890,27 @@ var visualizationControl = function () {
         }
       })
       if (overlapping.length > 0) {//if overlap
+        var laps = "";
+        for (const item of overlapping) {
+          laps = laps + ":" + item;
+        }
+        serverContent.push(["Overlapping", laps]);
         if (deterministic == 0 && unique) {//color combinations for overlap
-          rgbs = hColor.substring(5,hColor.length-1).split(',');
+          rgbs = hColor.substring(5, hColor.length - 1).split(',');
           hColor = "rgba(";
           for (const color of overlapping) {//isolate rbg values into list (r, g, b, 1)
-            rgbsTemp = hex2rgb(color,1.0).substring(5,hex2rgb(color,1.0).length-1).split(',');
-            for (i=0;i<rgbsTemp.length;i++){
+            rgbsTemp = hex2rgb(color, 1.0).substring(5, hex2rgb(color, 1.0).length - 1).split(',');
+            for (i = 0; i < rgbsTemp.length; i++) {
               rgbs[i] = parseInt(rgbs[i]) + parseInt(rgbsTemp[i]);
             }
           }
-          for (i=0;i<rgbs.length;i++){
+          for (i = 0; i < rgbs.length; i++) {
             rgbs[i] = rgbs[i] / (overlapping.length + 1);
           }
-          hColor += rgbs[0].toString() + ','+rgbs[1].toString() +','+rgbs[2].toString() +','+rgbs[3].toString() +')';
+          hColor += rgbs[0].toString() + ',' + rgbs[1].toString() + ',' + rgbs[2].toString() + ',' + rgbs[3].toString() + ')';
         }
         else if (deterministic == 1) {//pre-determined colors for overlap
-          hColor = detColors[overlapping.length-1];
+          hColor = detColors[overlapping.length - 1];
         }
       }//End of Color Visualization (overlap detection)
 
@@ -1034,14 +1044,14 @@ var visualizationControl = function () {
     var hPos = decodeLocation2(userMouseLocations[uID]);
     var hColor = hex2rgb(userColors[uID], 1.0);
     var hSize = { coeff: document.getElementById("sentenceSlider").value };//radius
-    hSize = {coeff: ".5"};
+    hSize = { coeff: ".5" };
     var hrate = { coeff: document.getElementById("sentenceSlider2").value };
 
 
     // var visShape, visSize;
-      circle.style = createSolidCircleHighlightStyle(hPos, hSize, hColor);
+    circle.style = createSolidCircleHighlightStyle(hPos, hSize, hColor);
   }
-  
+
 
   /**
    * removeHighlight takes a user ID as input and removes the corresponding
