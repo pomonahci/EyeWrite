@@ -16,6 +16,10 @@ let default_config = {
   radius: document.getElementById("hm-radius-slider").value,
 };
 
+var URL1 = window.location.href;
+var vis = URL1.search("vis");
+vis = URL1.substring(vis + 4, vis + 9);
+
 // var heatmapDataPointsStore = {}//for multiple
 let heatmapDataPoints = [];
 let intervalID;
@@ -38,6 +42,9 @@ var visualizationControl = function () {
   var userLocations = {};   // object for user locations
   var usersChecked = {};    // object for visualization checkboxes
   var userArrows = {};      // object for user arrows
+
+  var userMouseLocations = {};
+  var userMouseHighlights = {};
 
   // references to firebase user mouse and gaze positions
   var mousePosRef = firebaseRef.child("mice");
@@ -362,14 +369,17 @@ var visualizationControl = function () {
         gazePosRef.on("child_changed", visualize);
         gazePosRef.on("child_removed", removeHighlightWrapper);
       } else if (dataType == "mouse") {
-        mousePosRef.on("child_added", visualize);
-        mousePosRef.on("child_changed", visualize);
-        mousePosRef.on("child_removed", removeHighlightWrapper);
+        mousePosRef.on("child_added", visualizeMouse);
+        mousePosRef.on("child_changed", visualizeMouse);
+        mousePosRef.on("child_removed", removeHighlightWrapperMouse);
       } else {
         if (window.debug) console.log("Invalid data type!");
       }
     }
 
+    if (vis[4]) {//read in from parser
+      startVisualization('mouse');
+    }
     /**
      * stopVisualization takes a data type as input
      * and toggles off the visualization for that data.
@@ -381,9 +391,9 @@ var visualizationControl = function () {
         gazePosRef.off("child_changed", visualize);
         gazePosRef.off("child_removed", removeHighlightWrapper);
       } else if (dataType == "mouse") {
-        mousePosRef.off("child_added", visualize);
-        mousePosRef.off("child_changed", visualize);
-        mousePosRef.off("child_removed", removeHighlightWrapper);
+        mousePosRef.on("child_added", visualizeMouse);
+        mousePosRef.on("child_changed", visualizeMouse);
+        mousePosRef.on("child_removed", removeHighlightWrapperMouse);
       } else {
         if (window.debug) console.log("Invalid data type!");
       }
@@ -546,6 +556,15 @@ var visualizationControl = function () {
       if (userColors[snapshot.key]) updateHighlight(snapshot.key);
     } else {
       if (userHighlights[snapshot.key]) removeHighlight(snapshot.key);
+    }
+  }
+
+  function visualizeMouse(snapshot) {
+    userMouseLocations[snapshot.key] = snapshot.val();
+    if (usersChecked[snapshot.key]) {
+      if (userColors[snapshot.key]) updateHighlightMouse(snapshot.key);
+    } else {
+      if (userMouseHighlights[snapshot.key]) removeHighlightMouse(snapshot.key);
     }
   }
 
@@ -785,22 +804,22 @@ var visualizationControl = function () {
 
     //Overlap Detection for visualization color changes
     var hColor = hex2rgb(userColors[uID], 1.0);
-    
+
     var participants = URL.search("par");
-    participants = URL.substring(participants+4,participants+5);
-    
+    participants = URL.substring(participants + 4, participants + 5);
+
 
     var detColors = [];
     // 2 = (red), 4 = (green, yellow, red), 6 = (blue, green, yellow, orange, red)
-    if(participants==2){
+    if (participants == 2) {
       detColors = ["rgb(255,0,0,1)"];
     }
-    else if (participants == 4){
-      detColors = ["rgb(0,255,0,1)","rgb(0,255,255,1)","rgb(255,0,0,1)"];
-    }else if (participants == 6){
-      detColors = ["rgb(0,0,255,1)","rgb(0,255,0,1)","rgb(0,255,255,1)","rgb(255,165,0,1)","rgb(255,0,0,1)"];
+    else if (participants == 4) {
+      detColors = ["rgb(0,255,0,1)", "rgb(0,255,255,1)", "rgb(255,0,0,1)"];
+    } else if (participants == 6) {
+      detColors = ["rgb(0,0,255,1)", "rgb(0,255,0,1)", "rgb(0,255,255,1)", "rgb(255,165,0,1)", "rgb(255,0,0,1)"];
     }
-    if(!parseInt(unique)){
+    if (!parseInt(unique)) {
       hColor = "rgb(0,0,0,1)";
     }
     var hSize = { coeff: document.getElementById("sentenceSlider").value };//radius
@@ -828,22 +847,27 @@ var visualizationControl = function () {
         }
       })
       if (overlapping.length > 0) {//if overlap
+        var laps = "";
+        for (const item of overlapping) {
+          laps = laps + ":" + item;
+        }
+        serverContent.push(["Overlapping", laps]);
         if (deterministic == 2 && unique) {//color combinations for overlap
-          rgbs = hColor.substring(5,hColor.length-1).split(',');
+          rgbs = hColor.substring(5, hColor.length - 1).split(',');
           hColor = "rgba(";
           for (const color of overlapping) {//isolate rbg values into list (r, g, b, 1)
-            rgbsTemp = hex2rgb(color,1.0).substring(5,hex2rgb(color,1.0).length-1).split(',');
-            for (i=0;i<rgbsTemp.length;i++){
+            rgbsTemp = hex2rgb(color, 1.0).substring(5, hex2rgb(color, 1.0).length - 1).split(',');
+            for (i = 0; i < rgbsTemp.length; i++) {
               rgbs[i] = parseInt(rgbs[i]) + parseInt(rgbsTemp[i]);
             }
           }
-          for (i=0;i<rgbs.length;i++){
+          for (i = 0; i < rgbs.length; i++) {
             rgbs[i] = rgbs[i] / (overlapping.length + 1);
           }
-          hColor += rgbs[0].toString() + ','+rgbs[1].toString() +','+rgbs[2].toString() +','+rgbs[3].toString() +')';
+          hColor += rgbs[0].toString() + ',' + rgbs[1].toString() + ',' + rgbs[2].toString() + ',' + rgbs[3].toString() + ')';
         }
         else if (deterministic == 1) {//pre-determined colors for overlap
-          hColor = detColors[overlapping.length-1];
+          hColor = detColors[overlapping.length - 1];
         }
       }//End of Color Visualization (overlap detection)
 
@@ -873,22 +897,27 @@ var visualizationControl = function () {
         }
       })
       if (overlapping.length > 0) {//if overlap
+        var laps = "";
+        for (const item of overlapping) {
+          laps = laps + ":" + item;
+        }
+        serverContent.push(["Overlapping", laps]);
         if (deterministic == 0 && unique) {//color combinations for overlap
-          rgbs = hColor.substring(5,hColor.length-1).split(',');
+          rgbs = hColor.substring(5, hColor.length - 1).split(',');
           hColor = "rgba(";
           for (const color of overlapping) {//isolate rbg values into list (r, g, b, 1)
-            rgbsTemp = hex2rgb(color,1.0).substring(5,hex2rgb(color,1.0).length-1).split(',');
-            for (i=0;i<rgbsTemp.length;i++){
+            rgbsTemp = hex2rgb(color, 1.0).substring(5, hex2rgb(color, 1.0).length - 1).split(',');
+            for (i = 0; i < rgbsTemp.length; i++) {
               rgbs[i] = parseInt(rgbs[i]) + parseInt(rgbsTemp[i]);
             }
           }
-          for (i=0;i<rgbs.length;i++){
+          for (i = 0; i < rgbs.length; i++) {
             rgbs[i] = rgbs[i] / (overlapping.length + 1);
           }
-          hColor += rgbs[0].toString() + ','+rgbs[1].toString() +','+rgbs[2].toString() +','+rgbs[3].toString() +')';
+          hColor += rgbs[0].toString() + ',' + rgbs[1].toString() + ',' + rgbs[2].toString() + ',' + rgbs[3].toString() + ')';
         }
         else if (deterministic == 1) {//pre-determined colors for overlap
-          hColor = detColors[overlapping.length-1];
+          hColor = detColors[overlapping.length - 1];
         }
       }//End of Color Visualization (overlap detection)
 
@@ -1008,6 +1037,28 @@ var visualizationControl = function () {
     }
   }
 
+  function updateHighlightMouse(uID) {
+    var circle;
+    if (userMouseHighlights[uID] != null) {
+      circle = userMouseHighlights[uID];
+    } else {
+      circle = document.createElement("DIV");
+      circle.id = `${uID}M`;
+      userMouseHighlights[uID] = circle;
+      document.body.append(circle);
+    }
+    // var hPos = decodeLocation(userLocations[uID]);
+    var hPos = decodeLocation2(userMouseLocations[uID]);
+    var hColor = hex2rgb(userColors[uID], 1.0);
+    var hSize = { coeff: document.getElementById("sentenceSlider").value };//radius
+    hSize = { coeff: ".5" };
+    var hrate = { coeff: document.getElementById("sentenceSlider2").value };
+
+
+    // var visShape, visSize;
+    circle.style = createSolidCircleHighlightStyle(hPos, hSize, hColor);
+  }
+
   /**
    * removeHighlight takes a user ID as input and removes the corresponding
    * user's highlight from the local user's display.
@@ -1017,6 +1068,11 @@ var visualizationControl = function () {
   function removeHighlight(uID) {
     document.body.removeChild(userHighlights[uID]);
     delete userHighlights[uID];
+  }
+
+  function removeHighlightMouse(uID) {
+    document.body.removeChild(userMouseHighlights[uID]);
+    delete userMouseHighlights[uID];
   }
 
   /**
@@ -1029,11 +1085,17 @@ var visualizationControl = function () {
     removeHighlight(snapshot.key);
   }
 
+  function removeHighlightWrapperMouse(snapshot) {
+    removeHighlightMouse(snapshot.key);
+  }
+
   /**
-   * clearAllHighlights calls removeHighlight on all users.
-   */
+  * clearAllHighlights calls removeHighlight on all users.
+  */
   function clearAllHighlights() {
     for (let uID in userHighlights) removeHighlight(uID);
+    for (let uID in userMouseHighlights) removeHighlightMouse(uID);
+
   }
 
   /**
