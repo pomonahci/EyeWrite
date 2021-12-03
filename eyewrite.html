@@ -293,6 +293,8 @@
 
 <script>
   window.debug = false;  // turn off to remove debug statements
+  document.addEventListener('contextmenu', event => event.preventDefault()); //turn off right click ability?
+
 
   var firebaseConfig = {
     apiKey: "AIzaSyAmD2D9XCpVDQcJF08chqCbkCpL-_Jfu_Y",
