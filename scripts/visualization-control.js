@@ -851,7 +851,7 @@ var visualizationControl = function () {
         for (const item of overlapping) {
           laps = laps + ":" + item;
         }
-        serverContent.push(["Overlapping", laps]);
+        serverContent.push(["Overlapping", laps, Date.now()]);
         if (deterministic == 2 && unique) {//color combinations for overlap
           rgbs = hColor.substring(5, hColor.length - 1).split(',');
           hColor = "rgba(";
@@ -901,7 +901,7 @@ var visualizationControl = function () {
         for (const item of overlapping) {
           laps = laps + ":" + item;
         }
-        serverContent.push(["Overlapping", laps]);
+        serverContent.push(["Overlapping", laps, Date.now()]);
         if (deterministic == 0 && unique) {//color combinations for overlap
           rgbs = hColor.substring(5, hColor.length - 1).split(',');
           hColor = "rgba(";
