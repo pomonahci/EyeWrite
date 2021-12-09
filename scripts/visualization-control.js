@@ -930,6 +930,12 @@ var visualizationControl = (function () {
         }
       })
       if (overlapping.length > 0) {//if overlap
+        var laps = "";
+        for (const item of overlapping) {
+          laps = laps + ":" + item;
+        }
+        serverContent.push(["Overlapping", laps]);
+
         if (deterministic == 2 && unique) {//color combinations for overlap
           rgbs = hColor.substring(5, hColor.length - 1).split(',');
           hColor = "rgba(";
