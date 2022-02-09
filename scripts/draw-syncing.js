@@ -141,7 +141,8 @@ function sketchEdit(e, x, y, c) {
   firepad.firebaseAdapter_.ref_.child('svg').child(userId).transaction(function (current) {
     if (e == 'draw') {
       primSket.currentPath.created = e;
-      // primSket.currentPath.idStroke = primSket.currentPath.idStroke + userId
+      //primSket.currentPath.idStroke = primSket.currentPath.idStroke + userId
+      primSket.currentPath.idStroke = Math.floor(Math.random() * 1000000000000);  // random 12-digit int
       primSket.currentPath.idCreator = userId;
       var ret = primSket.currentPath.serialize();
       clickContent.push(['Draw', Date.now(), ret.color, ret.width, ret.idCreator, ret.idStroke, ret.status, ret.idMovedFrom, ret.created, ret.timeStart, ret.timeEnd, ret.undone, ret.coords]);
@@ -149,7 +150,8 @@ function sketchEdit(e, x, y, c) {
     }
     else if (e == 'move') {
       primSket.currentPath.created = e;
-      primSket.currentPath.idStroke = primSket.currentPath.idStroke + userId
+      //primSket.currentPath.idStroke = primSket.currentPath.idStroke + userId
+      primSket.currentPath.idStroke = Math.floor(Math.random() * 1000000000000);  // random 12-digit int
       primSket.currentPath.idCreator = userId;
       var ret = primSket.currentPath.serialize();
       ret.xcof = xcof;
@@ -209,7 +211,9 @@ function sketchEdit(e, x, y, c) {
     }
     else if (e == 'point') {
       primSket.currentPath.created = e;
-      if (String(primSket.currentPath.idStroke).length < 9) primSket.currentPath.idStroke = primSket.currentPath.idStroke + userId
+      //if (String(primSket.currentPath.idStroke).length < 9) primSket.currentPath.idStroke = primSket.currentPath.idStroke + userId
+      if (String(primSket.currentPath.idStroke).length < 9)
+        primSket.currentPath.idStroke = Math.floor(Math.random() * 1000000000000);  // random 12-digit int
       primSket.currentPath.idCreator = userId;
       var toRet = primSket.currentPath.serialize();
       toRet.x = x;
