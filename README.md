@@ -36,7 +36,7 @@ Note: you may need to import WebGazer module from hci.pomona server
     # Make sure you installed browser-sync globally
     npm i -g browser-sync
     # Then, run the following script.
-    npm start
+    node index.js
 
 * Visit (http://localhost:3000) on your browser
 * Follow the instructions on the welcome page to create or join a collaborative document.
