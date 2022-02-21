@@ -50,14 +50,18 @@ Visualization Triggers:
     - all same color vs all unique: 0 v 1
     - no change vs deterministic change vs overlap color change : 0 1 2
     - mouse pointer on vs off: 0 v 1
+ 
 Audio Triggers
 - aud=0 no audio call
 - aud=1 audio call on
-Prompt Triggers (THIS MUST BE THE LAST TAG IN THE URL)
-- prm="stringOfYourChoiceHere"
+
 Number of Participants Trigger (default is 2 if none is passed)
 - par=1 
 - par=2
 - etc
+
 Radius of Visualization
 - rad=x (radius of x)
+
+Prompt Triggers (THIS MUST BE THE LAST TAG IN THE URL)
+- prm="stringOfYourChoiceHere"
