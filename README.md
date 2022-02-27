@@ -49,7 +49,7 @@ Visualization Triggers:
     - hollow vs solid: 0 v 1
     - all same color vs all unique: 0 v 1
     - no change vs deterministic change vs overlap color change : 0 1 2
-    - mouse pointer on vs off: 0 v 1
+    - mouse pointer on vs off: 1 v 0
  
 Audio Triggers
 - aud=0 no audio call
