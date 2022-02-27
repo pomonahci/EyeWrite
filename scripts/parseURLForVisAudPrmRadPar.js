@@ -41,6 +41,7 @@ function parseURLFor() {
 
     var prompt = URL.search("prm");
     prompt = URL.substring(prompt + 4, URL.length);
+    prompt = prompt.replace(/_/g, " ");  // replace all underscores with space (#19)
     document.getElementById('drawingPrompt').innerHTML = prompt;
     serverContent.push(["Prompt",prompt]);
 
@@ -101,7 +102,7 @@ function triggerVis(vis) {
         serverContent.push(["Mouse Vis","On"]);
     }
     else{
-        serverContent.push(["Mouse Vis","On"]);
+        serverContent.push(["Mouse Vis","Off"]);
     }
 }
 
