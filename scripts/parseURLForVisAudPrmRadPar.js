@@ -49,7 +49,10 @@ function parseURLFor() {
     collaborators = URL.substring(collaborators+4,collaborators+5);
 
     var radius = URL.search("rad");
-    radius = URL.substring(radius + 4, radius + 5);
+    // radius is two-digit number, with a leading zero
+    radius = URL.substring(radius + 4, radius + 6);
+    if (radius[0] == "0")
+        radius = radius[1];  // leading zero case: only look at least significant
     document.getElementById("sentenceSlider").value = radius;
 }
 
