@@ -48,7 +48,7 @@ Visualization Triggers:
 - `vis` is a 5-character bitstring. Values represent, in order:
     - nothing vs gaze: 0 v 1
     - hollow vs solid gaze visualization: 0 v 1
-    - all same color vs all unique visualizations: 0 v 1
+    - all users same color vs all unique visualizations: 0 v 1
     - no change vs deterministic change vs computed color change on overlap: 0 1 2
     - mouse pointer visualization on vs off: 1 v 0
  
@@ -66,3 +66,5 @@ Radius of Gaze Visualization (default 25)
 
 Prompt (THIS MUST BE THE LAST TAG IN THE URL)
 - `prm=some_prompt` (underscores are replaced by spaces)
+
+For example, a URL might be `localhost:3000/eyewrite.html#-aud=0vis=11010par=2rad=20prm=baz`. For this url, we have no audio, gaze visualization, solid gaze visualization, same-color gaze visualization, deterministic overlap color change, no mouse visualization, two participants, gaze visualization radius of 20, and the prompt "baz".
