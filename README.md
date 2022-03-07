@@ -40,6 +40,7 @@ Note: you may need to import WebGazer module from hci.pomona server
 
 * Visit (http://localhost:3000) on your browser
 * Follow the instructions on the welcome page to create or join a collaborative document.
+* Data files should be downloaded automatically when you close the tab. But to _ensure_ download, run the command `unloadingCSV()` from the developer console.
 
 ## Running Experiments through the URL
 When creating the URL, just make sure these tags are included anywhere (except for prm, which must be last) in the URL verbatim as you see here:
