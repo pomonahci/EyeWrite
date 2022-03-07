@@ -810,9 +810,9 @@ var visualizationControl = function () {
 
 
     var detColors = [];
-    // 2 = (red), 4 = (green, yellow, red), 6 = (blue, green, yellow, orange, red)
+    // 2 = (green), 4 = (green, yellow, red), 6 = (blue, green, yellow, orange, red)
     if (participants == 2) {
-      detColors = ["rgb(255,0,0,1)"];
+      detColors = ["rgb(0,255,0,1)"];  // green
     }
     else if (participants == 4) {
       detColors = ["rgb(0,255,0,1)", "rgb(0,255,255,1)", "rgb(255,0,0,1)"];
