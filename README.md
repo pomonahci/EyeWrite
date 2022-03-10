@@ -36,28 +36,34 @@ Note: you may need to import WebGazer module from hci.pomona server
     # Make sure you installed browser-sync globally
     npm i -g browser-sync
     # Then, run the following script.
-    npm start
+    node index.js
 
 * Visit (http://localhost:3000) on your browser
 * Follow the instructions on the welcome page to create or join a collaborative document.
+* Data files should be downloaded automatically when you close the tab. But to _ensure_ download, run the command `unloadingCSV()` from the developer console.
 
 ## Running Experiments through the URL
-When creating the URL, just make sure these tags are included anywhere (except for prm) in the URL verbatim as you see here:
+When creating the URL, just make sure these tags are included anywhere (except for prm, which must be last) in the URL verbatim as you see here:
+
 Visualization Triggers:
-- vis = 5 number string with indices as follows in order:
+- `vis` is a 5-character bitstring. Values represent, in order:
     - nothing vs gaze: 0 v 1
-    - hollow vs solid: 0 v 1
-    - all same color vs all unique: 0 v 1
-    - no change vs deterministic change vs overlap color change : 0 1 2
-    - mouse pointer on vs off: 0 v 1
+    - hollow vs solid gaze visualization: 0 v 1
+    - all same color vs all unique visualizations: 0 v 1
+    - no change vs deterministic change vs computed color change on overlap: 0 1 2
+    - mouse pointer visualization on vs off: 1 v 0
+ 
 Audio Triggers
-- aud=0 no audio call
-- aud=1 audio call on
-Prompt Triggers (THIS MUST BE THE LAST TAG IN THE URL)
-- prm="stringOfYourChoiceHere"
-Number of Participants Trigger (default is 2 if none is passed)
-- par=1 
-- par=2
+- `aud=0` no audio call
+- `aud=1` audio call on
+
+Number of Participants (default 2)
+- `par=1` 
+- `par=2`
 - etc
-Radius of Visualization
-- rad=x (radius of x)
+
+Radius of Gaze Visualization (default 25)
+- `rad=xx` (two-digit number. If you want, e.g., 7, then it should be `rad=07`)
+
+Prompt (THIS MUST BE THE LAST TAG IN THE URL)
+- `prm=some_prompt` (underscores are replaced by spaces)
