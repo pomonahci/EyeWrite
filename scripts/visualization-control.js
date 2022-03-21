@@ -812,12 +812,12 @@ var visualizationControl = function () {
     var detColors = [];
     // 2 = (green), 4 = (green, yellow, red), 6 = (blue, green, yellow, orange, red)
     if (participants == 2) {
-      detColors = ["rgb(0,255,0,1)"];  // green
+      detColors = ["#1bb327"];  // green
     }
     else if (participants == 4) {
-      detColors = ["rgb(0,255,0,1)", "rgb(0,255,255,1)", "rgb(255,0,0,1)"];
+      detColors = ["#1bb327", "rgb(0,255,255,1)", "rgb(255,0,0,1)"];
     } else if (participants == 6) {
-      detColors = ["rgb(0,0,255,1)", "rgb(0,255,0,1)", "rgb(0,255,255,1)", "rgb(255,165,0,1)", "rgb(255,0,0,1)"];
+      detColors = ["rgb(0,0,255,1)", "#1bb327", "rgb(0,255,255,1)", "rgb(255,165,0,1)", "rgb(255,0,0,1)"];
     }
     if (!parseInt(unique)) {
       hColor = "rgb(0,0,0,1)";
