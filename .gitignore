@@ -31,3 +31,5 @@ node_modules/
 misc/
 # WebGazer/
 clientGazeLog.txt
+data_parsing/test_data/
+data_parsing/sample_data/
