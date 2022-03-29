@@ -107,5 +107,67 @@ def get_files():
 # have to get the data into csv objects, for the csv; into some data structure,
 # for the gazelog.
 
-def parse_csvs(csv_dict, server_csv):
+
+def parse_overlapping(server_csvs: list):
+    """server_csvs is a list of tuples: (user_id, file_location). The file
+    location is of the server_csv for each user. I think we only need the
+    server_csv to get the duration, time bounds, and color of overlap. (But
+    color doesn't seem consistent across csvs from the same experiment, which is
+    problematic.) We need clientGazeLog to get locations of overlap.
+
+    Tbh, we only need one server csv to get the data. We need the others in
+    order to figure out the time offset for each user, so to later figure
+    out the locations of the overlap.
+
+    """
+    NUM_PAR = len(server_csvs)
+    overlapping = {}  # keys user_id, values lists (this_overlapping)
+    start_timestamps = {}  # keys user_id, values ints
+    for n in range(NUM_PAR):
+        this_server_dict = {}
+        this_server_dict["users"] = []  # list of user ids
+        this_user = server_csvs[n][0]
+        this_overlapping = []
+        with open(server_csvs[n][1], mode='r') as server_file:
+            csv_reader = csv.DictReader(server_file)
+            line_count = 0
+            for row in csv_reader:
+                if row["Parameter"][:6] == "User: ":
+                    # add user id (special handling)
+                    this_server_dict["users"].append(row["Parameter"][6:])
+                elif row["Parameter"] == "Experiment Start":
+                    # timestamp of start
+                    this_server_dict["experiment_start"] = int(row["Value"])
+                    start_timestamps[this_user] = int(row["Value"])
+                elif row["Parameter"] == "Participants":
+                    # number of participants
+                    this_server_dict["participants"] = int(row["Value"])
+                    assert int(row["Value"]) == NUM_PAR
+                elif row["Parameter"] == "Overlapping":
+                    # because the last value (timestamp) has no header, we need to access the value directly
+                    timestamp = int(list(row.values())[2][0])
+                    color = row["Value"][1:]  # for some reason the color begins with a colon
+                    this_overlapping.append((color, timestamp))
+                else:
+                    this_server_dict[row["Parameter"]] = row["Value"]
+        overlapping[this_user] = this_overlapping
+    return overlapping, start_timestamps
+
+
+def make_overlap_buckets(overlapping_list, tolerance=1000):
+    """Group data from a single user's overlapping_list (given by
+    parse_overlapping) into buckets. A new bucket is made when `tolerance`
+    milliseconds go by without an overlapping data point.
+
+    """
     pass
+
+
+def get_overlap_locations(buckets, gazelog: str):
+    """Attach locations to the overlapping start and end time from `buckets`.
+    `buckets` is a single user's buckets; `gazelog` is that single user's
+    gazelog."""
+    pass
+
+# def parse_gazelogs(gazelog_dict: dict):
+#     pass
