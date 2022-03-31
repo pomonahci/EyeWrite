@@ -41,6 +41,8 @@ Author: Andy Han, late March 2022
 import argparse
 import os
 import csv
+import json
+import pprint
 
 # get the files
 parser = argparse.ArgumentParser()
@@ -119,55 +121,165 @@ def parse_overlapping(server_csvs: list):
     order to figure out the time offset for each user, so to later figure
     out the locations of the overlap.
 
+    Returns a tuple `overlapping`, `start_timestamps`. `overlapping` is a
+    dictionary with keys user_id (str) and values list that contain tuples
+    (color: str, timestamp: int).
+
+    `start_timestamps` is a dictionary that associates a user_id with the time
+    that that user reports having started the experiment. It's necessary to sync
+    the different computers' clocks.
+
     """
-    NUM_PAR = len(server_csvs)
     overlapping = {}  # keys user_id, values lists (this_overlapping)
     start_timestamps = {}  # keys user_id, values ints
-    for n in range(NUM_PAR):
-        this_server_dict = {}
-        this_server_dict["users"] = []  # list of user ids
-        this_user = server_csvs[n][0]
-        this_overlapping = []
-        with open(server_csvs[n][1], mode='r') as server_file:
-            csv_reader = csv.DictReader(server_file)
-            line_count = 0
-            for row in csv_reader:
-                if row["Parameter"][:6] == "User: ":
-                    # add user id (special handling)
-                    this_server_dict["users"].append(row["Parameter"][6:])
-                elif row["Parameter"] == "Experiment Start":
-                    # timestamp of start
-                    this_server_dict["experiment_start"] = int(row["Value"])
-                    start_timestamps[this_user] = int(row["Value"])
-                elif row["Parameter"] == "Participants":
-                    # number of participants
-                    this_server_dict["participants"] = int(row["Value"])
-                    assert int(row["Value"]) == NUM_PAR
-                elif row["Parameter"] == "Overlapping":
-                    # because the last value (timestamp) has no header, we need to access the value directly
-                    timestamp = int(list(row.values())[2][0])
-                    color = row["Value"][1:]  # for some reason the color begins with a colon
-                    this_overlapping.append((color, timestamp))
-                else:
-                    this_server_dict[row["Parameter"]] = row["Value"]
-        overlapping[this_user] = this_overlapping
+    for user, server_csv in server_csvs:
+        overlapping_single = parse_overlapping_single(server_csv)
+        start_timestamps[user] = overlapping_single["start_ts"]
+        overlapping[user] = overlapping_single["overlapping"]
+
     return overlapping, start_timestamps
+
+
+def parse_overlapping_single(server_csv):
+    """Helper function that parses one user's overlapping. Cf. parse_overlapping for more."""
+    this_server_dict = {}
+    this_server_dict["users"] = []  # list of user ids
+    this_overlapping = []
+    this_start_ts = 0
+    with open(server_csv, mode='r') as server_file:
+        csv_reader = csv.DictReader(server_file)
+        for row in csv_reader:
+            if row["Parameter"][:6] == "User: ":
+                # add user id (special handling)
+                this_server_dict["users"].append(row["Parameter"][6:])
+            elif row["Parameter"] == "Experiment Start":
+                # timestamp of start
+                this_server_dict["experiment_start"] = int(row["Value"])
+                this_start_ts = int(row["Value"])
+            elif row["Parameter"] == "Participants":
+                # number of participants
+                this_server_dict["participants"] = int(row["Value"])
+            elif row["Parameter"] == "Overlapping":
+                # because the last value (timestamp) has no header, we need to access the value directly
+                timestamp = int(list(row.values())[2][0])
+                color = row["Value"][1:]  # for some reason the color begins with a colon
+                this_overlapping.append((color, timestamp))
+            else:
+                this_server_dict[row["Parameter"]] = row["Value"]
+
+    return {"overlapping": this_overlapping, \
+            "server_dict": this_server_dict, \
+            "start_ts": this_start_ts}
 
 
 def make_overlap_buckets(overlapping_list, tolerance=1000):
     """Group data from a single user's overlapping_list (given by
     parse_overlapping) into buckets. A new bucket is made when `tolerance`
-    milliseconds go by without an overlapping data point.
+    milliseconds go by without an overlapping data point, or when the color changes.
+
+    The output is a list of dictionaries. The dictionaries have keys
+    "start" (value int), "end" (value int), and "color" (value str).
+    """
+    prev_color = overlapping_list[0][0]
+    prev_timestamp = overlapping_list[0][1]
+    buckets = []
+    this_bucket = {"start": prev_timestamp, "color": prev_color}
+    for color, timestamp in overlapping_list[1:]:
+        if timestamp - prev_timestamp >= tolerance or color != prev_color:
+            # finish this bucket
+            this_bucket["end"] = prev_timestamp
+            buckets.append(this_bucket)
+            # add this as the start of a new bucket
+            this_bucket = {"start": timestamp, "color": color}
+        prev_timestamp = timestamp
+        prev_color = color
+
+    return buckets
+
+
+def get_overlap_locations(orig_buckets: list, gazelog: str, user_id=None, tolerance=30):
+    """Attach locations to the overlapping start and end time from `buckets`.
+    `buckets` is a single user's buckets; `gazelog` is the file location of that
+    single user's gazelog. `tolerance` is how much tolerance we're allowing on
+    either side of the gazelog. That is, if `buckets` says that a user had
+    overlap at time 100 and we have tolerance of 10, then we will look in the
+    gazelog for a log any time between 90 and 110 (inclusive) and count the
+    first location so found as the location for the overlap at time 100.
+
+    The algorithm is one that is slow--O(len(gazelog) * len(orig_buckets))--but
+    the reason that we scan the entire buckets list is so that we deal with
+    search misses gracefully. If the function can't find a gazelog log within
+    the tolerance, then it won't add location info at that bucket, and will move
+    onto the next bucket. This means we can fine-tune tolerance to get the least
+    tolerance possible.
+
+    If `user_id` (as an int) is passed to this function, it will stop iterating
+    through the gazelog file when the gazelog user id is not the same. This will
+    improve performance quite a bit, cause our gazelogs don't make distinctions
+    between experiments except by changing the user id in the log.
+
+    Returns a modified copy of the `buckets` list, with four additional keys
+    in each bucket: "start_loc_x", "start_loc_y", "end_loc_x", and "end_loc_y".
 
     """
-    pass
+    start_timestamps = []
+    end_timestamps = []
+    buckets = []
+    for i, bucket in enumerate(orig_buckets):
+        # TODO this is stupid the i is obviously just going up by 1; can just
+        # use the index of the element in start_timestamps itself
+        buckets.append(bucket)  # make copy of orig_buckets
+        start_timestamps.append((bucket["start"], i))
+        end_timestamps.append((bucket["end"], i))
+
+    with open(gazelog, mode='r') as gazelog_file:
+        for line in gazelog_file:
+            found = False
+            log = json.loads(line)
+
+            if user_id and int(log["user"]) != user_id:
+                # keep going until we find the user
+                continue
+
+            # search in start timestamps
+            for start_ts, i in start_timestamps:
+                if start_ts - tolerance <= log["epoch"] and start_ts + tolerance >= log["epoch"]:
+                    buckets[i]["start_loc_x"] = log["X"]
+                    buckets[i]["start_loc_y"] = log["Y"]
+                    # this will overwrite any existing locations found, so it has a bias towards later time
+                    # break both for loops once we've found target
+                    found = True
+                    break
+
+            # the same gazelog log can't refer to the start of one bucket and
+            # the end of another, so long as this tolerance is less than the
+            # bucket tolerance in `make_overlap_buckets`, so we're done with
+            # this gazelog log if we found a start loc
+            if found: continue
+
+            for end_ts, i in end_timestamps:
+                if end_ts - tolerance <= log["epoch"] and end_ts + tolerance >= log["epoch"]:
+                    buckets[i]["end_loc_x"] = log["X"]
+                    buckets[i]["end_loc_y"] = log["Y"]
+                    # this will overwrite any existing locations found, so it has a bias towards later time
+                    break
+
+    return buckets
 
 
-def get_overlap_locations(buckets, gazelog: str):
-    """Attach locations to the overlapping start and end time from `buckets`.
-    `buckets` is a single user's buckets; `gazelog` is that single user's
-    gazelog."""
-    pass
+def example_single_buckets(server_csv, gazelog, user_id=None):
+    """Example of how to get a single user's buckets."""
+    overlapping_single = parse_overlapping_single(server_csv)
+    print(f"Done parsing overlapping; found start_ts {overlapping_single['start_ts']}")
+
+    buckets = make_overlap_buckets(overlapping_single['overlapping'])
+    print(f"Done making initial buckets. Found {len(buckets)} buckets:")
+    pprint.pprint(buckets)
+
+    location_buckets = get_overlap_locations(buckets, gazelog)
+    print("Done making location buckets:")
+    pprint.pprint(location_buckets)
+
 
 # def parse_gazelogs(gazelog_dict: dict):
 #     pass
