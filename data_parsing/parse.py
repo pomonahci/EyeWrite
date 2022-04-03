@@ -185,7 +185,7 @@ def make_overlap_buckets(overlapping_list, tolerance=1000):
     buckets = []
     this_bucket = {"start": prev_timestamp, "color": prev_color}
     for color, timestamp in overlapping_list[1:]:
-        if timestamp - prev_timestamp >= tolerance or color != prev_color:
+        if abs(timestamp - prev_timestamp) >= tolerance or color != prev_color:
             # finish this bucket
             this_bucket["end"] = prev_timestamp
             buckets.append(this_bucket)
@@ -267,19 +267,24 @@ def get_overlap_locations(orig_buckets: list, gazelog: str, user_id=None, tolera
     return buckets
 
 
-def example_single_buckets(server_csv, gazelog, user_id=None):
+def get_single_buckets(server_csv, gazelog, user_id=None):
     """Example of how to get a single user's buckets."""
     overlapping_single = parse_overlapping_single(server_csv)
     print(f"Done parsing overlapping; found start_ts {overlapping_single['start_ts']}")
 
     buckets = make_overlap_buckets(overlapping_single['overlapping'])
-    print(f"Done making initial buckets. Found {len(buckets)} buckets:")
-    pprint.pprint(buckets)
+    # print(f"Done making initial buckets. Found {len(buckets)} buckets:")
+    # pprint.pprint(buckets)
 
-    location_buckets = get_overlap_locations(buckets, gazelog)
-    print("Done making location buckets:")
+    location_buckets = get_overlap_locations(buckets, gazelog, user_id)
+    print(f"Done making location buckets with server_csv {server_csv}. Found {len(location_buckets)} buckets:")
     pprint.pprint(location_buckets)
 
 
-# def parse_gazelogs(gazelog_dict: dict):
-#     pass
+def make_csv_from_dict_list(d_list: list, output_location: str):
+    """Utility function to make a csv from list of dicts `d_list` to file `output_location`."""
+    keys = set().union(*(d.keys() for d in d_list))  # cause first entry might not have all keys
+    with open(output_location, 'w', newline='') as output_file:
+        dict_writer = csv.DictWriter(output_file, keys)
+        dict_writer.writeheader()
+        dict_writer.writerows(d_list)
