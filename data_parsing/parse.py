@@ -281,6 +281,11 @@ def get_single_buckets(server_csv, gazelog, user_id=None):
     pprint.pprint(location_buckets)
 
 
+def filter_fleeting_overlaps(overlap_buckets:list, ms: int=150) -> list:
+    """Filter out buckets with overlap duration less than `ms` milliseconds. Default 150"""
+    return [d for d in overlap_buckets if d["end"] - d["start"] < ms]
+
+
 def make_csv_from_dict_list(d_list: list, output_location: str):
     """Utility function to make a csv from list of dicts `d_list` to file `output_location`."""
     keys = set().union(*(d.keys() for d in d_list))  # cause first entry might not have all keys
