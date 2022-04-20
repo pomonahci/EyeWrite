@@ -267,6 +267,21 @@ def get_overlap_locations(orig_buckets: list, gazelog: str, user_id=None, tolera
     return buckets
 
 
+def filter_fleeting_overlaps(overlap_buckets:list, ms: int=150) -> list:
+    """Filter out buckets with overlap duration less than `ms` milliseconds. Default 150"""
+    return [d for d in overlap_buckets if d["end"] - d["start"] < ms]
+
+
+def make_csv_from_dict_list(d_list: list, output_location: str):
+    """Utility function to make a csv from list of dicts `d_list` to file `output_location`."""
+    keys = set().union(*(d.keys() for d in d_list))  # cause first entry might not have all keys
+    with open(output_location, 'w', newline='') as output_file:
+        dict_writer = csv.DictWriter(output_file, keys)
+        dict_writer.writeheader()
+        dict_writer.writerows(d_list)
+
+
+
 def get_single_buckets(server_csv, gazelog, user_id=None):
     """Example of how to get a single user's buckets."""
     overlapping_single = parse_overlapping_single(server_csv)
@@ -280,16 +295,16 @@ def get_single_buckets(server_csv, gazelog, user_id=None):
     print(f"Done making location buckets with server_csv {server_csv}. Found {len(location_buckets)} buckets:")
     pprint.pprint(location_buckets)
 
+    def ask_for_save():
+        print("Save to file? (y/n)")
+        save_p = input()
+        if save_p == 'y':
+            print(f"Saving as {server_csv}_buckets.csv")
+            make_csv_from_dict_list(location_buckets, f"{server_csv}_buckets.csv")
+            return
+        if save_p == 'n':
+            return
+        else:
+            ask_for_save()
 
-def filter_fleeting_overlaps(overlap_buckets:list, ms: int=150) -> list:
-    """Filter out buckets with overlap duration less than `ms` milliseconds. Default 150"""
-    return [d for d in overlap_buckets if d["end"] - d["start"] < ms]
-
-
-def make_csv_from_dict_list(d_list: list, output_location: str):
-    """Utility function to make a csv from list of dicts `d_list` to file `output_location`."""
-    keys = set().union(*(d.keys() for d in d_list))  # cause first entry might not have all keys
-    with open(output_location, 'w', newline='') as output_file:
-        dict_writer = csv.DictWriter(output_file, keys)
-        dict_writer.writeheader()
-        dict_writer.writerows(d_list)
+    ask_for_save()
