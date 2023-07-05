@@ -72,6 +72,12 @@ function triggerVis(vis) {
         document.getElementById("vis-shape").value = 'hollow';
         document.getElementById("vis-shape").dispatchEvent(new Event('change'));
     }
+
+    else if(vis[1]=2){//heatmap
+        serverContent.push(["Visualization","Heatmap"]);
+        document.getElementById("vis-shape").value = 'heatmap';
+        document.getElementById("vis-shape").dispatchEvent(new Event('change'));
+    }
     else {//solid
         serverContent.push(["Visualization","Solid"]);
         document.getElementById("vis-shape").value = 'solid';
