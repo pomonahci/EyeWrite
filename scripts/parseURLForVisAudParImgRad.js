@@ -72,15 +72,14 @@ function triggerVis(vis) {
         document.getElementById("vis-shape").value = 'hollow';
         document.getElementById("vis-shape").dispatchEvent(new Event('change'));
     }
-
-    else if(vis[1]=2){//heatmap
-        serverContent.push(["Visualization","Heatmap"]);
-        document.getElementById("vis-shape").value = 'heatmap';
-        document.getElementById("vis-shape").dispatchEvent(new Event('change'));
-    }
-    else {//solid
+    else if(vis[1] == 1) {//solid
         serverContent.push(["Visualization","Solid"]);
         document.getElementById("vis-shape").value = 'solid';
+        document.getElementById("vis-shape").dispatchEvent(new Event('change'));
+    }
+    else if(vis[1] == 2){//heatmap
+        serverContent.push(["Visualization","Heatmap"]);
+        document.getElementById("vis-shape").value = 'heatmap';
         document.getElementById("vis-shape").dispatchEvent(new Event('change'));
     }
 
@@ -88,9 +87,13 @@ function triggerVis(vis) {
         serverContent.push(["Colors","Identical"]);
         unique = 0;
     }
-    else {//unique
+    else if(vis[2]==1) {//unique
         serverContent.push(["Colors","Unique"]);
         unique = 1;
+    }
+    else if(vis[2]==2) {//transparent
+        serverContent.push(["Colors", "Transparent"]);
+        unique = 2;
     }
 
     if(vis[3]==0){//no change in overlap

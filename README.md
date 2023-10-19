@@ -46,27 +46,40 @@ For the Tobii integration, we need to browserify `tobii.js`, because it uses Nod
     # Then, run the following script.
     npm start
 
+* Run TobiiServer/TobiiElectronServer.exe
 * Visit (http://localhost:3000) on your browser
 * Follow the instructions on the welcome page to create or join a collaborative document.
 * Make sure that, if you're in room 219, you set the resolution to be 2560 by 1440, and restart the computer.
 
 ## Running Experiments through the URL
 When creating the URL, just make sure these tags are included anywhere in the URL verbatim as you see here:
+
 Visualization Triggers:
-- vis=0 no visualization
-- vis=1 hollow circle
-- vis=2 heatmap
+
+In the URL, specify `vis=xxxx`. Note that if you do *not* want the gaze visualization but you still want to track gaze and overlap data, you should set `vis=1020`.
+
+| Place  | is 0                      | is 1                         | is 2                       |
+|:-------|:--------------------------|:-----------------------------|:---------------------------|
+| vis[0] | No gaze data              | Yes gaze data                |                            |
+| vis[1] | Hollow gaze visualization | Solid gaze visualization     | Heatmap gaze visualization |
+| vis[2] | All users same colors     | Unique visualizations        | Transparent visualizations |
+| vis[3] | No overlap color change   | Deterministic overlap colors | Combination overlap colors |
+
+
 Audio Triggers
 - aud=0 no audio call
 - aud=1 audio call on
+
 Image Triggers
 - img=0 father's day
 - img=1 christmas
 - img=2 horse
 - img=3 warmup
+
 Number of Participants Trigger (default is 2 if none is passed)
 - par=1 
 - par=2
 - etc
+
 Radius of Visualization
-- rad=x (radius of x)
+- rad=x (radius of x). Single digit number. This is multiplied by seven later. I'm pretty sure it means pixels.

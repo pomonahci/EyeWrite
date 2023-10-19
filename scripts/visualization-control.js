@@ -848,6 +848,7 @@ var visualizationControl = (function () {
   function updateHighlight(uID) {
     console.log("in updateHightlight with uID", uID);
     var circle;
+    let isTransparent = unique === 2 ? 1 : 0;  // we plug this value into hex2rgb
 
     if (userHighlights[uID] != null) {
       circle = userHighlights[uID];
@@ -886,7 +887,7 @@ var visualizationControl = (function () {
 
 
     //Overlap Detection for visualization color changes
-    var hColor = hex2rgb(userColors[uID], 1.0);
+    var hColor = hex2rgb(userColors[uID], isTransparent);
     
     const URL = window.location.href;
     var participants = URL.search("par");
@@ -936,7 +937,7 @@ var visualizationControl = (function () {
         }
         serverContent.push(["Overlapping", laps, Date.now()]);
 
-        if (deterministic == 2 && unique) {//color combinations for overlap
+        if (deterministic == 2 && unique === 1) {//color combinations for overlap
           rgbs = hColor.substring(5, hColor.length - 1).split(',');
           hColor = "rgba(";
           for (const color of overlapping) {//isolate rbg values into list (r, g, b, 1)
@@ -987,7 +988,7 @@ var visualizationControl = (function () {
         }
         serverContent.push(["Overlapping", laps, Date.now()]);
 
-        if (deterministic == 0 && unique) {//color combinations for overlap
+        if (deterministic == 0 && unique === 1) {//color combinations for overlap
           rgbs = hColor.substring(5,hColor.length-1).split(',');
           hColor = "rgba(";
           for (const color of overlapping) {//isolate rbg values into list (r, g, b, 1)
