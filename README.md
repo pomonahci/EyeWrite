@@ -56,7 +56,7 @@ When creating the URL, just make sure these tags are included anywhere in the UR
 
 Visualization Triggers:
 
-In the URL, specify `vis=xxxx`. Note that if you do *not* want the gaze visualization but you still want to track gaze and overlap data, you should set `vis=1020`.
+In the URL, specify `vis=xxxx`. Note that if you do *not* want the gaze visualization but you still want to track gaze and overlap data, you should set `vis=1022`.
 
 | Place  | is 0                      | is 1                         | is 2                       |
 |:-------|:--------------------------|:-----------------------------|:---------------------------|
