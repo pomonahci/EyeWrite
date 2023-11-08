@@ -51,7 +51,7 @@ function parseURLFor() {
     
 
     var radius = URL.search("rad");
-    radius = URL.substring(radius + 4, radius + 5);
+    radius = URL.substring(radius + 4, radius + 6);
     document.getElementById("sentenceSlider").value = radius;
 }
 
