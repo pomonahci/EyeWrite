@@ -848,7 +848,7 @@ var visualizationControl = (function () {
   function updateHighlight(uID) {
     console.log("in updateHightlight with uID", uID);
     var circle;
-    let isTransparent = unique === 2 ? 1 : 0;  // we plug this value into hex2rgb
+    let transparency = (unique === 2) ? 0 : 0.9;  // we plug this value into hex2rgb
 
     if (userHighlights[uID] != null) {
       circle = userHighlights[uID];
@@ -887,7 +887,7 @@ var visualizationControl = (function () {
 
 
     //Overlap Detection for visualization color changes
-    var hColor = hex2rgb(userColors[uID], isTransparent);
+    var hColor = hex2rgb(userColors[uID], transparency);
     
     const URL = window.location.href;
     var participants = URL.search("par");
