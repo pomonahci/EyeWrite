@@ -56,7 +56,7 @@ When creating the URL, just make sure these tags are included anywhere in the UR
 
 Visualization Triggers:
 
-In the URL, specify `vis=xxxx`. Note that if you do *not* want the gaze visualization but you still want to track gaze and overlap data, you should set `vis=1022`.
+  * [ ] In the URL, specify `vis=xxxx`. Note that if you do *not* want the gaze visualization but you still want to track gaze and overlap data, you should set `vis=1020`.
 
 | Place  | is 0                      | is 1                         | is 2                       |
 |:-------|:--------------------------|:-----------------------------|:---------------------------|
@@ -82,4 +82,6 @@ Number of Participants Trigger (default is 2 if none is passed)
 - etc
 
 Radius of Visualization
-- rad=x (radius of x). Single digit number. This is multiplied by seven later. I'm pretty sure it means pixels.
+The radius is a *two digit number*. We multiply this by 8 to get the diameter of the circle visualization in pixels (for the Hollow and Solid cases, and invisibly in the Transparent case). So, for example, if you have `rad=10`, then we will get a circle with radius `8 * 10 = 80` pixels (including the 5px border). So the diameter of the circle will be 160 pixels.
+
+If you want a radius smaller than 80 pixels (that is, a one-digit radius), you must have a leading `0`. For example, `rad=05` will get you a radius of `8 * 5 = 40` pixels, for a circle with diameter 80 pixels.
