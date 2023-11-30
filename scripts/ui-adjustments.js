@@ -61,7 +61,7 @@ var UIAdjustments = (function () {
           hex: false,
           rgba: false,
           hsva: false,
-          input: false,
+          input: true,
           clear: false,
           save: true,
         },
