@@ -224,7 +224,7 @@ function firelist(snapshot) {
     }
 }
 
-getImage();
+
 function startExp() {
     startStopwatch();
     serverContent.push(["Experiment Start", Date.now()]);
@@ -232,6 +232,7 @@ function startExp() {
     firebaseRef.child('tasks').once('value', function (snap) {
         task = snap.val().length - 1;
     });
+    getImage();
     getTarget();
 }
 
