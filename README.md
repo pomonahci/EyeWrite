@@ -81,6 +81,9 @@ Number of Participants Trigger (default is 2 if none is passed)
 - par=2
 - etc
 
+User color: a hex code with the hashtag included
+- hex=#470047
+
 Radius of Visualization
 The radius is a *two digit number*. We multiply this by 8 to get the radius of the circle visualization in pixels (for the Hollow and Solid cases, and invisibly in the Transparent case). So, for example, if you have `rad=10`, then we will get a circle with radius `8 * 10 = 80` pixels (including the 5px border). So the diameter of the circle will be 160 pixels.
 
