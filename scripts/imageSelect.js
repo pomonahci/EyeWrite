@@ -45,17 +45,6 @@ var skipped = 0;
 var mySkipVote = false;
 
 function getImage() {
-    var URL = window.location.href;
-    imageLabel = URL.search("img");
-    imageLabel = URL.substring(imageLabel + 4, imageLabel + 5);
-    if (imageLabel == -1) return;
-    numPpl = URL.search('par');
-    if (numPpl == -1) {
-        numPpl = 2;
-    }
-    else {
-        numPpl = URL.substring(numPpl + 4, numPpl + 5);
-    }
     var imageName = index2Label[imageLabel];
     bounding = boundArray[imageName];
     document.getElementById("imageSearch").src = "./graphics/" + imageName;
@@ -230,7 +219,8 @@ function startExp() {
     serverContent.push(["Experiment Start", Date.now()]);
 
     firebaseRef.child('tasks').once('value', function (snap) {
-        task = snap.val().length - 1;
+        if (snap.val() !== null)
+            task = snap.val().length - 1;
     });
     getImage();
     getTarget();
@@ -252,7 +242,19 @@ function startExp() {
 document.getElementById("imageSearch").style.pointerEvents = "none";
 document.getElementById("skipButton").style.pointerEvents = "none";
 firebaseRef.child('users').on('value', function (snapshot) {
-    if (Object.keys(snapshot.val()).length == numPpl) {
+    var URL = window.location.href;
+    imageLabel = URL.search("img");
+    imageLabel = URL.substring(imageLabel + 4, imageLabel + 5);
+    if (imageLabel == -1) return;
+    numPpl = URL.search('par');
+    if (numPpl == -1) {
+        numPpl = 2;
+    }
+    else {
+        numPpl = URL.substring(numPpl + 4, numPpl + 5);
+    }
+
+    if (Object.keys(snapshot.val()).length >= numPpl) {
         startExp();
         firebaseRef.child("users").transaction(function (current) {
             for (const [key, value] of Object.entries(current)) {
