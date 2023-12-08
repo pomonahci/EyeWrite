@@ -254,11 +254,12 @@ var UIAdjustments = (function () {
       // console.log(existingColors, 'Now generate a new color for current user!');
 
       // Pick a new color for the user.
-      var newUserColor = selectNewColor(
+      var newUserColor = selectNewColorFromList(
         existingColors,
         firepad.firebaseAdapter_.color_
       );
       firepad.firebaseAdapter_.setColor(newUserColor);
+      pickr.setColor(newUserColor);
     } else {
       // if we do pass in color via url, then set it to that color
       // first validate the color
@@ -274,6 +275,27 @@ var UIAdjustments = (function () {
     // Regular expression to check if the string is a valid hex color
     const regex = /^#(?:[0-9a-fA-F]{3}){1,2}$/;
     return regex.test(hex);
+  }
+
+
+  /**
+   * Select a new color based on which order users came into the session.
+   * User 1 will always be the first color, User 2 will always be the second
+   * color, etc.
+   * */
+  function selectNewColorFromList(existingColors, currentColor) {
+    const listOfColors = [
+      "#7fc97f",
+      "#beaed4",
+      "fdc086",
+      "ffff99",
+      "386cb0",
+      "f0027f"
+    ];
+
+    // Return the zeroeth color for the first user (since for the first user
+    // there will be no existingColors), the second for the first, first for second, etc
+    return listOfColors[existingColors.length];
   }
 
   /**
