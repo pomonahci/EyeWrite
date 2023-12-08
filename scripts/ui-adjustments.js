@@ -248,9 +248,6 @@ var UIAdjustments = (function () {
           }
         }
       }
-      if (existingColors.length > 0) {
-        firepad.firebaseAdapter_.setColor("#ffffff");
-      }
       // console.log(existingColors, 'Now generate a new color for current user!');
 
       // Pick a new color for the user.
@@ -287,14 +284,15 @@ var UIAdjustments = (function () {
     const listOfColors = [
       "#7fc97f",
       "#beaed4",
-      "fdc086",
-      "ffff99",
-      "386cb0",
-      "f0027f"
+      "#fdc086",
+      "#ffff99",
+      "#386cb0",
+      "#f0027f"
     ];
 
     // Return the zeroeth color for the first user (since for the first user
     // there will be no existingColors), the second for the first, first for second, etc
+    console.log(`In selectNewColorFromList, have existingColors.length ${existingColors.length}, setting color to ${listOfColors[existingColors.length]}`)
     return listOfColors[existingColors.length];
   }
 
