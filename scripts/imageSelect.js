@@ -29,6 +29,7 @@ var horseBoxes = { 'tulip.png': [941 / 1440, 76 / 704, 102 / 1440, 152 / 704], '
 var warmupBoxes = { 'a1.png': [953 / 1420, 281 / 684, 60 / 1420, 57 / 684], 'a2.png': [893 / 1420, 314 / 684, 56 / 1420, 49 / 684], 'a3.png': [852 / 1420, 215 / 684, 64 / 1420, 55 / 684], 'a4.png': [828 / 1420, 95 / 684, 63 / 1420, 56 / 684], 'a5.png': [781 / 1420, 167 / 684, 61 / 1420, 51 / 684], 'a6.png': [704 / 1420, 208 / 684, 64 / 1420, 53 / 684], 'a7.png': [697 / 1420, 122 / 684, 66 / 1420, 57 / 684], 'a8.png': [576 / 1420, 244 / 684, 68 / 1420, 58 / 684] }
 
 var halloweenBoxes = {'crowns.jpeg': [(210 / 1200), (654 / 1150), (105 / 1200), (19 / 1150)]}
+var halloweenBoxes = {'crowns.jpeg': [(225 / 1440), (654 / 1150), (105 / 1200), (19 / 1150)]}
 var halloweennBoxes = {
     'Flag_one.png': [(77 / 1200), (153 / 1150), (173 / 1200), (136 / 1150)],
     'Flag_two.png': [(317 / 1200), (238 / 1150), (140 / 1200), (151 / 1150)],
@@ -107,6 +108,7 @@ var mySkipVote = false;
 function getImage() {
     var imageName = index2Label[imageLabel];
     bounding = boundArray[imageName];
+    console.log(bounding)
     document.getElementById("imageSearch").src = "./graphics/" + imageName;
 
     serverContent.push(["Participants", numPpl]);
@@ -128,8 +130,9 @@ function getTarget() {
 
     if (!bounding) return;
     keys = Object.keys(bounding);
+    console.log("keys",keys)
     numTargets = keys.length;
-
+    console.log("task",task)
     target = bounding[keys[task]];
     document.getElementById("targetSearch").src = "./graphics/" + keys[task];
     serverContent.push(["Target", keys[task], Date.now()]);
@@ -142,7 +145,7 @@ function onClick(event) {
     if (targetHit) return
     var x = event.clientX;
     var y = event.clientY;
-
+    console.log("target",target)
     if (target[0] * window.innerWidth <= x && target[1] * window.innerHeight <= y && x <= target[0] * window.innerWidth + target[2] * window.innerWidth && y <= target[1] * window.innerHeight + target[3] * window.innerHeight) {
         document.getElementById("skipButton").disabled = true;
         document.getElementById("skipButton").innerHTML = "Help Others Find It!";
