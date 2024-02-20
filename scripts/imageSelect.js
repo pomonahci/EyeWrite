@@ -146,6 +146,18 @@ function onClick(event) {
     var x = event.clientX;
     var y = event.clientY;
     console.log("target",target)
+    console.log("target0",target[0])
+    console.log("target1",target[1])
+    console.log("target2",target[2])
+    console.log("target3",target[3])
+    console.log("windown inner width",windown.innerWidth)
+    console.log("windown inner height",windown.innerHeight)
+    console.log("x",x)
+    console.log("y",y)
+    console.log(target[0] * window.innerWidth)
+    console.log(target[1] * window.innerHeight)
+    console.log( target[0] * window.innerWidth + target[2] * window.innerWidth)
+    console.log(target[1] * window.innerHeight + target[3] * window.innerHeight)
     if (target[0] * window.innerWidth <= x && target[1] * window.innerHeight <= y && x <= target[0] * window.innerWidth + target[2] * window.innerWidth && y <= target[1] * window.innerHeight + target[3] * window.innerHeight) {
         document.getElementById("skipButton").disabled = true;
         document.getElementById("skipButton").innerHTML = "Help Others Find It!";
