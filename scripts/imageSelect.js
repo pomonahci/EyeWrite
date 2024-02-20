@@ -16,7 +16,7 @@ var container = imageContainer.getBoundingClientRect();
 
 var imageLabel; // number identify 0-9 for what image is being looked at
 // listings of bounding boxes for each image
-var index2Label = { '0': 'fday.jpg', '1': 'halloween.jpeg', '2': 'horse.jpg', '3': 'warmup.png' } //dictionary linking imageLabel number to literal string for ease of reading
+var index2Label = { '0': 'fday.jpg', '1': 'christ.png', '2': 'horse.jpg', '3': 'warmup.png', '4': 'halloween.jpeg'} //dictionary linking imageLabel number to literal string for ease of reading
 // var index2Label = { '0': 'fdayboxes.jpg', '1': 'christboxes.png', '2': 'horseboxes.jpg' }
 
 
@@ -27,8 +27,6 @@ var christBoxes = { 'candle.png': [778 / 1440, 104 / 704, 32 / 1440, 86 / 704], 
 var horseBoxes = { 'tulip.png': [941 / 1440, 76 / 704, 102 / 1440, 152 / 704], 'tack.png': [507 / 1440, 388 / 704, 47 / 1440, 46 / 704], 'ladder.png': [1082 / 1440, 247 / 704, 48 / 1440, 23 / 704], 'brush.png': [1116 / 1440, 354 / 704, 22 / 1440, 143 / 704], 'rug.png': [990 / 1440, 458 / 704, 65 / 1440, 82 / 704], 'carrot.png': [748 / 1440, 616 / 704, 45 / 1440, 82 / 704] };
 
 var warmupBoxes = { 'a1.png': [953 / 1420, 281 / 684, 60 / 1420, 57 / 684], 'a2.png': [893 / 1420, 314 / 684, 56 / 1420, 49 / 684], 'a3.png': [852 / 1420, 215 / 684, 64 / 1420, 55 / 684], 'a4.png': [828 / 1420, 95 / 684, 63 / 1420, 56 / 684], 'a5.png': [781 / 1420, 167 / 684, 61 / 1420, 51 / 684], 'a6.png': [704 / 1420, 208 / 684, 64 / 1420, 53 / 684], 'a7.png': [697 / 1420, 122 / 684, 66 / 1420, 57 / 684], 'a8.png': [576 / 1420, 244 / 684, 68 / 1420, 58 / 684] }
-
-var boundArray = { 'fday.jpg': fdayBoxes, 'christ.png': christBoxes, 'horse.jpg': horseBoxes, 'warmup.png': warmupBoxes };
 
 var halloweenBoxes = {
     'Flag_one.png': [(77 / 1200), (153 / 1150), (173 / 1200), (136 / 1150)],
@@ -85,6 +83,10 @@ var halloweenBoxes = {
     'Turtle.png': [(1038 / 1200), (1024 / 1170), (114 / 1200), (134 / 1170)],
     'Knife.png': [(1033 / 1200), (868 / 1170), (81 / 1200), (110 / 1170)],
   };
+  
+var boundArray = { 'fday.jpg': fdayBoxes, 'christ.png': christBoxes, 'horse.jpg': horseBoxes, 'warmup.png': warmupBoxes, 'halloween.jepg': halloweenBoxes };
+
+
   
 // var boundArray = { 'fdayboxes.jpg': fdayBoxes, 'christboxes.png': christBoxes, 'horseboxes.jpg': horseBoxes };
 
