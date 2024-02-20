@@ -86,7 +86,7 @@ var halloweennBoxes = {
     'Knife.png': [(1033 / 1200), (868 / 1170), (81 / 1200), (110 / 1170)],
   };
 
-var boundArray = { 'fday.jpg': fdayBoxes, 'christ.png': christBoxes, 'horse.jpg': horseBoxes, 'warmup.png': warmupBoxes, 'halloween.jepg': halloweenBoxes };
+var boundArray = { 'fday.jpg': fdayBoxes, 'christ.png': christBoxes, 'horse.jpg': horseBoxes, 'warmup.png': warmupBoxes, 'halloween.jpeg': halloweenBoxes };
 
 
   
