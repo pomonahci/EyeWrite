@@ -16,7 +16,7 @@ var container = imageContainer.getBoundingClientRect();
 
 var imageLabel; // number identify 0-9 for what image is being looked at
 // listings of bounding boxes for each image
-var index2Label = { '0': 'fday.jpg', '1': 'christ.png', '2': 'horse.jpg', '3': 'warmup.png', '4': 'halloween.jpeg'} //dictionary linking imageLabel number to literal string for ease of reading
+var index2Label = { '0': 'fday.jpg', '1': 'christ.png', '2': 'horse.jpg', '3': 'warmup.png', '4': 'halloween.jpeg', '5': 'memorial.jpeg'} //dictionary linking imageLabel number to literal string for ease of reading
 // var index2Label = { '0': 'fdayboxes.jpg', '1': 'christboxes.png', '2': 'horseboxes.jpg' }
 
 
@@ -93,7 +93,7 @@ var halloweennBoxes = {
     'Knife.png': [(1033 / 1200), (868 / 1170), (81 / 1200), (110 / 1170)],
   };
 
-var boundArray = { 'fday.jpg': fdayBoxes, 'christ.png': christBoxes, 'horse.jpg': horseBoxes, 'warmup.png': warmupBoxes, 'halloween.jpeg': halloweenBoxes };
+var boundArray = { 'fday.jpg': fdayBoxes, 'christ.png': christBoxes, 'horse.jpg': horseBoxes, 'warmup.png': warmupBoxes, 'halloween.jpeg': halloweenBoxes, "memorial.jpeg":memorialBoxes };
 
 
   
