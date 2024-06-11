@@ -242,7 +242,7 @@ function nextTarget() {
         document.getElementById("skipButton").innerHTML = "Skip Target";
         document.getElementById("skipButton").style.left = '15%';
 
-        if (numTargets == task) {
+        if (numTargets == 1) {
             document.getElementById("imageSearch").removeEventListener("click", onClick);
             document.getElementById('targetSearch').style.visibility = 'hidden';
             stopStopwatch();
