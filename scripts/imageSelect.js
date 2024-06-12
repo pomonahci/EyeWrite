@@ -214,10 +214,8 @@ function updateIncorrectClicks() {
 
 var action = '';
 function checkTaskComplete() {
-    // check if everyone has clicked on this task
-    if (found + skipped == numPpl) {
-        nextTarget();
-    }
+    // check if somene skipped or found the target to move on
+    nextTarget();
 }
 
 function nextTarget() {
@@ -242,7 +240,7 @@ function nextTarget() {
         document.getElementById("skipButton").innerHTML = "Skip Target";
         document.getElementById("skipButton").style.left = '15%';
 
-        if (numTargets == 1) {
+        if (numTargets == task) {
             document.getElementById("imageSearch").removeEventListener("click", onClick);
             document.getElementById('targetSearch').style.visibility = 'hidden';
             stopStopwatch();

@@ -1,0 +1,90 @@
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const generateButton = document.getElementById('generateButton');
+const imageCountInput = document.getElementById('imageCount');
+const imageSizeInput = document.getElementById('imageSize');
+
+const canvasWidth = 400;
+const canvasHeight = 400;
+const minDistance = 50;
+
+canvas.width = canvasWidth;
+canvas.height = canvasHeight;
+
+function drawLetter(letter, x, y, rotation) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(rotation * Math.PI / 180);
+  ctx.fillStyle = 'black';
+  ctx.font = '12x Tahoma';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(letter, 0, 0);
+  ctx.restore();
+}
+
+function isOverlapping(x, y, positions) {
+  for (const pos of positions) {
+    const dx = x - pos.x;
+    const dy = y - pos.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    if (distance < minDistance) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function generateImage(hasO) {
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, canvasWidth + 30, canvasHeight +30);
+
+  const positions = [];
+  const letterCount = parseInt(imageSizeInput.value);
+  for (let i = 0; i < letterCount; i++) {
+    let x, y;
+    do {
+      x = Math.random() * (canvasWidth);
+      y = Math.random() * (canvasHeight);
+      while (x < 30 || x > canvasWidth - 30 || y < 30 || y > canvasHeight - 30) {
+        x = Math.random() * (canvasWidth);
+        y = Math.random() * (canvasHeight);
+      }
+    } while (isOverlapping(x, y, positions));
+    positions.push({ x, y });
+    const rotation = Math.floor(Math.random() * 4) * 90;
+
+    if (hasO && i === 0) {
+      drawLetter('O', x, y, rotation);
+    } else {
+      drawLetter('Q', x, y, rotation);
+    }
+  }
+}
+
+function downloadImage(filename) {
+  const dataURL = canvas.toDataURL('image/jpeg');
+  const link = document.createElement('a');
+  link.href = dataURL;
+  link.download = filename;
+  link.click();
+}
+
+function generateAndDownloadImages() {
+  const imageCount = parseInt(imageCountInput.value);
+
+  for (let i = 1; i <= imageCount; i++) {
+    generateImage(true);
+    document.body.appendChild(canvas);
+    canvas.style.display = 'block';
+    canvas.style.border= '1px solid black';
+    // downloadImage(`present_small_${i}.jpg`);
+
+    // generateImage(false);
+    // document.body.appendChild(canvas);
+    // canvas.style.display = 'block';
+    // downloadImage(`absent_small_${i}.jpg`);
+  }
+}
+
+generateButton.addEventListener('click', generateAndDownloadImages);
