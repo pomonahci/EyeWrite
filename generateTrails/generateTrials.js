@@ -4,8 +4,8 @@ const generateButton = document.getElementById('generateButton');
 const imageCountInput = document.getElementById('imageCount');
 const imageSizeInput = document.getElementById('imageSize');
 
-const canvasWidth = 400;
-const canvasHeight = 400;
+const canvasWidth = 700;
+const canvasHeight = 500;
 const minDistance = 50;
 
 canvas.width = canvasWidth;
@@ -16,10 +16,17 @@ function drawLetter(letter, x, y, rotation) {
   ctx.translate(x, y);
   ctx.rotate(rotation * Math.PI / 180);
   ctx.fillStyle = 'black';
-  ctx.font = '12x Tahoma';
+  ctx.font = '25px Arial';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(letter, 0, 0);
+  ctx.strokeStyle = 'red'; // Add this line to set the stroke color to red
+  ctx.lineWidth = 1; // Add this line to set the stroke width
+  const textMetrics = ctx.measureText(letter);
+  const rectWidth = textMetrics.width + 6;
+  console.log(textMetrics)
+  const rectHeight = parseInt(ctx.font, 10) + 6;
+  ctx.strokeRect(-rectWidth / 2, -rectHeight / 2, rectWidth, rectHeight); // Add this line to draw a rectangle around the letter
   ctx.restore();
 }
 
