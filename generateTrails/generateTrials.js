@@ -24,10 +24,40 @@ function drawLetter(letter, x, y, rotation) {
   ctx.lineWidth = 1; // Add this line to set the stroke width
   const textMetrics = ctx.measureText(letter);
   const rectWidth = textMetrics.width + 6;
-  console.log(textMetrics)
   const rectHeight = parseInt(ctx.font, 10) + 6;
   ctx.strokeRect(-rectWidth / 2, -rectHeight / 2, rectWidth, rectHeight); // Add this line to draw a rectangle around the letter
   ctx.restore();
+
+  const topLeftX = x - rectWidth / 2;
+  const topLeftY = y - rectHeight / 2;
+  const topRightX = x + rectWidth / 2;
+  const topRightY = y - rectHeight / 2;
+  const bottomLeftX = x - rectWidth / 2;
+  const bottomLeftY = y + rectHeight / 2;
+  const bottomRightX = x + rectWidth / 2;
+  const bottomRightY = y + rectHeight / 2;
+
+  console.log(`Top Left: (${topLeftX}, ${topLeftY})`);
+  console.log(`Top Right: (${topRightX}, ${topRightY})`);
+  console.log(`Bottom Left: (${bottomLeftX}, ${bottomLeftY})`);
+  console.log(`Bottom Right: (${bottomRightX}, ${bottomRightY})`);
+
+  ctx.fillStyle = 'red';
+  ctx.beginPath();
+  ctx.arc(topLeftX, topLeftY, 3, 0, 2 * Math.PI);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(topRightX, topRightY, 3, 0, 2 * Math.PI);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(bottomLeftX, bottomLeftY, 3, 0, 2 * Math.PI);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(bottomRightX, bottomRightY, 3, 0, 2 * Math.PI);
+  ctx.fill();
 }
 
 function isOverlapping(x, y, positions) {
