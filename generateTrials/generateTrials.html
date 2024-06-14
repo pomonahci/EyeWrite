@@ -14,9 +14,9 @@
       font-size: 16px;
     }
     canvas {
-        margin: 0 auto;
-        display: block;
         border: 1px solid black;
+        display: block;
+        margin: 10px auto;
     }
   </style>
 </head>
@@ -27,8 +27,14 @@
   <label for="imageSize">Image size:</label>
   <input type="number" id="imageSize" value="21" min="21" max="35">
   <button id="generateButton">Generate and Download Images</button>
-  <br>
+
+
+    <div style="display:flex;flex-direction: column;width: 120px;">
+      <button id="gameButton" >Play game</button>
+      <div id="gameScore">Game Score:</div>
+    </div>
   <canvas id="canvas" style="display: none;"></canvas>
+
   <script src="generateTrials.js"></script>
 </body>
 </html>

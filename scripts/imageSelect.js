@@ -108,7 +108,6 @@ var mySkipVote = false;
 function getImage() {
     var imageName = index2Label[imageLabel];
     bounding = boundArray[imageName];
-    console.log(bounding)
     document.getElementById("imageSearch").src = "./graphics/" + imageName;
 
     serverContent.push(["Participants", numPpl]);
@@ -145,23 +144,21 @@ function onClick(event) {
     if (targetHit) return
     var x = event.clientX;
     var y = event.clientY;
-    console.log("target",target)
-    console.log("target0",target[0])
-    console.log("target1",target[1])
-    console.log("target2",target[2])
-    console.log("target3",target[3])
-    console.log("windown inner width",window.innerWidth)
-    console.log("windown inner height",window.innerHeight)
-    console.log("x",x)
-    console.log("y",y)
-    console.log(target[0] * window.innerWidth)
-    console.log(target[1] * window.innerHeight)
-    console.log( target[0] * window.innerWidth + target[2] * window.innerWidth)
-    console.log(target[1] * window.innerHeight + target[3] * window.innerHeight)
+    console.log("x:",x, "y:",y)
+    console.log('target:',
+        target[0] * window.innerWidth, 
+        target[1] * window.innerHeight, 
+        target[0] * window.innerWidth + target[2] * window.innerWidth, 
+        target[1] * window.innerHeight + target[3] * window.innerHeight
+    )
+    var left = target[0] * window.innerWidth - container.left;
+    var top = target[1] * window.innerHeight - container.top;
+    var width = target[2] * window.innerWidth;
+    var height = target[3] * window.innerHeight;
+
+    
     if (target[0] * window.innerWidth <= x && target[1] * window.innerHeight <= y && x <= target[0] * window.innerWidth + target[2] * window.innerWidth && y <= target[1] * window.innerHeight + target[3] * window.innerHeight) {
-        document.getElementById("skipButton").disabled = true;
-        document.getElementById("skipButton").innerHTML = "Help Others Find It!";
-        document.getElementById("skipButton").style.left = '0%';
+        document.getElementById("skipButton").disabled = false;
         var box = document.createElement('div');
         var left = target[0] * window.innerWidth - container.left;
         var top = target[1] * window.innerHeight - container.top;
@@ -188,6 +185,12 @@ function onClick(event) {
     }
     else {
         clickContent.push(["Incorrect Click", keys[task], Date.now(), x/window.innerWidth, y/window.innerHeight]);
+        var wrongMessage = document.createElement('p');
+        wrongMessage.textContent = userId + ' got it wrong :(';
+        document.querySelector("#clickStatus").append(wrongMessage);
+        setTimeout(function() {
+            wrongMessage.remove();
+        }, 3000);
 
         misclicks++;
         // update user's misclicks on server
@@ -222,7 +225,6 @@ function checkTaskComplete() {
 function nextTarget() {
     serverContent.push(["Target Completed", "", Date.now()]);
     serverContent.push(["Clock", document.getElementById('stopwatch').innerHTML]);
-
     // clickContent.push("Personal Incorrect Clicks:"+misclicks+",\n");
 
     clearBoxes();
@@ -264,7 +266,7 @@ function clearBoxes() {
 function voteSkipTarget() {
     clickContent.push(["Skip Vote", keys[task], Date.now(), '', '']);
 
-    document.getElementById("skipButton").disabled = true;
+    document.getElementById("skipButton").disabled = false;
     mySkipVote = true;
     firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('skipVotes').transaction(function (current) {
         if (!current) current = [];
