@@ -215,6 +215,7 @@ function updateIncorrectClicks() {
 var action = '';
 function checkTaskComplete() {
     // check if somene skipped or found the target to move on
+    console.log('complete')
     nextTarget();
 }
 
@@ -237,7 +238,7 @@ function nextTarget() {
         document.getElementById('badclicks').innerHTML = 0;
         targetHit = false;
         mySkipVote = false;
-        document.getElementById("skipButton").innerHTML = "Skip Target";
+        document.getElementById("skipButton").innerHTML = "Target Absent";
         document.getElementById("skipButton").style.left = '15%';
 
         if (numTargets == task) {

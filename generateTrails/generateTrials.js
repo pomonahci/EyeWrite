@@ -5,9 +5,10 @@ const imageCountInput = document.getElementById('imageCount');
 const imageSizeInput = document.getElementById('imageSize');
 let O_coords = {};
 
-const canvasWidth = 700;
-const canvasHeight = 500;
-const minDistance = 50;
+const canvasWidth = 2200;
+const canvasHeight = 1250;
+const minDistance = 150;
+
 
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
@@ -18,7 +19,7 @@ function drawLetter(letter, x, y, rotation) {
   ctx.translate(x, y);
   ctx.rotate(rotation * Math.PI / 180);
   ctx.fillStyle = 'black';
-  ctx.font = '14px Arial';
+  ctx.font = '18px Slab';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(letter, 0, 0);
@@ -119,42 +120,43 @@ function generateAndDownloadImages() {
   const trialsData = [];
 
   for (let i = 1; i <= imageCount; i++) {
-    generateImage(true);
+    generateImage(false);
 
     document.body.appendChild(canvas);
     canvas.style.display = 'block';
     canvas.style.border= '1px solid black';
-    const presentData = {
-      name: `${imageSizeInput.value}_present_${i}.jpg`,
-      id: i,
-      absent: false,
-      size: parseInt(imageSizeInput.value),
-      O_coordinates: O_coords
-    };
-    trialsData.push(presentData);
-    downloadImage(`${imageSizeInput.value}_present_${i}.jpg`);
+  //   const presentData = {
+  //     name: `${imageSizeInput.value}_present_${i}.jpg`,
+  //     id: i,
+  //     absent: false,
+  //     size: parseInt(imageSizeInput.value),
+  //     O_coordinates: O_coords
+  //   };
+  //   trialsData.push(presentData);
+  //   downloadImage(`${imageSizeInput.value}_present_${i}.jpg`);
 
     
-    generateImage(false);
-    const absentData = {
-      name: `${imageSizeInput.value}_absent_${i}.jpg`,
-      id: i,
-      absent: true,
-      size: parseInt(imageSizeInput.value),
-      O_coordinates: O_coords
-    };
-    trialsData.push(absentData);
-    downloadImage(`${imageSizeInput.value}_absent_${i}.jpg`);
+  //   generateImage(false);
+  //   const absentData = {
+  //     name: `${imageSizeInput.value}_absent_${i}.jpg`,
+  //     id: i,
+  //     absent: true,
+  //     size: parseInt(imageSizeInput.value),
+  //     O_coordinates: O_coords
+  //   };
+  //   trialsData.push(absentData);
+  //   downloadImage(`${imageSizeInput.value}_absent_${i}.jpg`);
+  // }
+  //   console.log(trialsData);
+  //   const jsonString = JSON.stringify(trialsData);
+  //   const blob = new Blob([jsonString], { type: 'application/json' });
+  //   const url = URL.createObjectURL(blob);
+  //   const link = document.createElement('a');
+  //   link.href = url;
+  //   link.download = 'trials.json';
+  //   link.click();
+  //   URL.revokeObjectURL(url);
   }
-    console.log(trialsData);
-    const jsonString = JSON.stringify(trialsData);
-    const blob = new Blob([jsonString], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'trials.json';
-    link.click();
-    URL.revokeObjectURL(url);
   
 }
 
