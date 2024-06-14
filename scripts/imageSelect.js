@@ -158,7 +158,7 @@ function onClick(event) {
 
     
     if (target[0] * window.innerWidth <= x && target[1] * window.innerHeight <= y && x <= target[0] * window.innerWidth + target[2] * window.innerWidth && y <= target[1] * window.innerHeight + target[3] * window.innerHeight) {
-        document.getElementById("skipButton").disabled = false;
+        document.getElementById("skipButton").disabled = true;
         var box = document.createElement('div');
         var left = target[0] * window.innerWidth - container.left;
         var top = target[1] * window.innerHeight - container.top;
@@ -266,7 +266,7 @@ function clearBoxes() {
 function voteSkipTarget() {
     clickContent.push(["Skip Vote", keys[task], Date.now(), '', '']);
 
-    document.getElementById("skipButton").disabled = false;
+    document.getElementById("skipButton").disabled = true;
     mySkipVote = true;
     firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('skipVotes').transaction(function (current) {
         if (!current) current = [];
