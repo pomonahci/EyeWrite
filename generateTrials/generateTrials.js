@@ -3,7 +3,7 @@ const ctx = canvas.getContext('2d');
 const generateButton = document.getElementById('generateButton');
 const imageCountInput = document.getElementById('imageCount');
 const imageSizeInput = document.getElementById('imageSize');
-let O_coords = {};
+let coords = {};
 
 const canvasWidth = 2200;
 const canvasHeight = 1250;
@@ -14,12 +14,12 @@ canvas.width = canvasWidth;
 canvas.height = canvasHeight;
 
 
-function drawLetter(letter, x, y, rotation) {
+function drawLetter(letter, x, y, rotation, i) {
   ctx.save();
   ctx.translate(x, y);
   ctx.rotate(rotation * Math.PI / 180);
   ctx.fillStyle = 'black';
-  ctx.font = '18px Slab';
+  ctx.font = '0.3in Slab';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(letter, 0, 0);
@@ -55,15 +55,12 @@ function drawLetter(letter, x, y, rotation) {
   // ctx.beginPath();
   // ctx.arc(bottomRightX, bottomRightY, 3, 0, 2 * Math.PI);
   // ctx.fill();
-
-  if (letter === 'O') {
-    O_coords = {
-      topLeft: { x: topLeftX, y: topLeftY },
-      topRight: { x: topRightX, y: topRightY },
-      bottomLeft: { x: bottomLeftX, y: bottomLeftY },
-      bottomRight: { x: bottomRightX, y: bottomRightY }
-    };
-  } 
+  coords = {...coords, 
+    [`letter_${i}`]: letter,
+    [`x_${i}`]: x,
+    [`y_${i}`]: y,
+    [`rotation_${i}`]: rotation
+  }
 }
 
 function isOverlapping(x, y, positions) {
@@ -84,7 +81,7 @@ function generateImage(hasO) {
 
   const positions = [];
   const letterCount = parseInt(imageSizeInput.value);
-  for (let i = 0; i < letterCount; i++) {
+  for (let i = 1; i <= letterCount; i++) {
     let x, y;
     do {
       x = Math.random() * (canvasWidth);
@@ -98,9 +95,9 @@ function generateImage(hasO) {
     const rotation = Math.floor(Math.random() * 4) * 90;
 
     if (hasO && i === 0) {
-      drawLetter('O', x, y, rotation);
+      drawLetter('O', x, y, rotation, i);
     } else {
-      drawLetter('Q', x, y, rotation);
+      drawLetter('Q', x, y, rotation, i);
     }
   }
 }
@@ -120,44 +117,37 @@ function generateAndDownloadImages() {
   const trialsData = [];
 
   for (let i = 1; i <= imageCount; i++) {
+    coords = {};
+    generateImage(true);
+    const presentData = {
+      name: `${imageSizeInput.value}_present_${i}.jpg`,
+      id: i,
+      absent: false,
+      size: parseInt(imageSizeInput.value),
+      width: 26.798431396484375,
+      height: 34,
+       ...coords};
+    trialsData.push(presentData);
+    // downloadImage(`${imageSizeInput.value}_present_${i}.jpg`);
+
+
+    coords = {};
     generateImage(false);
+    const absentData = {
+      name: `${imageSizeInput.value}_absent_${i}.jpg`,
+      id: i,
+      absent: false,
+      size: parseInt(imageSizeInput.value),
+       ...coords};
 
-    document.body.appendChild(canvas);
-    canvas.style.display = 'block';
-    canvas.style.border= '1px solid black';
-  //   const presentData = {
-  //     name: `${imageSizeInput.value}_present_${i}.jpg`,
-  //     id: i,
-  //     absent: false,
-  //     size: parseInt(imageSizeInput.value),
-  //     O_coordinates: O_coords
-  //   };
-  //   trialsData.push(presentData);
-  //   downloadImage(`${imageSizeInput.value}_present_${i}.jpg`);
-
-    
-  //   generateImage(false);
-  //   const absentData = {
-  //     name: `${imageSizeInput.value}_absent_${i}.jpg`,
-  //     id: i,
-  //     absent: true,
-  //     size: parseInt(imageSizeInput.value),
-  //     O_coordinates: O_coords
-  //   };
-  //   trialsData.push(absentData);
-  //   downloadImage(`${imageSizeInput.value}_absent_${i}.jpg`);
-  // }
-  //   console.log(trialsData);
-  //   const jsonString = JSON.stringify(trialsData);
-  //   const blob = new Blob([jsonString], { type: 'application/json' });
-  //   const url = URL.createObjectURL(blob);
-  //   const link = document.createElement('a');
-  //   link.href = url;
-  //   link.download = 'trials.json';
-  //   link.click();
-  //   URL.revokeObjectURL(url);
+    trialsData.push(absentData);
+    // downloadImage(`${imageSizeInput.value}_absent_${i}.jpg`);
   }
-  
+  console.log(trialsData);
+  document.body.appendChild(canvas);
+  canvas.style.display = 'block';
+  canvas.style.border= '1px solid black';
 }
 
+   
 generateButton.addEventListener('click', generateAndDownloadImages);
