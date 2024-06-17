@@ -40,22 +40,22 @@ function drawLetter(letter, x, y, rotation, i) {
   const bottomLeftY = y + rectHeight / 2;
   const bottomRightX = x + rectWidth / 2;
   const bottomRightY = y + rectHeight / 2;
-  ctx.fillStyle = 'red';
-  ctx.beginPath();
-  ctx.arc(topLeftX, topLeftY, 3, 0, 2 * Math.PI);
-  ctx.fill();
+  // ctx.fillStyle = 'red';
+  // ctx.beginPath();
+  // ctx.arc(topLeftX, topLeftY, 3, 0, 2 * Math.PI);
+  // ctx.fill();
 
-  ctx.beginPath();
-  ctx.arc(topRightX, topRightY, 3, 0, 2 * Math.PI);
-  ctx.fill();
+  // ctx.beginPath();
+  // ctx.arc(topRightX, topRightY, 3, 0, 2 * Math.PI);
+  // ctx.fill();
 
-  ctx.beginPath();
-  ctx.arc(bottomLeftX, bottomLeftY, 3, 0, 2 * Math.PI);
-  ctx.fill();
+  // ctx.beginPath();
+  // ctx.arc(bottomLeftX, bottomLeftY, 3, 0, 2 * Math.PI);
+  // ctx.fill();
 
-  ctx.beginPath();
-  ctx.arc(bottomRightX, bottomRightY, 3, 0, 2 * Math.PI);
-  ctx.fill();
+  // ctx.beginPath();
+  // ctx.arc(bottomRightX, bottomRightY, 3, 0, 2 * Math.PI);
+  // ctx.fill();
   coords = {...coords, 
     [`letter_${i}`]: letter,
     [`x_${i}`]: x,
@@ -111,6 +111,34 @@ function downloadImage(filename) {
   link.click();
 }
 
+function generateCSV(data) {
+  const rows = data.map(item => [
+    item.absent,
+    item.id,
+    item.name,
+    item.size,
+    ...Array.from({ length: parseInt(imageSizeInput.value) }, (_, i) => item[`letter_${i + 1}`] || ''),
+    ...Array.from({ length: parseInt(imageSizeInput.value) }, (_, i) => item[`rotation_${i + 1}`] || ''),
+    ...Array.from({ length: parseInt(imageSizeInput.value) }, (_, i) => item[`x_${i + 1}`] || ''),
+    ...Array.from({ length: parseInt(imageSizeInput.value) }, (_, i) => item[`y_${i + 1}`] || '')
+  ]);
+
+  return rows.map(row => row.join(',')).join('\n');
+}
+
+
+function appendToCSV(csvContent) {
+  const blob = new Blob([csvContent], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'trials.csv';
+  link.setAttribute('target', '_blank');
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
 
 
 function generateAndDownloadImages() {
@@ -142,8 +170,12 @@ function generateAndDownloadImages() {
 
     trialsData.push(absentData);
     downloadImage(`${imageSizeInput.value}_absent_${i}.jpg`);
+
+    
   }
   console.log(trialsData);
+  const csvContent = generateCSV(trialsData);
+  appendToCSV(csvContent);
   document.body.appendChild(canvas);
   canvas.style.display = 'block';
   canvas.style.border= '1px solid black';
