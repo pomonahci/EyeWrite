@@ -112,6 +112,13 @@ function downloadImage(filename) {
 }
 
 function generateCSV(data) {
+  const header = [
+    'absent', 'id', 'name', 'size',
+    ...Array.from({ length: parseInt(imageSizeInput.value) }, (_, i) => `letter_${i + 1}`),
+    ...Array.from({ length: parseInt(imageSizeInput.value) }, (_, i) => `rotation_${i + 1}`),
+    ...Array.from({ length: parseInt(imageSizeInput.value) }, (_, i) => `x_${i + 1}`),
+    ...Array.from({ length: parseInt(imageSizeInput.value) }, (_, i) => `y_${i + 1}`)
+  ];
   const rows = data.map(item => [
     item.absent,
     item.id,
@@ -123,7 +130,7 @@ function generateCSV(data) {
     ...Array.from({ length: parseInt(imageSizeInput.value) }, (_, i) => item[`y_${i + 1}`] || '')
   ]);
 
-  return rows.map(row => row.join(',')).join('\n');
+  return [header, ...rows].map(row => row.join(',')).join('\n');
 }
 
 
@@ -153,8 +160,8 @@ function generateAndDownloadImages() {
       id: i,
       absent: false,
       size: parseInt(imageSizeInput.value),
-      
-       ...coords};
+       ...coords
+      };
     trialsData.push(presentData);
     downloadImage(`${imageSizeInput.value}_present_${i}.jpg`);
 
