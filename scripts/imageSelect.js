@@ -293,12 +293,6 @@ function voteSkipTarget() {
 }
 
 function firelist(snapshot) {
-    if (isApplicationStarting && snapshot.key == 'skipVotes') {
-        // Optionally, you can add logic here to handle the initial "skipVotes" case if needed
-        console.log("Application is starting, ignoring 'skipVotes' snapshot.");
-        return; // Skip processing this snapshot
-    }
-
     console.log("snapshot.key", snapshot.key);
     if (snapshot.key == 'incorrectClicks') {
         console.log("snapshot.key is incorrectClicks");
@@ -321,8 +315,6 @@ function startExp() {
     firebaseRef.child('tasks').once('value', function (snap) {
         if (snap.val() !== null)
             task = snap.val().length - 1;
-
-        isApplicationStarting = false;
     });
     getImage();
     getTarget();
