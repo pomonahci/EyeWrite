@@ -217,9 +217,24 @@ function updateIncorrectClicks() {
 
 var action = '';
 function checkTaskComplete() {
-    // check if somene skipped or found the target to move on
-    console.log('complete')
-    nextTarget();
+    // check if someone skipped or found the target to move on
+    console.log('complete');
+    var message = document.createElement('div');
+    message.textContent = 'Task Complete!';
+    message.style.position = 'fixed';
+    message.style.top = '50%';
+    message.style.left = '50%';
+    message.style.transform = 'translate(-50%, -50%)';
+    message.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+    message.style.color = 'white';
+    message.style.padding = '10px';
+    message.style.borderRadius = '5px';
+    message.style.zIndex = '9999';
+    document.body.appendChild(message);
+    setTimeout(function() {
+        document.body.removeChild(message);
+        nextTarget();
+    }, 2000);
 }
 
 function nextTarget() {
@@ -263,6 +278,8 @@ function clearBoxes() {
     if (document.getElementById('foundTarget')) document.getElementById('foundTarget').remove();
 }
 
+let isApplicationStarting = true;
+
 function voteSkipTarget() {
     clickContent.push(["Skip Vote", keys[task], Date.now(), '', '']);
 
@@ -276,6 +293,13 @@ function voteSkipTarget() {
 }
 
 function firelist(snapshot) {
+    if (isApplicationStarting && snapshot.key == 'skipVotes') {
+        // Optionally, you can add logic here to handle the initial "skipVotes" case if needed
+        console.log("Application is starting, ignoring 'skipVotes' snapshot.");
+        return; // Skip processing this snapshot
+    }
+
+    console.log("snapshot.key", snapshot.key);
     if (snapshot.key == 'incorrectClicks') {
         console.log("snapshot.key is incorrectClicks");
         updateIncorrectClicks();
@@ -297,6 +321,8 @@ function startExp() {
     firebaseRef.child('tasks').once('value', function (snap) {
         if (snap.val() !== null)
             task = snap.val().length - 1;
+
+        isApplicationStarting = false;
     });
     getImage();
     getTarget();
