@@ -9,6 +9,7 @@
 var imageContainer = document.getElementById('imageContainer');
 var container = imageContainer.getBoundingClientRect();
 
+
 // var imageSrc = document.getElementById('imageSearch');
 // var rect = imageSrc.getBoundingClientRect();
 
@@ -219,8 +220,15 @@ var action = '';
 function checkTaskComplete() {
     // check if someone skipped or found the target to move on
     console.log('complete');
+
     var message = document.createElement('div');
-    message.textContent = 'Task Complete!';
+    message.textContent = 'Task Completed by ' + userId + '!';
+
+    // Get the user name from userId in Firebase
+    firebaseRef.child('users').child(userId).child('name').once('value', function(snapshot) {
+        var userName = snapshot.val();
+        message.textContent = 'Task Completed by ' + userName + '!';
+    });
     message.style.position = 'fixed';
     message.style.top = '50%';
     message.style.left = '50%';
@@ -285,11 +293,12 @@ function voteSkipTarget() {
 
     document.getElementById("skipButton").disabled = true;
     mySkipVote = true;
-    firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('skipVotes').transaction(function (current) {
-        if (!current) current = [];
-        if (!current.includes(userId)) current.push(userId);
-        return current
-    })
+    firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('skipVotes')
+        .transaction(function (current) {
+            if (!current) current = [];
+            if (!current.includes(userId)) current.push(userId);
+            return current;
+        });
 }
 
 function firelist(snapshot) {
@@ -304,6 +313,14 @@ function firelist(snapshot) {
     else if (snapshot.key == 'skipVotes') {
         skipped = Object.keys(snapshot.val()).length;
         checkTaskComplete(snapshot);
+        
+        console.log(firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('skipVotes').child(userId));
+        
+        // firebaseRef.child('users').once('value', function(snapshot) {
+        //     const users = snapshot.val();
+        //     const names = Object.values(users).map(user => user.name);
+        //     console.log(names);
+        // });
     }
 }
 
@@ -361,3 +378,4 @@ firebaseRef.child('users').on('value', function (snapshot) {
         firebaseRef.child('users').off('value');
     }
 })
+
