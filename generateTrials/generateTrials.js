@@ -114,10 +114,10 @@ function downloadImage(filename) {
 function generateCSV(data) {
   const header = [
     'absent', 'id', 'name', 'size',
-    ...Array.from({ length:35 }, (_, i) => `letter_${i + 1}`),
-    ...Array.from({ length:35 }, (_, i) => `rotation_${i + 1}`),
-    ...Array.from({ length:35 }, (_, i) => `x_${i + 1}`),
-    ...Array.from({ length:35 }, (_, i) => `y_${i + 1}`)
+    ...Array.from({ length: parseInt(imageSizeInput.value) }, (_, i) => `letter_${i + 1}`),
+    ...Array.from({ length:parseInt(imageSizeInput.value) }, (_, i) => `rotation_${i + 1}`),
+    ...Array.from({ length: parseInt(imageSizeInput.value) }, (_, i) => `x_${i + 1}`),
+    ...Array.from({ length: parseInt(imageSizeInput.value) }, (_, i) => `y_${i + 1}`)
   ];
   const rows = data.map(item => [
     item.absent,
@@ -139,7 +139,7 @@ function appendToCSV(csvContent) {
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = 'trials.csv';
+  link.download = `${imageSizeInput.value}_trials.csv`;
   link.setAttribute('target', '_blank');
   document.body.appendChild(link);
   link.click();
