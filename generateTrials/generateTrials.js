@@ -114,10 +114,10 @@ function downloadImage(filename) {
 function generateCSV(data) {
   const header = [
     'absent', 'id', 'name', 'size',
-    ...Array.from({ length: parseInt(imageSizeInput.value) }, (_, i) => `letter_${i + 1}`),
-    ...Array.from({ length: parseInt(imageSizeInput.value) }, (_, i) => `rotation_${i + 1}`),
-    ...Array.from({ length: parseInt(imageSizeInput.value) }, (_, i) => `x_${i + 1}`),
-    ...Array.from({ length: parseInt(imageSizeInput.value) }, (_, i) => `y_${i + 1}`)
+    ...Array.from({ length:35 }, (_, i) => `letter_${i + 1}`),
+    ...Array.from({ length:35 }, (_, i) => `rotation_${i + 1}`),
+    ...Array.from({ length:35 }, (_, i) => `x_${i + 1}`),
+    ...Array.from({ length:35 }, (_, i) => `y_${i + 1}`)
   ];
   const rows = data.map(item => [
     item.absent,
@@ -152,40 +152,49 @@ function generateAndDownloadImages() {
   const imageCount = parseInt(imageCountInput.value);
   const trialsData = [];
 
-  for (let i = 1; i <= imageCount; i++) {
-    coords = {};
-    generateImage(true);
-    const presentData = {
-      name: `${imageSizeInput.value}_present_${i}.jpg`,
-      id: i,
-      absent: false,
-      size: parseInt(imageSizeInput.value),
-       ...coords
+  let i = 1;
+  const downloadNextImage = () => {
+    if (i <= imageCount) {
+      coords = {};
+      generateImage(true);
+      const presentData = {
+        name: `${imageSizeInput.value}_present_${i}.jpg`,
+        id: i,
+        absent: false,
+        size: parseInt(imageSizeInput.value),
+        ...coords
       };
-    trialsData.push(presentData);
-    downloadImage(`${imageSizeInput.value}_present_${i}.jpg`);
+      trialsData.push(presentData);
+      downloadImage(`${imageSizeInput.value}_present_${i}.jpg`);
 
+      setTimeout(() => {
+        coords = {};
+        generateImage(false);
+        const absentData = {
+          name: `${imageSizeInput.value}_absent_${i}.jpg`,
+          id: i,
+          absent: true,
+          size: parseInt(imageSizeInput.value),
+          ...coords
+        };
 
-    coords = {};
-    generateImage(false);
-    const absentData = {
-      name: `${imageSizeInput.value}_absent_${i}.jpg`,
-      id: i,
-      absent: true,
-      size: parseInt(imageSizeInput.value),
-       ...coords};
+        trialsData.push(absentData);
+        downloadImage(`${imageSizeInput.value}_absent_${i}.jpg`);
 
-    trialsData.push(absentData);
-    downloadImage(`${imageSizeInput.value}_absent_${i}.jpg`);
+        i++;
+        downloadNextImage();
+      }, 1000); // 1 second delay between each download
+    } else {
+      console.log(trialsData);
+      const csvContent = generateCSV(trialsData);
+      appendToCSV(csvContent);
+      document.body.appendChild(canvas);
+      canvas.style.display = 'block';
+      canvas.style.border = '1px solid black';
+    }
+  };
 
-    
-  }
-  console.log(trialsData);
-  const csvContent = generateCSV(trialsData);
-  appendToCSV(csvContent);
-  document.body.appendChild(canvas);
-  canvas.style.display = 'block';
-  canvas.style.border= '1px solid black';
+  downloadNextImage();
 }
 
 let score = 0;

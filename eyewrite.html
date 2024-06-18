@@ -94,13 +94,13 @@
 <body onload="updateUI()">
     <!-- Tobii, bundled by browserify -->
   <script type="text/javascript" src="scripts/bundle.js"></script>
-  <div id="userlist" width="100px" style="position: absolute; top:0px; left:0px; background-color: skyblue;"></div>
+  <div id="userlist" width="100px" style="position: absolute; top:0px; left:0px; background-color: #ccd5ae;"></div>
 
   <div id="firepad" style='visibility:hidden'></div>
 
 
-  <div id='imageContainer' style='position:relative;background-color: skyblue;height:1300px;left:160px; width: 2300px;display: flex; align-items: center;border-radius: 25px;'>
-    <img id='imageSearch' src='' alt="IMAGE" width='2200px' height='1250px' style="object-fit: contain;"/>
+  <div id='imageContainer' style='position:relative;background-color: #ccd5ae;;height:1300px;left:160px; width: 2300px;display: flex; align-items: center;border-radius: 25px;'>
+    <img id='imageSearch' src='' alt="IMAGE" width='2200px' height='1250px' style="border: 2px solid #58804f"/>
   </div>
 
   <div id="heatmap"></div>
@@ -111,7 +111,7 @@
   <div id="colorpicker"></div>
 
   <div id="imageSearchUI" style="
-  background-color: skyblue;
+  background-color: #ccd5ae;
   width: 150px;
   top:0px;
   right: 0px;
@@ -126,9 +126,9 @@
   padding-top: 50px;">
     <div style="font-weight: bold;" > Time: <span id='stopwatch'>00:00:00</span></div>
     <div  style="font-weight: bold;">Incorrect Clicks: <span id='badclicks' style="color: red;">0</span></div>
-    <img id='targetSearch' src='' alt='TARGET' width='100px' height='100px'
+    <img id='targetSearch' src='generateTrials/images/O_image.png' alt='TARGET' width='100px' height='100px'
       style='margin-top: 40px;'>
-    <button class="btn btn-primary" id="skipButton" onclick="voteSkipTarget()" >Target Absent</button>
+    <button class="btn btn-primary" id="skipButton" onclick="voteSkipTarget()">Target Absent</button>
   
   </div>
 
@@ -429,11 +429,6 @@
       return {w:window.innerWidth, h:window.innerHeight};
     })
     
-
-
-
-
-
 
 
 
