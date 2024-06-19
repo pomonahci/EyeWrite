@@ -100,9 +100,13 @@ function getTarget() {
     // firebaseRef.child('tasks').child(task).child('incorrectClicks').on('child_changed', updateIncorrectClicks);
     firebaseRef.child('tasks').child(task).on('child_added', firelist);
     firebaseRef.child('tasks').child(task).on('child_changed', firelist);
-    target = selectedData[task];
+    let imageName = images[task];
+    let target = selectedData.find(data => data.name === imageName);
+    console.log("target:",target)
     document.getElementById("imageSearch").src = "./generateTrials/images/" + target.name;
     serverContent.push(["Target", task, Date.now()]);
+    firebaseRef.child('tasks').child(task).child('about').set(target);
+    serverContent.push(["Participants", numPpl]);
     console.log(serverContent, task)
 }
 
@@ -241,7 +245,6 @@ function nextTarget() {
         action = '';
         skipped = 0;
         trial ++;
-        console.log('your mom')
         getTarget();
         getImage(trial);
     });
@@ -290,7 +293,7 @@ function startExp() {
 
     });
     getTarget();
-    getImage(trial);
+    // getImage(trial);
 }
 
 document.getElementById("imageSearch").style.pointerEvents = "none";
