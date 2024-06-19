@@ -236,6 +236,7 @@ canvas.addEventListener('click', function(event) {
     const textMetrics = ctx.measureText(letter);
     const rectWidth = textMetrics.width + 6;
     const rectHeight = parseInt(ctx.font, 10) + 6;
+    console.log(rectWidth, rectHeight);
     console.log("w",rectWidth,"H", rectHeight);
     ctx.restore();
 

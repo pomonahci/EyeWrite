@@ -15,13 +15,47 @@ var imageLabel; // number identify 0-9 for what image is being looked at
 var index2Label = { '0': 'fday.jpg', '1': 'christ.png', '2': 'horse.jpg', '3': 'warmup.png', '4': 'halloween.jpeg', '5': 'memorial.jpeg'} //dictionary linking imageLabel number to literal string for ease of reading
 // var index2Label = { '0': 'fdayboxes.jpg', '1': 'christboxes.png', '2': 'horseboxes.jpg' }
 
-var images = ['21_present_1.jpg', '21_present_2.jpg', '21_present_3.jpg', '21_present_4.jpg', '21_present_5.jpg', '21_present_6.jpg', '21_present_7.jpg', '21_present_8.jpg', '21_present_9.jpg', '21_present_10.jpg', '21_present_11.jpg', '21_present_12.jpg',
+let images = ['21_present_1.jpg', '21_present_2.jpg', '21_present_3.jpg', '21_present_4.jpg', '21_present_5.jpg', '21_present_6.jpg', '21_present_7.jpg', '21_present_8.jpg', '21_present_9.jpg', '21_present_10.jpg', '21_present_11.jpg', '21_present_12.jpg',
     '21_absent_1.jpg', '21_absent_2.jpg', '21_absent_3.jpg', '21_absent_4.jpg', '21_absent_5.jpg', '21_absent_6.jpg', '21_absent_7.jpg', '21_absent_8.jpg', '21_absent_9.jpg', '21_absent_10.jpg', '21_absent_11.jpg', '21_absent_12.jpg',
     '35_present_1.jpg', '35_present_2.jpg', '35_present_3.jpg', '35_present_4.jpg', '35_present_5.jpg', '35_present_6.jpg', '35_present_7.jpg', '35_present_8.jpg', '35_present_9.jpg', '35_present_10.jpg', '35_present_11.jpg', '35_present_12.jpg',
     '35_absent_1.jpg', '35_absent_2.jpg', '35_absent_3.jpg', '35_absent_4.jpg', '35_absent_5.jpg', '35_absent_6.jpg', '35_absent_7.jpg', '35_absent_8.jpg', '35_absent_9.jpg', '35_absent_10.jpg', '35_absent_11.jpg', '35_absent_12.jpg'];
 
+let imageName
+const boundArray = [160, 25, 2360, 1270]
+selectedData = []
+  fetch('./generateTrials/trials.csv')
+    .then(response => response.text())
+    .then(csvData => {
+        const rows = csvData.split('\n');
+        const columns = rows[0].split(',');
+        const nameIndex = columns.indexOf('name');
+        const idIndex = columns.indexOf('id');
+        const sizeIndex = columns.indexOf('size');
+        const absentIndex = columns.indexOf('absent');
+        const letter1Index = columns.indexOf('letter_1');
+        const x = columns.indexOf('x_1');
+        const y = columns.indexOf('y_1');
+        const rotation = columns.indexOf('rotation_1')
 
-  const boundArray = [(160,30), (2360,30), (2360, 1270),(160,1270)]
+        selectedData = rows.slice(1).map(row => {
+            const values = row.split(',');
+            return {
+                name: values[nameIndex],
+                id: values[idIndex],
+                size: values[sizeIndex],
+                absent: values[absentIndex],
+                letter_1: values[letter1Index],
+                x: values[x],
+                y: values[y],
+                rotation: values[rotation],
+            };
+        });
+        console.log(selectedData);
+        
+    })
+    .catch(error => {
+        console.error('Error fetching CSV file:', error);
+    });
 
 
 var bounding; // list of targets for imageLabel taken from boundArray
@@ -34,10 +68,10 @@ var url; //apache url
 var found = 0;
 var skipped = 0;
 var mySkipVote = false;
-var trial = 0;
+var trial = 0; // index of image, will increment
 
 function getImage(trial) {
-    var imageName = images[trial];
+    let imageName = images[trial];
     // bounding = boundArray[imageName];
     console.log(imageName)
     document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
@@ -46,62 +80,51 @@ function getImage(trial) {
     serverContent.push(["Image", imageName]);
 }
 
-// var keys;
-// function getTarget() {
-//     // firebaseRef.child('tasks').child(task).child('targetClicked').set("");
-//     // firebaseRef.child('tasks').child(task).child('incorrectClicks').set("");
-//     // firebaseRef.child('tasks').child(task).child('skipVotes').set("");
+function getTarget() {
+    // firebaseRef.child('tasks').child(task).child('targetClicked').set("");
+    // firebaseRef.child('tasks').child(task).child('incorrectClicks').set("");
+    // firebaseRef.child('tasks').child(task).child('skipVotes').set("");
 
-//     // firebaseRef.child('tasks').child(task).child('targetClicked').on('child_added', checkTaskComplete);//useless in experiments with more than 1 person
-//     // firebaseRef.child('tasks').child(task).child('targetClicked').on('child_changed', checkTaskComplete);
-//     // firebaseRef.child('tasks').child(task).child('incorrectClicks').on('child_changed', updateIncorrectClicks);
-//     firebaseRef.child('tasks').child(task).on('child_added', firelist);
-//     firebaseRef.child('tasks').child(task).on('child_changed', firelist);
+    // firebaseRef.child('tasks').child(task).child('targetClicked').on('child_added', checkTaskComplete);//useless in experiments with more than 1 person
+    // firebaseRef.child('tasks').child(task).child('targetClicked').on('child_changed', checkTaskComplete);
+    // firebaseRef.child('tasks').child(task).child('incorrectClicks').on('child_changed', updateIncorrectClicks);
+    firebaseRef.child('tasks').child(task).on('child_added', firelist);
+    firebaseRef.child('tasks').child(task).on('child_changed', firelist);
+    serverContent.push(["Target", 'task', Date.now()]);
 
-//     if (!bounding) return;
-//     keys = Object.keys(bounding);
-//     console.log("keys",keys)
-//     numTargets = keys.length;
-//     console.log("task",task)
-//     target = bounding[keys[task]];
-//     document.getElementById("targetSearch").src = "./graphics/" + keys[task];
-//     serverContent.push(["Target", keys[task], Date.now()]);
-
-// }
+}
 
 document.getElementById("imageSearch").addEventListener("click", onClick);
 function onClick(event) {
     if (mySkipVote) return;
     if (targetHit) return
-    var x = event.clientX;
-    var y = event.clientY;
-    console.log("x:",x, "y:",y)
-    console.log('target:',
-        target[0] * window.innerWidth, 
-        target[1] * window.innerHeight, 
-        target[0] * window.innerWidth + target[2] * window.innerWidth, 
-        target[1] * window.innerHeight + target[3] * window.innerHeight
-    )
-    var left = target[0] * window.innerWidth - container.left;
-    var top = target[1] * window.innerHeight - container.top;
-    var width = target[2] * window.innerWidth;
-    var height = target[3] * window.innerHeight;
-
+    var clickX = event.clientX;
+    var clickY = event.clientY;
+    console.log("x:",clickX, "y:",clickY)  
+    const rectHeight = 16;
+    const rectWidth = 13.7783203125;
+    const imageName = images[trial];
+    target = selectedData.find(data => data.name === imageName);
+    console.log("target:",target)
+    const topLeftX = parseFloat(target.x) - (rectWidth / 2) + boundArray[0];
+    const topLeftY = parseFloat(target.y) - (rectHeight / 2) + boundArray[1];
+    const bottomRightX = parseFloat(target.x) + (rectWidth / 2) + boundArray[0];
+    const bottomRightY = parseFloat(target.y) + (rectHeight / 2) + boundArray[1];
+    console.log("target:",topLeftX,topLeftY,bottomRightX,bottomRightY) 
     
-    if (target[0] * window.innerWidth <= x && target[1] * window.innerHeight <= y && x <= target[0] * window.innerWidth + target[2] * window.innerWidth && y <= target[1] * window.innerHeight + target[3] * window.innerHeight) {
+    if (clickX >= topLeftX &&
+        clickX <= bottomRightX &&
+        clickY >= topLeftY &&
+        clickY <= bottomRightY) {
         document.getElementById("skipButton").disabled = true;
         var box = document.createElement('div');
-        var left = target[0] * window.innerWidth - container.left;
-        var top = target[1] * window.innerHeight - container.top;
-        var width = target[2] * window.innerWidth;
-        var height = target[3] * window.innerHeight;
-        var styleInput = 'position:absolute;border: 2px solid green;left:' + left + 'px;top:' + top + 'px;width:' + width + 'px;height:' + height + 'px';
-        box.setAttribute('style', styleInput)
+        box.setAttribute('style', `border: 2px solid red; box-sizing: border-box; position: absolute; top: ${topLeftY}px; left: ${topLeftX - boundArray[0]}px; width: ${rectWidth}px; height: ${rectHeight}px;`);
         box.setAttribute('id', 'foundTarget');
         document.querySelector("#imageContainer").append(box);
 
         targetHit = true;
-        clickContent.push(["Correct Click", keys[task], Date.now(), x/window.innerWidth, y/window.innerHeight]);
+        clickContent.push(["Correct Click", target.name, Date.now(), clickX/window.innerWidth, clickY/window.innerHeight]);
+        
 
         firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('targetClicked').transaction(function (current) {
             if (!current) current = [];
@@ -115,7 +138,7 @@ function onClick(event) {
 
     }
     else {
-        clickContent.push(["Incorrect Click", keys[task], Date.now(), x/window.innerWidth, y/window.innerHeight]);
+        clickContent.push(["Incorrect Click", target.name, Date.now(), clickX/window.innerWidth, clickY/window.innerHeight]);
         var wrongMessage = document.createElement('p');
         wrongMessage.textContent = userId + ' got it wrong :(';
         document.querySelector("#clickStatus").append(wrongMessage);
@@ -202,6 +225,7 @@ function nextTarget() {
         skipped = 0;
         trial ++;
         getTarget();
+        getImage(trial);
     });
 }
 
@@ -212,8 +236,9 @@ function clearBoxes() {
 let isApplicationStarting = true;
 
 function voteSkipTarget() {
-    clickContent.push(["Skip Vote", keys[task], Date.now(), '', '']);
-
+    const imageName = images[trial];
+    let target = selectedData.find(data => data.name === imageName);
+    clickContent.push(["Skip Vote", target.name, Date.now(), '', '']);
     document.getElementById("skipButton").disabled = true;
     mySkipVote = true;
     firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('skipVotes').transaction(function (current) {
@@ -229,12 +254,14 @@ function firelist(snapshot) {
         console.log("snapshot.key is incorrectClicks");
         updateIncorrectClicks();
     } else if (snapshot.key == 'targetClicked') {
-        found = Object.keys(snapshot.val()).length;
-        checkTaskComplete(snapshot);
+        console.log("snapshot.key is targetClicked");
+        console.log(clickContent)
+        checkTaskComplete();
     }
     else if (snapshot.key == 'skipVotes') {
-        skipped = Object.keys(snapshot.val()).length;
-        checkTaskComplete(snapshot);
+        console.log("snapshot.key is skipVotes");
+        console.log(clickContent)
+        checkTaskComplete();
     }
 }
 
@@ -248,8 +275,8 @@ function startExp() {
             task = snap.val().length - 1;
 
     });
-    getImage(trial);
     getTarget();
+    getImage(trial);
 }
 
 //Used to get bounding box parameters manually and then inputting into "boundArray" dictionary above
@@ -295,37 +322,3 @@ firebaseRef.child('users').on('value', function (snapshot) {
 })
 
 
-fetch('./generateTrials/trials.csv')
-    .then(response => response.text())
-    .then(csvData => {
-        const rows = csvData.split('\n');
-        const columns = rows[0].split(',');
-        const nameIndex = columns.indexOf('name');
-        const idIndex = columns.indexOf('id');
-        const sizeIndex = columns.indexOf('size');
-        const absentIndex = columns.indexOf('absent');
-        const letter1Index = columns.indexOf('letter_1');
-        const x1Index = columns.indexOf('x_1');
-        const y1Index = columns.indexOf('y_1');
-        const rotation1Index = columns.indexOf('rotation_1');
-
-        const selectedData = rows.slice(1).map(row => {
-            const values = row.split(',');
-            return {
-                name: values[nameIndex],
-                id: values[idIndex],
-                size: values[sizeIndex],
-                absent: values[absentIndex],
-                letter_1: values[letter1Index],
-                x_1: values[x1Index],
-                y_1: values[y1Index],
-                rotation_1: values[rotation1Index]
-            };
-        });
-
-        // Use the 'selectedData' array here
-        console.log(selectedData);
-    })
-    .catch(error => {
-        console.error('Error fetching CSV file:', error);
-    });
