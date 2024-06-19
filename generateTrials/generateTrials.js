@@ -199,9 +199,6 @@ function generateAndDownloadImages() {
 
 let score = 0;
 function OamongQ() {
-  // const targetAbsentButton = document.createElement('button');
-  // targetAbsentButton.textContent = 'Target Absent';
-  // document.body.appendChild(targetAbsentButton);
   let score = 0;
   generateImage(true)
   document.body.appendChild(canvas);
@@ -261,12 +258,5 @@ canvas.addEventListener('click', function(event) {
         alert('Clicked on Q!');
       }
     }
-      // if (targetAbsentButton.contains(event.target)) {
-      //   generateImage(Math.random() < 0.5);
-      //   if (!letters.includes('O')) {
-      //     score++;
-      //   }
-      // }
-
   }
 });

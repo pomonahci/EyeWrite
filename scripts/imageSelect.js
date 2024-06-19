@@ -10,13 +10,14 @@ var imageContainer = document.getElementById('imageContainer');
 var container = imageContainer.getBoundingClientRect();
 
 
-var imageLabel; // number identify 0-9 for what image is being looked at
+// var imageLabel;
 
 let images = ['21_present_1.jpg', '21_present_2.jpg', '21_present_3.jpg', '21_present_4.jpg', '21_present_5.jpg', '21_present_6.jpg', '21_present_7.jpg', '21_present_8.jpg', '21_present_9.jpg', '21_present_10.jpg', '21_present_11.jpg', '21_present_12.jpg',
     '21_absent_1.jpg', '21_absent_2.jpg', '21_absent_3.jpg', '21_absent_4.jpg', '21_absent_5.jpg', '21_absent_6.jpg', '21_absent_7.jpg', '21_absent_8.jpg', '21_absent_9.jpg', '21_absent_10.jpg', '21_absent_11.jpg', '21_absent_12.jpg',
     '35_present_1.jpg', '35_present_2.jpg', '35_present_3.jpg', '35_present_4.jpg', '35_present_5.jpg', '35_present_6.jpg', '35_present_7.jpg', '35_present_8.jpg', '35_present_9.jpg', '35_present_10.jpg', '35_present_11.jpg', '35_present_12.jpg',
     '35_absent_1.jpg', '35_absent_2.jpg', '35_absent_3.jpg', '35_absent_4.jpg', '35_absent_5.jpg', '35_absent_6.jpg', '35_absent_7.jpg', '35_absent_8.jpg', '35_absent_9.jpg', '35_absent_10.jpg', '35_absent_11.jpg', '35_absent_12.jpg'];
 
+// Utility function to shuffle an array elements in random order
 function shuffleArray(array) {
     let shuffled = array.slice();
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -28,8 +29,11 @@ function shuffleArray(array) {
 // const images = shuffleArray(presuffled_images);
 console.log(images);
 
-let imageName
-const boundArray = [160, 25, 2360, 1270]
+let imageName // name of the image to be displayed
+const boundArray = [160, 25, 2360, 1270] // [left, top, right, bottom] of the image area
+
+
+// Fetch trials data from CSV file
 let selectedData = []
   fetch('./generateTrials/trials.csv')
     .then(response => response.text())
@@ -44,7 +48,8 @@ let selectedData = []
         const x = columns.indexOf('x_1');
         const y = columns.indexOf('y_1');
         const rotation = columns.indexOf('rotation_1')
-
+         
+        // Parse the CSV data into an array of objects
         selectedData = rows.slice(1).map(row => {
             const values = row.split(',');
             return {
@@ -85,55 +90,77 @@ function getTrial() {
     // firebaseRef.child('tasks').child(task).child('targetClicked').on('child_added', checkTaskComplete);//useless in experiments with more than 1 person
     // firebaseRef.child('tasks').child(task).child('targetClicked').on('child_changed', checkTaskComplete);
     // firebaseRef.child('tasks').child(task).child('incorrectClicks').on('child_changed', updateIncorrectClicks);
+
+    // Listen for changes in the 'tasks' node of the Firebase database
     firebaseRef.child('tasks').child(task).on('child_added', firelist);
     firebaseRef.child('tasks').child(task).on('child_changed', firelist);
+    
+    // Get the image name from the images array
     let imageName = images[task];
     console.log("imageName:",imageName)
+    // Get the target data for the image name from the selectedData array
     let target = selectedData.find(data => data.name === imageName);
     console.log("target:",target)
+    // Display the image on the page
     document.getElementById("imageSearch").src = "./generateTrials/images/" + target.name;
-    serverContent.push(["Target", task, Date.now()]);
+    // Add an about section to the task in the Firebase database
     firebaseRef.child('tasks').child(task).child('about').set(target);
+    // Log task start details to the server
+    serverContent.push(["Target", task, Date.now()]);
     serverContent.push(["Participants", numPpl]);
+    serverContent.push(["Image", target.name]);
     console.log(serverContent, task)
 }
-
+// Add an event listener for each click on the image
 document.getElementById("imageSearch").addEventListener("click", onClick);
 function onClick(event) {
-    if (mySkipVote) return;
-    if (targetHit) return
+    // Early return if the user has already voted to skip or if the target has been hit
+    if (mySkipVote || targetHit) return;
+
+    // Get the x and y coordinates of the click
     var clickX = event.clientX;
     var clickY = event.clientY;
     console.log("x:",clickX, "y:",clickY)  
+
+    // Get the target data for the image name from the selectedData array for its coordinates
+    const imageName = images[task];
+    target = selectedData.find(data => data.name === imageName)
+
+    // Get the bounding box coordinates for the target "O"
     const rectHeight = 16;
     const rectWidth = 13.7783203125;
-    const imageName = images[task];
-    target = selectedData.find(data => data.name === imageName);
     const topLeftX = parseFloat(target.x) - (rectWidth / 2) + boundArray[0];
     const topLeftY = parseFloat(target.y) - (rectHeight / 2) + boundArray[1];
     const bottomRightX = parseFloat(target.x) + (rectWidth / 2) + boundArray[0];
     const bottomRightY = parseFloat(target.y) + (rectHeight / 2) + boundArray[1];
     console.log("target:",topLeftX,topLeftY,bottomRightX,bottomRightY) 
+
+    // Add the click to the Firebase database
     firebaseRef.child('tasks').child(task).child('clicks').push({
         x: clickX,
         y: clickY,
         time: Date.now(),
         user: userId
     });
+
+    // Check if the click is within the bounding box of the target
     if (clickX >= topLeftX &&
         clickX <= bottomRightX &&
         clickY >= topLeftY &&
         clickY <= bottomRightY) {
+        // If the click is within the bounding box, draw a red box around the target
         document.getElementById("skipButton").disabled = true;
         var box = document.createElement('div');
         box.setAttribute('style', `border: 2px solid red; box-sizing: border-box; position: absolute; top: ${topLeftY}px; left: ${topLeftX - boundArray[0]}px; width: ${rectWidth}px; height: ${rectHeight}px;`);
+        // Set the id of the box to 'foundTarget' so it can be removed later
         box.setAttribute('id', 'foundTarget');
         document.querySelector("#imageContainer").append(box);
 
+        // Log the correct click to the server
         targetHit = true;
         clickContent.push(["Correct Click", target.name, Date.now(), clickX/window.innerWidth, clickY/window.innerHeight]);
         
-        
+        // Update the user's correct clicks on the server
         firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('targetClicked').set({
             user: userId,
             time: Date.now()
@@ -141,28 +168,25 @@ function onClick(event) {
 
     }
     else {
+        // Log the incorrect click to the server
         clickContent.push(["Incorrect Click", target.name, Date.now(), clickX/window.innerWidth, clickY/window.innerHeight]);
-        var wrongMessage = document.createElement('p');
-        wrongMessage.textContent = userId + ' got it wrong :(';
-        document.querySelector("#clickStatus").append(wrongMessage);
-        setTimeout(function() {
-            wrongMessage.remove();
-        }, 3000);
-
+        
+       // Increment the user's misclicks
         misclicks++;
-        // update user's misclicks on server
+        // update user's misclicks on firebase
         firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('incorrectClicks').child(userId).transaction(function (current) {
             if (!current) current = 0;
             current = misclicks;
             return current;
         });
-
+        // update client-side display with misclicks
         updateIncorrectClicks();
     }
 }
 
+// Function to update the client-side display with the total misclicks
 function updateIncorrectClicks() {
-    // update client-side display with computed total misclicks
+    // Pull the misclicks from the Firebase database and update the display
     firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('incorrectClicks').transaction(function(current) {
         total = 0;
         for (misclick of Object.values(current)) {
@@ -172,10 +196,11 @@ function updateIncorrectClicks() {
     });
 }
 
+// Function when task is completed
 function checkTaskComplete() {
-    // check if someone skipped or found the target to move on
     console.log('complete');
 
+    // Display a message to the user that the task is complete
     var message = document.createElement('div');
     message.textContent = 'Task Completed by ' + userId + '!';
 
@@ -184,6 +209,8 @@ function checkTaskComplete() {
         var userName = snapshot.val();
         message.textContent = 'Task Completed by ' + userName + '!';
     });
+
+    // Style the message and display it for 2 seconds
     message.style.position = 'fixed';
     message.style.top = '50%';
     message.style.left = '50%';
@@ -200,14 +227,20 @@ function checkTaskComplete() {
     }, 2000);
 }
 
+
+// Function to move to the next target
 function nextTarget() {
+    // Log the target completion to the server
     serverContent.push(["Target Completed", "", Date.now()]);
     serverContent.push(["Clock", document.getElementById('stopwatch').innerHTML]);
     // clickContent.push("Personal Incorrect Clicks:"+misclicks+",\n");
 
     clearBoxes();
+    // Remove the event listener for the image
     firebaseRef.child('tasks').child(task).off();
-    
+
+
+    // Reset everything for the next target
     firebaseRef.child('tasks').once('value', function (snap) {
         // snap.val() is the array of users who have correctly clicked on the target.
         // so when we do task = snap.val().length, we're increasing the task by 1        
@@ -219,6 +252,8 @@ function nextTarget() {
         document.getElementById("skipButton").innerHTML = "Target Absent";
         document.getElementById("skipButton").style.left = '15%';
 
+        // check if all targets have been found
+        // if so, stop the stopwatch and display a message
         if (numTargets == task) {
             document.getElementById("imageSearch").removeEventListener("click", onClick);
             document.getElementById('targetSearch').style.visibility = 'hidden';
@@ -227,32 +262,45 @@ function nextTarget() {
             document.getElementById("skipButton").style.left = '5%';
             return;
         }
+
         document.getElementById("skipButton").disabled = false;
         action = '';
         skipped = 0;
+        // increment the task and get the next trial
         task ++;
         getTrial();
 
     });
 }
 
+
+// Function to clear the red bounding box around the target
 function clearBoxes() {
     if (document.getElementById('foundTarget')) document.getElementById('foundTarget').remove();
 }
 
-
+// Function to skip the current target
 function voteSkipTarget() {
+    // get the target from the image name from the images array
     const imageName = images[task];
     let target = selectedData.find(data => data.name === imageName);
+
+    // Log the skip vote to the server
     clickContent.push(["Skip Vote", target.name, Date.now(), '', '']);
+
+    // disable the skip button(do for all later)
     document.getElementById("skipButton").disabled = true;
     mySkipVote = true;
+
+    // Add who voted for no Target to the Firebase database
     firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('noTarget').set({
         user: userId,
         time: Date.now()
     });
 }
 
+
+// Function to handle snapshot changes in the Firebase database according to the key
 function firelist(snapshot) {
     console.log("snapshot.key", snapshot.key);
     if (snapshot.key == 'incorrectClicks') {
@@ -268,26 +316,28 @@ function firelist(snapshot) {
     }
 }
 
-
+// Function to start the experiment
 function startExp() {
     startStopwatch();
     serverContent.push(["Experiment Start", Date.now()]);
-
+    // Get the first trial
     firebaseRef.child('tasks').once('value', function (snap) {
-        if (snap.val() !== null)
-            task = snap.val().length - 1;
+        task =0 
 
     });
     getTrial();
 }
 
+
 document.getElementById("imageSearch").style.pointerEvents = "none";
 document.getElementById("skipButton").style.pointerEvents = "none";
+
+// get the number of participants from the URL
 firebaseRef.child('users').on('value', function (snapshot) {
     var URL = window.location.href;
-    imageLabel = URL.search("img");
-    imageLabel = URL.substring(imageLabel + 4, imageLabel + 5);
-    if (imageLabel == -1) return;
+    // imageLabel = URL.search("img");
+    // imageLabel = URL.substring(imageLabel + 4, imageLabel + 5);
+    // if (imageLabel == -1) return;
     numPpl = URL.search('par');
     if (numPpl == -1) {
         numPpl = 2;
@@ -296,8 +346,10 @@ firebaseRef.child('users').on('value', function (snapshot) {
         numPpl = URL.substring(numPpl + 4, numPpl + 5);
     }
 
+    // check if the number of participants have joined to start the experiment
     if (Object.keys(snapshot.val()).length >= numPpl) {
         startExp();
+        // add the users' dimensions into the firebase database
         firebaseRef.child("users").transaction(function (current) {
             for (const [key, value] of Object.entries(current)) {
                 var wh = "("+value.dimensions.w+","+value.dimensions.h+")";
