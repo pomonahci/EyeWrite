@@ -76,21 +76,8 @@ var url; //apache url
 var found = 0;
 var skipped = 0;
 var mySkipVote = false;
-var trial = 0; // index of image, will increment
 
-function getImage(trial) {
-    let imageName = images[trial];
-    // bounding = boundArray[imageName];
-    console.log(imageName)
-    document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
-    let target = selectedData.find(data => data.name === imageName);
-    console.log("target:",target)
-    firebaseRef.child('tasks').child(task).child('about').set(target);
-    serverContent.push(["Participants", numPpl]);
-    serverContent.push(["Image", imageName]);
-}
-
-function getTarget() {
+function getTrial() {
     // firebaseRef.child('tasks').child(task).child('targetClicked').set("");
     // firebaseRef.child('tasks').child(task).child('incorrectClicks').set("");
     // firebaseRef.child('tasks').child(task).child('skipVotes').set("");
@@ -101,6 +88,7 @@ function getTarget() {
     firebaseRef.child('tasks').child(task).on('child_added', firelist);
     firebaseRef.child('tasks').child(task).on('child_changed', firelist);
     let imageName = images[task];
+    console.log("imageName:",imageName)
     let target = selectedData.find(data => data.name === imageName);
     console.log("target:",target)
     document.getElementById("imageSearch").src = "./generateTrials/images/" + target.name;
@@ -119,7 +107,7 @@ function onClick(event) {
     console.log("x:",clickX, "y:",clickY)  
     const rectHeight = 16;
     const rectWidth = 13.7783203125;
-    const imageName = images[trial];
+    const imageName = images[task];
     target = selectedData.find(data => data.name === imageName);
     const topLeftX = parseFloat(target.x) - (rectWidth / 2) + boundArray[0];
     const topLeftY = parseFloat(target.y) - (rectHeight / 2) + boundArray[1];
@@ -222,9 +210,7 @@ function nextTarget() {
     
     firebaseRef.child('tasks').once('value', function (snap) {
         // snap.val() is the array of users who have correctly clicked on the target.
-        // so when we do task = snap.val().length, we're increasing the task by 1
-        task ++;
-        
+        // so when we do task = snap.val().length, we're increasing the task by 1        
         // the rest of the code is in here cause of javascript async handling
         misclicks = 0;
         document.getElementById('badclicks').innerHTML = 0;
@@ -244,9 +230,9 @@ function nextTarget() {
         document.getElementById("skipButton").disabled = false;
         action = '';
         skipped = 0;
-        trial ++;
-        getTarget();
-        getImage(trial);
+        task ++;
+        getTrial();
+
     });
 }
 
@@ -256,7 +242,7 @@ function clearBoxes() {
 
 
 function voteSkipTarget() {
-    const imageName = images[trial];
+    const imageName = images[task];
     let target = selectedData.find(data => data.name === imageName);
     clickContent.push(["Skip Vote", target.name, Date.now(), '', '']);
     document.getElementById("skipButton").disabled = true;
@@ -292,8 +278,7 @@ function startExp() {
             task = snap.val().length - 1;
 
     });
-    getTarget();
-    // getImage(trial);
+    getTrial();
 }
 
 document.getElementById("imageSearch").style.pointerEvents = "none";
