@@ -12,7 +12,7 @@ var container = imageContainer.getBoundingClientRect();
 
 var imageLabel; // number identify 0-9 for what image is being looked at
 
-let presuffled_images = ['21_present_1.jpg', '21_present_2.jpg', '21_present_3.jpg', '21_present_4.jpg', '21_present_5.jpg', '21_present_6.jpg', '21_present_7.jpg', '21_present_8.jpg', '21_present_9.jpg', '21_present_10.jpg', '21_present_11.jpg', '21_present_12.jpg',
+let images = ['21_present_1.jpg', '21_present_2.jpg', '21_present_3.jpg', '21_present_4.jpg', '21_present_5.jpg', '21_present_6.jpg', '21_present_7.jpg', '21_present_8.jpg', '21_present_9.jpg', '21_present_10.jpg', '21_present_11.jpg', '21_present_12.jpg',
     '21_absent_1.jpg', '21_absent_2.jpg', '21_absent_3.jpg', '21_absent_4.jpg', '21_absent_5.jpg', '21_absent_6.jpg', '21_absent_7.jpg', '21_absent_8.jpg', '21_absent_9.jpg', '21_absent_10.jpg', '21_absent_11.jpg', '21_absent_12.jpg',
     '35_present_1.jpg', '35_present_2.jpg', '35_present_3.jpg', '35_present_4.jpg', '35_present_5.jpg', '35_present_6.jpg', '35_present_7.jpg', '35_present_8.jpg', '35_present_9.jpg', '35_present_10.jpg', '35_present_11.jpg', '35_present_12.jpg',
     '35_absent_1.jpg', '35_absent_2.jpg', '35_absent_3.jpg', '35_absent_4.jpg', '35_absent_5.jpg', '35_absent_6.jpg', '35_absent_7.jpg', '35_absent_8.jpg', '35_absent_9.jpg', '35_absent_10.jpg', '35_absent_11.jpg', '35_absent_12.jpg'];
@@ -25,7 +25,7 @@ function shuffleArray(array) {
     }
     return shuffled;
 }
-const images = shuffleArray(presuffled_images);
+// const images = shuffleArray(presuffled_images);
 console.log(images);
 
 let imageName
@@ -100,8 +100,10 @@ function getTarget() {
     // firebaseRef.child('tasks').child(task).child('incorrectClicks').on('child_changed', updateIncorrectClicks);
     firebaseRef.child('tasks').child(task).on('child_added', firelist);
     firebaseRef.child('tasks').child(task).on('child_changed', firelist);
-    serverContent.push(["Target", 'task', Date.now()]);
-
+    target = selectedData.find(data => data.name === task);
+    document.getElementById("imageSearch").src = "./generateTrials/images/" + task;
+    serverContent.push(["Target", task, Date.now()]);
+    console.log(serverContent, task)
 }
 
 document.getElementById("imageSearch").addEventListener("click", onClick);
