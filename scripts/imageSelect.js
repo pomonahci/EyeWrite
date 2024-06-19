@@ -100,8 +100,8 @@ function getTarget() {
     // firebaseRef.child('tasks').child(task).child('incorrectClicks').on('child_changed', updateIncorrectClicks);
     firebaseRef.child('tasks').child(task).on('child_added', firelist);
     firebaseRef.child('tasks').child(task).on('child_changed', firelist);
-    target = selectedData.find(data => data.name === task);
-    document.getElementById("imageSearch").src = "./generateTrials/images/" + task;
+    target = selectedData[task];
+    document.getElementById("imageSearch").src = "./generateTrials/images/" + target.name;
     serverContent.push(["Target", task, Date.now()]);
     console.log(serverContent, task)
 }
@@ -117,7 +117,6 @@ function onClick(event) {
     const rectWidth = 13.7783203125;
     const imageName = images[trial];
     target = selectedData.find(data => data.name === imageName);
-    console.log("target:",target)
     const topLeftX = parseFloat(target.x) - (rectWidth / 2) + boundArray[0];
     const topLeftY = parseFloat(target.y) - (rectHeight / 2) + boundArray[1];
     const bottomRightX = parseFloat(target.x) + (rectWidth / 2) + boundArray[0];
@@ -220,7 +219,7 @@ function nextTarget() {
     firebaseRef.child('tasks').once('value', function (snap) {
         // snap.val() is the array of users who have correctly clicked on the target.
         // so when we do task = snap.val().length, we're increasing the task by 1
-        task = snap.val().length;
+        task ++;
         
         // the rest of the code is in here cause of javascript async handling
         misclicks = 0;
@@ -242,6 +241,7 @@ function nextTarget() {
         action = '';
         skipped = 0;
         trial ++;
+        console.log('your mom')
         getTarget();
         getImage(trial);
     });
@@ -271,12 +271,10 @@ function firelist(snapshot) {
         updateIncorrectClicks();
     } else if (snapshot.key == 'targetClicked') {
         console.log("snapshot.key is targetClicked");
-        console.log(clickContent)
         checkTaskComplete();
     }
     else if (snapshot.key == 'noTarget') {
         console.log("snapshot.key is noTarget");
-        console.log(clickContent)
         checkTaskComplete();
     }
 }
