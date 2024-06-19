@@ -2,7 +2,7 @@
  * imageSelect.js controls the image search task
  * Interprets URL for image and targets, handles server interaction and target control
  * 
- * Name: nickmarsano
+ * Name: nickmarsano, Haram Yoon
  * Date: 06/30/2021
  */
 
@@ -30,7 +30,7 @@ console.log(images);
 
 let imageName
 const boundArray = [160, 25, 2360, 1270]
-selectedData = []
+let selectedData = []
   fetch('./generateTrials/trials.csv')
     .then(response => response.text())
     .then(csvData => {
@@ -83,7 +83,9 @@ function getImage(trial) {
     // bounding = boundArray[imageName];
     console.log(imageName)
     document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
-
+    let target = selectedData.find(data => data.name === imageName);
+    console.log("target:",target)
+    firebaseRef.child('tasks').child(task).child('about').set(target);
     serverContent.push(["Participants", numPpl]);
     serverContent.push(["Image", imageName]);
 }
@@ -119,7 +121,12 @@ function onClick(event) {
     const bottomRightX = parseFloat(target.x) + (rectWidth / 2) + boundArray[0];
     const bottomRightY = parseFloat(target.y) + (rectHeight / 2) + boundArray[1];
     console.log("target:",topLeftX,topLeftY,bottomRightX,bottomRightY) 
-    
+    firebaseRef.child('tasks').child(task).child('clicks').push({
+        x: clickX,
+        y: clickY,
+        time: Date.now(),
+        user: userId
+    });
     if (clickX >= topLeftX &&
         clickX <= bottomRightX &&
         clickY >= topLeftY &&
@@ -133,16 +140,11 @@ function onClick(event) {
         targetHit = true;
         clickContent.push(["Correct Click", target.name, Date.now(), clickX/window.innerWidth, clickY/window.innerHeight]);
         
-
-        firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('targetClicked').transaction(function (current) {
-            if (!current) current = [];
-            var users = []
-            for (const item of current) {
-                users.push(item[0]);
-            }
-            if (!users.includes(userId)) current.push(userId);
-            return current
-        })
+        
+        firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('targetClicked').set({
+            user: userId,
+            time: Date.now()
+        });
 
     }
     else {
@@ -177,12 +179,18 @@ function updateIncorrectClicks() {
     });
 }
 
-var action = '';
 function checkTaskComplete() {
     // check if someone skipped or found the target to move on
     console.log('complete');
+
     var message = document.createElement('div');
-    message.textContent = 'Task Complete!';
+    message.textContent = 'Task Completed by ' + userId + '!';
+
+    // Get the user name from userId in Firebase
+    firebaseRef.child('users').child(userId).child('name').once('value', function(snapshot) {
+        var userName = snapshot.val();
+        message.textContent = 'Task Completed by ' + userName + '!';
+    });
     message.style.position = 'fixed';
     message.style.top = '50%';
     message.style.left = '50%';
@@ -241,7 +249,6 @@ function clearBoxes() {
     if (document.getElementById('foundTarget')) document.getElementById('foundTarget').remove();
 }
 
-let isApplicationStarting = true;
 
 function voteSkipTarget() {
     const imageName = images[trial];
@@ -249,11 +256,10 @@ function voteSkipTarget() {
     clickContent.push(["Skip Vote", target.name, Date.now(), '', '']);
     document.getElementById("skipButton").disabled = true;
     mySkipVote = true;
-    firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('skipVotes').transaction(function (current) {
-        if (!current) current = [];
-        if (!current.includes(userId)) current.push(userId);
-        return current
-    })
+    firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('noTarget').set({
+        user: userId,
+        time: Date.now()
+    });
 }
 
 function firelist(snapshot) {
@@ -266,8 +272,8 @@ function firelist(snapshot) {
         console.log(clickContent)
         checkTaskComplete();
     }
-    else if (snapshot.key == 'skipVotes') {
-        console.log("snapshot.key is skipVotes");
+    else if (snapshot.key == 'noTarget') {
+        console.log("snapshot.key is noTarget");
         console.log(clickContent)
         checkTaskComplete();
     }
@@ -287,19 +293,6 @@ function startExp() {
     getImage(trial);
 }
 
-//Used to get bounding box parameters manually and then inputting into "boundArray" dictionary above
-// var c1 = true;
-// var x1;
-// var y1;
-// document.getElementById("imageSearch").addEventListener("click", whereAmI);
-// function whereAmI(event) {
-//     if (!c1) {
-//         console.log(x1 + '/' + window.innerWidth + ', ' + y1 + '/' + window.innerHeight + ', ' + (event.clientX - x1) + '/' + window.innerWidth + ', ' + (event.clientY - y1) + '/' + window.innerHeight)
-//     }
-//     x1 = event.clientX;
-//     y1 = event.clientY;
-//     c1 = !c1;
-// }
 document.getElementById("imageSearch").style.pointerEvents = "none";
 document.getElementById("skipButton").style.pointerEvents = "none";
 firebaseRef.child('users').on('value', function (snapshot) {
