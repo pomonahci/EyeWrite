@@ -211,7 +211,7 @@ function checkTaskComplete() {
                 actionType = 'Correctly Found';
             } else if (taskData.noTarget && taskData.noTarget.user) {
                 userId = taskData.noTarget.user;
-                if (selectedData[task].absent == 0) {
+                if (imageName.includes('absent')) {
                     actionType = 'Correctly Skipped';
                 }
                 else {
