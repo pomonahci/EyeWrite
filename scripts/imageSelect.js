@@ -210,10 +210,15 @@ function checkTaskComplete() {
 
             if (taskData.targetClicked && taskData.targetClicked.user) {
                 userId = taskData.targetClicked.user;
-                actionType = 'clicked the target';
+                actionType = 'Correctly Found';
             } else if (taskData.noTarget && taskData.noTarget.user) {
                 userId = taskData.noTarget.user;
-                actionType = 'marked target as absent';
+                if (selectedData[task].absent == 0) {
+                    actionType = 'Correctly Skipped';
+                }
+                else {
+                    actionType = 'Incorrectly Skipped';
+                }
             }
 
             if (userId) {
@@ -228,14 +233,14 @@ function checkTaskComplete() {
         })
         .then(function(result) {
             if (result.userId) {
-                displayMessage(`Task was completed by: `, result.color);
+                displayMessage(`Target was ${result.actionType} by: `, result.color);
             } else {
                 displayMessage("Task Completed!");
             }
         })
         .catch(function(error) {
             console.error("Error checking task completion:", error);
-            displayMessage("Task Completed!");
+            displayMessage("Error!");
         });
 
     function displayMessage(text, color) {
@@ -362,7 +367,7 @@ function startExp() {
     serverContent.push(["Experiment Start", Date.now()]);
     // Get the first trial
     firebaseRef.child('tasks').once('value', function (snap) {
-        task =0 
+        task = 0 
 
     });
     getTrial();
