@@ -103,7 +103,7 @@ function getTrial() {
     // Log task start details to the server
     serverContent.push(["Target", task, Date.now()]);
     serverContent.push(["Participants", numPpl]);
-    serverContent.push(["Image", target.name]);
+    serverContent.push(["Image", imageName]);
 }
 // Add an event listener for each click on the image
 document.getElementById("imageSearch").addEventListener("click", onClick);
