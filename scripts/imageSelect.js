@@ -228,7 +228,7 @@ function checkTaskComplete() {
         })
         .then(function(result) {
             if (result.userId) {
-                displayMessage(`Task Completed! User ${result.userId} ${result.actionType}.`, result.color);
+                displayMessage(`Task was completed by: `, result.color);
             } else {
                 displayMessage("Task Completed!");
             }
@@ -239,23 +239,33 @@ function checkTaskComplete() {
         });
 
     function displayMessage(text, color) {
+        var message = document.createElement('div');
         message.textContent = text;
         message.style.position = 'fixed';
         message.style.top = '50%';
         message.style.left = '50%';
         message.style.transform = 'translate(-50%, -50%)';
-        message.style.backgroundColor = color || 'rgba(0, 0, 0, 0.8)';
+        message.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
         message.style.color = 'white';
         message.style.padding = '10px';
         message.style.borderRadius = '5px';
         message.style.zIndex = '9999';
         document.body.appendChild(message);
+
+        var colorBox = document.createElement('div');
+        colorBox.style.backgroundColor = color;
+        colorBox.style.width = '20px';
+        colorBox.style.height = '20px';
+        colorBox.style.marginLeft = '10px';
+        colorBox.style.display = 'inline-block';
+        message.appendChild(colorBox);
+
         setTimeout(function() {
             document.body.removeChild(message);
             nextTarget();
         }, 2000);
     }
-}
+    }
 
 
 // Function to move to the next target
