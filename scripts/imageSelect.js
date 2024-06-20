@@ -284,20 +284,11 @@ function nextTarget() {
     firebaseRef.child('tasks').child(task).off();
 
     // Reset everything for the next target
-    firebaseRef.child('tasks').once('value', function (snap) {
+    firebaseRef.child('tasks').once('value', function (snapshot) {
         // Use a transaction to increment the task variable atomically
-        firebaseRef.child('tasks').transaction(function (currentTasks) {
-            if (currentTasks) {
-                task = currentTasks.length;
-            } else {
-                task = 0;
-            }
-            return currentTasks;
-        }, function (error, committed, snapshot) {
-            if (error) {
-                console.error('Transaction failed:', error);
-            } else if (committed) {
                 // Task incremented successfully, continue with the rest of the logic
+                console.log("HERERHEHR",snapshot.val(), snapshot.val().length)
+                task = snapshot.val().length;
                 misclicks = 0;
                 document.getElementById('badclicks').innerHTML = 0;
                 targetHit = false;
@@ -320,10 +311,10 @@ function nextTarget() {
                 action = '';
                 skipped = 0;
                 // Get the next trial
+                
                 getTrial();
             }
-        });
-    });
+        );
 }
 
 
