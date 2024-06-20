@@ -97,10 +97,6 @@ function getTrial() {
   
     // Get the image name from the images array
     let imageName = images[task];
-    console.log("imageName:",imageName)
-    // Get the target data for the image name from the selectedData array
-    let target = selectedData.find(data => data.name === imageName);
-    console.log("target:",target)
     // Display the image on the page
     document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
     // Add an about section to the task in the Firebase database
