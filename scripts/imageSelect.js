@@ -104,12 +104,11 @@ function getTrial() {
     // Display the image on the page
     document.getElementById("imageSearch").src = "./generateTrials/images/" + target.name;
     // Add an about section to the task in the Firebase database
-    firebaseRef.child('tasks').child(task).child('about').set(target);
+    // firebaseRef.child('tasks').child(task).child('about').set(target);
     // Log task start details to the server
     serverContent.push(["Target", task, Date.now()]);
     serverContent.push(["Participants", numPpl]);
     serverContent.push(["Image", target.name]);
-    console.log(serverContent, task)
 }
 // Add an event listener for each click on the image
 document.getElementById("imageSearch").addEventListener("click", onClick);
@@ -276,8 +275,10 @@ function checkTaskComplete() {
 // Function to move to the next target
 function nextTarget() {
     // Log the target completion to the server
+    console.log("nextTarget")
     serverContent.push(["Target Completed", "", Date.now()]);
     serverContent.push(["Clock", document.getElementById('stopwatch').innerHTML]);
+    console.log(serverContent, task)
 
     clearBoxes();
     // Remove the event listener for the image
@@ -405,5 +406,3 @@ firebaseRef.child('users').on('value', function (snapshot) {
         firebaseRef.child('users').off('value');
     }
 })
-
-
