@@ -94,7 +94,7 @@ function getTrial() {
     // Listen for changes in the 'tasks' node of the Firebase database
     firebaseRef.child('tasks').child(task).on('child_added', firelist);
     firebaseRef.child('tasks').child(task).on('child_changed', firelist);
-    
+  
     // Get the image name from the images array
     let imageName = images[task];
     console.log("imageName:",imageName)
@@ -200,8 +200,6 @@ function updateIncorrectClicks() {
 function checkTaskComplete() {
     console.log('complete');
 
-    var message = document.createElement('div');
-
     firepad.firebaseAdapter_.ref_.child('tasks').child(task).once('value')
         .then(function(taskSnapshot) {
             const taskData = taskSnapshot.val();
@@ -244,6 +242,8 @@ function checkTaskComplete() {
         });
 
     function displayMessage(text, color) {
+        // Display a message on the screen for 2 seconds
+        // with the text and color provided
         var message = document.createElement('div');
         message.textContent = text;
         message.style.position = 'fixed';
@@ -278,43 +278,51 @@ function nextTarget() {
     // Log the target completion to the server
     serverContent.push(["Target Completed", "", Date.now()]);
     serverContent.push(["Clock", document.getElementById('stopwatch').innerHTML]);
-    // clickContent.push("Personal Incorrect Clicks:"+misclicks+",\n");
 
     clearBoxes();
     // Remove the event listener for the image
     firebaseRef.child('tasks').child(task).off();
 
-
     // Reset everything for the next target
     firebaseRef.child('tasks').once('value', function (snap) {
-        // snap.val() is the array of users who have correctly clicked on the target.
-        // so when we do task = snap.val().length, we're increasing the task by 1        
-        // the rest of the code is in here cause of javascript async handling
-        misclicks = 0;
-        document.getElementById('badclicks').innerHTML = 0;
-        targetHit = false;
-        mySkipVote = false;
-        document.getElementById("skipButton").innerHTML = "Target Absent";
-        document.getElementById("skipButton").style.left = '15%';
+        // Use a transaction to increment the task variable atomically
+        firebaseRef.child('tasks').transaction(function (currentTasks) {
+            if (currentTasks) {
+                task = currentTasks.length;
+            } else {
+                task = 0;
+            }
+            return currentTasks;
+        }, function (error, committed, snapshot) {
+            if (error) {
+                console.error('Transaction failed:', error);
+            } else if (committed) {
+                // Task incremented successfully, continue with the rest of the logic
+                misclicks = 0;
+                document.getElementById('badclicks').innerHTML = 0;
+                targetHit = false;
+                mySkipVote = false;
+                document.getElementById("skipButton").innerHTML = "Target Absent";
+                document.getElementById("skipButton").style.left = '15%';
 
-        // check if all targets have been found
-        // if so, stop the stopwatch and display a message
-        if (numTargets == task) {
-            document.getElementById("imageSearch").removeEventListener("click", onClick);
-            document.getElementById('targetSearch').style.visibility = 'hidden';
-            stopStopwatch();
-            document.getElementById("skipButton").innerHTML = "All Targets Found!";
-            document.getElementById("skipButton").style.left = '5%';
-            return;
-        }
+                // Check if all targets have been found
+                // If so, stop the stopwatch and display a message
+                if (numTargets == task) {
+                    document.getElementById("imageSearch").removeEventListener("click", onClick);
+                    document.getElementById('targetSearch').style.visibility = 'hidden';
+                    stopStopwatch();
+                    document.getElementById("skipButton").innerHTML = "All Targets Found!";
+                    document.getElementById("skipButton").style.left = '5%';
+                    return;
+                }
 
-        document.getElementById("skipButton").disabled = false;
-        action = '';
-        skipped = 0;
-        // increment the task and get the next trial
-        task ++;
-        getTrial();
-
+                document.getElementById("skipButton").disabled = false;
+                action = '';
+                skipped = 0;
+                // Get the next trial
+                getTrial();
+            }
+        });
     });
 }
 
