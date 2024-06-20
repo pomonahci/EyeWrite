@@ -200,31 +200,61 @@ function updateIncorrectClicks() {
 function checkTaskComplete() {
     console.log('complete');
 
-    // Display a message to the user that the task is complete
     var message = document.createElement('div');
-    message.textContent = 'Task Completed by ' + userId + '!';
 
-    // Get the user name from userId in Firebase
-    firebaseRef.child('users').child(userId).child('name').once('value', function(snapshot) {
-        var userName = snapshot.val();
-        message.textContent = 'Task Completed by ' + userName + '!';
-    });
+    firepad.firebaseAdapter_.ref_.child('tasks').child(task).once('value')
+        .then(function(taskSnapshot) {
+            const taskData = taskSnapshot.val();
+            let userId = null;
+            let actionType = '';
 
-    // Style the message and display it for 2 seconds
-    message.style.position = 'fixed';
-    message.style.top = '50%';
-    message.style.left = '50%';
-    message.style.transform = 'translate(-50%, -50%)';
-    message.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-    message.style.color = 'white';
-    message.style.padding = '10px';
-    message.style.borderRadius = '5px';
-    message.style.zIndex = '9999';
-    document.body.appendChild(message);
-    setTimeout(function() {
-        document.body.removeChild(message);
-        nextTarget();
-    }, 2000);
+            if (taskData.targetClicked && taskData.targetClicked.user) {
+                userId = taskData.targetClicked.user;
+                actionType = 'clicked the target';
+            } else if (taskData.noTarget && taskData.noTarget.user) {
+                userId = taskData.noTarget.user;
+                actionType = 'marked target as absent';
+            }
+
+            if (userId) {
+                return firepad.firebaseAdapter_.ref_.child('users').child(userId).child('color').once('value')
+                    .then(function(colorSnapshot) {
+                        const color = colorSnapshot.val();
+                        return { userId, color, actionType };
+                    });
+            } else {
+                return { userId: null, color: null, actionType: '' };
+            }
+        })
+        .then(function(result) {
+            if (result.userId) {
+                displayMessage(`Task Completed! User ${result.userId} ${result.actionType}.`, result.color);
+            } else {
+                displayMessage("Task Completed!");
+            }
+        })
+        .catch(function(error) {
+            console.error("Error checking task completion:", error);
+            displayMessage("Task Completed!");
+        });
+
+    function displayMessage(text, color) {
+        message.textContent = text;
+        message.style.position = 'fixed';
+        message.style.top = '50%';
+        message.style.left = '50%';
+        message.style.transform = 'translate(-50%, -50%)';
+        message.style.backgroundColor = color || 'rgba(0, 0, 0, 0.8)';
+        message.style.color = 'white';
+        message.style.padding = '10px';
+        message.style.borderRadius = '5px';
+        message.style.zIndex = '9999';
+        document.body.appendChild(message);
+        setTimeout(function() {
+            document.body.removeChild(message);
+            nextTarget();
+        }, 2000);
+    }
 }
 
 
