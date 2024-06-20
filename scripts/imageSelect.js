@@ -102,9 +102,8 @@ function getTrial() {
     let target = selectedData.find(data => data.name === imageName);
     console.log("target:",target)
     // Display the image on the page
-    document.getElementById("imageSearch").src = "./generateTrials/images/" + target.name;
+    document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
     // Add an about section to the task in the Firebase database
-    // firebaseRef.child('tasks').child(task).child('about').set(target);
     // Log task start details to the server
     serverContent.push(["Target", task, Date.now()]);
     serverContent.push(["Participants", numPpl]);
@@ -198,6 +197,12 @@ function updateIncorrectClicks() {
 // Function when task is completed
 function checkTaskComplete() {
     console.log('complete');
+    // Get the image name from the images array
+    let imageName = images[task];
+    // Get the target data for the image name from the selectedData array
+    let target = selectedData.find(data => data.name === imageName);
+    // Add task details to firebase
+    firebaseRef.child('tasks').child(task).child('about').set(target);
 
     firepad.firebaseAdapter_.ref_.child('tasks').child(task).once('value')
         .then(function(taskSnapshot) {
