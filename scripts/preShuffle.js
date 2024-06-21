@@ -42,6 +42,7 @@ function distributeImages(pics) {
 
 
 
+
 function shuffleImages() {
     // Shuffle the images array
     let shuffledImages = distributeImages(pics);

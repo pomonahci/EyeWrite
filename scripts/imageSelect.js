@@ -59,7 +59,7 @@ let selectedData = []
 var bounding; // list of targets for imageLabel taken from boundArray
 var misclicks = 0; // number of misclicks while searching for target (will be made global)
 var targetHit = false; // boolean value to determine if a bounding box should be drawn locally (only draw once)
-var numTargets = images.length; // number of targets to find per image
+var numTargets = 4; // number of targets to find per image
 var task = 0; // index of target, will incremenent
 var numPpl; // number of participants in this experiement (gotten from URL)
 var url; //apache url
@@ -77,8 +77,8 @@ function getTrial() {
     // firebaseRef.child('tasks').child(task).child('incorrectClicks').on('child_changed', updateIncorrectClicks);
 
     // Listen for changes in the 'tasks' node of the Firebase database
-    firebaseRef.child('tasks').child(task).on('child_added', firelist);
-    firebaseRef.child('tasks').child(task).on('child_changed', firelist);
+    firebaseRef.child('tasks').child(condition).child(task).on('child_added', firelist);
+    firebaseRef.child('tasks').child(condition).child(task).on('child_changed', firelist);
   
     // Get the image name from the images array
     let imageName = images[task];
@@ -116,7 +116,7 @@ function onClick(event) {
     console.log("target:",topLeftX,topLeftY,bottomRightX,bottomRightY) 
 
     // Add the click to the Firebase database
-    firebaseRef.child('tasks').child(task).child('clicks').push({
+    firebaseRef.child('tasks').child(condition).child(task).child('clicks').push({
         x: clickX,
         y: clickY,
         time: Date.now(),
@@ -141,9 +141,9 @@ function onClick(event) {
         clickContent.push(["Correct Click", target.name, Date.now(), clickX/window.innerWidth, clickY/window.innerHeight]);
         
         // Update the user's correct clicks on the server
-        firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('targetClicked').once('value', function(snapshot) {
+        firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('targetClicked').once('value', function(snapshot) {
             if (!snapshot.exists()) {
-                firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('targetClicked').set({
+                firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('targetClicked').set({
                     user: userId,
                     time: Date.now()
                 });
@@ -157,7 +157,7 @@ function onClick(event) {
        // Increment the user's misclicks
         misclicks++;
         // update user's misclicks on firebase
-        firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('incorrectClicks').child(userId).transaction(function (current) {
+        firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('incorrectClicks').child(userId).transaction(function (current) {
             if (!current) current = 0;
             current = misclicks;
             return current;
@@ -170,7 +170,7 @@ function onClick(event) {
 // Function to update the client-side display with the total misclicks
 function updateIncorrectClicks() {
     // Pull the misclicks from the Firebase database and update the display
-    firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('incorrectClicks').transaction(function(current) {
+    firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('incorrectClicks').transaction(function(current) {
         total = 0;
         for (misclick of Object.values(current)) {
             total += misclick;
@@ -188,9 +188,9 @@ function checkTaskComplete() {
     let target = selectedData.find(data => data.name === imageName);
     // Add task details to firebase
     
-    firebaseRef.child('tasks').child(task).child('about').set(target);
+    firebaseRef.child('tasks').child(condition).child(task).child('about').set(target);
 
-    firepad.firebaseAdapter_.ref_.child('tasks').child(task).once('value')
+    firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).once('value')
         .then(function(taskSnapshot) {
             const taskData = taskSnapshot.val();
             let userId = null;
@@ -273,29 +273,29 @@ function nextTarget() {
 
     clearBoxes();
     // Remove the event listener for the image
-    firebaseRef.child('tasks').child(task).off();
+    firebaseRef.child('tasks').child(condition).child(task).off();
 
     // Reset everything for the next target
-    firebaseRef.child('tasks').once('value', function (snapshot) {
+    firebaseRef.child('tasks').child(condition).once('value', function (snapshot) {
         // Use a transaction to increment the task variable atomically
                 // Task incremented successfully, continue with the rest of the logic
                 console.log("HERERHEHR",snapshot.val(), snapshot.val().length)
-                task = snapshot.val().length;
+                task = snapshot.val().length 
                 misclicks = 0;
                 document.getElementById('badclicks').innerHTML = 0;
                 targetHit = false;
                 mySkipVote = false;
-                document.getElementById("skipButton").innerHTML = "Target Absent";
+                document.getElementById("skipButton").innerHTML = "No Target";
                 document.getElementById("skipButton").style.left = '15%';
 
                 // Check if all targets have been found
                 // If so, stop the stopwatch and display a message
                 if (numTargets == task) {
                     document.getElementById("imageSearch").removeEventListener("click", onClick);
-                    document.getElementById('targetSearch').style.visibility = 'hidden';
                     stopStopwatch();
                     document.getElementById("skipButton").innerHTML = "All Targets Found!";
                     document.getElementById("skipButton").style.left = '5%';
+                    document.getElementById("skipButton").disabled = true;
                     document.getElementById("startButton").disabled = false;
                     return;
                 }
@@ -330,9 +330,9 @@ function voteSkipTarget() {
     mySkipVote = true;
 
     // Add who voted for no Target to the Firebase database
-    firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('noTarget').once('value', function(snapshot) {
+    firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('noTarget').once('value', function(snapshot) {
         if (!snapshot.exists()) {
-            firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('noTarget').set({
+            firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('noTarget').set({
                 user: userId,
                 time: Date.now()
             });
@@ -358,16 +358,20 @@ function firelist(snapshot) {
 }
 
 // Function to start the experiment
-function startExp(condition) {
+function startExp(c) {
     document.getElementById("startButton").disabled = true;
+    document.getElementById("skipButton").disabled = false;
+    document.getElementById("imageSearch").addEventListener("click", onClick);
+    document.getElementById("skipButton").innerHTML = "No Target"; 
+    condition = c;
+    task = 0                                                                              
+
     // Get the shuffled images from Firebase
     firebaseRef.child('shuffledImages').child(condition).once('value', function (snapshot) {
         images = snapshot.val();
-        console.log("first")
-        console.log(images + "images lol");
-        console.log("second:")
         // Display the first image
-        let imageName = images[0];
+        let imageName = images[task];
+        console.log(images)
         document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
     });
     // Start the stopwatch and log the experiment start time
