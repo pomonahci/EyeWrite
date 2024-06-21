@@ -12,7 +12,7 @@ var container = imageContainer.getBoundingClientRect();
 
 var imageLabel;
 
-let images = []
+var images = []
 
 let imageName // name of the image to be displayed
 const boundArray = [160, 25, 2360, 1270] // [left, top, right, bottom] of the image area
@@ -296,6 +296,7 @@ function nextTarget() {
                     stopStopwatch();
                     document.getElementById("skipButton").innerHTML = "All Targets Found!";
                     document.getElementById("skipButton").style.left = '5%';
+                    document.getElementById("startButton").disabled = false;
                     return;
                 }
 
@@ -358,6 +359,7 @@ function firelist(snapshot) {
 
 // Function to start the experiment
 function startExp(condition) {
+    document.getElementById("startButton").disabled = true;
     // Get the shuffled images from Firebase
     firebaseRef.child('shuffledImages').child(condition).once('value', function (snapshot) {
         images = snapshot.val();
@@ -367,10 +369,6 @@ function startExp(condition) {
     startStopwatch();
     serverContent.push(["Experiment Start", Date.now()]);
     // Get the first trial
-    firebaseRef.child('tasks').once('value', function (snap) {
-        task = 0 
-
-    });
     getTrial();
 }
 
