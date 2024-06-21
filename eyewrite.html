@@ -131,8 +131,14 @@
     <button class="btn btn-primary" id="skipButton" onclick="voteSkipTarget()">No Target</button>
   
   </div>
+  <input type="text" id="condition" placeholder='Condition...' style="position: absolute; top:250px; background-color:lightgrey;padding: 10px; font-size: 14px; width:100px;"></input>
 
-  <button id="shuffle" onclick="shuffleImages()" style="position: absolute; top:300px; background-color: #ffbf86;padding: 10px; font-size: 14px; visibility: hidden;">Shuffle</button>
+  <button id="startButton" onclick="startExp(document.getElementById('condition').value)" 
+  style="position: absolute; top:300px; background-color: white;padding: 10px; font-size: 14px; " disabled>Start Experiment</button>
+
+  <button id="shuffle" onclick="shuffleImages()" 
+  style="position: absolute; top:400px; background-color: #ffbf86;padding: 10px; font-size: 14px;">
+  Shuffle</button>
 
 
 <!-- NOT USED BELOW -->

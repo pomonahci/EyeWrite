@@ -12,22 +12,7 @@ var container = imageContainer.getBoundingClientRect();
 
 var imageLabel;
 
-let images = ['21_present_1.jpg', '21_present_2.jpg', '21_present_3.jpg', '21_present_4.jpg', '21_present_5.jpg', '21_present_6.jpg', '21_present_7.jpg', '21_present_8.jpg', '21_present_9.jpg', '21_present_10.jpg', '21_present_11.jpg', '21_present_12.jpg',
-    '21_absent_1.jpg', '21_absent_2.jpg', '21_absent_3.jpg', '21_absent_4.jpg', '21_absent_5.jpg', '21_absent_6.jpg', '21_absent_7.jpg', '21_absent_8.jpg', '21_absent_9.jpg', '21_absent_10.jpg', '21_absent_11.jpg', '21_absent_12.jpg',
-    '35_present_1.jpg', '35_present_2.jpg', '35_present_3.jpg', '35_present_4.jpg', '35_present_5.jpg', '35_present_6.jpg', '35_present_7.jpg', '35_present_8.jpg', '35_present_9.jpg', '35_present_10.jpg', '35_present_11.jpg', '35_present_12.jpg',
-    '35_absent_1.jpg', '35_absent_2.jpg', '35_absent_3.jpg', '35_absent_4.jpg', '35_absent_5.jpg', '35_absent_6.jpg', '35_absent_7.jpg', '35_absent_8.jpg', '35_absent_9.jpg', '35_absent_10.jpg', '35_absent_11.jpg', '35_absent_12.jpg'];
-
-// Utility function to shuffle an array elements in random order
-function shuffleArray(array) {
-    let shuffled = array.slice();
-    for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-}
-// const images = shuffleArray(presuffled_images);
-console.log(images);
+let images = []
 
 let imageName // name of the image to be displayed
 const boundArray = [160, 25, 2360, 1270] // [left, top, right, bottom] of the image area
@@ -372,7 +357,13 @@ function firelist(snapshot) {
 }
 
 // Function to start the experiment
-function startExp() {
+function startExp(condition) {
+    // Get the shuffled images from Firebase
+    firebaseRef.child('shuffledImages').child(condition).once('value', function (snapshot) {
+        images = snapshot.val();
+        console.log(images);
+    });
+    // Start the stopwatch and log the experiment start time
     startStopwatch();
     serverContent.push(["Experiment Start", Date.now()]);
     // Get the first trial
@@ -390,9 +381,6 @@ document.getElementById("skipButton").style.pointerEvents = "none";
 // get the number of participants from the URL
 firebaseRef.child('users').on('value', function (snapshot) {
     var URL = window.location.href;
-    shuffleLabel = URL.search("shuffle");
-    shuffleLabel = URL.substring(shuffleLabel + 8);
-    if (shuffleLabel == -1) return;
     numPpl = URL.search('par');
     if (numPpl == -1) {
         numPpl = 2;
@@ -403,7 +391,7 @@ firebaseRef.child('users').on('value', function (snapshot) {
 
     // check if the number of participants have joined to start the experiment
     if (Object.keys(snapshot.val()).length >= numPpl) {
-        startExp();
+        document.getElementById("startButton").disabled = false;
         // add the users' dimensions into the firebase database
         firebaseRef.child("users").transaction(function (current) {
             for (const [key, value] of Object.entries(current)) {
