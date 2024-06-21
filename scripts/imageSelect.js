@@ -363,7 +363,12 @@ function startExp(condition) {
     // Get the shuffled images from Firebase
     firebaseRef.child('shuffledImages').child(condition).once('value', function (snapshot) {
         images = snapshot.val();
-        console.log(images);
+        console.log("first")
+        console.log(images + "images lol");
+        console.log("second:")
+        // Display the first image
+        let imageName = images[0];
+        document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
     });
     // Start the stopwatch and log the experiment start time
     startStopwatch();
