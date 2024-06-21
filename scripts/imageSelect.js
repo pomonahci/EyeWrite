@@ -10,7 +10,7 @@ var imageContainer = document.getElementById('imageContainer');
 var container = imageContainer.getBoundingClientRect();
 
 
-// var imageLabel;
+var imageLabel;
 
 let images = ['21_present_1.jpg', '21_present_2.jpg', '21_present_3.jpg', '21_present_4.jpg', '21_present_5.jpg', '21_present_6.jpg', '21_present_7.jpg', '21_present_8.jpg', '21_present_9.jpg', '21_present_10.jpg', '21_present_11.jpg', '21_present_12.jpg',
     '21_absent_1.jpg', '21_absent_2.jpg', '21_absent_3.jpg', '21_absent_4.jpg', '21_absent_5.jpg', '21_absent_6.jpg', '21_absent_7.jpg', '21_absent_8.jpg', '21_absent_9.jpg', '21_absent_10.jpg', '21_absent_11.jpg', '21_absent_12.jpg',
@@ -99,6 +99,7 @@ function getTrial() {
     let imageName = images[task];
     // Display the image on the page
     document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
+    console.log('image: ', imageName)
     // Add an about section to the task in the Firebase database
     // Log task start details to the server
     serverContent.push(["Target", task, Date.now()]);
@@ -358,6 +359,7 @@ function firelist(snapshot) {
     }
     else if (snapshot.key == 'noTarget') {
         console.log("snapshot.key is noTarget");
+        document.getElementById("skipButton").disabled = true;
         checkTaskComplete();
     }
 }
@@ -381,9 +383,9 @@ document.getElementById("skipButton").style.pointerEvents = "none";
 // get the number of participants from the URL
 firebaseRef.child('users').on('value', function (snapshot) {
     var URL = window.location.href;
-    // imageLabel = URL.search("img");
-    // imageLabel = URL.substring(imageLabel + 4, imageLabel + 5);
-    // if (imageLabel == -1) return;
+    shuffleLabel = URL.search("shuffle");
+    shuffleLabel = URL.substring(shuffleLabel + 8);
+    if (shuffleLabel == -1) return;
     numPpl = URL.search('par');
     if (numPpl == -1) {
         numPpl = 2;
