@@ -156,11 +156,14 @@ function onClick(event) {
         clickContent.push(["Correct Click", target.name, Date.now(), clickX/window.innerWidth, clickY/window.innerHeight]);
         
         // Update the user's correct clicks on the server
-        firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('targetClicked').set({
-            user: userId,
-            time: Date.now()
+        firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('targetClicked').once('value', function(snapshot) {
+            if (!snapshot.exists()) {
+                firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('targetClicked').set({
+                    user: userId,
+                    time: Date.now()
+                });
+            }
         });
-
     }
     else {
         // Log the incorrect click to the server
@@ -199,6 +202,7 @@ function checkTaskComplete() {
     // Get the target data for the image name from the selectedData array
     let target = selectedData.find(data => data.name === imageName);
     // Add task details to firebase
+    
     firebaseRef.child('tasks').child(task).child('about').set(target);
 
     firepad.firebaseAdapter_.ref_.child('tasks').child(task).once('value')
@@ -340,9 +344,13 @@ function voteSkipTarget() {
     mySkipVote = true;
 
     // Add who voted for no Target to the Firebase database
-    firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('noTarget').set({
-        user: userId,
-        time: Date.now()
+    firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('noTarget').once('value', function(snapshot) {
+        if (!snapshot.exists()) {
+            firepad.firebaseAdapter_.ref_.child('tasks').child(task).child('noTarget').set({
+                user: userId,
+                time: Date.now()
+            });
+        }
     });
 }
 
@@ -358,8 +366,7 @@ function firelist(snapshot) {
         checkTaskComplete();
     }
     else if (snapshot.key == 'noTarget') {
-        console.log("snapshot.key is noTarget");
-        document.getElementById("skipButton").disabled = true;
+        console.log("snapshot.key is noTarget")
         checkTaskComplete();
     }
 }
