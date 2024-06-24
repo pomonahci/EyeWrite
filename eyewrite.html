@@ -128,22 +128,17 @@
     <div  style="font-weight: bold;">Incorrect Clicks: <span id='badclicks' style="color: red;">0</span></div>
     <img id='targetSearch' src='generateTrials/images/O_image.png' alt='TARGET' width='100px' height='100px'
       style='margin-top: 40px;'>
-    <button class="btn btn-primary" id="skipButton" onclick="voteSkipTarget()" disabled>No Target</button>
+    <button class="btn btn-primary" id="skipButton" onclick="voteSkipTarget()">No Target</button>
   
   </div>
-  <select id="condition" style="position: absolute; top: 400px; right:30px; background-color:lightgrey;padding: 10px; font-size: 14px; width:100px;">
-    <option value="SG">SG</option>
-    <option value="SV">SV</option>
-    <option value="SG + SV">SG + SV</option>
-  </select>
+  <input type="text" id="condition" placeholder='Condition...' style="position: absolute; top:250px; background-color:lightgrey;padding: 10px; font-size: 14px; width:100px;"></input>
 
-  <button id="startButton" onclick="startExp(document.getElementById('condition').value)" 
-  style="position: absolute; top:450px; background-color: white;padding: 10px; font-size: 14px; right:10px" disabled>Start Experiment</button>
+  <button id="startButton"
+  style="position: absolute; top:300px; background-color: white;padding: 10px; font-size: 14px; ">Start Experiment</button>
 
   <button id="shuffle" onclick="shuffleImages()" 
   style="position: absolute; top:400px; background-color: #ffbf86;padding: 10px; font-size: 14px;">
   Shuffle</button>
-  <!-- add visiblity: hidden to the div when doing experiemtn -->
 
 
 <!-- NOT USED BELOW -->

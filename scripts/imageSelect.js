@@ -210,7 +210,6 @@ function checkTaskComplete() {
                     actionType = 'Incorrectly Skipped';
                 }
             }
-
             if (userId) {
                 return firepad.firebaseAdapter_.ref_.child('users').child(userId).child('color').once('value')
                     .then(function(colorSnapshot) {
@@ -365,10 +364,21 @@ function firelist(snapshot) {
 
 // Function to start the experiment
 function startExp(c) {
-    firebaseRef.child('users').child(userId).child('startClick').set(true);
-    firebaseRef.child('users').orderByChild('startClick').equalTo(true).once('value', function(snapshot) {
-        var numParticipants = snapshot.numChildren();
-        if (numParticipants == numPpl) {
+    // firebaseRef.child('users').child(userId).child('startClick').set(true);
+    // firebaseRef.child('users').orderByChild('startClick').equalTo(true).on('value', function(snapshot) {
+    // When a user clicks the button
+
+    firebaseRef.child('globalState').child('buttonClicked').set(false);
+    // Listening for changes in the global state
+    firebaseRef.child('globalState').child('buttonClicked').on('value', function(snapshot) {
+        document.getElementById('startButton').addEventListener('click', function() {
+            firebaseRef.child('globalState').child('buttonClicked').set(true);
+        });
+
+
+        // var numParticipants = snapshot.numChildren();
+        console.log("buttonClicked" + snapshot.val())
+        if (snapshot.val()) {
             document.getElementById("startButton").disabled = true;
             document.getElementById("skipButton").disabled = false;
             document.getElementById("imageSearch").addEventListener("click", onClick);
@@ -387,7 +397,7 @@ function startExp(c) {
             serverContent.push(["Experiment Start", Date.now()]);
             // Get the first trial
             getTrial();
-                }
+        }
     });
 }
 
@@ -410,7 +420,9 @@ firebaseRef.child('users').on('value', function (snapshot) {
 
     // check if the number of participants have joined to start the experiment
     if (Object.keys(snapshot.val()).length >= numPpl) {
-        document.getElementById("startButton").disabled = false;
+        shuffleImages();
+        startExp("SG")
+        // document.getElementById("startButton").disabled = false;
         // add the users' dimensions into the firebase database
         firebaseRef.child("users").transaction(function (current) {
             for (const [key, value] of Object.entries(current)) {
