@@ -90,6 +90,8 @@ function getTrial() {
     serverContent.push(["Target", task, Date.now()]);
     serverContent.push(["Participants", numPpl]);
     serverContent.push(["Image", imageName]);
+    // resetStopwatch()
+    startStopwatch();
 }
 // Add an event listener for each click on the image
 document.getElementById("imageSearch").addEventListener("click", onClick);
@@ -258,6 +260,8 @@ function checkTaskComplete() {
         setTimeout(function() {
             document.body.removeChild(message);
             nextTarget();
+            stopStopwatch();
+            resetStopwatch();
         }, 2000);
     }
     }
@@ -293,7 +297,7 @@ function nextTarget() {
                 if (numTargets == task) {
                     document.getElementById("imageSearch").removeEventListener("click", onClick);
                     stopStopwatch();
-                    document.getElementById("skipButton").innerHTML = "All Targets Found!";
+                    document.getElementById("skipButton").innerHTML = "All Tasks Completed!";
                     document.getElementById("skipButton").style.left = '5%';
                     document.getElementById("skipButton").disabled = true;
                     document.getElementById("startButton").disabled = false;
@@ -304,8 +308,8 @@ function nextTarget() {
                 action = '';
                 skipped = 0;
                 // Get the next trial
-                
                 getTrial();
+
             }
         );
 }
@@ -374,8 +378,7 @@ function startExp(c) {
         console.log(images)
         document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
     });
-    // Start the stopwatch and log the experiment start time
-    startStopwatch();
+    // Start the stopwatch and log the experiment start 
     serverContent.push(["Experiment Start", Date.now()]);
     // Get the first trial
     getTrial();
