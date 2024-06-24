@@ -297,6 +297,8 @@ function nextTarget() {
                 if (numTargets == task) {
                     document.getElementById("imageSearch").removeEventListener("click", onClick);
                     stopStopwatch();
+                    firebaseRef.child('users').child(userId).child('startClick').set(false);
+
                     document.getElementById("skipButton").innerHTML = "All Tasks Completed!";
                     document.getElementById("skipButton").style.left = '5%';
                     document.getElementById("skipButton").disabled = true;
