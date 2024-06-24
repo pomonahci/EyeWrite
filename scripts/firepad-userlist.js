@@ -24,7 +24,7 @@ var FirepadUserList = (function () {
     this.firebaseOn_(ref.root.child(".info/connected"), "value", function (s) {
       if (s.val() === true && self.displayName_) {
         var nameRef = ref.child(self.userId_).child("name");
-        nameRef.onDisconnect().remove();
+        // nameRef.onDisconnect().remove();
         nameRef.set(self.displayName_);
       }
     });
@@ -38,7 +38,7 @@ var FirepadUserList = (function () {
 
   FirepadUserList.prototype.dispose = function () {
     this.removeFirebaseCallbacks_();
-    this.ref_.child(this.userId_).child("name").remove();
+    // this.ref_.child(this.userId_).child("name").remove();
 
     this.place_.removeChild(this.userList_);
   };
@@ -103,7 +103,7 @@ var FirepadUserList = (function () {
     var self = this;
     on(nameInput, "change", function (e) {
       var name = nameInput.value || "Guest " + Math.floor(Math.random() * 1000);
-      myUserRef.child("name").onDisconnect().remove();
+      // myUserRef.child("name").onDisconnect().remove();
       myUserRef.child("name").set(name);
       nameHint.style.display = "none";
       nameInput.blur();

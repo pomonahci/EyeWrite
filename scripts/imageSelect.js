@@ -363,26 +363,33 @@ function firelist(snapshot) {
 
 // Function to start the experiment
 function startExp(c) {
-    document.getElementById("startButton").disabled = true;
-    document.getElementById("skipButton").disabled = false;
-    document.getElementById("imageSearch").addEventListener("click", onClick);
-    document.getElementById("skipButton").innerHTML = "No Target"; 
-    condition = c;
-    task = 0                                                                              
-
-    // Get the shuffled images from Firebase
-    firebaseRef.child('shuffledImages').child(condition).once('value', function (snapshot) {
-        images = snapshot.val();
-        // Display the first image
-        let imageName = images[task];
-        console.log(images)
-        document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
+    firebaseRef.child('users').child(userId).child('startClick').set(true);
+    firebaseRef.child('users').orderByChild('startClick').equalTo(true).once('value', function(snapshot) {
+        var numParticipants = snapshot.numChildren();
+        if (numParticipants == numPpl) {
+            document.getElementById("startButton").disabled = true;
+            document.getElementById("skipButton").disabled = false;
+            document.getElementById("imageSearch").addEventListener("click", onClick);
+            document.getElementById("skipButton").innerHTML = "No Target"; 
+            condition = c;
+            task = 0                                                                              
+            // Get the shuffled images from Firebase
+            firebaseRef.child('shuffledImages').child(condition).once('value', function (snapshot) {
+                images = snapshot.val();
+                // Display the first image
+                let imageName = images[task];
+                console.log(images)
+                document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
+            });
+            // Start the stopwatch and log the experiment start 
+            serverContent.push(["Experiment Start", Date.now()]);
+            // Get the first trial
+            getTrial();
+                }
     });
-    // Start the stopwatch and log the experiment start 
-    serverContent.push(["Experiment Start", Date.now()]);
-    // Get the first trial
-    getTrial();
 }
+
+
 
 
 document.getElementById("imageSearch").style.pointerEvents = "none";
