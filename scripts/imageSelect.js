@@ -68,13 +68,6 @@ var skipped = 0;
 var mySkipVote = false;
 
 function getTrial() {
-    // firebaseRef.child('tasks').child(task).child('targetClicked').set("");
-    // firebaseRef.child('tasks').child(task).child('incorrectClicks').set("");
-    // firebaseRef.child('tasks').child(task).child('skipVotes').set("");
-
-    // firebaseRef.child('tasks').child(task).child('targetClicked').on('child_added', checkTaskComplete);//useless in experiments with more than 1 person
-    // firebaseRef.child('tasks').child(task).child('targetClicked').on('child_changed', checkTaskComplete);
-    // firebaseRef.child('tasks').child(task).child('incorrectClicks').on('child_changed', updateIncorrectClicks);
 
     // Listen for changes in the 'tasks' node of the Firebase database
     firebaseRef.child('tasks').child(condition).child(task).on('child_added', firelist);
@@ -188,16 +181,18 @@ function checkTaskComplete() {
     let imageName = images[task];
     // Get the target data for the image name from the selectedData array
     let target = selectedData.find(data => data.name === imageName);
+
     // Add task details to firebase
-    
     firebaseRef.child('tasks').child(condition).child(task).child('about').set(target);
 
+    // Check if the target has been clicked or skipped
     firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).once('value')
         .then(function(taskSnapshot) {
             const taskData = taskSnapshot.val();
             let userId = null;
             let actionType = '';
 
+            // Get the user who completed the task and the action type
             if (taskData.targetClicked && taskData.targetClicked.user) {
                 userId = taskData.targetClicked.user;
                 actionType = 'Correctly Found';
@@ -210,7 +205,8 @@ function checkTaskComplete() {
                     actionType = 'Incorrectly Skipped';
                 }
             }
-
+            
+            // Get the color of the user who completed the task
             if (userId) {
                 return firepad.firebaseAdapter_.ref_.child('users').child(userId).child('color').once('value')
                     .then(function(colorSnapshot) {
@@ -221,11 +217,13 @@ function checkTaskComplete() {
                 return { userId: null, color: null, actionType: '' };
             }
         })
+        // Display a message on the screen with the user who completed the task
         .then(function(result) {
             if (result.userId) {
                 displayMessage(`Target was ${result.actionType} by: `, result.color);
             } else {
                 displayMessage("Task Completed!");
+                console.log(result)
             }
         })
         .catch(function(error) {
@@ -257,6 +255,7 @@ function checkTaskComplete() {
         colorBox.style.display = 'inline-block';
         message.appendChild(colorBox);
 
+        // Remove the message after 2 seconds and move to the next target
         setTimeout(function() {
             document.body.removeChild(message);
             nextTarget();
@@ -297,7 +296,6 @@ function nextTarget() {
                 if (numTargets == task) {
                     document.getElementById("imageSearch").removeEventListener("click", onClick);
                     stopStopwatch();
-                    firebaseRef.child('users').child(userId).child('startClick').set(false);
 
                     document.getElementById("skipButton").innerHTML = "All Tasks Completed!";
                     document.getElementById("skipButton").style.left = '5%';
@@ -366,28 +364,28 @@ function firelist(snapshot) {
 // Function to start the experiment
 function startExp(c) {
     firebaseRef.child('users').child(userId).child('startClick').set(true);
-    firebaseRef.child('users').orderByChild('startClick').equalTo(true).once('value', function(snapshot) {
-        var numParticipants = snapshot.numChildren();
-        if (numParticipants == numPpl) {
+    firebaseRef.child('users').orderByChild('startClick').equalTo(true).on('value', function(snapshot) {
+        if (snapshot.numChildren() == numPpl) {
             document.getElementById("startButton").disabled = true;
             document.getElementById("skipButton").disabled = false;
             document.getElementById("imageSearch").addEventListener("click", onClick);
             document.getElementById("skipButton").innerHTML = "No Target"; 
+            task = 0 
             condition = c;
-            task = 0                                                                              
             // Get the shuffled images from Firebase
             firebaseRef.child('shuffledImages').child(condition).once('value', function (snapshot) {
                 images = snapshot.val();
-                // Display the first image
-                let imageName = images[task];
-                console.log(images)
-                document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
-            });
+                console.log(images);
+                getTrial();
+
+                    });
+            
             // Start the stopwatch and log the experiment start 
-            serverContent.push(["Experiment Start", Date.now()]);
+            serverContent.push([`Condition ${condition} Start`, Date.now()]);
             // Get the first trial
-            getTrial();
-                }
+            firebaseRef.child('users').child(userId).child('startClick').set(false);
+
+         }
     });
 }
 
