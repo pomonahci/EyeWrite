@@ -302,9 +302,12 @@ function nextTarget() {
 
                 // Check if all targets have been found
                 // If so, stop the stopwatch and display a message
+                // Check if all targets have been found
+                // If so, stop the stopwatch and display a message
                 if (numTargets == task) {
                     document.getElementById("imageSearch").removeEventListener("click", onClick);
                     stopStopwatch();
+                    firebaseRef.child('globalState').child('buttonClicked').set(false);
 
                     document.getElementById("skipButton").innerHTML = "All Tasks Completed!";
                     document.getElementById("skipButton").style.left = '5%';
@@ -371,7 +374,7 @@ function firelist(snapshot) {
 }
 
 // Function to start the experiment
-function startExp(c) {
+function startExp() {
     // firebaseRef.child('users').child(userId).child('startClick').set(true);
     // firebaseRef.child('users').orderByChild('startClick').equalTo(true).on('value', function(snapshot) {
     // When a user clicks the button
@@ -389,8 +392,8 @@ function startExp(c) {
             document.getElementById("skipButton").disabled = false;
             document.getElementById("imageSearch").addEventListener("click", onClick);
             document.getElementById("skipButton").innerHTML = "No Target"; 
-            condition = c;
-            task = 0                                                                              
+            condition = document.getElementById("condition").value;
+            task = 0;                                                                          
             // Get the shuffled images from Firebase
             firebaseRef.child('shuffledImages').child(condition).once('value', function (snapshot) {
                 images = snapshot.val();
@@ -426,9 +429,9 @@ firebaseRef.child('users').on('value', function (snapshot) {
 
     // check if the number of participants have joined to start the experiment
     if (Object.keys(snapshot.val()).length >= numPpl) {
+        document.getElementById("startButton").disabled = false;
         shuffleImages();
-        startExp("SG")
-        // document.getElementById("startButton").disabled = false;
+        startExp();
         // add the users' dimensions into the firebase database
         firebaseRef.child("users").transaction(function (current) {
             for (const [key, value] of Object.entries(current)) {

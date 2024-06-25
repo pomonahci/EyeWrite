@@ -61,6 +61,5 @@ function shuffleImages() {
             });
     });
 
-    document.getElementById('shuffle').style.visibility = 'hidden';
 }
 
