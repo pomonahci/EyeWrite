@@ -220,7 +220,8 @@ function checkTaskComplete() {
         // Display a message on the screen with the user who completed the task
         .then(function(result) {
             if (result.userId) {
-                displayMessage(`Target was ${result.actionType} by: `, result.color);
+                displayMessage(`Target was ${result.actionType} by: `, result.color, result.actionType.slice(0, 9));
+
             } else {
                 displayMessage("Task Completed!");
                 console.log(result)
@@ -231,7 +232,7 @@ function checkTaskComplete() {
             displayMessage("Error!");
         });
 
-    function displayMessage(text, color) {
+    function displayMessage(text, color, actionType) {
         // Display a message on the screen for 2 seconds
         // with the text and color provided
         var message = document.createElement('div');
@@ -254,13 +255,21 @@ function checkTaskComplete() {
         colorBox.style.marginLeft = '10px';
         colorBox.style.display = 'inline-block';
         message.appendChild(colorBox);
+        document.getElementById("imageSearchUI").style.backgroundColor = actionType === 'Correctly' ? '#3cb371' : '#ff6347';
+        document.getElementById("userlist").style.backgroundColor = actionType === 'Correctly' ? '#3cb371' : '#ff6347';
 
         // Remove the message after 2 seconds and move to the next target
         setTimeout(function() {
+            
+
             document.body.removeChild(message);
             nextTarget();
             stopStopwatch();
             resetStopwatch();
+
+            // Reset the background color to grey after 2 seconds
+            document.getElementById("imageSearchUI").style.backgroundColor = '#dcdcdc';
+            document.getElementById("userlist").style.backgroundColor = '#dcdcdc';
         }, 2000);
     }
     }
