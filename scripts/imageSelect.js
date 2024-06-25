@@ -296,7 +296,9 @@ function nextTarget() {
                 if (numTargets == task) {
                     document.getElementById("imageSearch").removeEventListener("click", onClick);
                     stopStopwatch();
-                    firebaseRef.child('users').child(userId).child('startClick').set(false);
+                    firebaseRef.child('globalState').child('buttonClicked').set(false);
+                    shuffleImages();
+                    startExp("SV")
 
                     document.getElementById("skipButton").innerHTML = "All Tasks Completed!";
                     document.getElementById("skipButton").style.left = '5%';
@@ -374,8 +376,6 @@ function startExp(c) {
         document.getElementById('startButton').addEventListener('click', function() {
             firebaseRef.child('globalState').child('buttonClicked').set(true);
         });
-
-
         // var numParticipants = snapshot.numChildren();
         console.log("buttonClicked" + snapshot.val())
         if (snapshot.val()) {
