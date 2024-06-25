@@ -428,7 +428,7 @@ firebaseRef.child('users').on('value', function (snapshot) {
     }
 
     // check if the number of participants have joined to start the experiment
-    if (Object.keys(snapshot.val()).length == numPpl) {
+    if (Object.keys(snapshot.val()).length >= numPpl) {
         document.getElementById("startButton").disabled = false;
         shuffleImages();
         startExp();
