@@ -372,29 +372,38 @@ function firelist(snapshot) {
 
 // Function to start the experiment
 function startExp(c) {
-    firebaseRef.child('users').child(userId).child('startClick').set(true);
-    firebaseRef.child('users').orderByChild('startClick').equalTo(true).on('value', function(snapshot) {
-        if (snapshot.numChildren() == numPpl) {
+    // firebaseRef.child('users').child(userId).child('startClick').set(true);
+    // firebaseRef.child('users').orderByChild('startClick').equalTo(true).on('value', function(snapshot) {
+    // When a user clicks the button
+
+    firebaseRef.child('globalState').child('buttonClicked').set(false);
+    // Listening for changes in the global state
+    firebaseRef.child('globalState').child('buttonClicked').on('value', function(snapshot) {
+        document.getElementById('startButton').addEventListener('click', function() {
+            firebaseRef.child('globalState').child('buttonClicked').set(true);
+        });
+        // var numParticipants = snapshot.numChildren();
+        console.log("buttonClicked" + snapshot.val())
+        if (snapshot.val()) {
             document.getElementById("startButton").disabled = true;
             document.getElementById("skipButton").disabled = false;
             document.getElementById("imageSearch").addEventListener("click", onClick);
             document.getElementById("skipButton").innerHTML = "No Target"; 
-            task = 0 
             condition = c;
+            task = 0                                                                              
             // Get the shuffled images from Firebase
             firebaseRef.child('shuffledImages').child(condition).once('value', function (snapshot) {
                 images = snapshot.val();
-                console.log(images);
-                getTrial();
-
-                    });
-            
+                // Display the first image
+                let imageName = images[task];
+                console.log(images)
+                document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
+            });
             // Start the stopwatch and log the experiment start 
-            serverContent.push([`Condition ${condition} Start`, Date.now()]);
+            serverContent.push(["Experiment Start", Date.now()]);
             // Get the first trial
-            firebaseRef.child('users').child(userId).child('startClick').set(false);
-
-         }
+            getTrial();
+        }
     });
 }
 
@@ -417,7 +426,9 @@ firebaseRef.child('users').on('value', function (snapshot) {
 
     // check if the number of participants have joined to start the experiment
     if (Object.keys(snapshot.val()).length >= numPpl) {
-        document.getElementById("startButton").disabled = false;
+        shuffleImages();
+        startExp("SG")
+        // document.getElementById("startButton").disabled = false;
         // add the users' dimensions into the firebase database
         firebaseRef.child("users").transaction(function (current) {
             for (const [key, value] of Object.entries(current)) {
