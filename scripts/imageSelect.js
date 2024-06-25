@@ -391,6 +391,7 @@ function startExp(c) {
                 // Display the first image
                 let imageName = images[task];
                 console.log(images)
+                console.log(imageName)
                 document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
             });
             // Start the stopwatch and log the experiment start 
