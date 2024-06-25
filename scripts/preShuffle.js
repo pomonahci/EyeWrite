@@ -50,16 +50,27 @@ function shuffleImages() {
     console.log(shuffledImages.map(arr => arr.length));
     const map = {0: 'SG', 1: 'SV', 2: 'SG + SV'};
 
-    // Add the shuffled array to Firebase
-    shuffledImages.forEach((array, index) => {
-        firebaseRef.child('shuffledImages').child(map[index]).set(array)
-            .then(() => {
-                console.log(`Array ${index} added to Firebase successfully`);
-            })
-            .catch((error) => {
-                console.error(`Error adding array ${index} to Firebase:`, error);
-            });
-    });
+    // Check if the 'shuffledImages' child already exists in Firebase
+    firebaseRef.child('shuffledImages').once('value')
+        .then((snapshot) => {
+            if (!snapshot.exists()) {
+                // Add the shuffled array to Firebase
+                shuffledImages.forEach((array, index) => {
+                    firebaseRef.child('shuffledImages').child(map[index]).set(array)
+                        .then(() => {
+                            console.log(`Array ${index} added to Firebase successfully`);
+                        })
+                        .catch((error) => {
+                            console.error(`Error adding array ${index} to Firebase:`, error);
+                        });
+                });
+            } else {
+                console.log("'shuffledImages' child already exists in Firebase");
+            }
+        })
+        .catch((error) => {
+            console.error("Error checking if 'shuffledImages' child exists in Firebase:", error);
+        });
 
 }
 
