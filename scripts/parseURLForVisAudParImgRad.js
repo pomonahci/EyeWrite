@@ -50,9 +50,9 @@ function parseURLFor() {
     }
     
 
-    var radius = URL.search("rad");
-    radius = URL.substring(radius + 4, radius + 6);
-    document.getElementById("sentenceSlider").value = radius;
+    // var radius = URL.search("rad");
+    // radius = URL.substring(radius + 4, radius + 6);
+    document.getElementById("sentenceSlider").value = 10;
 }
 
 function triggerVis(vis) {

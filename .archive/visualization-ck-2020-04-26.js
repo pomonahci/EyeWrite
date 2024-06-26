@@ -385,7 +385,7 @@ var mouseVis = function () {
         }
 
         if (window.gazeSharing) {
-
+          console.log('gaze sharing');
           if (top <= scroll.getBoundingClientRect().top) {
             if (scroll.scrollY !== 0) {
               divc.style.borderTop = "2px solid " + hex2rgb(color, 0.0);

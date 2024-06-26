@@ -393,6 +393,14 @@ function startExp() {
             document.getElementById("imageSearch").addEventListener("click", onClick);
             document.getElementById("skipButton").innerHTML = "No Target"; 
             condition = document.getElementById("condition").value;
+            // Check if the condition is SG or not to set the gaze send and visualization switches
+                if (condition.startsWith("SG")) {
+                    document.getElementById("gazeSendSwitch").checked = true;
+                    document.getElementById("gazeVisSwitch").checked = true; 
+                } else {
+                    document.getElementById("gazeSendSwitch").checked = false;
+                    document.getElementById("gazeVisSwitch").checked = false; 
+                }
             task = 0;                                                                          
             // Get the shuffled images from Firebase
             firebaseRef.child('shuffledImages').child(condition).once('value', function (snapshot) {
