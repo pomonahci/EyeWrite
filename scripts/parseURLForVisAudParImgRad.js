@@ -6,8 +6,8 @@
  * Date: 07/01/2021
  */
 
-var unique = 0;
-var deterministic = 0;
+var unique = 1;
+var deterministic = 2;
 
 function parseURLFor() {
     var URL = window.location.href;
