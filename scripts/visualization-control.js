@@ -475,55 +475,50 @@ var visualizationControl = (function () {
       console.log(`send data state: ${getDataState(window.sendDataState)}`);
     });
 
-    // // Listener for mouse visualization switch.
-    // mouseVisSwitch.addEventListener("change", function () {
-    //   if (mouseVisSwitch.checked) {
-    //     if (gazeVisSwitch.checked) {
-    //       gazeVisSwitch.checked = false;
-    //       stopVisualization("gaze");
-    //       clearAllHighlights();
-    //     }
-    //     if (window.visualizationState != 1) window.visualizationState = 1;
-    //     startVisualization("mouse");
-    //   } else {
-    //     if (!gazeVisSwitch.checked) {
-    //       window.visualizationState = 0;
-    //       stopVisualization("mouse");
-    //       clearAllHighlights();
-    //     }
-    //   }
-    //   if (window.debug)
-    //     console.log(
-    //       `visualization state: ${getDataState(window.visualizationState)}`
-    //     );
-    // });
+    // Listener for mouse visualization switch.
+    mouseVisSwitch.addEventListener("change", function () {
+      if (mouseVisSwitch.checked) {
+        if (gazeVisSwitch.checked) {
+          gazeVisSwitch.checked = false;
+          stopVisualization("gaze");
+          clearAllHighlights();
+        }
+        if (window.visualizationState != 1) window.visualizationState = 1;
+        startVisualization("mouse");
+      } else {
+        if (!gazeVisSwitch.checked) {
+          window.visualizationState = 0;
+          stopVisualization("mouse");
+          clearAllHighlights();
+        }
+      }
+      if (window.debug)
+        console.log(
+          `visualization state: ${getDataState(window.visualizationState)}`
+        );
+    });
 
     // Listener for gaze visualization switch.
     gazeVisSwitch.addEventListener("change", function () {
       if (gazeVisSwitch.checked) {
-        stopVisualization("gaze");
-      } else {
+        if (mouseVisSwitch.checked) {
+          mouseVisSwitch.checked = false;
+          stopVisualization("mouse");
+          clearAllHighlights();
+        }
+        if (window.visualizationState != 2) window.visualizationState = 2;
         startVisualization("gaze");
+      } else {
+        if (!mouseVisSwitch.checked) {
+          window.visualizationState = 0;
+          stopVisualization("gaze");
+          clearAllHighlights();
+        }
       }
-      
-      //   if (mouseVisSwitch.checked) {
-      //     mouseVisSwitch.checked = false;
-      //     stopVisualization("mouse");
-      //     clearAllHighlights();
-      //   }
-      //   if (window.visualizationState != 2) window.visualizationState = 2;
-      //   startVisualization("gaze");
-      // } else {
-      //   if (!mouseVisSwitch.checked) {
-      //     window.visualizationState = 0;
-      //     stopVisualization("gaze");
-      //     clearAllHighlights();
-      //   }
-      // }
-      // if (window.debug)
-      //   console.log(
-      //     `visualization state: ${getDataState(window.visualizationState)}`
-      //   );
+      if (window.debug)
+        console.log(
+          `visualization state: ${getDataState(window.visualizationState)}`
+        );
     });
 
     // fill the document if empty
