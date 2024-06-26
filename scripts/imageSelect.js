@@ -433,16 +433,14 @@ firebaseRef.child('users').on('value', function (snapshot) {
         shuffleImages();
         startExp();
         // add the users' dimensions into the firebase database
-        firebaseRef.child("users").on("value", function(snapshot) {
-            snapshot.forEach(function(childSnapshot) {
-                var key = childSnapshot.key;
-                var value = childSnapshot.val();
-                var wh = "(" + value.dimensions.w + "," + value.dimensions.h + ")";
-                serverContent.push([`${key} dimension`, wh]);
+        firebaseRef.child("users").transaction(function (current) {
+            for (const [key, value] of Object.entries(current)) {
+                var wh = "("+value.dimensions.w+","+value.dimensions.h+")";
+                serverContent.push([`${key} dimension`,wh]);
                 serverContent.push([`${key} color`, value.color]);
                 serverContent.push([`${key} name`, value.name]);
-            });
-        });
+            }
+        })
         document.getElementById("imageSearch").style.pointerEvents = "auto";
         document.getElementById("skipButton").style.pointerEvents = "auto";
         firebaseRef.child('users').off('value');
