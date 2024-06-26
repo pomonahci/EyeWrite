@@ -81,6 +81,8 @@ function unloading() {
     download(fileName + '_' + userId + '_mouse', content1);
     download(fileName + '_' + userId + '_gaze', content2);
 }
+
+
 function unloadingCSV() {
     createCSV(fileName + "_" + userId + "_mouse", mouseContent);
     createCSV(fileName + "_" + userId + "_action", clickContent);
@@ -104,4 +106,4 @@ function unloadingCSV() {
 
 }
 // window.addEventListener('beforeunload', unloading);
-// window.addEventListener('beforeunload', unloadingCSV);
+//window.addEventListener('beforeunload', unloadingCSV);
