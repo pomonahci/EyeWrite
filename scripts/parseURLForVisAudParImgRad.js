@@ -6,7 +6,9 @@
  * Date: 07/01/2021
  */
 
+// whether the gaze should be transparen or hollow
 var unique = 1;
+// whether the overlap should be deterministic or not
 var deterministic = 2;
 
 function parseURLFor() {
@@ -16,7 +18,7 @@ function parseURLFor() {
     var p2 = URL.substring(html+14,URL.length);
     fileName = p1+p2;
 
-
+    // this is the experiment name
     if (URL.search("EyeDraw") != -1) experiment = "EyeDraw";
     else if (URL.search("ImageSearch") != -1) experiment = "ImageSearch";
     else if (URL.search("EyeWrite") != -1) experiment = "EyeWrite";
@@ -39,8 +41,10 @@ function parseURLFor() {
     // triggerAud(audio);
 
 
-    var imageLabel = URL.search("img");
-    imageLabel = URL.substring(imageLabel + 4, imageLabel + 5);
+    // var imageLabel = URL.search("img");
+    // imageLabel = URL.substring(imageLabel + 4, imageLabel + 5);
+
+    // this is the number of people in the experiment
     var numPpl = URL.search('par');
     if (numPpl == -1) {
         numPpl = 2;
@@ -52,6 +56,8 @@ function parseURLFor() {
 
     // var radius = URL.search("rad");
     // radius = URL.substring(radius + 4, radius + 6);
+
+    // set gze radius to 10 by default
     document.getElementById("sentenceSlider").value = 10;
 }
 

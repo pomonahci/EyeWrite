@@ -308,6 +308,11 @@ function nextTarget() {
                     document.getElementById("imageSearch").removeEventListener("click", onClick);
                     stopStopwatch();
                     firebaseRef.child('globalState').child('buttonClicked').set(false);
+                    firebaseRef.child('tasks').once('value', function(snapshot) {
+                        if(snapshot.numChildren() ==3){
+                            unloading();
+                        }
+                    });
 
                     document.getElementById("skipButton").innerHTML = "All Tasks Completed!";
                     alert("All tasks completed!");

@@ -41,6 +41,7 @@ function writeGazeLog(data) {
   data.user = window.userID;
   data.epoch = currentTime;
   socket.emit('gazeLog', data);
+  console.log(data);
 }
 
 window.sendGaze = function(circle) {
