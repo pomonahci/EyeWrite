@@ -310,6 +310,7 @@ function nextTarget() {
                     firebaseRef.child('globalState').child('buttonClicked').set(false);
 
                     document.getElementById("skipButton").innerHTML = "All Tasks Completed!";
+                    alert("All tasks completed!");
                     document.getElementById("skipButton").style.left = '5%';
                     document.getElementById("skipButton").disabled = true;
                     document.getElementById("startButton").disabled = false;
@@ -395,11 +396,9 @@ function startExp() {
             condition = document.getElementById("condition").value;
             // Check if the condition is SG or not to set the gaze send and visualization switches
                 if (condition.startsWith("SG")) {
-                    document.getElementById("gazeSendSwitch").checked = true;
-                    document.getElementById("gazeVisSwitch").checked = true; 
+                    unique = 1; 
                 } else {
-                    document.getElementById("gazeSendSwitch").checked = false;
-                    document.getElementById("gazeVisSwitch").checked = false; 
+                   unique = 2;
                 }
             task = 0;                                                                          
             // Get the shuffled images from Firebase
@@ -411,7 +410,7 @@ function startExp() {
                 document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
             });
             // Start the stopwatch and log the experiment start 
-            serverContent.push(["Experiment Start", Date.now()]);
+            serverContent.push([`Condition Start (${condition})`, Date.now()]);
             // Get the first trial
             getTrial();
         }
