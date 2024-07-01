@@ -43,8 +43,8 @@ let selectedData = []
                 size: values[sizeIndex],
                 absent: values[absentIndex],
                 letter_1: values[letter1Index],
-                x: values[x],
-                y: values[y],
+                x: values[x] + boundArray[0],
+                y: values[y] + boundArray[1],
                 rotation: values[rotation],
             };
         });
@@ -59,7 +59,7 @@ let selectedData = []
 var bounding; // list of targets for imageLabel taken from boundArray
 var misclicks = 0; // number of misclicks while searching for target (will be made global)
 var targetHit = false; // boolean value to determine if a bounding box should be drawn locally (only draw once)
-var numTargets = 48; // number of targets to find per image
+var numTargets = 4; // number of targets to find per image
 var task = 0; // index of target, will incremenent
 var numPpl; // number of participants in this experiement (gotten from URL)
 var url; //apache url
@@ -133,7 +133,7 @@ function onClick(event) {
 
         // Log the correct click to the server
         targetHit = true;
-        clickContent.push(["Correct Click", target.name, Date.now(), clickX/window.innerWidth, clickY/window.innerHeight]);
+        clickContent.push(["Correct Click", target.name, Date.now(), clickX, clickY]);
         
         // Update the user's correct clicks on the server
         firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('targetClicked').once('value', function(snapshot) {
@@ -147,7 +147,7 @@ function onClick(event) {
     }
     else {
         // Log the incorrect click to the server
-        clickContent.push(["Incorrect Click", target.name, Date.now(), clickX/window.innerWidth, clickY/window.innerHeight]);
+        clickContent.push(["Incorrect Click", target.name, Date.now(), clickX, clickY]);
         
        // Increment the user's misclicks
         misclicks++;
@@ -310,7 +310,7 @@ function nextTarget() {
                     firebaseRef.child('globalState').child('buttonClicked').set(false);
                     firebaseRef.child('tasks').once('value', function(snapshot) {
                         if(snapshot.numChildren() ==3){
-                            unloading();
+                            unloadingCSV();
                         }
                     });
 

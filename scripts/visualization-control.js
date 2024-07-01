@@ -790,7 +790,7 @@ var visualizationControl = (function () {
       mousePosRef.child(userId).update(encodedLoc);
     }
     // mouseContent.push('('+(event.clientX/window.innerWidth)+','+(event.clientY/window.innerHeight)+';'+Date.now()+'),\n');
-    mouseContent.push([event.clientX / window.innerWidth, event.clientY / window.innerHeight, Date.now()]);
+    mouseContent.push([event.clientX, event.clientY, Date.now()]);
   }
 
 
