@@ -85,6 +85,7 @@ function getTrial() {
     serverContent.push(["Image", imageName]);
     // resetStopwatch()
     startStopwatch();
+    document.getElementById('trialNumber').innerHTML = task + 1;
 }
 // Add an event listener for each click on the image
 document.getElementById("imageSearch").addEventListener("click", onClick);
