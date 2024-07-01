@@ -59,7 +59,7 @@ let selectedData = []
 var bounding; // list of targets for imageLabel taken from boundArray
 var misclicks = 0; // number of misclicks while searching for target (will be made global)
 var targetHit = false; // boolean value to determine if a bounding box should be drawn locally (only draw once)
-var numTargets = 4; // number of targets to find per image
+var numTargets = 48; // number of targets to find per image
 var task = 0; // index of target, will incremenent
 var numPpl; // number of participants in this experiement (gotten from URL)
 var url; //apache url
@@ -117,7 +117,7 @@ function onClick(event) {
         time: Date.now(),
         user: userId
     });
-
+``
     // Check if the click is within the bounding box of the target
     if (clickX >= topLeftX &&
         clickX <= bottomRightX &&
