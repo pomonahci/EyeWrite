@@ -29,4 +29,5 @@
 *.cpuprofile
 node_modules/
 misc/
+*.txt
 # WebGazer/
