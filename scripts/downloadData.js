@@ -89,31 +89,27 @@ function processOverlapData(data) {
     const headers = ['timestamp', 'user1', 'x1', 'y1', 'user2', 'x2', 'y2', 'user3', 'x3', 'y3', 'user4', 'x4', 'y4', 'user5', 'x5', 'y5', 'user6', 'x6', 'y6'];
     const content = [headers];
 
-    // Group data by timestamp
-    const groupedData = data.reduce((acc, item) => {
-        if (!acc[item.time]) {
-            acc[item.time] = [];
-        }
-        acc[item.time].push(item);
-        return acc;
-    }, {});
+    // Flatten and process the nested structure
+    data.forEach(outerArray => {
+        outerArray.forEach(innerArray => {
+            if (Array.isArray(innerArray) && innerArray.length > 0) {
+                const timestamp = innerArray[0].time;
+                const row = new Array(19).fill('');
+                row[0] = timestamp;
 
-    // Process each timestamp group
-    for (const [timestamp, group] of Object.entries(groupedData)) {
-        const row = new Array(19).fill(''); // Initialize with empty strings
-        row[0] = timestamp;
+                innerArray.forEach((item, index) => {
+                    if (index < 6) { // Limit to 6 users
+                        const baseIndex = 1 + index * 3;
+                        row[baseIndex] = item.user;
+                        row[baseIndex + 1] = item.x !== undefined ? item.x : '';
+                        row[baseIndex + 2] = item.y !== undefined ? item.y : '';
+                    }
+                });
 
-        group.forEach((item, index) => {
-            if (index < 6) { // Limit to 6 users
-                const baseIndex = 1 + index * 3;
-                row[baseIndex] = item.user;
-                row[baseIndex + 1] = item.x;
-                row[baseIndex + 2] = item.y;
+                content.push(row);
             }
         });
-
-        content.push(row);
-    }
+    });
 
     return content;
 }
@@ -123,7 +119,7 @@ function unloadingCSV() {
     // createCSV(fileName + "_" + userId + "_mouse", mouseContent);
     createCSV(fileName + "_" + userId + "_action", clickContent);
     const overlapData = processOverlapData(overlayContent);
-    createCSV(fileName = '_overlap_data', overlapData);
+    createCSV(fileName + '_overlap_data', overlapData);
     var chosen = false;
     firebaseRef.child('users').once('value', function (snap) {
         for (const user of Object.keys(snap.val())) {
