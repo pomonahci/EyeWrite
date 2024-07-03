@@ -84,9 +84,9 @@ function unloading() {
 }
 
 
-
+// Process the overlap data
 function processOverlapData(data) {
-    const headers = ['timestamp', 'user1', 'x1', 'y1', 'user2', 'x2', 'y2', 'user3', 'x3', 'y3', 'user4', 'x4', 'y4', 'user5', 'x5', 'y5', 'user6', 'x6', 'y6'];
+    const headers = ['timestamp', 'x', 'y', 'user1', 'user2', 'user3', 'user4', 'user5', 'user6'];
     const content = [headers];
 
     // Flatten and process the nested structure
@@ -94,18 +94,11 @@ function processOverlapData(data) {
         outerArray.forEach(innerArray => {
             if (Array.isArray(innerArray) && innerArray.length > 0) {
                 const timestamp = innerArray[0].time;
-                const row = new Array(19).fill('');
-                row[0] = timestamp;
+                const x = innerArray[0].x;
+                const y = innerArray[0].y;
+                const users = innerArray.map(item => item.user);
 
-                innerArray.forEach((item, index) => {
-                    if (index < 6) { // Limit to 6 users
-                        const baseIndex = 1 + index * 3;
-                        row[baseIndex] = item.user;
-                        row[baseIndex + 1] = item.x !== undefined ? item.x : '';
-                        row[baseIndex + 2] = item.y !== undefined ? item.y : '';
-                    }
-                });
-
+                const row = [timestamp, x, y, ...users, ...Array(6 - users.length).fill('')];
                 content.push(row);
             }
         });
