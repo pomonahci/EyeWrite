@@ -783,15 +783,15 @@ var visualizationControl = (function () {
    * It updates only when the local user has enabled sharing mouse location.
    * @param event
    */
-  // function mouseMove(event) {
-  //   // encodedLoc = encodeLocation(event.clientX, event.clientY);
-  //   encodedLoc = encodeLocation2(event.clientX, event.clientY);
-  //   if (window.sendDataState == 1 || window.sendDataState == 3) {
-  //     mousePosRef.child(userId).update(encodedLoc);
-  //   }
-  //   // mouseContent.push('('+(event.clientX/window.innerWidth)+','+(event.clientY/window.innerHeight)+';'+Date.now()+'),\n');
-  //   mouseContent.push([event.clientX, event.clientY, Date.now()]);
-  // }
+  function mouseMove(event) {
+    // encodedLoc = encodeLocation(event.clientX, event.clientY);
+    encodedLoc = encodeLocation2(event.clientX, event.clientY);
+    if (window.sendDataState == 1 || window.sendDataState == 3) {
+      mousePosRef.child(userId).update(encodedLoc);
+    }
+    // mouseContent.push('('+(event.clientX/window.innerWidth)+','+(event.clientY/window.innerHeight)+';'+Date.now()+'),\n');
+    // mouseContent.push([event.clientX, event.clientY, Date.now()]);
+  }
 
 
 
@@ -846,7 +846,7 @@ var visualizationControl = (function () {
    * @param {*} uID
    */
   function updateHighlight(uID) {
-    console.log("in updateHightlight with uID", uID);
+    // console.log("in updateHightlight with uID", uID);
     var circle;
     let transparency = (unique === 2) ? 0 : 0.9;  // we plug this value into hex2rgb
 
@@ -911,7 +911,7 @@ var visualizationControl = (function () {
     var hrate = { coeff: document.getElementById("sentenceSlider2").value };
 
     if (window.visShape == "solid") {
-      console.log("in solid");
+      // console.log("in solid");
       var overlapping = [];
 
       firepad.firebaseAdapter_.ref_.child('gaze').transaction(function(current) {
@@ -925,12 +925,13 @@ var visualizationControl = (function () {
             let radSumSq = (rad + rad) * (rad + rad);
 
             if (distSq < radSumSq) {
-              overlapping.push(userColors[key]);
+              overlapping.push(key);
             }
           }
         }
       })
       if (overlapping.length > 0) {//if overlap
+        overlapping.push([uID]);
         var laps = "";
         for (const item of overlapping) {
           laps = laps + ":" + item;
@@ -961,10 +962,10 @@ var visualizationControl = (function () {
       clearInterval(intervalID);
       intervalID = null;
       heatmapInstance.setData({ data: [] });
-      console.log("at end of solid, circle is", circle);
+      // console.log("at end of solid, circle is", circle);
     } else if (window.visShape == "hollow") {
       var overlapping = [];
-
+      var pos = {};
       firepad.firebaseAdapter_.ref_.child('gaze').transaction(function (current) {
         for (const [key, value] of Object.entries(current)) {
           if (key != uID) {//key is all users, uID is moving user
@@ -974,19 +975,21 @@ var visualizationControl = (function () {
             let distSq = (decodeLocation2(value).x - hPos.x) * (decodeLocation2(value).x - hPos.x) + (decodeLocation2(value).y - hPos.y) * (decodeLocation2(value).y - hPos.y);
             var rad = 8 * parseInt(hSize.coeff);
             let radSumSq = (rad + rad) * (rad + rad);
+            pos = value;
 
             if (distSq < radSumSq) {
-              overlapping.push(userColors[key]);
+              overlapping.push(key);
             }
           }
         }
       })
       if (overlapping.length > 0) {//if overlap
-        var laps = "";
-        for (const item of overlapping) {
-          laps = laps + ":" + item;
-        }
-        serverContent.push(["Overlapping", laps, Date.now()]);
+        overlapping.push(uID);
+        var overlapObj = overlapping.map(item => {
+            const coords = decodeLocation2(pos);
+            return { x: coords.x, y: coords.y, user: item, time: Date.now()};
+          });
+          overlayContent.push([overlapObj]);
 
         if (deterministic == 0 && unique === 1) {//color combinations for overlap
           rgbs = hColor.substring(5,hColor.length-1).split(',');

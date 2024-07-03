@@ -5,7 +5,6 @@
  * Name: nickmarsano, Haram Yoon
  * Date: 06/30/2021
  */
-
 var imageContainer = document.getElementById('imageContainer');
 var container = imageContainer.getBoundingClientRect();
 
@@ -81,7 +80,7 @@ function getTrial() {
     // Add an about section to the task in the Firebase database
     // Log task start details to the server
     if (imageName){
-        serverContent.push(["Trial", task, Date.now()]);
+        serverContent.push(["Trial Start", task, Date.now()]);
         serverContent.push(["Image", imageName]);
     }
     // resetStopwatch()
@@ -197,7 +196,7 @@ function checkTaskComplete() {
             // Get the user who completed the task and the action type
             if (taskData.targetClicked && taskData.targetClicked.user) {
                 userId = taskData.targetClicked.user;
-                actionType = 'Correctly Found';
+                actionType = 'Right';
             } else if (taskData.noTarget && taskData.noTarget.user) {
                 userId = taskData.noTarget.user;
                 if (imageName.includes('absent')) {
@@ -335,6 +334,7 @@ function nextTarget(actionType) {
                 skipped = 0;
                 // Get the next trial
                 getTrial();
+                console.log(overlayContent)
 
             }
         );

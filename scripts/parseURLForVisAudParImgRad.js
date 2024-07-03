@@ -6,10 +6,10 @@
  * Date: 07/01/2021
  */
 
-// whether the gaze should be transparen or hollow
+// whether the gaze colors should be unique
 var unique = 1;
 // whether the overlap should be deterministic or not
-var deterministic = 2;
+var deterministic = 0;
 
 function parseURLFor() {
     var URL = window.location.href;
