@@ -117,7 +117,7 @@ function triggerVis(vis) {
 
 function triggerAud(aud) {
     if (aud == 1) {
-        serverContent.splice(4,0,["Audio","On"]);
+        // serverContent.splice(4,0,["Audio","On"]);
         var mediaRef = firebaseRef.child("media");
         joinButStat = true;
         mediaRef.child(userId).update({ audio: false, camera: false, is_ready: true, peer_id: "-1", stream_id: "-1" })
@@ -127,7 +127,7 @@ function triggerAud(aud) {
         voiceAudButton.innerText = "Unmuted";
     }
     else {
-        serverContent.splice(4,0,["Audio","Off"]);
+        // serverContent.splice(4,0,["Audio","Off"]);
         console.log("No Audio Call.");
     }
 }

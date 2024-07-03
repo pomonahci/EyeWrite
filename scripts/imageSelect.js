@@ -80,9 +80,10 @@ function getTrial() {
     console.log('image: ', imageName)
     // Add an about section to the task in the Firebase database
     // Log task start details to the server
-    serverContent.push(["Target", task, Date.now()]);
-    serverContent.push(["Participants", numPpl]);
-    serverContent.push(["Image", imageName]);
+    if (imageName){
+        serverContent.push(["Trial", task, Date.now()]);
+        serverContent.push(["Image", imageName]);
+    }
     // resetStopwatch()
     startStopwatch();
     document.getElementById('trialNumber').innerHTML = task + 1;
@@ -200,10 +201,10 @@ function checkTaskComplete() {
             } else if (taskData.noTarget && taskData.noTarget.user) {
                 userId = taskData.noTarget.user;
                 if (imageName.includes('absent')) {
-                    actionType = 'Correctly Skipped';
+                    actionType = 'Right';
                 }
                 else {
-                    actionType = 'Incorrectly Skipped';
+                    actionType = 'Wrong';
                 }
             }
             
@@ -221,7 +222,7 @@ function checkTaskComplete() {
         // Display a message on the screen with the user who completed the task
         .then(function(result) {
             if (result.userId) {
-                displayMessage(`Target was ${result.actionType} by: `, result.color, result.actionType.slice(0, 9));
+                displayMessage(`${result.actionType} `, result.color, result.actionType);
 
             } else {
                 displayMessage("Task Completed!");
@@ -256,32 +257,38 @@ function checkTaskComplete() {
         colorBox.style.marginLeft = '10px';
         colorBox.style.display = 'inline-block';
         message.appendChild(colorBox);
-        document.getElementById("imageSearchUI").style.backgroundColor = actionType === 'Correctly' ? '#3cb371' : '#ff6347';
-        document.getElementById("userlist").style.backgroundColor = actionType === 'Correctly' ? '#3cb371' : '#ff6347';
+        document.getElementById("imageSearchUI").style.backgroundColor = actionType === 'Right' ? '#3cb371' : '#ff6347';
+        document.getElementById("userlist").style.backgroundColor = actionType === 'Right' ? '#3cb371' : '#ff6347';
 
         // Remove the message after 2 seconds and move to the next target
         setTimeout(function() {
             
 
             document.body.removeChild(message);
-            nextTarget();
+            nextTarget(actionType);
             stopStopwatch();
             resetStopwatch();
 
             // Reset the background color to grey after 2 seconds
-            document.getElementById("imageSearchUI").style.backgroundColor = '#dcdcdc';
-            document.getElementById("userlist").style.backgroundColor = '#dcdcdc';
+            document.getElementById("imageSearchUI").style.backgroundColor = 'white';
+            document.getElementById("userlist").style.backgroundColor = 'white';
         }, 2000);
     }
     }
 
 
 // Function to move to the next target
-function nextTarget() {
+function nextTarget(actionType) {
     // Log the target completion to the server
     console.log("nextTarget")
-    serverContent.push(["Target Completed", "", Date.now()]);
-    serverContent.push(["Clock", document.getElementById('stopwatch').innerHTML]);
+    serverContent.push(["Trail Completed", actionType, Date.now()]);
+    const stopwatchTime = document.getElementById('stopwatch').innerHTML;
+    const timeArray = stopwatchTime.split(':');
+    const hours = parseInt(timeArray[0]);
+    const minutes = parseInt(timeArray[1]);
+    const seconds = parseInt(timeArray[2]);
+    const totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
+    serverContent.push(["Clock", totalSeconds]);
     console.log(serverContent, task)
 
     clearBoxes();
@@ -414,9 +421,11 @@ function startExp() {
                 let imageName = images[task];
                 console.log(images)
                 document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
+                serverContent.push(["Trial", task, Date.now()]);
+                serverContent.push(["Image", imageName]);
             });
             // Start the stopwatch and log the experiment start 
-            serverContent.push([`Condition Start (${condition})`, Date.now()]);
+            serverContent.push([`Condition Start (${condition})`,, Date.now()]);
             // Get the first trial
             getTrial();
         }
@@ -453,6 +462,7 @@ firebaseRef.child('users').on('value', function (snapshot) {
                 serverContent.push([`${key} color`, value.color]);
                 serverContent.push([`${key} name`, value.name]);
             }
+            serverContent.push(["Participants", numPpl]);
         })
         document.getElementById("imageSearch").style.pointerEvents = "auto";
         document.getElementById("skipButton").style.pointerEvents = "auto";
