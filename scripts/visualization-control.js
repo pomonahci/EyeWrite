@@ -783,15 +783,15 @@ var visualizationControl = (function () {
    * It updates only when the local user has enabled sharing mouse location.
    * @param event
    */
-  function mouseMove(event) {
-    // encodedLoc = encodeLocation(event.clientX, event.clientY);
-    encodedLoc = encodeLocation2(event.clientX, event.clientY);
-    if (window.sendDataState == 1 || window.sendDataState == 3) {
-      mousePosRef.child(userId).update(encodedLoc);
-    }
-    // mouseContent.push('('+(event.clientX/window.innerWidth)+','+(event.clientY/window.innerHeight)+';'+Date.now()+'),\n');
-    mouseContent.push([event.clientX, event.clientY, Date.now()]);
-  }
+  // function mouseMove(event) {
+  //   // encodedLoc = encodeLocation(event.clientX, event.clientY);
+  //   encodedLoc = encodeLocation2(event.clientX, event.clientY);
+  //   if (window.sendDataState == 1 || window.sendDataState == 3) {
+  //     mousePosRef.child(userId).update(encodedLoc);
+  //   }
+  //   // mouseContent.push('('+(event.clientX/window.innerWidth)+','+(event.clientY/window.innerHeight)+';'+Date.now()+'),\n');
+  //   mouseContent.push([event.clientX, event.clientY, Date.now()]);
+  // }
 
 
 

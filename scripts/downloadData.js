@@ -36,7 +36,7 @@ function createCSV(filename, content) {
 
 var fileName = '';//file name as a string
 var clickContent = [['action', 'target', 'timestamp', 'x', 'y']];
-var mouseContent = [['x', 'y', 'timestamp']];
+// var mouseContent = [['x', 'y', 'timestamp']];
 var gazeContent = [['x/window.innerWidth', 'y/window.innerhHeight', 'timestamp']];
 var serverContent = [['Parameter', 'Value', 'Timestamp']];
 function unloading() {
@@ -84,7 +84,7 @@ function unloading() {
 
 
 function unloadingCSV() {
-    createCSV(fileName + "_" + userId + "_mouse", mouseContent);
+    // createCSV(fileName + "_" + userId + "_mouse", mouseContent);
     createCSV(fileName + "_" + userId + "_action", clickContent);
     var chosen = false;
     firebaseRef.child('users').once('value', function (snap) {

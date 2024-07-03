@@ -324,12 +324,12 @@ function nextTarget(actionType) {
 
                     document.getElementById("skipButton").innerHTML = "All Tasks Completed!";
                     alert("All tasks completed!");
+                    document.getElementById("imageSearch").src = "";
                     document.getElementById("skipButton").style.left = '5%';
                     document.getElementById("skipButton").disabled = true;
                     document.getElementById("startButton").disabled = false;
                     return;
                 }
-
                 document.getElementById("skipButton").disabled = false;
                 action = '';
                 skipped = 0;
