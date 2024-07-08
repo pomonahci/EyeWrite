@@ -987,7 +987,7 @@ var visualizationControl = (function () {
         overlapping.push(uID);
         var overlapObj = overlapping.map(item => {
             const coords = decodeLocation2(pos);
-            return { x: coords.x, y: coords.y, user: item, time: Date.now()};
+            return { x: coords.x, y: coords.y, user: item, image: window.imageSelectData.imageName, condition: condition, time: Date.now()};
           });
           overlayContent.push([overlapObj]);
 

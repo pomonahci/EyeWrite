@@ -86,7 +86,7 @@ function unloading() {
 
 // Process the overlap data
 function processOverlapData(data) {
-    const headers = ['timestamp', 'x', 'y', 'user1', 'user2', 'user3', 'user4', 'user5', 'user6'];
+    const headers = ['timestamp', 'x', 'y','condition', 'image', 'user1', 'user2', 'user3', 'user4', 'user5', 'user6'];
     const content = [headers];
 
     // Flatten and process the nested structure
@@ -96,9 +96,11 @@ function processOverlapData(data) {
                 const timestamp = innerArray[0].time;
                 const x = innerArray[0].x;
                 const y = innerArray[0].y;
+                const condition = innerArray[0].condition;
+                const image = innerArray[0].image;
                 const users = innerArray.map(item => item.user);
 
-                const row = [timestamp, x, y, ...users, ...Array(6 - users.length).fill('')];
+                const row = [timestamp, x, y, condition, image, ...users, ...Array(6 - users.length).fill('')];
                 content.push(row);
             }
         });

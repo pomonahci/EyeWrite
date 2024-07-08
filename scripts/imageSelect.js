@@ -58,7 +58,7 @@ let selectedData = []
 var bounding; // list of targets for imageLabel taken from boundArray
 var misclicks = 0; // number of misclicks while searching for target (will be made global)
 var targetHit = false; // boolean value to determine if a bounding box should be drawn locally (only draw once)
-var numTargets = 2; // number of targets to find per image
+var numTargets = 4; // number of targets to find per image
 var task = 0; // index of target, will incremenent
 var numPpl; // number of participants in this experiement (gotten from URL)
 var url; //apache url
@@ -75,13 +75,13 @@ function getTrial() {
     // Get the image name from the images array
     let imageName = images[task];
     // Display the image on the page
-    document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
-    console.log('image: ', imageName)
-    // Add an about section to the task in the Firebase database
     // Log task start details to the server
     if (imageName){
+        document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
+        console.log('image: ', imageName)
         serverContent.push(["Trial Start", task, Date.now()]);
         serverContent.push(["Image", imageName]);
+        window.imageSelectData.imageName = imageName;
     }
     // resetStopwatch()
     startStopwatch();
@@ -407,6 +407,7 @@ function startExp() {
             document.getElementById("imageSearch").addEventListener("click", onClick);
             document.getElementById("skipButton").innerHTML = "No Target"; 
             condition = document.getElementById("condition").value;
+            window.imageSelectData.condition = condition;
             // Check if the condition is SG or not to set the gaze send and visualization switches
                 if (condition.startsWith("SG")) {
                     unique = 1; 
@@ -423,6 +424,7 @@ function startExp() {
                 document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
                 serverContent.push(["Trial", task, Date.now()]);
                 serverContent.push(["Image", imageName]);
+                window.imageSelectData.imageName = imageName;
             });
             // Start the stopwatch and log the experiment start 
             serverContent.push([`Condition Start (${condition})`,, Date.now()]);
@@ -469,3 +471,9 @@ firebaseRef.child('users').on('value', function (snapshot) {
         firebaseRef.child('users').off('value');
     }
 })
+
+
+window.imageSelectData = {
+    imageName: "",
+    condition: ""
+};
