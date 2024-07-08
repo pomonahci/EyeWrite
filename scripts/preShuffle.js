@@ -46,7 +46,6 @@ function distributeImages(pics) {
 function shuffleImages() {
     // Shuffle the images array
     let shuffledImages = distributeImages(pics);
-    console.log('Shuffled images:', shuffledImages);
     console.log(shuffledImages.map(arr => arr.length));
     const map = {0: 'SG', 1: 'SV', 2: 'SG + SV'};
 
@@ -62,7 +61,7 @@ function shuffleImages() {
                         })
                         .catch((error) => {
                             console.error(`Error adding array ${index} to Firebase:`, error);
-                        });
+                        });      
                 });
             } else {
                 console.log("'shuffledImages' child already exists in Firebase");

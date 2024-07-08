@@ -47,8 +47,6 @@ let selectedData = []
                 rotation: values[rotation],
             };
         });
-        console.log(selectedData);
-        
     })
     .catch(error => {
         console.error('Error fetching CSV file:', error);
@@ -225,7 +223,6 @@ function checkTaskComplete() {
 
             } else {
                 displayMessage("Task Completed!");
-                console.log(result)
             }
         })
         .catch(function(error) {
@@ -280,14 +277,14 @@ function checkTaskComplete() {
 function nextTarget(actionType) {
     // Log the target completion to the server
     console.log("nextTarget")
-    serverContent.push(["Trail Completed", actionType, Date.now()]);
+    serverContent.push(["Trial Completed", actionType, Date.now()]);
     const stopwatchTime = document.getElementById('stopwatch').innerHTML;
     const timeArray = stopwatchTime.split(':');
     const hours = parseInt(timeArray[0]);
     const minutes = parseInt(timeArray[1]);
     const seconds = parseInt(timeArray[2]);
     const totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
-    serverContent.push(["Clock", totalSeconds]);
+    serverContent.push(["Total Seconds", totalSeconds]);
     console.log(serverContent, task)
 
     clearBoxes();
@@ -298,7 +295,6 @@ function nextTarget(actionType) {
     firebaseRef.child('tasks').child(condition).once('value', function (snapshot) {
         // Use a transaction to increment the task variable atomically
                 // Task incremented successfully, continue with the rest of the logic
-                console.log("HERERHEHR",snapshot.val(), snapshot.val().length)
                 task = snapshot.val().length 
                 misclicks = 0;
                 document.getElementById('badclicks').innerHTML = 0;
@@ -312,6 +308,7 @@ function nextTarget(actionType) {
                 // Check if all targets have been found
                 // If so, stop the stopwatch and display a message
                 if (numTargets == task) {
+                    console.log("All tasks completed!");
                     document.getElementById("imageSearch").removeEventListener("click", onClick);
                     stopStopwatch();
                     firebaseRef.child('globalState').child('buttonClicked').set(false);
@@ -334,7 +331,6 @@ function nextTarget(actionType) {
                 skipped = 0;
                 // Get the next trial
                 getTrial();
-                console.log(overlayContent)
 
             }
         );
@@ -373,7 +369,6 @@ function voteSkipTarget() {
 
 // Function to handle snapshot changes in the Firebase database according to the key
 function firelist(snapshot) {
-    console.log("snapshot.key", snapshot.key);
     if (snapshot.key == 'incorrectClicks') {
         console.log("snapshot.key is incorrectClicks");
         updateIncorrectClicks();
@@ -422,12 +417,14 @@ function startExp() {
                 let imageName = images[task];
                 console.log(images)
                 document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
-                serverContent.push(["Trial", task, Date.now()]);
+                serverContent.push(["Trial Start", task, Date.now()]);
                 serverContent.push(["Image", imageName]);
+                console.log('image: ', imageName)   
                 window.imageSelectData.imageName = imageName;
             });
             // Start the stopwatch and log the experiment start 
             serverContent.push([`Condition Start (${condition})`,, Date.now()]);
+            console.log('starting')
             // Get the first trial
             getTrial();
         }
