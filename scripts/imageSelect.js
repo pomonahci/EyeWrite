@@ -134,12 +134,16 @@ function onClick(event) {
         targetHit = true;
         
         // Update the user's correct clicks on the server
-        firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('targetClicked').once('value', function(snapshot) {
+        firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('noTarget').once('value', function(snapshot) {
             if (!snapshot.exists()) {
-                clickContent.push(["Correct Click", target.name, Date.now(), clickX, clickY, condition]);
-                firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('targetClicked').set({
-                    user: userId,
-                    time: Date.now()
+                firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('targetClicked').once('value', function(snapshotClicked) {
+                    if (!snapshotClicked.exists()) {
+                        clickContent.push(["Correctly Clicked", target.name, Date.now(), '', '', condition]);
+                        firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('targetClicked').set({
+                            user: userId,
+                            time: Date.now()
+                        });
+                    }
                 });
             }
         });
@@ -353,15 +357,19 @@ function voteSkipTarget() {
     mySkipVote = true;
 
     // Add who voted for no Target to the Firebase database
-    firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('noTarget').once('value', function(snapshot) {
-        if (!snapshot.exists()) {
-            clickContent.push(["Skip Vote", target.name, Date.now(), '', '', condition]);
-            firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('noTarget').set({
-                user: userId,
-                time: Date.now()
-            });
-        }
-    });
+  firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('noTarget').once('value', function(snapshot) {
+    if (!snapshot.exists()) {
+        firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('targetClicked').once('value', function(snapshotClicked) {
+            if (!snapshotClicked.exists()) {
+                clickContent.push(["Skip Vote", target.name, Date.now(), '', '', condition]);
+                firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('noTarget').set({
+                    user: userId,
+                    time: Date.now()
+                });
+            }
+        });
+    }
+});
 }
 
 
