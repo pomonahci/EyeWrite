@@ -35,7 +35,7 @@ function createCSV(filename, content) {
 }
 
 var fileName = '';//file name as a string
-var clickContent = [['action', 'target', 'timestamp', 'x', 'y']];
+var clickContent = [['action', 'target', 'timestamp', 'x', 'y', 'condition']];
 // var mouseContent = [['x', 'y', 'timestamp']];
 var overlayContent = [];
 var gazeContent = [['x/window.innerWidth', 'y/window.innerhHeight', 'timestamp']];

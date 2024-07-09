@@ -132,7 +132,7 @@ function onClick(event) {
 
         // Log the correct click to the server
         targetHit = true;
-        clickContent.push(["Correct Click", target.name, Date.now(), clickX, clickY]);
+        clickContent.push(["Correct Click", target.name, Date.now(), clickX, clickY, condition]);
         
         // Update the user's correct clicks on the server
         firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('targetClicked').once('value', function(snapshot) {
@@ -146,7 +146,7 @@ function onClick(event) {
     }
     else {
         // Log the incorrect click to the server
-        clickContent.push(["Incorrect Click", target.name, Date.now(), clickX, clickY]);
+        clickContent.push(["Incorrect Click", target.name, Date.now(), clickX, clickY, condition]);
         
        // Increment the user's misclicks
         misclicks++;
@@ -349,7 +349,7 @@ function voteSkipTarget() {
     let target = selectedData.find(data => data.name === imageName);
 
     // Log the skip vote to the server
-    clickContent.push(["Skip Vote", target.name, Date.now(), '', '']);
+    clickContent.push(["Skip Vote", target.name, Date.now(), '', '', condition]);
 
     // disable the skip button(do for all later)
     document.getElementById("skipButton").disabled = true;
