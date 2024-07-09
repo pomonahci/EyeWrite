@@ -132,11 +132,11 @@ function onClick(event) {
 
         // Log the correct click to the server
         targetHit = true;
-        clickContent.push(["Correct Click", target.name, Date.now(), clickX, clickY, condition]);
         
         // Update the user's correct clicks on the server
         firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('targetClicked').once('value', function(snapshot) {
             if (!snapshot.exists()) {
+                clickContent.push(["Correct Click", target.name, Date.now(), clickX, clickY, condition]);
                 firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('targetClicked').set({
                     user: userId,
                     time: Date.now()
@@ -348,9 +348,6 @@ function voteSkipTarget() {
     const imageName = images[task];
     let target = selectedData.find(data => data.name === imageName);
 
-    // Log the skip vote to the server
-    clickContent.push(["Skip Vote", target.name, Date.now(), '', '', condition]);
-
     // disable the skip button(do for all later)
     document.getElementById("skipButton").disabled = true;
     mySkipVote = true;
@@ -358,6 +355,7 @@ function voteSkipTarget() {
     // Add who voted for no Target to the Firebase database
     firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('noTarget').once('value', function(snapshot) {
         if (!snapshot.exists()) {
+            clickContent.push(["Skip Vote", target.name, Date.now(), '', '', condition]);
             firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('noTarget').set({
                 user: userId,
                 time: Date.now()
