@@ -110,38 +110,11 @@ function processOverlapData(data) {
 }
 
 
-// Updated function to remove duplicates from serverContent using floor for timestamps
-function removeDuplicatesFromServerContent(content) {
-    const seen = new Set();
-    return content.filter((row, index) => {
-        // Skip the header row
-        if (index === 0) return true;
-        
-        // Assuming Parameter is in the first column (index 0) and timestamp is in the third column (index 2)
-        const parameter = row[0];
-        const timestamp = row[2];
-        console.log(row);
-        
-        // If parameter or timestamp is undefined or empty string, keep the row
-        if (parameter === undefined || parameter === '' || timestamp === undefined || timestamp === '') return true;
-        
-        // Floor the timestamp to the nearest 10 (remove last digit)
-        const flooredTimestamp = Math.floor(parseFloat(timestamp) / 10) * 10;
-        
-        const key = `${parameter}_${flooredTimestamp}`;
-        if (seen.has(key)) {
-            return false; // This is a duplicate, don't keep it
-        }
-        seen.add(key);
-        return true; // This is not a duplicate, keep it
-    });
-}
-
 function unloadingCSV() {
     // createCSV(fileName + "_" + userId + "_mouse", mouseContent);
-    // createCSV(fileName + "_" + userId + "_action", clickContent);
+    createCSV(fileName + "_" + userId + "_action", clickContent);
     const overlapData = processOverlapData(overlayContent);
-    // createCSV(fileName + '_overlap_data', overlapData);
+    createCSV(fileName + '_overlap_data', overlapData);
     var chosen = false;
     firebaseRef.child('users').once('value', function (snap) {
         for (const user of Object.keys(snap.val())) {
@@ -157,9 +130,7 @@ function unloadingCSV() {
         }
     });
     if (chosen) {
-        // Remove duplicates from serverContent before creating CSV
-        const uniqueServerContent = removeDuplicatesFromServerContent(serverContent);
-        createCSV(fileName + "_server", uniqueServerContent);
+        createCSV(fileName + "_server", serverContent);
     }
 }
 // window.addEventListener('beforeunload', unloading);
