@@ -240,22 +240,13 @@ function updateGlobalState(actionType) {
     
     // Update the count for the specific action type
     globalStateRef.child(actionType).transaction(currentValue => {
-        if (currentValue == null) {
-            return 1;
-        } else {
-            return currentValue + 1/numPpl;
-        }
+        return (currentValue || 0) + 1/numPpl;
     });
     
     // Update the money
     globalStateRef.child('money').transaction(currentValue => {
-        const change = actionType === 'Right' ? 3.5 : -7.5;
-       if (currentValue == null) {
-            return change;
-        }
-        else{
-            return currentValue + change/numPpl;
-        }
+        const change = actionType === 'Right' ? 3.5 : -7;
+        return (currentValue || 0) + change/numPpl;
     });
     }
     
