@@ -56,7 +56,7 @@ let selectedData = []
 var bounding; // list of targets for imageLabel taken from boundArray
 var misclicks = 0; // number of misclicks while searching for target (will be made global)
 var targetHit = false; // boolean value to determine if a bounding box should be drawn locally (only draw once)
-var numTargets = 4; // number of targets to find per image
+var numTargets = 2; // number of targets to find per image
 var task = 0; // index of target, will incremenent
 var numPpl; // number of participants in this experiement (gotten from URL)
 var url; //apache url
@@ -78,7 +78,7 @@ function getTrial() {
         document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
         console.log('image: ', imageName)
         serverContent.push(["Trial Start", task, Date.now()]);
-        serverContent.push(["Image", imageName]);
+        serverContent.push(["Image", imageName, Date.now() + 10]);
         window.imageSelectData.imageName = imageName;
     }
     // resetStopwatch()
@@ -305,7 +305,7 @@ function nextTarget(actionType) {
     const minutes = parseInt(timeArray[1]);
     const seconds = parseInt(timeArray[2]);
     const totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
-    serverContent.push(["Total Seconds", totalSeconds]);
+    serverContent.push(["Total Seconds", totalSeconds, Date.now()]);
     console.log(serverContent, task)
 
     clearBoxes();
@@ -334,7 +334,7 @@ function nextTarget(actionType) {
                     stopStopwatch();
                     firebaseRef.child('globalState').child('buttonClicked').set(false);
                     firebaseRef.child('tasks').once('value', function(snapshot) {
-                        if(snapshot.numChildren() ==3){
+                        if(snapshot.numChildren() ==1){
                             unloadingCSV();
                         }
                     });
@@ -441,7 +441,7 @@ function startExp() {
                 console.log(images)
                 document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
                 serverContent.push(["Trial Start", task, Date.now()]);
-                serverContent.push(["Image", imageName]);
+                serverContent.push(["Image", imageName, Date.now() + 10]);
                 console.log('image: ', imageName)   
                 window.imageSelectData.imageName = imageName;
             });
@@ -477,15 +477,17 @@ firebaseRef.child('users').on('value', function (snapshot) {
         shuffleImages();
         startExp();
         // add the users' dimensions into the firebase database
-        firebaseRef.child("users").transaction(function (current) {
-            for (const [key, value] of Object.entries(current)) {
-                var wh = "("+value.dimensions.w+","+value.dimensions.h+")";
-                serverContent.push([`${key} dimension`,wh]);
-                serverContent.push([`${key} color`, value.color]);
-                serverContent.push([`${key} name`, value.name]);
-            }
-            serverContent.push(["Participants", numPpl]);
-        })
+        setTimeout(function() {
+            firebaseRef.child("users").transaction(function (current) {
+                for (const [key, value] of Object.entries(current)) {
+                    var wh = "("+value.dimensions.w+","+value.dimensions.h+")";
+                    serverContent.push([`${key} dimension`,wh]);
+                    serverContent.push([`${key} color`, value.color]);
+                    serverContent.push([`${key} name`, value.name]);
+                }
+                serverContent.push(["Participants", numPpl]);
+            });
+        }, 1000);
         document.getElementById("imageSearch").style.pointerEvents = "auto";
         document.getElementById("skipButton").style.pointerEvents = "auto";
         firebaseRef.child('users').off('value');
