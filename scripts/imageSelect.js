@@ -208,7 +208,7 @@ function checkTaskComplete() {
                     actionType = 'Wrong';
                 }
             }
-            
+            updateGlobalState(actionType);      
             // Get the color of the user who completed the task
             if (userId) {
                 return firepad.firebaseAdapter_.ref_.child('users').child(userId).child('color').once('value')
@@ -234,6 +234,23 @@ function checkTaskComplete() {
             displayMessage("Error!");
         });
 
+        // Update the global state with the task completion 
+        function updateGlobalState(actionType) {
+            const globalStateRef = firepad.firebaseAdapter_.ref_.child('globalState');
+            
+            // Update the count for the specific action type
+            globalStateRef.child(actionType).transaction(currentValue => {
+              return (currentValue || 0) + 1;
+            });
+            
+            // Update the money
+            globalStateRef.child('money').transaction(currentValue => {
+              const change = actionType === 'Right' ? 3.5 : -7.5;
+              return (currentValue || 0) + change;
+            });
+          }
+       
+    
     function displayMessage(text, color, actionType) {
         // Display a message on the screen for 2 seconds
         // with the text and color provided
