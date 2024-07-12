@@ -56,7 +56,7 @@ let selectedData = []
 var bounding; // list of targets for imageLabel taken from boundArray
 var misclicks = 0; // number of misclicks while searching for target (will be made global)
 var targetHit = false; // boolean value to determine if a bounding box should be drawn locally (only draw once)
-var numTargets = len(selectedData)/3; // number of targets to find per image
+var numTargets = 4; // number of targets to find per image
 var task = 0; // index of target, will incremenent
 var numPpl; // number of participants in this experiement (gotten from URL)
 var url; //apache url
@@ -234,64 +234,73 @@ function checkTaskComplete() {
             displayMessage("Error!");
         });
 
-        // Update the global state with the task completion 
-        function updateGlobalState(actionType) {
-            const globalStateRef = firepad.firebaseAdapter_.ref_.child('globalState');
-            
-            // Update the count for the specific action type
-            globalStateRef.child(actionType).transaction(currentValue => {
-              return (currentValue || 0) + 1;
-            });
-            
-            // Update the money
-            globalStateRef.child('money').transaction(currentValue => {
-              const change = actionType === 'Right' ? 3.5 : -7.5;
-              return (currentValue || 0) + change;
-            });
-          }
-       
+// Update the global state with the task completion 
+function updateGlobalState(actionType) {
+    const globalStateRef = firepad.firebaseAdapter_.ref_.child('globalState');
     
-    function displayMessage(text, color, actionType) {
-        // Display a message on the screen for 2 seconds
-        // with the text and color provided
-        var message = document.createElement('div');
-        message.textContent = text;
-        message.style.position = 'fixed';
-        message.style.top = '50%';
-        message.style.left = '50%';
-        message.style.transform = 'translate(-50%, -50%)';
-        message.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-        message.style.color = 'white';
-        message.style.padding = '10px';
-        message.style.borderRadius = '5px';
-        message.style.zIndex = '9999';
-        document.body.appendChild(message);
-
-        var colorBox = document.createElement('div');
-        colorBox.style.backgroundColor = color;
-        colorBox.style.width = '20px';
-        colorBox.style.height = '20px';
-        colorBox.style.marginLeft = '10px';
-        colorBox.style.display = 'inline-block';
-        message.appendChild(colorBox);
-        document.getElementById("imageSearchUI").style.backgroundColor = actionType === 'Right' ? '#3cb371' : '#ff6347';
-        document.getElementById("userlist").style.backgroundColor = actionType === 'Right' ? '#3cb371' : '#ff6347';
-
-        // Remove the message after 2 seconds and move to the next target
-        setTimeout(function() {
-            
-
-            document.body.removeChild(message);
-            nextTarget(actionType);
-            stopStopwatch();
-            resetStopwatch();
-
-            // Reset the background color to grey after 2 seconds
-            document.getElementById("imageSearchUI").style.backgroundColor = 'white';
-            document.getElementById("userlist").style.backgroundColor = 'white';
-        }, 2000);
+    // Update the count for the specific action type
+    globalStateRef.child(actionType).transaction(currentValue => {
+        if (currentValue == null) {
+            return 1;
+        } else {
+            return currentValue + 1/numPpl;
+        }
+    });
+    
+    // Update the money
+    globalStateRef.child('money').transaction(currentValue => {
+        const change = actionType === 'Right' ? 3.5 : -7.5;
+       if (currentValue == null) {
+            return change;
+        }
+        else{
+            return currentValue + change/numPpl;
+        }
+    });
     }
-    }
+    
+
+function displayMessage(text, color, actionType) {
+    // Display a message on the screen for 2 seconds
+    // with the text and color provided
+    var message = document.createElement('div');
+    message.textContent = text;
+    message.style.position = 'fixed';
+    message.style.top = '50%';
+    message.style.left = '50%';
+    message.style.transform = 'translate(-50%, -50%)';
+    message.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+    message.style.color = 'white';
+    message.style.padding = '10px';
+    message.style.borderRadius = '5px';
+    message.style.zIndex = '9999';
+    document.body.appendChild(message);
+
+    var colorBox = document.createElement('div');
+    colorBox.style.backgroundColor = color;
+    colorBox.style.width = '20px';
+    colorBox.style.height = '20px';
+    colorBox.style.marginLeft = '10px';
+    colorBox.style.display = 'inline-block';
+    message.appendChild(colorBox);
+    document.getElementById("imageSearchUI").style.backgroundColor = actionType === 'Right' ? '#3cb371' : '#ff6347';
+    document.getElementById("userlist").style.backgroundColor = actionType === 'Right' ? '#3cb371' : '#ff6347';
+
+    // Remove the message after 2 seconds and move to the next target
+    setTimeout(function() {
+        
+
+        document.body.removeChild(message);
+        nextTarget(actionType);
+        stopStopwatch();
+        resetStopwatch();
+
+        // Reset the background color to grey after 2 seconds
+        document.getElementById("imageSearchUI").style.backgroundColor = 'white';
+        document.getElementById("userlist").style.backgroundColor = 'white';
+    }, 2000);
+}
+}
 
 
 // Function to move to the next target
