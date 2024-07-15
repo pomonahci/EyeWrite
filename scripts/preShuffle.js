@@ -33,7 +33,7 @@ function distributeImages(pics) {
     for (let img of shuffled) {
         let category = img.substring(0, 10);
         if (counts.hasOwnProperty(category)) {
-            let arrayIndex = counts[category].findIndex(count => count < 12);
+            let arrayIndex = counts[category].findIndex(count => count < 24);
             
             if (arrayIndex !== -1) {
                 result[arrayIndex].push(img);
