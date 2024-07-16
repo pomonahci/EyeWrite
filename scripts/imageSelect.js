@@ -56,7 +56,7 @@ let selectedData = []
 var bounding; // list of targets for imageLabel taken from boundArray
 var misclicks = 0; // number of misclicks while searching for target (will be made global)
 var targetHit = false; // boolean value to determine if a bounding box should be drawn locally (only draw once)
-var numTargets; // number of targets to find per image
+var numTargets = 2; // number of targets to find per image
 var task = 0; // index of target, will incremenent
 var numPpl; // number of participants in this experiement (gotten from URL)
 var url; //apache url
@@ -443,23 +443,17 @@ function startExp() {
             // Get the shuffled images from Firebase
             firebaseRef.child('shuffledImages').child(condition).once('value', function (snapshot) {
                 images = snapshot.val();
-                numTargets = images.length;
+                // numTargets = images.length;
                 document.getElementById('trialLength').innerHTML = numTargets;
+                serverContent.push([`Condition Start (${condition})`, "Experiment", Date.now()]);
+                console.log('starting')
+                getTrial();
 
-                // Display the first image
-                let imageName = images[task];
-                console.log(images)
-                document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
-                console.log('image: ', imageName)   
-                window.imageSelectData.imageName = imageName;
             });
             // Start the stopwatch and log the experiment start 
-            serverContent.push([`Condition Start (${condition})`, "Experiment", Date.now()]);
-            console.log('starting')
+            
             // Get the first trial
-            setTimeout(function() {
-                getTrial();
-            }, 1000);
+
         }
     });
 }
@@ -500,22 +494,15 @@ function startWarmup() {
             // Get the shuffled images from Firebase
             firebaseRef.child('shuffledImages').child(condition).once('value', function (snapshot) {
                 images = snapshot.val();
-                numTargets = images.length;
+                // numTargets = images.length;
                 document.getElementById('trialLength').innerHTML = numTargets;
 
-                // Display the first image
-                let imageName = images[task];
-                console.log(images)
-                console.log(images)
-                document.getElementById("imageSearch").src = "./generateTrials/images/warmup/" + imageName;
-                console.log('image: ', imageName)   
-                window.imageSelectData.imageName = imageName;
+                serverContent.push([`Condition Start (${condition})`, "Warmup", Date.now()]);
+                console.log('starting')
+                getTrial();
             });
             // Start the stopwatch and log the experiment start 
-            serverContent.push([`Condition Start (${condition})`,"Warmup", Date.now()]);
-            console.log('starting')
-            // Get the first trial
-            getTrial();
+           
         }
     });
 }
