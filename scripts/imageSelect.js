@@ -450,8 +450,6 @@ function startExp() {
                 let imageName = images[task];
                 console.log(images)
                 document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
-                serverContent.push(["Trial Start", task, Date.now()]);
-                serverContent.push(["Image", imageName, Date.now()]);
                 console.log('image: ', imageName)   
                 window.imageSelectData.imageName = imageName;
             });
@@ -510,8 +508,6 @@ function startWarmup() {
                 console.log(images)
                 console.log(images)
                 document.getElementById("imageSearch").src = "./generateTrials/images/warmup/" + imageName;
-                serverContent.push(["Trial Start", task, Date.now()]);
-                serverContent.push(["Image", imageName, Date.now()]);
                 console.log('image: ', imageName)   
                 window.imageSelectData.imageName = imageName;
             });
@@ -519,7 +515,7 @@ function startWarmup() {
             serverContent.push([`Condition Start (${condition})`,"Warmup", Date.now()]);
             console.log('starting')
             // Get the first trial
-                getTrial();
+            getTrial();
         }
     });
 }

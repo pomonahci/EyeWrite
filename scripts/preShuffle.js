@@ -42,7 +42,7 @@ function distributeImages(pics) {
         let category = img.substring(0, 10);
         let warmup = img.substring(7, 17);
         if (counts.hasOwnProperty(category)) {
-            let arrayIndex = counts[category].findIndex(count => count < 1);
+            let arrayIndex = counts[category].findIndex(count => count < 24);
             
             if (arrayIndex !== -1) {
                 result[arrayIndex].push(img);
