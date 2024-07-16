@@ -506,14 +506,14 @@ function startWarmup() {
                 document.getElementById('trialLength').innerHTML = numTargets;
 
                 // Display the first image
-                // let imageName = images[task];
-                // console.log(images)
-                // console.log(images)
-                // document.getElementById("imageSearch").src = "./generateTrials/images/warmup/" + imageName;
-                // serverContent.push(["Trial Start", task, Date.now()]);
-                // serverContent.push(["Image", imageName, Date.now()]);
-                // console.log('image: ', imageName)   
-                // window.imageSelectData.imageName = imageName;
+                let imageName = images[task];
+                console.log(images)
+                console.log(images)
+                document.getElementById("imageSearch").src = "./generateTrials/images/warmup/" + imageName;
+                serverContent.push(["Trial Start", task, Date.now()]);
+                serverContent.push(["Image", imageName, Date.now()]);
+                console.log('image: ', imageName)   
+                window.imageSelectData.imageName = imageName;
             });
             // Start the stopwatch and log the experiment start 
             serverContent.push([`Condition Start (${condition})`,"Warmup", Date.now()]);
