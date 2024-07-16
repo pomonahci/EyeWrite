@@ -158,20 +158,20 @@ function generateAndDownloadImages() {
       coords = {};
       generateImage(true);
       const presentData = {
-        name: `${imageSizeInput.value}_present_${i}.jpg`,
+        name: `warmup_${imageSizeInput.value}_present_${i}.jpg`,
         id: i,
         absent: false,
         size: parseInt(imageSizeInput.value),
         ...coords
       };
       trialsData.push(presentData);
-      downloadImage(`${imageSizeInput.value}_present_${i}.jpg`);
+      downloadImage(`warmup_${imageSizeInput.value}_present_${i}.jpg`);
 
       setTimeout(() => {
         coords = {};
         generateImage(false);
         const absentData = {
-          name: `${imageSizeInput.value}_absent_${i}.jpg`,
+          name: `warmup_${imageSizeInput.value}_absent_${i}.jpg`,
           id: i,
           absent: true,
           size: parseInt(imageSizeInput.value),
@@ -179,7 +179,7 @@ function generateAndDownloadImages() {
         };
 
         trialsData.push(absentData);
-        downloadImage(`${imageSizeInput.value}_absent_${i}.jpg`);
+        downloadImage(`warmup_${imageSizeInput.value}_absent_${i}.jpg`);
 
         i++;
         downloadNextImage();

@@ -78,7 +78,7 @@ function getTrial() {
         document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
         console.log('image: ', imageName)
         serverContent.push(["Trial Start", task, Date.now()]);
-        serverContent.push(["Image", imageName, Date.now() + 10]);
+        serverContent.push(["Image", imageName, Date.now()]);
         window.imageSelectData.imageName = imageName;
     }
     // resetStopwatch()
@@ -420,13 +420,14 @@ function startExp() {
         // var numParticipants = snapshot.numChildren();
         console.log("buttonClicked" + snapshot.val())
         if (snapshot.val()) {
-            document.getElementById("startButton").disabled = true;
+            document.getElementById("startButton").disabled = true
+            
             document.getElementById("skipButton").disabled = false;
             document.getElementById("imageSearch").addEventListener("click", onClick);
             document.getElementById("skipButton").innerHTML = "No Target"; 
             condition = document.getElementById("condition").value;
             window.imageSelectData.condition = condition;
-            // Check if the condition is SG or not to set the gaze send and visualization switches
+            // Check if the condition is SG or not to set the gaze send and visualization switches   
                 if (condition.startsWith("SG")) {
                     unique = 1; 
                 } else {
@@ -441,7 +442,58 @@ function startExp() {
                 console.log(images)
                 document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
                 serverContent.push(["Trial Start", task, Date.now()]);
-                serverContent.push(["Image", imageName, Date.now() + 10]);
+                serverContent.push(["Image", imageName, Date.now()]);
+                console.log('image: ', imageName)   
+                window.imageSelectData.imageName = imageName;
+            });
+            // Start the stopwatch and log the experiment start 
+            serverContent.push([`Condition Start (${condition})`,, Date.now()]);
+            console.log('starting')
+            // Get the first trial
+            getTrial();
+        }
+    });
+}
+
+
+
+function startWarmup() {
+    // firebaseRef.child('users').child(userId).child('startClick').set(true);
+    // firebaseRef.child('users').orderByChild('startClick').equalTo(true).on('value', function(snapshot) {
+    // When a user clicks the button
+
+    firebaseRef.child('globalState').child('WarmupbuttonClicked').set(false);
+    // Listening for changes in the global state
+    firebaseRef.child('globalState').child('WarmupbuttonClicked').on('value', function(snapshot) {
+        document.getElementById('startWarmupButton').addEventListener('click', function() {
+            firebaseRef.child('globalState').child('WarmupbuttonClicked').set(true);
+        });
+        // var numParticipants = snapshot.numChildren();
+        console.log("WarmupbuttonClicked" + snapshot.val())
+        if (snapshot.val()) {
+            document.getElementById("startButton").disabled = true;
+            document.getElementById("startWarmupButton").disabled = true;
+            document.getElementById("skipButton").disabled = false;
+            document.getElementById("imageSearch").addEventListener("click", onClick);
+            document.getElementById("skipButton").innerHTML = "No Target"; 
+            condition = document.getElementById("warmups").value;
+            window.imageSelectData.condition = condition;
+            // Check if the condition is SG or not to set the gaze send and visualization switches   
+                if (condition.startsWith("SG")) {
+                    unique = 1; 
+                } else {
+                   unique = 2;
+                }
+            task = 0;                                                                          
+            // Get the shuffled images from Firebase
+            firebaseRef.child('shuffledImages').child('warmup').once('value', function (snapshot) {
+                images = snapshot.val();
+                // Display the first image
+                let imageName = images[task];
+                console.log(images)
+                document.getElementById("imageSearch").src = "./generateTrials/images/warmup/" + imageName;
+                serverContent.push(["Trial Start", task, Date.now()]);
+                serverContent.push(["Image", imageName, Date.now()]);
                 console.log('image: ', imageName)   
                 window.imageSelectData.imageName = imageName;
             });
@@ -474,8 +526,10 @@ firebaseRef.child('users').on('value', function (snapshot) {
     // check if the number of participants have joined to start the experiment
     if (Object.keys(snapshot.val()).length >= numPpl) {
         document.getElementById("startButton").disabled = false;
+        document.getElementById("startWarmupButton").disabled = false;
         shuffleImages();
         startExp();
+        startWarmup();
         // add the users' dimensions into the firebase database
         setTimeout(function() {
             firebaseRef.child("users").transaction(function (current) {

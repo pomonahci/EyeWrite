@@ -12,6 +12,14 @@ let pics = [
     ...Array(72).fill().map((_, i) => `35_absent_${i + 1}.jpg`)
 ];
 
+let warmup = [
+    // 2 warmup trials per category
+    ...Array(2).fill().map((_, i) => `warmup_21_present_${i + 1}.jpg`),
+    ...Array(2).fill().map((_, i) => `warmup_21_absent_${i + 1}.jpg`),
+    ...Array(2).fill().map((_, i) => `warmup_35_present_${i + 1}.jpg`),
+    ...Array(2).fill().map((_, i) => `warmup_35_absent_${i + 1}.jpg`)
+]
+
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -58,25 +66,28 @@ function shuffleImages() {
 
     // Check if the 'shuffledImages' child already exists in Firebase
     firebaseRef.child('shuffledImages').once('value')
-        .then((snapshot) => {
-            if (!snapshot.exists()) {
-                // Add the shuffled array to Firebase
-                shuffledImages.forEach((array, index) => {
-                    firebaseRef.child('shuffledImages').child(map[index]).set(array)
-                        .then(() => {
-                            console.log(`Array ${index} added to Firebase successfully`);
-                        })
-                        .catch((error) => {
-                            console.error(`Error adding array ${index} to Firebase:`, error);
-                        });      
-                });
-            } else {
-                console.log("'shuffledImages' child already exists in Firebase");
-            }
-        })
-        .catch((error) => {
-            console.error("Error checking if 'shuffledImages' child exists in Firebase:", error);
-        });
+    .then((snapshot) => {
+        if (!snapshot.exists()) {
+            // Corrected reference and initiate all set operations, including warmup, simultaneously
+            const promises = [
+                firebaseRef.child('shuffledImages').child('warmup').set(warmup)
+            ];
 
+            shuffledImages.forEach((array, index) => {
+                promises.push(firebaseRef.child('shuffledImages').child(map[index]).set(array));
+            });
+
+            // Wait for all set operations to complete
+            Promise.all(promises).then(() => {
+                console.log('All images added to Firebase successfully');
+            }).catch((error) => {
+                console.error('Error adding images to Firebase:', error);
+            });
+        } else {
+            console.log("'shuffledImages' child already exists in Firebase");
+        }
+    })
+    .catch((error) => {
+        console.error("Error checking if 'shuffledImages' child exists in Firebase:", error);
+    });
 }
-
