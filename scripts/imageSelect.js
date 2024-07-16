@@ -137,7 +137,7 @@ function onClick(event) {
 
         // Log the correct click to the server
         targetHit = true;
-        clickContent.push(["Correctly Clicked", target.name, Date.now(), '', '', condition]);
+        clickContent.push(["Correctly Clicked", target.name, Date.now(), clickX, clickY, condition]);
         
         // Update the user's correct clicks on the server
         firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('noTarget').once('value', function(snapshot) {
