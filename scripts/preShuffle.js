@@ -14,10 +14,10 @@ let pics = [
 
 let warmup = [
     // 2 warmup trials per category
-    ...Array(2).fill().map((_, i) => `warmup_21_present_${i + 1}.jpg`),
-    ...Array(2).fill().map((_, i) => `warmup_21_absent_${i + 1}.jpg`),
-    ...Array(2).fill().map((_, i) => `warmup_35_present_${i + 1}.jpg`),
-    ...Array(2).fill().map((_, i) => `warmup_35_absent_${i + 1}.jpg`)
+    ...Array(3).fill().map((_, i) => `warmup_21_present_${i + 1}.jpg`),
+    ...Array(3).fill().map((_, i) => `warmup_21_absent_${i + 1}.jpg`),
+    ...Array(3).fill().map((_, i) => `warmup_35_present_${i + 1}.jpg`),
+    ...Array(3).fill().map((_, i) => `warmup_35_absent_${i + 1}.jpg`)
 ]
 
 function shuffleArray(array) {
@@ -40,15 +40,24 @@ function distributeImages(pics) {
 
     for (let img of shuffled) {
         let category = img.substring(0, 10);
+        let warmup = img.substring(7, 17);
         if (counts.hasOwnProperty(category)) {
-            let arrayIndex = counts[category].findIndex(count => count < 24);
+            let arrayIndex = counts[category].findIndex(count => count < 1);
             
             if (arrayIndex !== -1) {
                 result[arrayIndex].push(img);
                 counts[category][arrayIndex]++;
             }
         } else {
-            console.log(`Unexpected image format: ${img}`);
+            if(counts.hasOwnProperty(warmup)){
+                let arrayIndex = counts[warmup].findIndex(count => count < 1);
+                if(arrayIndex !== -1){
+                    result[arrayIndex].push(img);
+                    counts[warmup][arrayIndex]++;
+                }
+            }else{
+                console.log(`Unexpected image format: ${img}`);
+            }
         }
     }
 
@@ -61,7 +70,8 @@ function distributeImages(pics) {
 function shuffleImages() {
     // Shuffle the images array
     let shuffledImages = distributeImages(pics);
-    console.log(shuffledImages.map(arr => arr.length));
+    let warmupShuffle = distributeImages(warmup);
+    console.log(warmupShuffle);
     const map = {0: 'SG', 1: 'SV', 2: 'SG + SV'};
 
     // Check if the 'shuffledImages' child already exists in Firebase
@@ -69,9 +79,10 @@ function shuffleImages() {
     .then((snapshot) => {
         if (!snapshot.exists()) {
             // Corrected reference and initiate all set operations, including warmup, simultaneously
-            const promises = [
-                firebaseRef.child('shuffledImages').child('warmup').set(warmup)
-            ];
+            const promises = [];
+            warmupShuffle.forEach((array, index) => {
+                promises.push(firebaseRef.child('shuffledImages').child(`${map[index]}_warmup`).set(array));
+            });
 
             shuffledImages.forEach((array, index) => {
                 promises.push(firebaseRef.child('shuffledImages').child(map[index]).set(array));

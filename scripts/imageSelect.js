@@ -56,13 +56,14 @@ let selectedData = []
 var bounding; // list of targets for imageLabel taken from boundArray
 var misclicks = 0; // number of misclicks while searching for target (will be made global)
 var targetHit = false; // boolean value to determine if a bounding box should be drawn locally (only draw once)
-var numTargets = 4; // number of targets to find per image
+var numTargets; // number of targets to find per image
 var task = 0; // index of target, will incremenent
 var numPpl; // number of participants in this experiement (gotten from URL)
 var url; //apache url
 var found = 0;
 var skipped = 0;
 var mySkipVote = false;
+var is_warmup = false;
 
 function getTrial() {
 
@@ -75,7 +76,11 @@ function getTrial() {
     // Display the image on the page
     // Log task start details to the server
     if (imageName){
+        if (is_warmup){
+            document.getElementById("imageSearch").src = "./generateTrials/images/warmup/" + imageName;
+        } else {
         document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
+        }
         console.log('image: ', imageName)
         serverContent.push(["Trial Start", task, Date.now()]);
         serverContent.push(["Image", imageName, Date.now()]);
@@ -133,7 +138,7 @@ function onClick(event) {
         // Log the correct click to the server
         targetHit = true;
         clickContent.push(["Correctly Clicked", target.name, Date.now(), '', '', condition]);
-     
+        
         // Update the user's correct clicks on the server
         firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('noTarget').once('value', function(snapshot) {
             if (!snapshot.exists()) {
@@ -333,8 +338,9 @@ function nextTarget(actionType) {
                     document.getElementById("imageSearch").removeEventListener("click", onClick);
                     stopStopwatch();
                     firebaseRef.child('globalState').child('buttonClicked').set(false);
+                    firebaseRef.child('globalState').child('WarmupbuttonClicked').set(false);
                     firebaseRef.child('tasks').once('value', function(snapshot) {
-                        if(snapshot.numChildren()==3){
+                        if(snapshot.numChildren()==6){
                             unloadingCSV();
                         }
                     });
@@ -345,6 +351,7 @@ function nextTarget(actionType) {
                     document.getElementById("skipButton").style.left = '5%';
                     document.getElementById("skipButton").disabled = true;
                     document.getElementById("startButton").disabled = false;
+                    document.getElementById("startWarmupButton").disabled = false;
                     return;
                 }
                 document.getElementById("skipButton").disabled = false;
@@ -410,7 +417,6 @@ function startExp() {
     // firebaseRef.child('users').child(userId).child('startClick').set(true);
     // firebaseRef.child('users').orderByChild('startClick').equalTo(true).on('value', function(snapshot) {
     // When a user clicks the button
-
     firebaseRef.child('globalState').child('buttonClicked').set(false);
     // Listening for changes in the global state
     firebaseRef.child('globalState').child('buttonClicked').on('value', function(snapshot) {
@@ -418,15 +424,15 @@ function startExp() {
             firebaseRef.child('globalState').child('buttonClicked').set(true);
         });
         // var numParticipants = snapshot.numChildren();
-        console.log("buttonClicked" + snapshot.val())
         if (snapshot.val()) {
             document.getElementById("startButton").disabled = true
-            
+            document.getElementById("startWarmupButton").disabled = true;
             document.getElementById("skipButton").disabled = false;
             document.getElementById("imageSearch").addEventListener("click", onClick);
             document.getElementById("skipButton").innerHTML = "No Target"; 
             condition = document.getElementById("condition").value;
             window.imageSelectData.condition = condition;
+            is_warmup = false;
             // Check if the condition is SG or not to set the gaze send and visualization switches   
                 if (condition.startsWith("SG")) {
                     unique = 1; 
@@ -437,6 +443,9 @@ function startExp() {
             // Get the shuffled images from Firebase
             firebaseRef.child('shuffledImages').child(condition).once('value', function (snapshot) {
                 images = snapshot.val();
+                numTargets = images.length;
+                document.getElementById('trialLength').innerHTML = numTargets;
+
                 // Display the first image
                 let imageName = images[task];
                 console.log(images)
@@ -447,10 +456,12 @@ function startExp() {
                 window.imageSelectData.imageName = imageName;
             });
             // Start the stopwatch and log the experiment start 
-            serverContent.push([`Condition Start (${condition})`,, Date.now()]);
+            serverContent.push([`Condition Start (${condition})`, "Experiment", Date.now()]);
             console.log('starting')
             // Get the first trial
-            getTrial();
+            setTimeout(function() {
+                getTrial();
+            }, 1000);
         }
     });
 }
@@ -477,7 +488,10 @@ function startWarmup() {
             document.getElementById("imageSearch").addEventListener("click", onClick);
             document.getElementById("skipButton").innerHTML = "No Target"; 
             condition = document.getElementById("warmups").value;
+            condition = condition + "_warmup";
+            console.log(condition)
             window.imageSelectData.condition = condition;
+            is_warmup = true;
             // Check if the condition is SG or not to set the gaze send and visualization switches   
                 if (condition.startsWith("SG")) {
                     unique = 1; 
@@ -486,22 +500,26 @@ function startWarmup() {
                 }
             task = 0;                                                                          
             // Get the shuffled images from Firebase
-            firebaseRef.child('shuffledImages').child('warmup').once('value', function (snapshot) {
+            firebaseRef.child('shuffledImages').child(condition).once('value', function (snapshot) {
                 images = snapshot.val();
+                numTargets = images.length;
+                document.getElementById('trialLength').innerHTML = numTargets;
+
                 // Display the first image
-                let imageName = images[task];
-                console.log(images)
-                document.getElementById("imageSearch").src = "./generateTrials/images/warmup/" + imageName;
-                serverContent.push(["Trial Start", task, Date.now()]);
-                serverContent.push(["Image", imageName, Date.now()]);
-                console.log('image: ', imageName)   
-                window.imageSelectData.imageName = imageName;
+                // let imageName = images[task];
+                // console.log(images)
+                // console.log(images)
+                // document.getElementById("imageSearch").src = "./generateTrials/images/warmup/" + imageName;
+                // serverContent.push(["Trial Start", task, Date.now()]);
+                // serverContent.push(["Image", imageName, Date.now()]);
+                // console.log('image: ', imageName)   
+                // window.imageSelectData.imageName = imageName;
             });
             // Start the stopwatch and log the experiment start 
-            serverContent.push([`Condition Start (${condition})`,, Date.now()]);
+            serverContent.push([`Condition Start (${condition})`,"Warmup", Date.now()]);
             console.log('starting')
             // Get the first trial
-            getTrial();
+                getTrial();
         }
     });
 }

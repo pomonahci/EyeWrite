@@ -99,7 +99,7 @@
   <div id="firepad" style='visibility:hidden'></div>
 
 
-  <div id='imageContainer' style='position:relative;background-color: white;;height:1300px;left:160px; width: 2300px;display: flex; align-items: center;border-radius: 25px;'>
+  <div id='imageContainer' style='position:relative;background-color: white;;height:1300px;left:160px; width: 2250px;display: flex; align-items: center;border-radius: 25px;'>
     <img id='imageSearch' src='' alt="IMAGE" width='2200px' height='1250px' style="border: 2px solid #000000"/>
   </div>
 
@@ -114,7 +114,7 @@
   background-color: white;
   width: 150px;
   top:0px;
-  right: 0px;
+  right: 20px;
   position: absolute;
   border-radius: 4px;
   height: 100%;
@@ -126,28 +126,28 @@
   padding-top: 50px;">
     <div style="font-weight: bold;" > Time: <span id='stopwatch'>00:00:00</span></div>
     <div  style="font-weight: bold;">Incorrect Clicks: <span id='badclicks' style="color: red;">0</span></div>
-    <div style="font-weight: bold;">Trial: <span id='trialNumber'>0</span>/96</div>
+    <div style="font-weight: bold;">Trial: <span id='trialNumber'>0</span> / <span id="trialLength">0</span></div>
     <img id='targetSearch' src='generateTrials/images/O_image.png' alt='TARGET' width='50px' height='50px'
       style='margin-top: 40px;'>
     <button class="btn btn-primary" id="skipButton" onclick="voteSkipTarget()" disabled>No Target</button>
   
   </div>
-  <select id="condition" style="position: absolute; top: 400px; right:30px; background-color:white;padding: 10px; font-size: 14px; width:100px;">
+  <select id="condition" style="position: absolute; top: 400px; right:45px; background-color:white;padding: 10px; font-size: 14px; width:100px;">
     <option value="SG">SG</option>
     <option value="SV">SV</option>
     <option value="SG + SV">SG + SV</option>
   </select>
   <button id="startButton"
-  style="position: absolute; top:450px; background-color: white;padding: 10px; font-size: 14px; right:10px" disabled>Start Experiment</button>
+  style="position: absolute; top:450px; background-color: white;padding: 10px; font-size: 14px; right:30px" disabled>Start Experiment</button>
 
 
-  <select id="warmups" style="position: absolute; top: 500px; right:30px; background-color:white;padding: 10px; font-size: 14px; width:100px;">
+  <select id="warmups" style="position: absolute; top: 500px; right:45px; background-color:white;padding: 10px; font-size: 14px; width:100px;">
     <option value="SG">SG</option>
     <option value="SV">SV</option>
     <option value="SG + SV">SG + SV</option>
   </select>
   <button id="startWarmupButton"
-  style="position: absolute; top:550px; background-color: white;padding: 15px; font-size: 14px; right:10px" disabled>Start Warmup</button>
+  style="position: absolute; top:550px; background-color: white;padding: 10px; font-size: 14px; right:40px" disabled>Start Warmup</button>
 
 
 
