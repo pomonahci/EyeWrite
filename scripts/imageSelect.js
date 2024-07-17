@@ -121,7 +121,6 @@ function onClick(event) {
         time: Date.now(),
         user: userId
     });
-``
     // Check if the click is within the bounding box of the target
     if (clickX >= topLeftX &&
         clickX <= bottomRightX &&
