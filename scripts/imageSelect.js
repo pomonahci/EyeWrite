@@ -203,12 +203,10 @@ function checkTaskComplete() {
             if (taskData.targetClicked && taskData.targetClicked.user) {
                 userId = taskData.targetClicked.user;
                 actionType = 'Right';
-                document.getElementById("skipButton").disabled = true;
-                document.getElementById("imageSearch").removeEventListener("click", onClick); 
+                document.getElementById("skipButton").disabled = true; 
             } else if (taskData.noTarget && taskData.noTarget.user) {
                 userId = taskData.noTarget.user;
                 document.getElementById("skipButton").disabled = true;
-                document.getElementById("imageSearch").removeEventListener("click", onClick); 
                 if (imageName.includes('absent')) {
                     actionType = 'Right';
                 }
