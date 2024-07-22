@@ -92,7 +92,18 @@ function getTrial() {
 }
 // Add an event listener for each click on the image
 document.getElementById("imageSearch").addEventListener("click", onClick);
+let lastClickTime = 0;
 function onClick(event) {
+    const now = Date.now();
+    // Define the minimum time between clicks (e.g., 500 milliseconds)
+    const debounceTime = 500;
+
+    // Check if the current click is too close to the last click
+    if (now - lastClickTime < debounceTime) {
+        // If yes, ignore this click
+        return;
+    }
+
     // Early return if the user has already voted to skip or if the target has been hit
     if (mySkipVote || targetHit) return;
 
