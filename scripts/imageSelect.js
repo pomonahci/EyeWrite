@@ -203,8 +203,12 @@ function checkTaskComplete() {
             if (taskData.targetClicked && taskData.targetClicked.user) {
                 userId = taskData.targetClicked.user;
                 actionType = 'Right';
+                document.getElementById("skipButton").disabled = true;
+                document.getElementById("imageSearch").removeEventListener("click", onClick); 
             } else if (taskData.noTarget && taskData.noTarget.user) {
                 userId = taskData.noTarget.user;
+                document.getElementById("skipButton").disabled = true;
+                document.getElementById("imageSearch").removeEventListener("click", onClick); 
                 if (imageName.includes('absent')) {
                     actionType = 'Right';
                 }
@@ -212,7 +216,8 @@ function checkTaskComplete() {
                     actionType = 'Wrong';
                 }
             }
-            updateGlobalState(actionType);      
+            updateGlobalState(actionType);
+     
             // Get the color of the user who completed the task
             if (userId) {
                 return firepad.firebaseAdapter_.ref_.child('users').child(userId).child('color').once('value')
@@ -392,8 +397,7 @@ function voteSkipTarget() {
                     user: userId,
                     time: Date.now()
                 });
-            document.getElementById("skipButton").disabled = true;
-            document.getElementById("imageSearch").removeEventListener("click", onClick);
+            
             }
         });
     }
