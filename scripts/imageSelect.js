@@ -392,6 +392,8 @@ function voteSkipTarget() {
                     user: userId,
                     time: Date.now()
                 });
+            document.getElementById("skipButton").disabled = true;
+            document.getElementById("imageSearch").removeEventListener("click", onClick);
             }
         });
     }
