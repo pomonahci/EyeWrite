@@ -339,7 +339,10 @@ function nextTarget(actionType) {
                     firebaseRef.child('globalState').child('buttonClicked').set(false);
                     firebaseRef.child('globalState').child('WarmupbuttonClicked').set(false);
                     firebaseRef.child('tasks').once('value', function(snapshot) {
-                        if(snapshot.numChildren()==6){
+                        if(numPpl == 1 && snapshot.numChildren() == 2){
+                            unloadingCSV();
+                        }
+                        if(numPpl > 1 && snapshot.numChildren() == 6){
                             unloadingCSV();
                         }
                     });
