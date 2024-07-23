@@ -229,45 +229,29 @@ var UIAdjustments = (function () {
   controlContainer.style.top =
     userlistBox.offsetTop + userlistBox.offsetHeight + 10 + "px";
 
-  firebaseRef.child("users").once("value", function (data) {
-    // look for hex in url. The reason we do it here and not in parseURLForVisAudParImgRad.js is because
-    // this code executes before that
-    const urlUserColorLoc = window.location.href.search("hex");
-    const urlUserColor = window.location.href.substring(urlUserColorLoc + 4, urlUserColorLoc + 11);  // hex color with # included
-
-    // do some stuff once
-    if (urlUserColorLoc === -1 || urlUserColor === undefined || !isValidHexColor(urlUserColor)) {
-      // if we don't pass in a hex color via url, then generate a new color
-      // urlUserColor is defined in parseURLForVisAudParImgRad.js
-      var existingColors = [];
-      if (data.key != userId) {
-        for (let [uID, val] of Object.entries(data.val())) {
-          if (uID != userId) {
-            existingColors.push(chroma(val["color"]).hcl());
-            // if (window.debug) console.log(chroma(val['color']).hcl());
+    firebaseRef.child("users").once("value", function (data) {
+      const urlUserColorLoc = window.location.href.search("hex");
+      const urlUserColor = window.location.href.substring(urlUserColorLoc + 4, urlUserColorLoc + 11);
+  
+      if (urlUserColorLoc === -1 || urlUserColor === undefined || !isValidHexColor(urlUserColor)) {
+          var existingColors = [];
+          data.forEach(function(childSnapshot) {
+              if (childSnapshot.key !== userId) {
+                  existingColors.push(childSnapshot.val().color);
+              }
+          });
+  
+          var newUserColor = selectNewColorFromList(existingColors, firepad.firebaseAdapter_.color_);
+          firepad.firebaseAdapter_.setColor(newUserColor);
+          pickr.setColor(newUserColor);
+      } else {
+          if (isValidHexColor(urlUserColor)) {
+              console.log("setting color to url color: " + urlUserColor);
+              firepad.firebaseAdapter_.setColor(urlUserColor);
+              pickr.setColor(urlUserColor);
           }
-        }
       }
-      // console.log(existingColors, 'Now generate a new color for current user!');
-
-      // Pick a new color for the user.
-      var newUserColor = selectNewColorFromList(
-        existingColors,
-        firepad.firebaseAdapter_.color_
-      );
-      firepad.firebaseAdapter_.setColor(newUserColor);
-      pickr.setColor(newUserColor);
-    } else {
-      // if we do pass in color via url, then set it to that color
-      // first validate the color
-      if (isValidHexColor(urlUserColor)) {
-        console.log("setting color to url color: " + urlUserColor);
-        firepad.firebaseAdapter_.setColor(urlUserColor);
-        pickr.setColor(urlUserColor);
-      }
-    }
   });
-
   function isValidHexColor(hex) {
     // Regular expression to check if the string is a valid hex color
     const regex = /^#(?:[0-9a-fA-F]{3}){1,2}$/;
@@ -282,19 +266,22 @@ var UIAdjustments = (function () {
    * */
   function selectNewColorFromList(existingColors, currentColor) {
     const listOfColors = [
-      "#7fc97f",
-      "#beaed4",
-      "#fdc086",
-      "#ffff99",
-      "#386cb0",
-      "#f0027f"
+        "#0000FF", "#FF0000", "#008000", "#800080", "#FFA500", "#FF00FF", "#008080"
     ];
-
-    // Return the zeroeth color for the first user (since for the first user
-    // there will be no existingColors), the second for the first, first for second, etc
-    console.log(`In selectNewColorFromList, have existingColors.length ${existingColors.length}, setting color to ${listOfColors[existingColors.length]}`)
-    return listOfColors[existingColors.length];
-  }
+    
+    // Filter out colors that are already in use
+    const availableColors = listOfColors.filter(color => 
+        !existingColors.some(existing => existing.toLowerCase() === color.toLowerCase())
+    );
+    
+    if (availableColors.length > 0) {
+        // If there are available colors, return the first one
+        return availableColors[0];
+    } else {
+        // If all colors are taken, fall back to the original color or generate a random one
+        return currentColor || '#' + Math.floor(Math.random()*16777215).toString(16);
+    }
+}
 
   /**
    * selectNewColor selects a new color given the existing colors
