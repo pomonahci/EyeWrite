@@ -115,60 +115,58 @@ function onClick(event) {
     console.log("target:",topLeftX,topLeftY,bottomRightX,bottomRightY) 
 
     // Add the click to the Firebase database
-    const debounceThreshold = 1000; // 1 second threshold, adjust as needed
+    firebaseRef.child('tasks').child(condition).child(task).child('clicks').push({
+        x: clickX,
+        y: clickY,
+        time: Date.now(),
+        user: userId
+    });
+    // Check if the click is within the bounding box of the target
+    if (clickX >= topLeftX &&
+        clickX <= bottomRightX &&
+        clickY >= topLeftY &&
+        clickY <= bottomRightY) {
+        // If the click is within the bounding box, draw a red box around the target
+        document.getElementById("skipButton").disabled = true;
+        var box = document.createElement('div');
+        box.setAttribute('style', `border: 2px solid red; box-sizing: border-box; position: absolute; top: ${topLeftY}px; left: ${topLeftX - boundArray[0]}px; width: ${rectWidth}px; height: ${rectHeight}px;`);
+        // Set the id of the box to 'foundTarget' so it can be removed later
+        box.setAttribute('id', 'foundTarget');
+        document.querySelector("#imageContainer").append(box);
 
-firebaseRef.child('tasks').child(condition).child(task).child('lastClick').once('value', snapshot => {
-    const now = Date.now();
-    if (!snapshot.exists() || now - snapshot.val().time > debounceThreshold) {
-        // If there's no last click or we're past the debounce threshold, proceed with the update
-        firebaseRef.child('tasks').child(condition).child(task).child('clicks').push({
-            x: clickX,
-            y: clickY,
-            time: now,
-            user: userId
+        // Log the correct click to the server
+        targetHit = true;
+        clickContent.push(["Correctly Clicked", target.name, Date.now(), clickX, clickY, condition]);
+        
+        // Update the user's correct clicks on the server
+        firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('noTarget').once('value', function(snapshot) {
+            if (!snapshot.exists()) {
+                firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('targetClicked').once('value', function(snapshotClicked) {
+                    if (!snapshotClicked.exists()) {
+                        firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('targetClicked').set({
+                            user: userId,
+                            time: Date.now()
+                        });
+                    }
+                });
+            }
         });
-
-        // Update the last click timestamp
-        firebaseRef.child('tasks').child(condition).child(task).child('lastClick').set({ time: now });
-
-        // Check if the click is within the bounding box of the target
-        if (clickX >= topLeftX && clickX <= bottomRightX && clickY >= topLeftY && clickY <= bottomRightY) {
-            // If the click is within the bounding box, draw a red box around the target
-            document.getElementById("skipButton").disabled = true;
-            var box = document.createElement('div');
-            box.setAttribute('style', `border: 2px solid red; box-sizing: border-box; position: absolute; top: ${topLeftY}px; left: ${topLeftX}px; width: ${rectWidth}px; height: ${rectHeight}px;`);
-            box.setAttribute('id', 'foundTarget');
-            document.querySelector("#imageContainer").append(box);
-
-            // Log the correct click to the server
-            targetHit = true;
-            clickContent.push(["Correctly Clicked", target.name, now, clickX, clickY, condition]);
-
-            // Update the user's correct clicks on the server
-            firebaseRef.child('tasks').child(condition).child(task).child('targetClicked').set({
-                user: userId,
-                time: now
-            });
-        }else {
-            // Log the incorrect click to the server
-            clickContent.push(["Incorrect Click", target.name, Date.now(), clickX, clickY, condition]);
-            
-           // Increment the user's misclicks
-            misclicks++;
-            // update user's misclicks on firebase
-            firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('incorrectClicks').child(userId).transaction(function (current) {
-                if (!current) current = 0;
-                current = misclicks;
-                return current;
-            });
-            // update client-side display with misclicks
-            updateIncorrectClicks();
-        }
-    } else {
-        // If we're within the debounce threshold, do not register the click
-        console.log("Click ignored due to debounce threshold");
     }
-});  
+    else {
+        // Log the incorrect click to the server
+        clickContent.push(["Incorrect Click", target.name, Date.now(), clickX, clickY, condition]);
+        
+       // Increment the user's misclicks
+        misclicks++;
+        // update user's misclicks on firebase
+        firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('incorrectClicks').child(userId).transaction(function (current) {
+            if (!current) current = 0;
+            current = misclicks;
+            return current;
+        });
+        // update client-side display with misclicks
+        updateIncorrectClicks();
+    }
 }
 
 // Function to update the client-side display with the total misclicks
@@ -205,12 +203,10 @@ function checkTaskComplete() {
             if (taskData.targetClicked && taskData.targetClicked.user) {
                 userId = taskData.targetClicked.user;
                 actionType = 'Right';
-                document.getElementById("skipButton").disabled = true;
-                document.getElementById("imageSearch").removeEventListener("click", onClick); 
+                document.getElementById("skipButton").disabled = true; 
             } else if (taskData.noTarget && taskData.noTarget.user) {
                 userId = taskData.noTarget.user;
                 document.getElementById("skipButton").disabled = true;
-                document.getElementById("imageSearch").removeEventListener("click", onClick); 
                 if (imageName.includes('absent')) {
                     actionType = 'Right';
                 }
