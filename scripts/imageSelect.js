@@ -5,6 +5,13 @@
  * Name: nickmarsano, Haram Yoon
  * Date: 06/30/2021
  */
+/**
+ * imageSelect.js controls the image search task
+ * Interprets URL for image and targets, handles server interaction and target control
+ * 
+ * Name: nickmarsano, Haram Yoon
+ * Date: 06/30/2021
+ */
 var imageContainer = document.getElementById('imageContainer');
 var container = imageContainer.getBoundingClientRect();
 
@@ -76,11 +83,8 @@ function getTrial() {
     // Display the image on the page
     // Log task start details to the server
     if (imageName){
-        if (is_warmup){
-            document.getElementById("imageSearch").src = "./generateTrials/images/warmup/" + imageName;
-        } else {
-        document.getElementById("imageSearch").src = "./generateTrials/images/" + imageName;
-        }
+        const imageSrc = is_warmup ? `./generateTrials/images/warmup/${imageName}` : `./generateTrials/images/${imageName}`;
+        document.getElementById("imageSearch").src = imageSrc;
         console.log('image: ', imageName)
         serverContent.push(["Trial Start", task, Date.now()]);
         serverContent.push(["Image", imageName, Date.now()]);
@@ -92,7 +96,7 @@ function getTrial() {
 }
 // Add an event listener for each click on the image
 document.getElementById("imageSearch").addEventListener("click", onClick);
-function onClick(event) {
+async function onClick(event) {
     // Early return if the user has already voted to skip or if the target has been hit
     if (mySkipVote || targetHit) return;
 
@@ -138,19 +142,21 @@ function onClick(event) {
         targetHit = true;
         clickContent.push(["Correctly Clicked", target.name, Date.now(), clickX, clickY, condition]);
         
-        // Update the user's correct clicks on the server
-        firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('noTarget').once('value', function(snapshot) {
-            if (!snapshot.exists()) {
-                firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('targetClicked').once('value', function(snapshotClicked) {
-                    if (!snapshotClicked.exists()) {
-                        firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('targetClicked').set({
-                            user: userId,
-                            time: Date.now()
-                        });
-                    }
-                });
-            }
-        });
+        // Update the user's correct clicks on the server as long action hasn't been (for actions done at similar time)
+        await firebaseRef.child('tasks').child(condition).child(task).child('noTarget').once('value')
+            .then(snapshot => {
+                if (!snapshot.exists()) {
+                    return firebaseRef.child('tasks').child(condition).child(task).child('targetClicked').once('value');
+                }
+            })
+            .then(snapshotClicked => {
+                if (!snapshotClicked.exists()) {
+                    return firebaseRef.child('tasks').child(condition).child(task).child('targetClicked').set({
+                        user: userId,
+                        time: Date.now()
+                    });
+                }
+            });
     }
     else {
         // Log the incorrect click to the server
@@ -159,10 +165,8 @@ function onClick(event) {
        // Increment the user's misclicks
         misclicks++;
         // update user's misclicks on firebase
-        firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('incorrectClicks').child(userId).transaction(function (current) {
-            if (!current) current = 0;
-            current = misclicks;
-            return current;
+        firebaseRef.child('tasks').child(condition).child(task).child('incorrectClicks').child(userId).transaction(function (current) {
+            return (current || 0) + 1;
         });
         // update client-side display with misclicks
         updateIncorrectClicks();
@@ -172,7 +176,7 @@ function onClick(event) {
 // Function to update the client-side display with the total misclicks
 function updateIncorrectClicks() {
     // Pull the misclicks from the Firebase database and update the display
-    firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('incorrectClicks').transaction(function(current) {
+    firebaseRef.child('tasks').child(condition).child(task).child('incorrectClicks').transaction(function(current) {
         total = 0;
         for (misclick of Object.values(current)) {
             total += misclick;
@@ -182,68 +186,59 @@ function updateIncorrectClicks() {
 }
 
 // Function when task is completed
-function checkTaskComplete() {
+async function checkTaskComplete() {
     console.log('complete');
     // Get the image name from the images array
     let imageName = images[task];
     // Get the target data for the image name from the selectedData array
     let target = selectedData.find(data => data.name === imageName);
 
-    // Add task details to firebase
-    firebaseRef.child('tasks').child(condition).child(task).child('about').set(target);
+    try {
+        // add the target to the firebase database
+        await firebaseRef.child('tasks').child(condition).child(task).child('about').set(target);
 
-    // Check if the target has been clicked or skipped
-    firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).once('value')
-        .then(function(taskSnapshot) {
-            const taskData = taskSnapshot.val();
-            let userId = null;
-            let actionType = '';
+        // Get the task data from the Firebase database to check if for completed action type
+        const taskSnapshot = await firebaseRef.child('tasks').child(condition).child(task).once('value');
+        const taskData = taskSnapshot.val();
 
-            // Get the user who completed the task and the action type
-            if (taskData.targetClicked && taskData.targetClicked.user) {
-                userId = taskData.targetClicked.user;
-                actionType = 'Right';
-                document.getElementById("skipButton").disabled = true; 
-            } else if (taskData.noTarget && taskData.noTarget.user) {
-                userId = taskData.noTarget.user;
-                document.getElementById("skipButton").disabled = true;
-                if (imageName.includes('absent')) {
-                    actionType = 'Right';
-                }
-                else {
-                    actionType = 'Wrong';
-                }
-            }
-            updateGlobalState(actionType);
-     
+        // default values for user who did action and actionType
+        let userId = null;
+        let actionType = '';
+
+        // Get the user who completed the task and the action type
+        // Check if the target was clicked
+        if (taskData.targetClicked && taskData.targetClicked.user) {
+            userId = taskData.targetClicked.user;
+            actionType = 'Right';
+        // Check if the Skip button was clicked
+        } else if (taskData.noTarget && taskData.noTarget.user) {
+            userId = taskData.noTarget.user;
+            actionType = imageName.includes('absent') ? 'Right' : 'Wrong';
+        }
+        document.getElementById("skipButton").disabled = true;
+
+        // add updated right, wrong, money to the firebase database
+        updateGlobalState(actionType);
+
             // Get the color of the user who completed the task
-            if (userId) {
-                return firepad.firebaseAdapter_.ref_.child('users').child(userId).child('color').once('value')
-                    .then(function(colorSnapshot) {
-                        const color = colorSnapshot.val();
-                        return { userId, color, actionType };
-                    });
-            } else {
-                return { userId: null, color: null, actionType: '' };
-            }
-        })
-        // Display a message on the screen with the user who completed the task
-        .then(function(result) {
-            if (result.userId) {
-                displayMessage(`${result.actionType} `, result.color, result.actionType);
+        if (userId) {
+            const colorSnapshot = await firebaseRef.child('users').child(userId).child('color').once('value');
+            const color = colorSnapshot.val();
+            displayMessage(`${actionType} `, color, actionType);
+        } else {
+            displayMessage("Task Completed!");
+        }
 
-            } else {
-                displayMessage("Task Completed!");
-            }
-        })
-        .catch(function(error) {
-            console.error("Error checking task completion:", error);
-            displayMessage("Error!");
-        });
+    } catch (error) {
+        console.error("Error checking task completion:", error);
+        displayMessage("Error!");
+    }
+}
 
 // Update the global state with the task completion 
 function updateGlobalState(actionType) {
     const globalStateRef = firepad.firebaseAdapter_.ref_.child('globalState');
+    if (is_warmup) return;
     
     // Update the count for the specific action type
     globalStateRef.child(actionType).transaction(currentValue => {
@@ -252,7 +247,7 @@ function updateGlobalState(actionType) {
     
     // Update the money
     globalStateRef.child('money').transaction(currentValue => {
-        const change = actionType === 'Right' ? 3.5 : -7;
+        const change = actionType === 'Right' ? 0.035 : -0.07;
         return (currentValue || 0) + change/numPpl;
     });
     }
@@ -286,8 +281,6 @@ function displayMessage(text, color, actionType) {
 
     // Remove the message after 2 seconds and move to the next target
     setTimeout(function() {
-        
-
         document.body.removeChild(message);
         nextTarget(actionType);
         stopStopwatch();
@@ -298,75 +291,70 @@ function displayMessage(text, color, actionType) {
         document.getElementById("userlist").style.backgroundColor = 'white';
     }, 2000);
 }
-}
+
 
 
 // Function to move to the next target
-function nextTarget(actionType) {
+async function nextTarget(actionType) {
     // Log the target completion to the server
     console.log("nextTarget")
     serverContent.push(["Trial Completed", actionType, Date.now()]);
     const stopwatchTime = document.getElementById('stopwatch').innerHTML;
-    const timeArray = stopwatchTime.split(':');
-    const hours = parseInt(timeArray[0]);
-    const minutes = parseInt(timeArray[1]);
-    const seconds = parseInt(timeArray[2]);
+    const [hours, minutes, seconds] = stopwatchTime.split(':').map(Number);
     const totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
     serverContent.push(["Total Seconds", totalSeconds, Date.now()]);
-    console.log(serverContent, task)
+    console.log(serverContent, task);
 
     clearBoxes();
     // Remove the event listener for the image
     firebaseRef.child('tasks').child(condition).child(task).off();
 
-    // Reset everything for the next target
-    firebaseRef.child('tasks').child(condition).once('value', function (snapshot) {
-        // Use a transaction to increment the task variable atomically
-                // Task incremented successfully, continue with the rest of the logic
-                task = snapshot.val().length 
-                misclicks = 0;
-                document.getElementById('badclicks').innerHTML = 0;
-                targetHit = false;
-                mySkipVote = false;
-                document.getElementById("skipButton").innerHTML = "No Target";
-                document.getElementById("skipButton").style.left = '15%';
+    try {
+        // Get the number of tasks completed so far (how we increment tasks)
+        const snapshot = await firebaseRef.child('tasks').child(condition).once('value');
+        task = snapshot.val().length;
+        // Reset everything for the next target
+        misclicks = 0;
+        document.getElementById('badclicks').innerHTML = 0;
+        targetHit = false;
+        mySkipVote = false;
+        document.getElementById("skipButton").innerHTML = "No Target";
+        document.getElementById("skipButton").style.left = '15%';
 
-                // Check if all targets have been found
-                // If so, stop the stopwatch and display a message
-                // Check if all targets have been found
-                // If so, stop the stopwatch and display a message
-                if (numTargets == task) {
-                    console.log("All tasks completed!");
-                    document.getElementById("imageSearch").removeEventListener("click", onClick);
-                    stopStopwatch();
-                    firebaseRef.child('globalState').child('buttonClicked').set(false);
-                    firebaseRef.child('globalState').child('WarmupbuttonClicked').set(false);
-                    firebaseRef.child('tasks').once('value', function(snapshot) {
-                        if(numPpl == 1 && snapshot.numChildren() == 2){
-                            unloadingCSV();
-                        }
-                        if(numPpl > 1 && snapshot.numChildren() == 6){
-                            unloadingCSV();
-                        }
-                    });
+        // Check if all tasks are completed
+        if (numTargets == task) {
+            console.log("All tasks completed!");
+            document.getElementById("imageSearch").removeEventListener("click", onClick);
+            stopStopwatch();
+            // Reset the global state
+            await firebaseRef.child('globalState').child('buttonClicked').set(false);
+            await firebaseRef.child('globalState').child('WarmupbuttonClicked').set(false);
 
-                    document.getElementById("skipButton").innerHTML = "All Tasks Completed!";
-                    alert("All tasks completed!");
-                    document.getElementById("imageSearch").src = "";
-                    document.getElementById("skipButton").style.left = '5%';
-                    document.getElementById("skipButton").disabled = true;
-                    document.getElementById("startButton").disabled = false;
-                    document.getElementById("startWarmupButton").disabled = false;
-                    return;
-                }
-                document.getElementById("skipButton").disabled = false;
-                action = '';
-                skipped = 0;
-                // Get the next trial
-                getTrial();
-
+            // Download csv files if experiment is completed
+            const tasksSnapshot = await firebaseRef.child('tasks').once('value');
+            if ((numPpl == 1 && tasksSnapshot.numChildren() == 2) || 
+                (numPpl > 1 && tasksSnapshot.numChildren() == 6)) {
+                unloadingCSV();
             }
-        );
+
+            // Let participants know that all tasks are completed
+            document.getElementById("skipButton").innerHTML = "All Tasks Completed!";
+            alert("All tasks completed!");
+            // Reset the image and enable the start button for next condition
+            document.getElementById("imageSearch").src = "";
+            document.getElementById("skipButton").style.left = '5%';
+            document.getElementById("skipButton").disabled = true;
+            document.getElementById("startButton").disabled = false;
+            document.getElementById("startWarmupButton").disabled = false;
+            return;
+        }
+        document.getElementById("skipButton").disabled = false;
+        skipped = 0;
+        // Get the next trial based on updated task var
+        getTrial();
+    } catch (error) {
+        console.error("Error in nextTarget:", error);
+    }
 }
 
 
@@ -375,8 +363,10 @@ function clearBoxes() {
     if (document.getElementById('foundTarget')) document.getElementById('foundTarget').remove();
 }
 
+let isTaskCompletionInProgress = false;
 // Function to skip the current target
-function voteSkipTarget() {
+async function voteSkipTarget() {
+    if (isTaskCompletionInProgress) return;
     // get the target from the image name from the images array
     const imageName = images[task];
     let target = selectedData.find(data => data.name === imageName);
@@ -386,134 +376,126 @@ function voteSkipTarget() {
     mySkipVote = true;
     clickContent.push(["Skip Vote", target.name, Date.now(), '', '', condition]);
 
-    // Add who voted for no Target to the Firebase database
-  firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('noTarget').once('value', function(snapshot) {
-    if (!snapshot.exists()) {
-        firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('targetClicked').once('value', function(snapshotClicked) {
-            if (!snapshotClicked.exists()) {
-                firepad.firebaseAdapter_.ref_.child('tasks').child(condition).child(task).child('noTarget').set({
-                    user: userId,
-                    time: Date.now()
-                });
-            
-            }
-        });
-    }
-});
+    // Update the user's noTarget on the server as long action hasn't been (for actions done at similar time)
+    await firebaseRef.child('tasks').child(condition).child(task).child('noTarget').once('value')
+    .then(snapshot => {
+        if (!snapshot.exists()) {
+            return firebaseRef.child('tasks').child(condition).child(task).child('targetClicked').once('value');
+        }
+    })
+    .then(snapshotClicked => {
+        if (!snapshotClicked.exists()) {
+            return firebaseRef.child('tasks').child(condition).child(task).child('noTarget').set({
+                user: userId,
+                time: Date.now()
+            });
+        }
+    });
 }
 
 
 // Function to handle snapshot changes in the Firebase database according to the key
 function firelist(snapshot) {
+    // fix for bug where multiple events are triggered
+    if (isTaskCompletionInProgress) {
+        console.log("Task completion already in progress. Ignoring additional events.");
+        return;
+    }
+    // When someone incorrectly clicks
     if (snapshot.key == 'incorrectClicks') {
         console.log("snapshot.key is incorrectClicks");
         updateIncorrectClicks();
-    } else if (snapshot.key == 'targetClicked') {
-        console.log("snapshot.key is targetClicked");
-        checkTaskComplete();
+    // when someone skips or presses target
+    } else if (snapshot.key == 'targetClicked' || snapshot.key == 'noTarget') {
+        console.log(`snapshot.key is ${snapshot.key}`);
+        //  if action not already being process, check task completion
+        if (!isTaskCompletionInProgress) {
+            isTaskCompletionInProgress = true;
+            checkTaskComplete().then(() => {
+                isTaskCompletionInProgress = false;
+            }).catch(error => {
+                console.error("Error in checkTaskComplete:", error);
+                isTaskCompletionInProgress = false;
+            });
+        }
     }
-    else if (snapshot.key == 'noTarget') {
-        console.log("snapshot.key is noTarget")
-        checkTaskComplete();
+}
+
+// Function to start the experiment or warmup session
+async function startExperiment(isWarmup) {
+    // Determine which button type to use based on whether it's a warmup or not
+    const buttonType = isWarmup ? 'WarmupbuttonClicked' : 'buttonClicked';
+    const buttonId = isWarmup ? 'startWarmupButton' : 'startButton';
+    
+    try {
+        // Reset the global state for the appropriate button type
+        await firebaseRef.child('globalState').child(buttonType).set(false);
+        
+        // Set up the event listener for the start button
+        document.getElementById(buttonId).addEventListener('click', function() {
+            firebaseRef.child('globalState').child(buttonType).set(true);
+        });
+        
+        // Listen for changes in the global state
+        firebaseRef.child('globalState').child(buttonType).on('value', async function(snapshot) {
+            // Check if the button has been clicked (value is true)
+            if (snapshot.val()) {
+                // Disable start buttons and enable skip button
+                document.getElementById("startButton").disabled = true;
+                document.getElementById("startWarmupButton").disabled = true;
+                document.getElementById("skipButton").disabled = false;
+                
+                // Add click event listener to the image
+                document.getElementById("imageSearch").addEventListener("click", onClick);
+                
+                // Set the skip button text
+                document.getElementById("skipButton").innerHTML = "No Target"; 
+                
+                // Set the condition based on whether it's a warmup or not
+                condition = isWarmup ? document.getElementById("warmups").value + "_warmup" : document.getElementById("condition").value;
+                window.imageSelectData.condition = condition;
+                is_warmup = isWarmup;
+                
+                // Set the 'unique' value based on the condition (used for gaze visualization)
+                unique = condition.startsWith("SG") ? 1 : 2;
+                
+                // Reset the task counter
+                task = 0;
+                
+                try {
+                    // Fetch the shuffled images for the current condition
+                    const imagesSnapshot = await firebaseRef.child('shuffledImages').child(condition).once('value');
+                    images = imagesSnapshot.val();
+                    
+                    // Set the number of targets and update the UI
+                    numTargets = images.length;
+                    document.getElementById('trialLength').innerHTML = numTargets;
+                    
+                    // Log the start of the condition
+                    serverContent.push([`Condition Start (${condition})`, isWarmup ? "Warmup" : "Experiment", Date.now()]);
+                    console.log('starting');
+                    
+                    // Start the first trial
+                    getTrial();
+                } catch (error) {
+                    console.error('Error fetching shuffled images:', error);
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error starting experiment:', error);
     }
 }
 
 // Function to start the experiment
 function startExp() {
-    // firebaseRef.child('users').child(userId).child('startClick').set(true);
-    // firebaseRef.child('users').orderByChild('startClick').equalTo(true).on('value', function(snapshot) {
-    // When a user clicks the button
-    firebaseRef.child('globalState').child('buttonClicked').set(false);
-    // Listening for changes in the global state
-    firebaseRef.child('globalState').child('buttonClicked').on('value', function(snapshot) {
-        document.getElementById('startButton').addEventListener('click', function() {
-            firebaseRef.child('globalState').child('buttonClicked').set(true);
-        });
-        // var numParticipants = snapshot.numChildren();
-        if (snapshot.val()) {
-            document.getElementById("startButton").disabled = true
-            document.getElementById("startWarmupButton").disabled = true;
-            document.getElementById("skipButton").disabled = false;
-            document.getElementById("imageSearch").addEventListener("click", onClick);
-            document.getElementById("skipButton").innerHTML = "No Target"; 
-            condition = document.getElementById("condition").value;
-            window.imageSelectData.condition = condition;
-            is_warmup = false;
-            // Check if the condition is SG or not to set the gaze send and visualization switches   
-                if (condition.startsWith("SG")) {
-                    unique = 1; 
-                } else {
-                   unique = 2;
-                }
-            task = 0;                                                                          
-            // Get the shuffled images from Firebase
-            firebaseRef.child('shuffledImages').child(condition).once('value', function (snapshot) {
-                images = snapshot.val();
-                numTargets = images.length;
-                document.getElementById('trialLength').innerHTML = numTargets;
-                serverContent.push([`Condition Start (${condition})`, "Experiment", Date.now()]);
-                console.log('starting')
-                getTrial();
-
-            });
-            // Start the stopwatch and log the experiment start 
-            
-            // Get the first trial
-
-        }
-    });
+    startExperiment(false);
 }
 
-
-
+// Function to start the warmup
 function startWarmup() {
-    // firebaseRef.child('users').child(userId).child('startClick').set(true);
-    // firebaseRef.child('users').orderByChild('startClick').equalTo(true).on('value', function(snapshot) {
-    // When a user clicks the button
-
-    firebaseRef.child('globalState').child('WarmupbuttonClicked').set(false);
-    // Listening for changes in the global state
-    firebaseRef.child('globalState').child('WarmupbuttonClicked').on('value', function(snapshot) {
-        document.getElementById('startWarmupButton').addEventListener('click', function() {
-            firebaseRef.child('globalState').child('WarmupbuttonClicked').set(true);
-        });
-        // var numParticipants = snapshot.numChildren();
-        console.log("WarmupbuttonClicked" + snapshot.val())
-        if (snapshot.val()) {
-            document.getElementById("startButton").disabled = true;
-            document.getElementById("startWarmupButton").disabled = true;
-            document.getElementById("skipButton").disabled = false;
-            document.getElementById("imageSearch").addEventListener("click", onClick);
-            document.getElementById("skipButton").innerHTML = "No Target"; 
-            condition = document.getElementById("warmups").value;
-            condition = condition + "_warmup";
-            console.log(condition)
-            window.imageSelectData.condition = condition;
-            is_warmup = true;
-            // Check if the condition is SG or not to set the gaze send and visualization switches   
-                if (condition.startsWith("SG")) {
-                    unique = 1; 
-                } else {
-                   unique = 2;
-                }
-            task = 0;                                                                          
-            // Get the shuffled images from Firebase
-            firebaseRef.child('shuffledImages').child(condition).once('value', function (snapshot) {
-                images = snapshot.val();
-                numTargets = images.length;
-                document.getElementById('trialLength').innerHTML = numTargets;
-
-                serverContent.push([`Condition Start (${condition})`, "Warmup", Date.now()]);
-                console.log('starting')
-                getTrial();
-            });
-            // Start the stopwatch and log the experiment start 
-           
-        }
-    });
+    startExperiment(true);
 }
-
-
 
 
 document.getElementById("imageSearch").style.pointerEvents = "none";
