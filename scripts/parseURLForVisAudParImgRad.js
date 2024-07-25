@@ -7,7 +7,7 @@
  */
 
 // whether the gaze colors should be unique
-var unique = 1;
+var unique = 2;
 // whether the overlap should be deterministic or not
 var deterministic = 0;
 

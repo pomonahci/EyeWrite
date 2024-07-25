@@ -267,7 +267,7 @@ var UIAdjustments = (function () {
   function selectNewColorFromList(existingColors, currentColor) {
     const listOfColors = [
         "#0000FF", "#FF0000", "#008000", "#800080", "#FFA500", "#FF00FF", "#008080"
-    ];
+    ]; // blue, red, green, purple, orange, magenta, teal
     
     // Filter out colors that are already in use
     const availableColors = listOfColors.filter(color => 

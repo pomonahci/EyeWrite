@@ -110,6 +110,35 @@ function processOverlapData(data) {
 }
 
 
+function removeDuplicatesFromServerContent(content) {
+    const seen = new Set();
+    const filteredContent = content.filter((row, index) => {
+        // Skip the header row
+        if (index === 0) return true;
+        
+        // Assuming Parameter is in the first column (index 0) and imagename is in the fourth column (index 3)
+        const parameter = row[0];
+        const image = row[3];
+        
+        // If parameter or imagename is undefined or empty string, keep the row
+        if (parameter === undefined || parameter === '' || image === undefined || image === '') return true;
+        
+        const key = `${parameter}_${image}`;
+        if (seen.has(key)) {
+            return false; // This is a duplicate, don't keep it
+        }
+        seen.add(key);
+        return true; // This is not a duplicate, keep it
+    });
+
+    // Remove the image name (fourth column) from each row
+    return filteredContent.map(row => {
+        if (Array.isArray(row)) {
+            return [...row.slice(0, 3)];
+        }
+        return row;
+    });
+}
 function unloadingCSV() {
     // createCSV(fileName + "_" + userId + "_mouse", mouseContent);
     createCSV(fileName + "_" + userId + "_action", clickContent);
@@ -130,7 +159,9 @@ function unloadingCSV() {
         }
     });
     if (chosen) {
-        createCSV(fileName + "_server", serverContent);
+        // Remove duplicates from serverContent before creating CSV
+        const uniqueServerContent = removeDuplicatesFromServerContent(serverContent);
+        createCSV(fileName + "_server", uniqueServerContent);
     }
 }
 // window.addEventListener('beforeunload', unloading);

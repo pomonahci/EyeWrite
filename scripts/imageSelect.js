@@ -86,13 +86,14 @@ function getTrial() {
         const imageSrc = is_warmup ? `./generateTrials/images/warmup/${imageName}` : `./generateTrials/images/${imageName}`;
         document.getElementById("imageSearch").src = imageSrc;
         console.log('image: ', imageName)
-        serverContent.push(["Trial Start", task, Date.now()]);
-        serverContent.push(["Image", imageName, Date.now()]);
+        serverContent.push(["Trial Start", task, Date.now(), imageName]);
+        serverContent.push(["Image", imageName, Date.now(), imageName]);
         window.imageSelectData.imageName = imageName;
     }
     // resetStopwatch()
     startStopwatch();
     document.getElementById('trialNumber').innerHTML = task + 1;
+    return;
 }
 // Add an event listener for each click on the image
 document.getElementById("imageSearch").addEventListener("click", onClick);
@@ -298,11 +299,12 @@ function displayMessage(text, color, actionType) {
 async function nextTarget(actionType) {
     // Log the target completion to the server
     console.log("nextTarget")
-    serverContent.push(["Trial Completed", actionType, Date.now()]);
+    const imageName = images[task];
+    serverContent.push(["Trial Completed", actionType, Date.now(), imageName]);
     const stopwatchTime = document.getElementById('stopwatch').innerHTML;
     const [hours, minutes, seconds] = stopwatchTime.split(':').map(Number);
     const totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
-    serverContent.push(["Total Seconds", totalSeconds, Date.now()]);
+    serverContent.push(["Total Seconds", totalSeconds, Date.now(), imageName]);
     console.log(serverContent, task);
 
     clearBoxes();
@@ -472,7 +474,7 @@ async function startExperiment(isWarmup) {
                     document.getElementById('trialLength').innerHTML = numTargets;
                     
                     // Log the start of the condition
-                    serverContent.push([`Condition Start (${condition})`, isWarmup ? "Warmup" : "Experiment", Date.now()]);
+                    serverContent.push([`Condition Start (${condition})`, isWarmup ? "Warmup" : "Experiment", Date.now(), 'repeat_check']);
                     console.log('starting');
                     
                     // Start the first trial
