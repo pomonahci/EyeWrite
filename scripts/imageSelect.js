@@ -182,7 +182,7 @@ function updateIncorrectClicks() {
         for (misclick of Object.values(current)) {
             total += misclick;
         }
-        document.getElementById('badclicks').innerHTML = total;
+        // document.getElementById('badclicks').innerHTML = total;
     });
 }
 
@@ -243,12 +243,20 @@ function updateGlobalState(actionType) {
     
     // Update the count for the specific action type
     globalStateRef.child(actionType).transaction(currentValue => {
-        return (currentValue || 0) + 1/numPpl;
-    });
+        // Ensure we're always working with a number
+        const current = typeof currentValue === 'number' ? currentValue : 0;
+        return current + 1;
+      }).then((result) => {
+        if (result.committed) {
+          // Only update the DOM if the transaction was successful
+          document.getElementById(actionType).innerHTML = result.snapshot.val();
+        }
+      }).catch(error => console.error('Transaction failed: ', error));
+
     
     // Update the money
     globalStateRef.child('money').transaction(currentValue => {
-        const change = actionType === 'Right' ? 0.035 : -0.07;
+        const change = actionType === 'Right' ? 0.021 : -0.042;
         return (currentValue || 0) + change/numPpl;
     });
     }
@@ -317,7 +325,7 @@ async function nextTarget(actionType) {
         task = snapshot.val().length;
         // Reset everything for the next target
         misclicks = 0;
-        document.getElementById('badclicks').innerHTML = 0;
+        // document.getElementById('badclicks').innerHTML = 0;
         targetHit = false;
         mySkipVote = false;
         document.getElementById("skipButton").innerHTML = "No Target";
@@ -428,7 +436,7 @@ async function startExperiment(isWarmup) {
     // Determine which button type to use based on whether it's a warmup or not
     const buttonType = isWarmup ? 'WarmupbuttonClicked' : 'buttonClicked';
     const buttonId = isWarmup ? 'startWarmupButton' : 'startButton';
-    
+
     try {
         // Reset the global state for the appropriate button type
         await firebaseRef.child('globalState').child(buttonType).set(false);
@@ -457,6 +465,8 @@ async function startExperiment(isWarmup) {
                 condition = isWarmup ? document.getElementById("warmups").value + "_warmup" : document.getElementById("condition").value;
                 window.imageSelectData.condition = condition;
                 is_warmup = isWarmup;
+                document.getElementById("wrongUI").style.visibility = isWarmup  ? "hidden": "visible";
+                document.getElementById("rightUI").style.visibility = isWarmup ? "hidden": "visible";
                 
                 // Set the 'unique' value based on the condition (used for gaze visualization)
                 unique = condition.startsWith("SG") ? 1 : 2;
@@ -544,3 +554,10 @@ window.imageSelectData = {
     imageName: "",
     condition: ""
 };
+
+window.onload = displayClock();
+function displayClock(){
+var display = new Date().toLocaleTimeString(undefined, {hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit', fractionalSecondDigits: 3});
+  document.getElementById("time").innerHTML = display;
+  setTimeout(displayClock, 100); 
+}

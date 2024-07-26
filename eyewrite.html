@@ -121,14 +121,16 @@
   visibility: visible;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
   align-items: center;
   padding-top: 50px;">
     <div style="font-weight: bold;" > Time: <span id='stopwatch'>00:00:00</span></div>
-    <div  style="font-weight: bold;">Incorrect Clicks: <span id='badclicks' style="color: red;">0</span></div>
+    <div  style="font-weight: bold;" id="wrongUI">Incorrect Trials: <span id='Wrong' style="color: red;">0</span></div>
+    <div  style="font-weight: bold;" id="rightUI">Correct Trials: <span id='Right' style="color: green;">0</span></div>
+
     <div style="font-weight: bold;">Trial: <span id='trialNumber'>0</span> / <span id="trialLength">0</span></div>
     <img id='targetSearch' src='generateTrials/images/O_image.png' alt='TARGET' width='50px' height='50px'
-      style='margin-top: 40px;'>
+      style='margin-top: 10px;'>
     <button class="btn btn-primary" id="skipButton" onclick="voteSkipTarget()" disabled>No Target</button>
   
   </div>
@@ -149,7 +151,7 @@
   <button id="startWarmupButton"
   style="position: absolute; top:550px; background-color: white;padding: 10px; font-size: 14px; right:40px" disabled>Start Warmup</button>
 
-
+ <div id="time" style="position: absolute; bottom: 10px; right:25px;">Time hEre</div>
 
   <!-- add visiblity: hidden to the div when doing experiemtn -->
 
