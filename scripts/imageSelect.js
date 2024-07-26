@@ -243,15 +243,11 @@ function updateGlobalState(actionType) {
     
     // Update the count for the specific action type
     globalStateRef.child(actionType).transaction(currentValue => {
-        // Ensure we're always working with a number
-        const current = typeof currentValue === 'number' ? currentValue : 0;
-        return current + 1;
-      }).then((result) => {
-        if (result.committed) {
-          // Only update the DOM if the transaction was successful
-          document.getElementById(actionType).innerHTML = result.snapshot.val();
-        }
-      }).catch(error => console.error('Transaction failed: ', error));
+        const val =  currentValue ? currentValue + 1/numPpl : 1;
+        document.getElementById(actionType).innerHTML = val;
+        return val;
+        
+    });
 
     
     // Update the money
