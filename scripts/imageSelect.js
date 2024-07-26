@@ -185,7 +185,8 @@ function updateIncorrectClicks() {
         // document.getElementById('badclicks').innerHTML = total;
     });
 }
-
+let wrong = 0;
+let right = 0;
 // Function when task is completed
 async function checkTaskComplete() {
     console.log('complete');
@@ -219,6 +220,14 @@ async function checkTaskComplete() {
         document.getElementById("skipButton").disabled = true;
 
         // add updated right, wrong, money to the firebase database
+        if (actionType === 'Right') {
+            right++;
+            document.getElementById("right").innerHTML = found;
+        }
+        else {
+            wrong++;
+            document.getElementById("wrong").innerHTML = wrong;
+        }
         updateGlobalState(actionType);
 
             // Get the color of the user who completed the task
@@ -244,7 +253,7 @@ function updateGlobalState(actionType) {
     // Update the count for the specific action type
     globalStateRef.child(actionType).transaction(currentValue => {
         const val =  currentValue ? currentValue + 1/numPpl : 1;
-        document.getElementById(actionType).innerHTML = val;
+        // document.getElementById(actionType).innerHTML = val;
         return val;
         
     });
