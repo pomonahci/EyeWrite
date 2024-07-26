@@ -244,8 +244,10 @@ let money = 0;
 // Update the global state with the task completion 
 function updateGlobalState(actionType) {
     const globalStateRef = firepad.firebaseAdapter_.ref_.child('globalState');
+    // only care if real experiment
     if (is_warmup) return;
 
+    // Increment the right, wrong, and money based on the action type
     if (actionType === 'Right') {
         right++;
         money += 0.021;
@@ -253,11 +255,11 @@ function updateGlobalState(actionType) {
     }
     else {
         wrong++;
-        money -= -0.042;
+        money -= 0.042;
         document.getElementById("Wrong").innerHTML = wrong;
     }
     
-    // Update the count and moneyfor the specific action type
+    // Update the count and money for the specific action type
     globalStateRef.child(actionType).set(actionType === 'Right' ? right : wrong);
     globalStateRef.child('money').set(money);
     }
