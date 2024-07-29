@@ -72,7 +72,7 @@ function shuffleImages() {
     let shuffledImages = distributeImages(pics);
     let warmupShuffle = distributeImages(warmup);
     console.log(warmupShuffle);
-    const map = {0: 'SG', 1: 'SV', 2: 'SG + SV'};
+    const map = {0: 'G', 1: 'V', 2: 'B'};
 
     // Check if the 'shuffledImages' child already exists in Firebase
     firebaseRef.child('shuffledImages').once('value')

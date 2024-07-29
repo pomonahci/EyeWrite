@@ -345,10 +345,10 @@ async function nextTarget(actionType) {
 
             // Download csv files if experiment is completed
             const tasksSnapshot = await firebaseRef.child('tasks').once('value');
-            if ((numPpl == 1 && tasksSnapshot.numChildren() == 2) || 
-                (numPpl > 1 && tasksSnapshot.numChildren() == 6)) {
-                unloadingCSV();
-            }
+            // if ((numPpl == 1 && tasksSnapshot.numChildren() == 2) || 
+            //     (numPpl > 1 && tasksSnapshot.numChildren() == 6)) {
+            //     unloadingCSV();
+            // }
 
             // Let participants know that all tasks are completed
             document.getElementById("skipButton").innerHTML = "All Tasks Completed!";
@@ -465,14 +465,18 @@ async function startExperiment(isWarmup) {
                 document.getElementById("skipButton").innerHTML = "No Target"; 
                 
                 // Set the condition based on whether it's a warmup or not
-                condition = isWarmup ? document.getElementById("warmups").value + "_warmup" : document.getElementById("condition").value;
+                const URL = window.location.href
+                const communicationCondition = URL.search("gaze");
+                const condition_substring =  URL.substring(communicationCondition + 5, communicationCondition + 6);
+                condition = condition_substring + (isWarmup ? "_warmup" : "");
+
                 window.imageSelectData.condition = condition;
                 is_warmup = isWarmup;
                 document.getElementById("wrongUI").style.visibility = isWarmup  ? "hidden": "visible";
                 document.getElementById("rightUI").style.visibility = isWarmup ? "hidden": "visible";
                 
                 // Set the 'unique' value based on the condition (used for gaze visualization)
-                unique = condition.startsWith("SG") ? 1 : 2;
+                // unique = condition.startsWith("SG") ? 1 : 2;
                 
                 // Reset the task counter
                 task = 0;

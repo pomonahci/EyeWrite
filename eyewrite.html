@@ -97,7 +97,7 @@
   <div id="userlist" width="100px" style="position: absolute; top:0px; left:0px; background-color: white;"></div>
 
   <div id="firepad" style='visibility:hidden'></div>
-
+  <button id="downloadButton" style="position: absolute; top: 400px; left: 0px; background-color: lightgreen;padding: 10px; font-size: 14px;" onclick="unloadingCSV()">Download Data</button>
 
   <div id='imageContainer' style='position:relative;background-color: white;;height:1300px;left:160px; width: 2250px;display: flex; align-items: center;border-radius: 25px;'>
     <img id='imageSearch' src='' alt="IMAGE" width='2200px' height='1250px' style="border: 2px solid #000000"/>
@@ -134,20 +134,20 @@
     <button class="btn btn-primary" id="skipButton" onclick="voteSkipTarget()" disabled>No Target</button>
   
   </div>
-  <select id="condition" style="position: absolute; top: 400px; right:45px; background-color:white;padding: 10px; font-size: 14px; width:100px;">
+  <!-- <select id="condition" style="position: absolute; top: 400px; right:45px; background-color:white;padding: 10px; font-size: 14px; width:100px;">
     <option value="SG">SG</option>
     <option value="SV">SV</option>
     <option value="SG + SV">SG + SV</option>
-  </select>
+  </select> -->
   <button id="startButton"
   style="position: absolute; top:450px; background-color: white;padding: 10px; font-size: 14px; right:30px" disabled>Start Experiment</button>
 
 
-  <select id="warmups" style="position: absolute; top: 500px; right:15px; background-color:white;padding: 10px; font-size: 14px; width:150px;">
+  <!-- <select id="warmups" style="position: absolute; top: 500px; right:15px; background-color:white;padding: 10px; font-size: 14px; width:150px;">
     <option value="SG">SG Warmup</option>
     <option value="SV">SV Warmup</option>
     <option value="SG + SV">SG + SV Warmup</option>
-  </select>
+  </select> -->
   <button id="startWarmupButton"
   style="position: absolute; top:550px; background-color: white;padding: 10px; font-size: 14px; right:40px" disabled>Start Warmup</button>
 
@@ -397,6 +397,13 @@
       pollInterval: 5,
       viewportMargin: 2,
     });
+
+// THIS WILL CLEAR DATABASE (Rules must be changed on firebase console)
+//     const database = firebase.database();
+//     console.log('Clearing database...');
+// database.ref('/').remove()
+//   .then(() => console.log('Database cleared'))
+//   .catch((error) => console.error('Error clearing database:', error));
 
     // Create a random ID to use as our user ID (we must give this to firepad and FirepadUserList).
     var userId = Math.floor(Math.random() * 9999999999).toString();
