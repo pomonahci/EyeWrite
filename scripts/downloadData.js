@@ -144,6 +144,9 @@ function unloadingCSV() {
     createCSV(fileName + "_" + userId + "_action", clickContent);
     const overlapData = processOverlapData(overlayContent);
     createCSV(fileName + '_overlap_data', overlapData);
+
+    downloadClientGazeLog(userId);
+
     var chosen = false;
     firebaseRef.child('users').once('value', function (snap) {
         for (const user of Object.keys(snap.val())) {
@@ -164,5 +167,24 @@ function unloadingCSV() {
         createCSV(fileName + "_server", uniqueServerContent);
     }
 }
+
+
+function downloadClientGazeLog(userId) {
+    fetch('../clientGazeLog.txt')
+        .then(response => response.text())
+        .then(data => {
+            const blob = new Blob([data], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = `clientGazeLog_${userId}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(error => console.error('Error downloading clientGazeLog.txt:', error));
+}
+
 // window.addEventListener('beforeunload', unloading);
 // window.addEventListener('beforeunload', unloadingCSV);

@@ -54,7 +54,7 @@ function parseURLFor() {
     }
     var communicationCondition = URL.search("gaze");
     condition = URL.substring(communicationCondition + 5, communicationCondition + 6);
-    unique =  condition == "V" ? 2 : 1;
+    unique = condition == "V" ? 2 : 1;
     
 
     // var radius = URL.search("rad");

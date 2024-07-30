@@ -345,10 +345,9 @@ async function nextTarget(actionType) {
 
             // Download csv files if experiment is completed
             const tasksSnapshot = await firebaseRef.child('tasks').once('value');
-            // if ((numPpl == 1 && tasksSnapshot.numChildren() == 2) || 
-            //     (numPpl > 1 && tasksSnapshot.numChildren() == 6)) {
-            //     unloadingCSV();
-            // }
+            if (tasksSnapshot.numChildren() == 2) {
+                unloadingCSV();
+            }
 
             // Let participants know that all tasks are completed
             document.getElementById("skipButton").innerHTML = "All Tasks Completed!";
@@ -483,8 +482,9 @@ async function startExperiment(isWarmup) {
                 
                 try {
                     // Fetch the shuffled images for the current condition
-                    const imagesSnapshot = await firebaseRef.child('shuffledImages').child(condition).once('value');
-                    images = imagesSnapshot.val();
+                    // const imagesSnapshot = await firebaseRef.child('shuffledImages').child(condition).once('value');
+                    // images = imagesSnapshot.val();
+                    images = await loadShuffledImages(condition, isWarmup);
                     
                     // Set the number of targets and update the UI
                     numTargets = images.length;
@@ -535,7 +535,7 @@ firebaseRef.child('users').on('value', function (snapshot) {
     if (Object.keys(snapshot.val()).length >= numPpl) {
         document.getElementById("startButton").disabled = false;
         document.getElementById("startWarmupButton").disabled = false;
-        shuffleImages();
+        // shuffleImages();
         startExp();
         startWarmup();
         // add the users' dimensions into the firebase database
@@ -556,6 +556,22 @@ firebaseRef.child('users').on('value', function (snapshot) {
     }
 })
 
+
+async function loadShuffledImages(condition, isWarmup) {
+    return new Promise((resolve, reject) => {
+        fetch('/../shuffle/images.json')
+            .then(response => response.json())
+            .then(data => {
+                const images = isWarmup ? data.warmup[condition] : data.main[condition];
+                console.log('Shuffled images:', images);
+                resolve(images);
+            })
+            .catch(error => {
+                console.error('Error loading shuffled images:', error);
+                reject(error);
+            });
+    });
+}
 
 window.imageSelectData = {
     imageName: "",
