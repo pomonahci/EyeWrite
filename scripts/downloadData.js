@@ -109,7 +109,8 @@ function processOverlapData(data) {
     return content;
 }
 
-
+let correct = 0;
+let incorrect = 0;
 function removeDuplicatesFromServerContent(content) {
     const seen = new Set();
     const filteredContent = content.filter((row, index) => {
@@ -119,6 +120,7 @@ function removeDuplicatesFromServerContent(content) {
         // Assuming Parameter is in the first column (index 0) and imagename is in the fourth column (index 3)
         const parameter = row[0];
         const image = row[3];
+        const value = row[1];
         
         // If parameter or imagename is undefined or empty string, keep the row
         if (parameter === undefined || parameter === '' || image === undefined || image === '') return true;
@@ -128,6 +130,15 @@ function removeDuplicatesFromServerContent(content) {
             return false; // This is a duplicate, don't keep it
         }
         seen.add(key);
+        if (value === 'Right' || value === 'Wrong') {
+            if (value === 'Right') {
+                correct++;
+            }
+            else {
+                incorrect++;
+            }
+        }
+
         return true; // This is not a duplicate, keep it
     });
 
@@ -137,7 +148,7 @@ function removeDuplicatesFromServerContent(content) {
             return [...row.slice(0, 3)];
         }
         return row;
-    });
+    }).concat([['Right', correct], ['Wrong', incorrect]]);
 }
 function unloadingCSV() {
     // createCSV(fileName + "_" + userId + "_mouse", mouseContent);
