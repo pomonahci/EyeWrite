@@ -283,6 +283,7 @@ function updateGlobalState(actionType) {
       }).catch((error) => {
         console.error("Transaction failed: ", error);
       });
+      return;
     }
     
 
