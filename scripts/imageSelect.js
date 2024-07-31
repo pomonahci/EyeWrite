@@ -255,12 +255,13 @@ function updateGlobalState(actionType) {
         current.push(actionType == 'Right' ? 1 : 0);
         console.log("Current global state:", current);
         // Handle concurrency
-        const concurrentCount = task + 1 - current.length;
+        console.log("Task:", task);
+        const concurrentCount = Math.abs(task + 1 - current.length);
         console.log("Concurrent count:", concurrentCount);
         if (concurrentCount > 0) {
           console.warn(`Detected ${concurrentCount} concurrent results`);
           // Remove excess results from the end
-          current = current.slice(0, -concurrentCount);
+          current = current.slice(0, concurrentCount);
         }
         
         return current;
