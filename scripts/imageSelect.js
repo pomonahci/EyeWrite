@@ -248,19 +248,40 @@ function updateGlobalState(actionType) {
     // only care if real experiment
     if (is_warmup) return;
 
-    globalStateRef.child(actionType).transaction(function (current) {
-        return (current || 0) + 1;
-    }).then(function(result) {
-        if (result.committed) {
-            const newVal = result.snapshot.val();
-            document.getElementById(actionType).innerHTML = newVal;
-        } else {
-            console.log("Transaction failed");
+    globalStateRef.child('actions').transaction((current) => {
+        current = current || [];
+        
+        // Append 1 for correct, 0 for incorrect
+        current.push(actionType == 'Right' ? 1 : 0);
+        console.log("Current global state:", current);
+        // Handle concurrency
+        const concurrentCount = task + 1 - current.length;
+        console.log("Concurrent count:", concurrentCount);
+        if (concurrentCount > 0) {
+          console.warn(`Detected ${concurrentCount} concurrent results`);
+          // Remove excess results from the end
+          current = current.slice(0, -concurrentCount);
         }
-    }).catch(function(error) {
+        
+        return current;
+      }).then((result) => {
+        if (result.committed) {
+          const newState = result.snapshot.val();
+          console.log("Updated global state:", newState);
+          
+          // Count wrong (0) and right (1) actions
+          const wrongCount = newState.filter(action => action === 0).length;
+          const rightCount = newState.filter(action => action === 1).length;
+          
+          // Update DOM elements
+          document.getElementById('Wrong').innerHTML = wrongCount;
+          document.getElementById('Right').innerHTML = rightCount;
+        } else {
+          console.log("Transaction failed");
+        }
+      }).catch((error) => {
         console.error("Transaction failed: ", error);
-    });
-
+      });
     // Increment the right, wrong, and money based on the action type
     // if (actionType === 'Right') {
     //     right++;
