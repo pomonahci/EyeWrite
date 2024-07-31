@@ -247,21 +247,27 @@ function updateGlobalState(actionType) {
     // only care if real experiment
     if (is_warmup) return;
 
+    globalStateRef.child(actionType).transaction(function (current) {
+        val = (current || 0) + 1;
+        document.getElementById(actionType).innerHTML = val;
+        return val;
+    });
+
     // Increment the right, wrong, and money based on the action type
-    if (actionType === 'Right') {
-        right++;
-        money += 0.021;
-        document.getElementById("Right").innerHTML = right;
-    }
-    else {
-        wrong++;
-        money -= 0.042;
-        document.getElementById("Wrong").innerHTML = wrong;
-    }
+    // if (actionType === 'Right') {
+    //     right++;
+    //     money += 0.021;
+        
+    // }
+    // else {
+    //     wrong++;
+    //     money -= 0.042;
+    //     document.getElementById("Wrong").innerHTML = wrong;
+    // }
     
-    // Update the count and money for the specific action type
-    globalStateRef.child(actionType).set(actionType === 'Right' ? right : wrong);
-    globalStateRef.child('money').set(money);
+    // // Update the count and money for the specific action type
+    // globalStateRef.child(actionType).set(actionType === 'Right' ? right : wrong);
+    // globalStateRef.child('money').set(money);
     }
     
 
