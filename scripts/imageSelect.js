@@ -261,7 +261,7 @@ function updateGlobalState(actionType) {
         if (concurrentCount > 0) {
           console.warn(`Detected ${concurrentCount} concurrent results`);
           // Remove excess results from the end
-          current = current.slice(0, concurrentCount);
+          current = current.slice(0, -concurrentCount);
         }
         
         return current;
@@ -283,21 +283,6 @@ function updateGlobalState(actionType) {
       }).catch((error) => {
         console.error("Transaction failed: ", error);
       });
-    // Increment the right, wrong, and money based on the action type
-    // if (actionType === 'Right') {
-    //     right++;
-    //     money += 0.021;
-        
-    // }
-    // else {
-    //     wrong++;
-    //     money -= 0.042;
-    //     document.getElementById("Wrong").innerHTML = wrong;
-    // }
-    
-    // // Update the count and money for the specific action type
-    // globalStateRef.child(actionType).set(actionType === 'Right' ? right : wrong);
-    // globalStateRef.child('money').set(money);
     }
     
 
