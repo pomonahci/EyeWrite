@@ -244,13 +244,21 @@ let money = 0;
 // Update the global state with the task completion 
 function updateGlobalState(actionType) {
     const globalStateRef = firepad.firebaseAdapter_.ref_.child('globalState');
+
     // only care if real experiment
     if (is_warmup) return;
 
     globalStateRef.child(actionType).transaction(function (current) {
-        val = (current || 0) + 1;
-        document.getElementById(actionType).innerHTML = val;
-        return val;
+        return (current || 0) + 1;
+    }).then(function(result) {
+        if (result.committed) {
+            const newVal = result.snapshot.val();
+            document.getElementById(actionType).innerHTML = newVal;
+        } else {
+            console.log("Transaction failed");
+        }
+    }).catch(function(error) {
+        console.error("Transaction failed: ", error);
     });
 
     // Increment the right, wrong, and money based on the action type
