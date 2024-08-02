@@ -130,15 +130,6 @@ function removeDuplicatesFromServerContent(content) {
             return false; // This is a duplicate, don't keep it
         }
         seen.add(key);
-        if (value === 'Right' || value === 'Wrong') {
-            if (value === 'Right') {
-                correct++;
-            }
-            else {
-                incorrect++;
-            }
-        }
-
         return true; // This is not a duplicate, keep it
     });
 
@@ -148,7 +139,7 @@ function removeDuplicatesFromServerContent(content) {
             return [...row.slice(0, 3)];
         }
         return row;
-    }).concat([['Right', correct], ['Wrong', incorrect]]);
+    });
 }
 function unloadingCSV() {
     // createCSV(fileName + "_" + userId + "_mouse", mouseContent);

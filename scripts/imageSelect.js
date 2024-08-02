@@ -271,6 +271,11 @@ function updateGlobalState(actionType) {
           // Update DOM elements
           document.getElementById('Wrong').innerHTML = wrongCount;
           document.getElementById('Right').innerHTML = rightCount;
+
+        
+        globalStateRef.child('right').set(rightCount);
+        globalStateRef.child('wrong').set(wrongCount);
+          
         } else {
           console.log("Transaction failed");
         }
@@ -351,17 +356,22 @@ async function nextTarget(actionType, user) {
         document.getElementById("skipButton").style.left = '15%';
 
         // Check if all tasks are completed
-        if (numTargets == task) {
+        if (5 == task) {
             console.log("All tasks completed!");
             document.getElementById("imageSearch").removeEventListener("click", onClick);
             stopStopwatch();
             // Reset the global state
             await firebaseRef.child('globalState').child('buttonClicked').set(false);
             await firebaseRef.child('globalState').child('WarmupbuttonClicked').set(false);
+            serverContent.push([`Condition End(${condition})`,condition, Date.now(), 'repeat_check']);
 
             // Download csv files if experiment is completed
             const tasksSnapshot = await firebaseRef.child('tasks').once('value');
             if (tasksSnapshot.numChildren() == 2) {
+                const right  = await firebaseRef.child('globalState').child('right').once('value');
+                const wrong  = await firebaseRef.child('globalState').child('wrong').once('value');
+                const money = right.val() * 0.021 - wrong.val() * 0.042;
+                firebaseRef.child('globalState').child('money').set(money);
                 unloadingCSV();
             }
 
