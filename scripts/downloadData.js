@@ -157,6 +157,7 @@ function unloadingCSV() {
     createCSV(fileName + '_overlap_data', overlapData);
 
     downloadClientGazeLog(userId);
+    downloadImagesJson();
 
     var chosen = false;
     firebaseRef.child('users').once('value', function (snap) {
@@ -195,6 +196,23 @@ function downloadClientGazeLog(userId) {
             window.URL.revokeObjectURL(url);
         })
         .catch(error => console.error('Error downloading clientGazeLog.txt:', error));
+}
+
+function downloadImagesJson() {
+    fetch('../shuffle/images.json')
+        .then(response => response.json())
+        .then(data => {
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = `images_.json`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(error => console.error('Error downloading images.json:', error));
 }
 
 // window.addEventListener('beforeunload', unloading);

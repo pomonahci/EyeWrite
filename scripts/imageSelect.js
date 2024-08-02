@@ -95,8 +95,6 @@ function getTrial() {
     document.getElementById('trialNumber').innerHTML = task + 1;
     return;
 }
-// Add an event listener for each click on the image
-document.getElementById("imageSearch").addEventListener("click", onClick);
 async function onClick(event) {
     // Early return if the user has already voted to skip or if the target has been hit
     if (mySkipVote || targetHit) return;
@@ -111,8 +109,8 @@ async function onClick(event) {
     target = selectedData.find(data => data.name === imageName)
 
     // Get the bounding box coordinates for the target "O"
-    const rectHeight = 16;
-    const rectWidth = 13.7783203125;
+    const rectHeight = 17;
+    const rectWidth = 17;
     const topLeftX = parseFloat(target.x) - (rectWidth / 2) + boundArray[0];
     const topLeftY = parseFloat(target.y) - (rectHeight / 2) + boundArray[1];
     const bottomRightX = parseFloat(target.x) + (rectWidth / 2) + boundArray[0];
@@ -226,7 +224,7 @@ async function checkTaskComplete() {
         if (userId) {
             const colorSnapshot = await firebaseRef.child('users').child(userId).child('color').once('value');
             const color = colorSnapshot.val();
-            displayMessage(`${actionType} `, color, actionType);
+            displayMessage(`${actionType} `, color, actionType, userId);
         } else {
             displayMessage("Task Completed!");
         }
@@ -253,11 +251,8 @@ function updateGlobalState(actionType) {
         
         // Append 1 for correct, 0 for incorrect
         current.push(actionType == 'Right' ? 1 : 0);
-        console.log("Current global state:", current);
         // Handle concurrency
-        console.log("Task:", task);
         const concurrentCount = Math.abs(task + 1 - current.length);
-        console.log("Concurrent count:", concurrentCount);
         if (concurrentCount > 0) {
           console.warn(`Detected ${concurrentCount} concurrent results`);
           // Remove excess results from the end
@@ -268,7 +263,6 @@ function updateGlobalState(actionType) {
       }).then((result) => {
         if (result.committed) {
           const newState = result.snapshot.val();
-          console.log("Updated global state:", newState);
           
           // Count wrong (0) and right (1) actions
           const wrongCount = newState.filter(action => action === 0).length;
@@ -287,7 +281,7 @@ function updateGlobalState(actionType) {
     }
     
 
-function displayMessage(text, color, actionType) {
+function displayMessage(text, color, actionType, user) {
     // Display a message on the screen for 2 seconds
     // with the text and color provided
     var message = document.createElement('div');
@@ -316,7 +310,7 @@ function displayMessage(text, color, actionType) {
     // Remove the message after 2 seconds and move to the next target
     setTimeout(function() {
         document.body.removeChild(message);
-        nextTarget(actionType);
+        nextTarget(actionType, user);
         stopStopwatch();
         resetStopwatch();
 
@@ -329,11 +323,11 @@ function displayMessage(text, color, actionType) {
 
 
 // Function to move to the next target
-async function nextTarget(actionType) {
+async function nextTarget(actionType, user) {
     // Log the target completion to the server
     console.log("nextTarget")
     const imageName = images[task];
-    serverContent.push(["Trial Completed", actionType, Date.now(), imageName]);
+    serverContent.push(["Trial Completed", `${user} (${actionType})`, Date.now(), imageName]);
     const stopwatchTime = document.getElementById('stopwatch').innerHTML;
     const [hours, minutes, seconds] = stopwatchTime.split(':').map(Number);
     const totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
@@ -461,6 +455,21 @@ async function startExperiment(isWarmup) {
     const buttonType = isWarmup ? 'WarmupbuttonClicked' : 'buttonClicked';
     const buttonId = isWarmup ? 'startWarmupButton' : 'startButton';
 
+    if (isWarmup) {
+        // add the users' dimensions into the firebase database
+        setTimeout(function() {
+            firebaseRef.child("users").transaction(function (current) {
+                for (const [key, value] of Object.entries(current)) {
+                    var wh = "("+value.dimensions.w+","+value.dimensions.h+")";
+                    serverContent.push([`${key} dimension`,wh]);
+                    serverContent.push([`${key} color`, value.color]);
+                    serverContent.push([`${key} name`, value.name]);
+                }
+                serverContent.push(["Participants", numPpl]);
+            });
+        }, 1000);
+    }
+
     try {
         // Reset the global state for the appropriate button type
         await firebaseRef.child('globalState').child(buttonType).set(false);
@@ -560,18 +569,7 @@ firebaseRef.child('users').on('value', function (snapshot) {
         // shuffleImages();
         startExp();
         startWarmup();
-        // add the users' dimensions into the firebase database
-        setTimeout(function() {
-            firebaseRef.child("users").transaction(function (current) {
-                for (const [key, value] of Object.entries(current)) {
-                    var wh = "("+value.dimensions.w+","+value.dimensions.h+")";
-                    serverContent.push([`${key} dimension`,wh]);
-                    serverContent.push([`${key} color`, value.color]);
-                    serverContent.push([`${key} name`, value.name]);
-                }
-                serverContent.push(["Participants", numPpl]);
-            });
-        }, 1000);
+        
         document.getElementById("imageSearch").style.pointerEvents = "auto";
         document.getElementById("skipButton").style.pointerEvents = "auto";
         firebaseRef.child('users').off('value');
