@@ -356,7 +356,7 @@ async function nextTarget(actionType, user) {
         document.getElementById("skipButton").style.left = '15%';
 
         // Check if all tasks are completed
-        if (5 == task) {
+        if (numTargets == task) {
             console.log("All tasks completed!");
             document.getElementById("imageSearch").removeEventListener("click", onClick);
             stopStopwatch();
